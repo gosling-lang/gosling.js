@@ -23,6 +23,13 @@ interface TileInfo {
     server: null;
     tilePos: number[];
     zoomLevel: number;
+    tilePositionId?: string;
+}
+/**
+ * This is what all the tile information eventually gets organized into.
+ */
+interface LoadedTiles {
+    [tilePositionId: string]: TileInfo;
 }
 
 /**
@@ -43,7 +50,7 @@ class CsvDataFetcherClass {
 
     #dataPromise: Promise<void> | undefined;
     #chromSizes: ChromSizes;
-    #parsedCSVdata!: { [k: string]: string | number }[]; // Either set in the constructor or in #fetchCsv()
+    #parsedData!: { [k: string]: string | number }[]; // Either set in the constructor or in #fetchCsv()
     #assembly: Assembly;
     #filter: FilterTransform[] | undefined;
 
@@ -62,7 +69,7 @@ class CsvDataFetcherClass {
     }
 
     /**
-     * Fetches CSV file from url, parses it, and sets this.#parsedCSVdata
+     * Fetches CSV file from url, parses it, and sets this.#parsedData
      */
     async #fetchCsv(): Promise<void> {
         const { url, chromosomeField, genomicFields, headerNames, longToWideId, genomicFieldsToConvert } =
@@ -127,9 +134,9 @@ class CsvDataFetcherClass {
                         });
                     }
                 });
-                this.#parsedCSVdata = Object.keys(newJson).map(k_3 => newJson[k_3]);
+                this.#parsedData = Object.keys(newJson).map(k_3 => newJson[k_3]);
             } else {
-                this.#parsedCSVdata = json;
+                this.#parsedData = json;
             }
         } catch (error) {
             console.error('[Gosling Data Fetcher] Error fetching data', error);
@@ -153,7 +160,7 @@ class CsvDataFetcherClass {
     /**
      * Called in TiledPixiTrack
      */
-    tilesetInfo(callback?: (loadedTiles: TilesetInfo) => void): Promise<TilesetInfo | void> | undefined {
+    tilesetInfo(callback?: (tilesetInto: TilesetInfo) => void): Promise<TilesetInfo | void> | undefined {
         if (!this.#dataPromise) {
             // data promise is not prepared yet
             return;
@@ -171,7 +178,7 @@ class CsvDataFetcherClass {
     /**
      * Called by this.tilesetInfo() to call a callback function with tileset info.
      */
-    #generateTilesetInfo(callback?: (loadedTiles: TilesetInfo) => void): TilesetInfo {
+    #generateTilesetInfo(callback?: (tilesetInfo: TilesetInfo) => void): TilesetInfo {
         this.tilesetInfoLoading = false;
 
         const TILE_SIZE = 1024;
@@ -192,13 +199,13 @@ class CsvDataFetcherClass {
     }
     /**
      * Called in TiledPixiTrack.
-     * @param receivedTiles A function from TiledPixiTrack
-     * @param tileIds An array of tile IDs
+     * @param receivedTiles A function from TiledPixiTrack which takes in all the loaded tiles
+     * @param tileIds An array of tile IDs. Ex. ['1.0', '1.1']
      */
-    fetchTilesDebounced(receivedTiles: (loadedTiles: any) => void, tileIds: any[]): void {
-        const tiles: { [k: string]: any } = {};
+    fetchTilesDebounced(receivedTiles: (loadedTiles: LoadedTiles) => void, tileIds: string[]): void {
+        const tiles: LoadedTiles = {};
 
-        const validTileIds: any[] = [];
+        const validTileIds: string[] = [];
         const tilePromises = [];
 
         for (const tileId of tileIds) {
@@ -216,11 +223,13 @@ class CsvDataFetcherClass {
             tilePromises.push(this.#tile(z, x, y));
         }
 
-        Promise.all(tilePromises).then(values => {
-            values.forEach((value, i) => {
-                const validTileId = validTileIds[i];
-                tiles[validTileId] = value;
-                tiles[validTileId].tilePositionId = validTileId;
+        Promise.all(tilePromises).then(tileInfo => {
+            tileInfo.forEach((tileInfo, i) => {
+                if (tileInfo) {
+                    const validTileId = validTileIds[i];
+                    tiles[validTileId] = tileInfo;
+                    tiles[validTileId].tilePositionId = validTileId;
+                }
             });
             receivedTiles(tiles);
         });
@@ -232,31 +241,32 @@ class CsvDataFetcherClass {
      * @param y An integer, the y coordinate of the tile
      * @returns A promise of an object with tile coordinates and data
      */
-    #tile(z: number, x: number, y: number): Promise<TileInfo> | undefined {
-        return this.tilesetInfo()?.then((tsInfo: any) => {
-            const tileWidth = +tsInfo.max_width / 2 ** +z;
+    async #tile(z: number, x: number, y: number): Promise<TileInfo | undefined> {
+        const tilesetInfo = await this.tilesetInfo();
+        if (!tilesetInfo) return;
 
-            // get the bounds of the tile
-            const minX = tsInfo.min_pos[0] + x * tileWidth;
-            const maxX = tsInfo.min_pos[0] + (x + 1) * tileWidth;
+        const tileWidth = +tilesetInfo.max_width / 2 ** +z;
 
-            // filter the data so that only the visible data is sent to tracks
-            let tabularData = filterUsingGenoPos(this.#parsedCSVdata, [minX, maxX], this.dataConfig);
+        // get the bounds of the tile
+        const minX = tilesetInfo.min_pos[0] + x * tileWidth;
+        const maxX = tilesetInfo.min_pos[0] + (x + 1) * tileWidth;
 
-            // filter data based on the `DataTransform` spec
-            this.#filter?.forEach(f => {
-                tabularData = filterData(f, tabularData);
-            });
+        // filter the data so that only the visible data is sent to tracks
+        let tabularData = filterUsingGenoPos(this.#parsedData as Datum[], [minX, maxX], this.dataConfig);
 
-            const sizeLimit = this.dataConfig.sampleLength ?? 1000;
-            return {
-                // sample the data to make it managable for visualization components
-                tabularData: tabularData.length > sizeLimit ? sampleSize(tabularData, sizeLimit) : tabularData,
-                server: null,
-                tilePos: [x, y],
-                zoomLevel: z
-            };
+        // filter data based on the `DataTransform` spec
+        this.#filter?.forEach(f => {
+            tabularData = filterData(f, tabularData);
         });
+
+        const sizeLimit = this.dataConfig.sampleLength ?? 1000;
+        return {
+            // sample the data to make it managable for visualization components
+            tabularData: tabularData.length > sizeLimit ? sampleSize(tabularData, sizeLimit) : tabularData,
+            server: null,
+            tilePos: [x, y],
+            zoomLevel: z
+        };
     }
 
     /**
