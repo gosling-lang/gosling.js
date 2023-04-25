@@ -857,6 +857,10 @@ export interface BedData {
      */
     url: string;
     /**
+     * Specify the URL address of the data file index.
+     */
+    indexUrl: string;
+    /**
      * Any non-standard field in the BED file
      */
     customFields?: string[];

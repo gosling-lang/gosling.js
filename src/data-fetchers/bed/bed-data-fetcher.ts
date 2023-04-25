@@ -2,6 +2,9 @@ import { dsvFormat as d3dsvFormat } from 'd3-dsv';
 import { computeChromSizes } from '../../core/utils/assembly';
 import { sampleSize } from 'lodash-es';
 import type { Assembly, BedData, FilterTransform, Datum } from '@gosling.schema';
+// import { TabixIndexedFile } from '@gmod/tabix';
+// import BED from '@gmod/bed';
+
 import type { DSVParsedArray, DSVRowString } from 'd3-dsv';
 import { filterData } from '../../core/utils/data-transform';
 import { type CommonDataConfig, filterUsingGenoPos } from '../utils';

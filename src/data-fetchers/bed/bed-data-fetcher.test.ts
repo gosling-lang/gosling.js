@@ -7,6 +7,7 @@ describe('BED fetcher', () => {
     const dataConfig: BedDataConfig = {
         type: 'bed',
         url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/275_peaks.bed',
+        indexUrl: '',
         assembly: 'hg38',
         sampleLength: 1000
     };
@@ -74,6 +75,7 @@ describe('BED fetcher with too many custom fields', () => {
         type: 'bed',
         url: 'https://s3.amazonaws.com/gosling-lang.org/data/COVID/sars-cov-2_Sprot_annot_sorted.bed',
         customFields: ['col3', 'col4'],
+        indexUrl: '',
         assembly: [['NC_045512.2', 29903]],
         sampleLength: 1000
     };
@@ -90,6 +92,7 @@ describe('BED fetcher with a custom field', () => {
     const dataConfig: BedDataConfig = {
         type: 'bed',
         url: 'https://s3.amazonaws.com/gosling-lang.org/data/COVID/sars-cov-2_Sprot_annot_sorted.bed',
+        indexUrl: '',
         customFields: ['my_custom_field'],
         assembly: [['NC_045512.2', 29903]],
         sampleLength: 1000

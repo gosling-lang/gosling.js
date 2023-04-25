@@ -112,6 +112,10 @@
           },
           "type": "array"
         },
+        "indexUrl": {
+          "description": "Specify the URL address of the data file index.",
+          "type": "string"
+        },
         "sampleLength": {
           "description": "Specify the number of rows loaded from the URL.\n\n__Default:__ `1000`",
           "type": "number"
@@ -131,7 +135,8 @@
       },
       "required": [
         "type",
-        "url"
+        "url",
+        "indexUrl"
       ],
       "type": "object"
     },
