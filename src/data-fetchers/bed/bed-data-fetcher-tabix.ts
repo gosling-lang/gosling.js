@@ -65,7 +65,9 @@ class BedDataFetcher implements TabularDataFetcher<BedTile> {
 
     async getTabularData(tileIds: string[]): Promise<BedTile[]> {
         const buf = await (await this.worker).getTabularData(this.uid, tileIds);
-        return JSON.parse(new TextDecoder().decode(buf));
+        const parsed = JSON.parse(new TextDecoder().decode(buf));
+        console.warn(parsed);
+        return parsed;
     }
 }
 
