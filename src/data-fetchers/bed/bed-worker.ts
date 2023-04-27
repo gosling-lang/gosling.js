@@ -12,14 +12,6 @@ import { DataSource, RemoteFile } from '../utils';
 import type { TilesetInfo } from '@higlass/types';
 import type { ChromSizes } from '@gosling.schema';
 
-// promises indexed by urls
-const bedFiles: Map<string, BedFile> = new Map();
-
-type BedFileOptions = {
-    sampleLength: number;
-    customFields?: string[];
-};
-
 /**
  * A class to represent a BED file. It takes care of setting up gmod/tabix.
  */
@@ -31,7 +23,13 @@ export class BedFile {
     constructor(public tbi: TabixIndexedFile, uid: string) {
         this.#uid = uid;
     }
-
+    /**
+     * Function to create an instance of BedFile
+     * @param url A string which is the URL of the bed file
+     * @param indexUrl A string which is the URL of the bed  index file
+     * @param uid A unique identifier for the worker
+     * @returns an instance of BedFile
+     */
     static fromUrl(url: string, indexUrl: string, uid: string) {
         const tbi = new TabixIndexedFile({
             filehandle: new RemoteFile(url),
@@ -42,12 +40,100 @@ export class BedFile {
     set customFields(custom: string[]) {
         this.#customFields = custom;
     }
+    /**
+     * Creates a parser. Parser cannot be created in the constructor because it relies on chromosome information
+     * which gets created by DataSource
+     * @returns A function to parse lines of BED files
+     */
     async getParser() {
         if (!this.#parseLine) {
-            const parseLine = await new BedParser(this.#uid, this.#customFields).getLineParser();
+            const n_columns = this.#customFields ? await this.#calcNColumns() : undefined;
+            const parseLine = await new BedParser(this.#customFields, n_columns).getLineParser();
             this.#parseLine = parseLine;
         }
         return this.#parseLine;
+    }
+    /**
+     * Function to calculate the number of columns in the BED file. Needed when custom column names are supplied
+     * Relatively inefficient because the gmod/tabix API only has a way to retrieve lines based on genomic coordinates,
+     * but I believe this is better than fetching the BED file itself because then it only has to be fetched and
+     * unzipped once.
+     * @param uid A string which is the UID associated worker. Used to retrieve the chromosome information
+     * @returns
+     */
+    async #calcNColumns() {
+        const source = dataSources.get(this.#uid)!;
+        const { chromLengths, cumPositions } = source.chromInfo;
+        let n_cols = 0;
+        for (const cumPos of cumPositions) {
+            const chromName = cumPos.chr;
+            const chromStart = cumPos.pos;
+            const chromEnd = cumPos.pos + chromLengths[chromName];
+            n_cols = await new Promise(resolve => {
+                source.file.tbi.getLines(chromName, chromStart, chromEnd, line => {
+                    resolve(line.split('\t').length);
+                });
+            });
+            if (n_cols > 0) break;
+        }
+        console.warn('columns', n_cols);
+        return n_cols;
+    }
+    /**
+     * Retrieves data within a certain coordinate range
+     * @param minX A number which is the minimum X boundary of the tile
+     * @param maxX A number which is the maximum X boundary of the tile
+     * @param callback A callback function which takes in parsed BED file data record
+     * @returns A promise of array of promises which resolve when the data has been successfully retrieved
+     */
+    async getTileData(minX: number, maxX: number, callback: (bedRecord: BedRecord) => unknown) {
+        const source = dataSources.get(this.#uid)!;
+        const parseLine = await this.getParser();
+        const recordPromises: Promise<void>[] = []; // These promises resolve when the data has been retrieved
+
+        let curMinX = minX;
+
+        const { chromLengths, cumPositions } = source.chromInfo;
+
+        cumPositions.forEach(cumPos => {
+            const chromName = cumPos.chr;
+            const chromStart = cumPos.pos;
+            const chromEnd = cumPos.pos + chromLengths[chromName];
+
+            let startPos, endPos;
+            if (chromStart <= curMinX && curMinX < chromEnd) {
+                if (maxX > chromEnd) {
+                    // the visible region extends beyond the end of this chromosome
+                    // fetch from the start until the end of the chromosome
+
+                    startPos = curMinX - chromStart;
+                    endPos = chromEnd - chromStart;
+                    recordPromises.push(
+                        source.file.tbi
+                            .getLines(chromName, startPos, endPos, line => {
+                                const bedRecord = parseLine(line, chromStart);
+                                callback(bedRecord);
+                            })
+                            .then(() => {})
+                    );
+                } else {
+                    startPos = Math.floor(curMinX - chromStart);
+                    endPos = Math.ceil(maxX - chromStart);
+                    recordPromises.push(
+                        source.file.tbi
+                            .getLines(chromName, startPos, endPos, line => {
+                                const bedRecord = parseLine(line, chromStart);
+                                callback(bedRecord);
+                            })
+                            .then(() => {})
+                    );
+                    return;
+                }
+
+                curMinX = chromEnd;
+            }
+        });
+        return recordPromises;
     }
 }
 /**
@@ -55,16 +141,16 @@ export class BedFile {
  */
 class BedParser {
     #customFields?: string[];
-    #uid: string;
+    #n_columns?: number;
 
     /**
      * Constructor for BedParser
-     * @param uid A string which is the unique ID associated with the worker
      * @param customFields An array of strings, where each string is the name of a custom column
+     * @param n_columns A number which is the number of columns in the Bed File
      */
-    constructor(uid: string, customFields?: string[]) {
+    constructor(customFields?: string[], n_columns?: number) {
         this.#customFields = customFields;
-        this.#uid = uid;
+        this.#n_columns = n_columns;
     }
     /**
      * Creates an instance of gmod/BED and returns a function which can parse a single BED file line
@@ -77,7 +163,7 @@ class BedParser {
         }
         let parser: BED;
         if (this.#customFields) {
-            const customAutoSqlSchema = await this.constructBedAutoSql();
+            const customAutoSqlSchema = this.constructBedAutoSql();
             parser = new BED({ autoSql: customAutoSqlSchema });
         } else {
             parser = new BED();
@@ -96,18 +182,18 @@ class BedParser {
      * Generates an autoSql schema for a BED file that has custom columns
      * @returns A string which is the autoSql spec
      */
-    async constructBedAutoSql() {
+    constructBedAutoSql() {
         const AUTO_SQL_HEADER = `table customBedSchema\n"BED12"\n    (\n`;
         const AUTO_SQL_FOOTER = '\n    )';
 
-        const autoSqlFields = await this.generateAutoSQLFields();
+        const autoSqlFields = this.generateAutoSQLFields();
         return String.prototype.concat(AUTO_SQL_HEADER, autoSqlFields, AUTO_SQL_FOOTER);
     }
     /**
-     * Generates the fields used in the autoSql schema
+     * Generates the fields used in the autoSql schema. For custom column names.
      * @returns A string which is are the fields in the autoSql schema
      */
-    async generateAutoSQLFields(): Promise<string> {
+    generateAutoSQLFields() {
         const BED12Fields: FieldInfo[] = [
             ['string', 'chrom'],
             ['uint', 'chromStart'],
@@ -122,56 +208,31 @@ class BedParser {
             ['uint[blockCount]', 'blockSizes'],
             ['uint[blockCount]', 'blockStarts']
         ];
-
-        /**
-         * Helper function to calculate the number of columns in the BED file. Relatively inefficient because the
-         * gmod/tabix API only has a way to retrieve lines based on genomic coordinates, but I believe this is better
-         * than fetching the BED file itself because then it only has to be fetched and unzipped once
-         * @param uid A string which is the UID associated worker. Used to retrieve the chromosome information
-         * @returns
-         */
-        async function calcNCols(uid: string) {
-            const source = dataSources.get(uid)!;
-            const { chromLengths, cumPositions } = source.chromInfo;
-            let n_cols = 0;
-            for (const cumPos of cumPositions) {
-                const chromName = cumPos.chr;
-                const chromStart = cumPos.pos;
-                const chromEnd = cumPos.pos + chromLengths[chromName];
-                n_cols = await new Promise(resolve => {
-                    source.file.tbi.getLines(chromName, chromStart, chromEnd, line => {
-                        resolve(line.split('\t').length);
-                    });
-                });
-                if (n_cols > 0) break;
-            }
-            console.warn('columns', n_cols);
-            return n_cols;
-        }
-        const n_cols = await calcNCols(this.#uid);
-        if (n_cols === 0) throw new Error('Number of columns was not able to be determined');
+        if (!this.#n_columns) throw new Error('Number of columns was not able to be determined');
         if (!this.#customFields) return ''; // This function should never be called if there are no custom fields
         const customFieldType = 'string';
         const customFieldsWithTypes = this.#customFields.map(column => [customFieldType, column] as FieldInfo);
 
         let allFields: FieldInfo[];
         const REQUIRED_COLS = 3;
-        if (n_cols > BED12Fields.length) {
-            if (n_cols !== BED12Fields.length + this.#customFields.length) {
-                throw new Error(`BED file error: unexpected number of custom fields. Found ${n_cols} columns 
+        if (this.#n_columns > BED12Fields.length) {
+            if (this.#n_columns !== BED12Fields.length + this.#customFields.length) {
+                throw new Error(`BED file error: unexpected number of custom fields. Found ${this.#n_columns} columns 
                     which is different from the expected ${BED12Fields.length + this.#customFields.length}`);
             }
             allFields = BED12Fields.concat(customFieldsWithTypes);
         } else {
-            if (n_cols - this.#customFields.length >= REQUIRED_COLS) {
-                allFields = BED12Fields.slice(0, n_cols - this.#customFields.length).concat(customFieldsWithTypes);
+            if (this.#n_columns - this.#customFields.length >= REQUIRED_COLS) {
+                allFields = BED12Fields.slice(0, this.#n_columns - this.#customFields.length).concat(
+                    customFieldsWithTypes
+                );
             } else {
                 throw new Error(
                     `Expected ${
                         REQUIRED_COLS + this.#customFields.length
                     } columns (${REQUIRED_COLS} required columns and ${
                         this.#customFields.length
-                    } custom columns) but found ${n_cols} columns`
+                    } custom columns) but found ${this.#n_columns} columns`
                 );
             }
         }
@@ -188,6 +249,14 @@ class BedParser {
  * Used in BedParser to associate column names with data types
  */
 type FieldInfo = [type: string, fieldName: string];
+
+// promises indexed by urls
+const bedFiles: Map<string, BedFile> = new Map();
+
+type BedFileOptions = {
+    sampleLength: number;
+    customFields?: string[];
+};
 
 /**
  * All data stored in each BED file eventually gets put into this
@@ -209,6 +278,10 @@ type BedRecord = {
 };
 
 export type BedTile = BedRecord;
+
+export interface EmptyTile {
+    tilePositionId: string;
+}
 /**
  * Object to store tile data. Each key a string which contains the coordinates of the tile
  */
@@ -250,7 +323,7 @@ const tilesetInfo = (uid: string) => {
 const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
     console.warn('bed tile called');
     const source = dataSources.get(uid)!;
-    const parseLine = await source.file.getParser();
+    // const parseLine = await source.file.getParser();
 
     const CACHE_KEY = `${uid}.${z}.${x}`;
 
@@ -259,62 +332,22 @@ const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
     tileValues[CACHE_KEY] = [];
     // }
 
-    const recordPromises: Promise<void>[] = [];
     const tileWidth = +source.tilesetInfo.max_width / 2 ** +z;
 
     // get bounds of this tile
     const minX = source.tilesetInfo.min_pos[0] + x * tileWidth;
     const maxX = source.tilesetInfo.min_pos[0] + (x + 1) * tileWidth;
 
-    let curMinX = minX;
-
-    const { chromLengths, cumPositions } = source.chromInfo;
-
-    cumPositions.forEach(cumPos => {
-        const chromName = cumPos.chr;
-        const chromStart = cumPos.pos;
-        const chromEnd = cumPos.pos + chromLengths[chromName];
-
-        let startPos, endPos;
-        if (chromStart <= curMinX && curMinX < chromEnd) {
-            if (maxX > chromEnd) {
-                // the visible region extends beyond the end of this chromosome
-                // fetch from the start until the end of the chromosome
-
-                startPos = curMinX - chromStart;
-                endPos = chromEnd - chromStart;
-                recordPromises.push(
-                    source.file.tbi
-                        .getLines(chromName, startPos, endPos, line => {
-                            const bedRecord = parseLine(line, chromStart);
-                            tileValues[CACHE_KEY] = tileValues[CACHE_KEY].concat([bedRecord]);
-                        })
-                        .then(() => {})
-                );
-            } else {
-                startPos = Math.floor(curMinX - chromStart);
-                endPos = Math.ceil(maxX - chromStart);
-                recordPromises.push(
-                    source.file.tbi
-                        .getLines(chromName, startPos, endPos, line => {
-                            const bedRecord = parseLine(line, chromStart);
-                            tileValues[CACHE_KEY] = tileValues[CACHE_KEY].concat([bedRecord]);
-                        })
-                        .then(() => {})
-                );
-                return;
-            }
-
-            curMinX = chromEnd;
-        }
+    const recordPromises = await source.file.getTileData(minX, maxX, (bedRecord: BedRecord) => {
+        tileValues[CACHE_KEY] = tileValues[CACHE_KEY].concat([bedRecord]);
     });
 
-    return Promise.all(recordPromises).then(values => values.flat());
+    return Promise.all(recordPromises);
 };
 
 const fetchTilesDebounced = async (uid: string, tileIds: string[]) => {
     console.warn('fetch tiles debounced called');
-    const tiles: Record<string, BedTile> = {};
+    const tiles: Record<string, EmptyTile> = {};
     const validTileIds: string[] = [];
     const tilePromises: Promise<void[]>[] = [];
 
@@ -333,9 +366,7 @@ const fetchTilesDebounced = async (uid: string, tileIds: string[]) => {
     return Promise.all(tilePromises).then(values => {
         for (let i = 0; i < values.length; i++) {
             const validTileId = validTileIds[i];
-            // @ts-expect-error values is void, this should never happen.
-            tiles[validTileId] = values[i];
-            tiles[validTileId].tilePositionId = validTileId;
+            tiles[validTileId] = { tilePositionId: validTileId };
         }
         return tiles;
     });
