@@ -32,23 +32,21 @@ export class BedFile {
         this.#uid = uid;
     }
 
-    async getParser() {
-        if (!this.#parser) {
-            return await new BedParser(this.#uid, this.#customFields).newParser();
-        }
-        return this.#parser;
-    }
-
-    set customFields(custom: string[]) {
-        this.#customFields = custom;
-    }
-
     static fromUrl(url: string, indexUrl: string, uid: string) {
         const tbi = new TabixIndexedFile({
             filehandle: new RemoteFile(url),
             tbiFilehandle: new RemoteFile(indexUrl)
         });
         return new BedFile(tbi, uid);
+    }
+    set customFields(custom: string[]) {
+        this.#customFields = custom;
+    }
+    async getParser() {
+        if (!this.#parser) {
+            return await new BedParser(this.#uid, this.#customFields).newParser();
+        }
+        return this.#parser;
     }
 }
 /**
@@ -201,7 +199,7 @@ export type BedTile = BedRecord;
 /**
  * Object to store tile data. Each key a string which contains the coordinates of the tile
  */
-const tileValues: Record<string, BedTile[]> = {}; // new LRU({ max: MAX_TILES });
+const tileValues: Record<string, BedTile[]> = {};
 /**
  * Maps from UID to Bed File info
  */
@@ -268,6 +266,8 @@ const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
             const bedRecord: BedRecord = parser.parseLine(line) as BedRecord;
             const cumulativeChromStart = cumPos.pos + bedRecord.chromStart + 1;
             const cumulativeChromEnd = cumPos.pos + bedRecord.chromEnd + 1;
+            if (bedRecord.thickEnd) bedRecord.thickEnd = cumPos.pos + bedRecord.thickEnd + 1;
+            if (bedRecord.thickStart) bedRecord.thickStart = cumPos.pos + bedRecord.thickStart + 1;
 
             // Create key values
             const data: BedTile = {
