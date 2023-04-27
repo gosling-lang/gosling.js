@@ -2,15 +2,14 @@
  * This document is heavily based on the following repo by @alexander-veit:
  * https://github.com/dbmi-bgm/higlass-sv/blob/main/src/sv-fetcher-worker.js
  */
+
 import BED from '@gmod/bed';
 import { TabixIndexedFile } from '@gmod/tabix';
 import { expose, Transfer } from 'threads/worker';
 import { sampleSize } from 'lodash-es';
-
-import { DataSource, RemoteFile } from '../utils';
-
 import type { TilesetInfo } from '@higlass/types';
 import type { ChromSizes } from '@gosling.schema';
+import { DataSource, RemoteFile, EmptyTile } from '../utils';
 
 /**
  * A class to represent a BED file. It takes care of setting up gmod/tabix.
@@ -279,9 +278,6 @@ type BedRecord = {
 
 export type BedTile = BedRecord;
 
-export interface EmptyTile {
-    tilePositionId: string;
-}
 /**
  * Object to store tile data. Each key a string which contains the coordinates of the tile
  */
