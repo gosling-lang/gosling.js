@@ -24,7 +24,7 @@ type BedFileOptions = {
  * A class to represent a BED file. It takes care of setting up gmod/tabix.
  */
 export class BedFile {
-    #parser?: BED;
+    #parseLine?: (line: string, chromStart: number) => BedRecord;
     #customFields?: string[];
     #uid: string;
 
@@ -43,10 +43,11 @@ export class BedFile {
         this.#customFields = custom;
     }
     async getParser() {
-        if (!this.#parser) {
-            return await new BedParser(this.#uid, this.#customFields).newParser();
+        if (!this.#parseLine) {
+            const parseLine = await new BedParser(this.#uid, this.#customFields).getLineParser();
+            this.#parseLine = parseLine;
         }
-        return this.#parser;
+        return this.#parseLine;
     }
 }
 /**
@@ -66,17 +67,30 @@ class BedParser {
         this.#uid = uid;
     }
     /**
-     * This function returns the actual parser. Cannot be done in the constructor because this.constructBedAutoSql()
-     * is async
-     * @returns A BED parser
+     * Creates an instance of gmod/BED and returns a function which can parse a single BED file line
+     * @returns A function to parse a single line of the BED file
      */
-    async newParser() {
+    async getLineParser() {
+        /** Helper function to calculate cumulative chromosome positions */
+        function relativeToCumulative(pos: number, chromStart: number) {
+            return chromStart + pos + 1;
+        }
+        let parser: BED;
         if (this.#customFields) {
             const customAutoSqlSchema = await this.constructBedAutoSql();
-            return new BED({ autoSql: customAutoSqlSchema });
+            parser = new BED({ autoSql: customAutoSqlSchema });
         } else {
-            return new BED();
+            parser = new BED();
         }
+        const lineParser = (line: string, chromStart: number) => {
+            const bedRecord: BedRecord = parser.parseLine(line) as BedRecord;
+            const fieldsToConvert = ['chromStart', 'chromEnd', 'thickEnd', 'thickStart'];
+            fieldsToConvert.forEach(field => {
+                if (bedRecord[field]) bedRecord[field] = relativeToCumulative(bedRecord[field] as number, chromStart);
+            });
+            return bedRecord;
+        };
+        return lineParser;
     }
     /**
      * Generates an autoSql schema for a BED file that has custom columns
@@ -112,13 +126,12 @@ class BedParser {
         /**
          * Helper function to calculate the number of columns in the BED file. Relatively inefficient because the
          * gmod/tabix API only has a way to retrieve lines based on genomic coordinates, but I believe this is better
-         * than fetching the BED file itself
+         * than fetching the BED file itself because then it only has to be fetched and unzipped once
          * @param uid A string which is the UID associated worker. Used to retrieve the chromosome information
          * @returns
          */
         async function calcNCols(uid: string) {
             const source = dataSources.get(uid)!;
-            console.warn('info', source.chromInfo);
             const { chromLengths, cumPositions } = source.chromInfo;
             let n_cols = 0;
             for (const cumPos of cumPositions) {
@@ -237,7 +250,7 @@ const tilesetInfo = (uid: string) => {
 const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
     console.warn('bed tile called');
     const source = dataSources.get(uid)!;
-    const parser = await source.file.getParser();
+    const parseLine = await source.file.getParser();
 
     const CACHE_KEY = `${uid}.${z}.${x}`;
 
@@ -262,24 +275,6 @@ const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
         const chromStart = cumPos.pos;
         const chromEnd = cumPos.pos + chromLengths[chromName];
 
-        const parseLineStoreData = (line: string) => {
-            const bedRecord: BedRecord = parser.parseLine(line) as BedRecord;
-            const cumulativeChromStart = cumPos.pos + bedRecord.chromStart + 1;
-            const cumulativeChromEnd = cumPos.pos + bedRecord.chromEnd + 1;
-            if (bedRecord.thickEnd) bedRecord.thickEnd = cumPos.pos + bedRecord.thickEnd + 1;
-            if (bedRecord.thickStart) bedRecord.thickStart = cumPos.pos + bedRecord.thickStart + 1;
-
-            // Create key values
-            const data: BedTile = {
-                ...bedRecord,
-                chromStart: cumulativeChromStart,
-                chromEnd: cumulativeChromEnd
-            };
-
-            // Store this column
-            tileValues[CACHE_KEY] = tileValues[CACHE_KEY].concat([data]);
-        };
-
         let startPos, endPos;
         if (chromStart <= curMinX && curMinX < chromEnd) {
             if (maxX > chromEnd) {
@@ -291,7 +286,8 @@ const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
                 recordPromises.push(
                     source.file.tbi
                         .getLines(chromName, startPos, endPos, line => {
-                            parseLineStoreData(line);
+                            const bedRecord = parseLine(line, chromStart);
+                            tileValues[CACHE_KEY] = tileValues[CACHE_KEY].concat([bedRecord]);
                         })
                         .then(() => {})
                 );
@@ -301,7 +297,8 @@ const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
                 recordPromises.push(
                     source.file.tbi
                         .getLines(chromName, startPos, endPos, line => {
-                            parseLineStoreData(line);
+                            const bedRecord = parseLine(line, chromStart);
+                            tileValues[CACHE_KEY] = tileValues[CACHE_KEY].concat([bedRecord]);
                         })
                         .then(() => {})
                 );
