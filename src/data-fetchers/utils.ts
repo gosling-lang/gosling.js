@@ -14,7 +14,7 @@ export type CommonDataConfig = {
 
 export type EmptyTile = {
     tilePositionId: string;
-}
+};
 
 export class DataSource<File, Options> {
     chromInfo: ExtendedChromInfo;
