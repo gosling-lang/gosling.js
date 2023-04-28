@@ -21,21 +21,22 @@ type VcfFileOptions = {
     sampleLength: number;
 };
 
+/**
+ * This is a class to represent a VCF file.
+ */
 class VcfFile {
     #parseLine?: (line: string, chromStart: number, prevPos?: number) => VcfTile;
     #uid: string;
     constructor(public tbi: TabixIndexedFile, uid: string) {
         this.#uid = uid;
     }
-
-    async getParser() {
-        if (!this.#parseLine) {
-            const header = await this.tbi.getHeader();
-            this.#parseLine = new VcfParser(header).getParser();
-        }
-        return this.#parseLine;
-    }
-
+    /**
+     * Function to create an instance of VcfFile from URLs
+     * @param url A string which is the URL of the bed file
+     * @param indexUrl A string which is the URL of the bed  index file
+     * @param uid A unique identifier for the worker
+     * @returns an instance of VcfFile
+     */
     static fromUrl(url: string, indexUrl: string, uid: string) {
         const tbi = new TabixIndexedFile({
             filehandle: new RemoteFile(url),
@@ -43,7 +44,23 @@ class VcfFile {
         });
         return new VcfFile(tbi, uid);
     }
-
+    /**
+     * Creates the parser used for the BED file.
+     */
+    async getParser() {
+        if (!this.#parseLine) {
+            const header = await this.tbi.getHeader();
+            this.#parseLine = new VcfParser(header).getParser();
+        }
+        return this.#parseLine;
+    }
+    /**
+     * Retrieves data within a certain coordinate range
+     * @param minX A number which is the minimum X boundary of the tile
+     * @param maxX A number which is the maximum X boundary of the tile
+     * @param callback A callback function which receives the VCF tile
+     * @returns A promise of array of promises which resolve when the data has been successfully retrieved
+     */
     async getTileData(minX: number, maxX: number, callback: (tileRecord: VcfTile) => unknown) {
         const source = dataSources.get(this.#uid)!;
         const parseLine = await this.getParser();
@@ -97,6 +114,9 @@ class VcfFile {
     }
 }
 
+/**
+ * Used by VcfFile to parse lines of VCF file
+ */
 class VcfParser {
     #header: string;
 
@@ -143,7 +163,12 @@ const tilesetInfo = (uid: string) => {
     return dataSources.get(uid)!.tilesetInfo;
 };
 
-// We return an empty tile. We get the data from SvTrack
+/**
+ * Updates `tileValues` with the data for a specific tile.
+ * @param uid A string which is the unique identifier of the worker
+ * @param z A number which is the z coordinate of the tile
+ * @param x A number which is the x coordinate of the tile
+ */
 const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
     const source = dataSources.get(uid)!;
     const CACHE_KEY = `${uid}.${z}.${x}`;
