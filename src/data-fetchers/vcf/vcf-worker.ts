@@ -22,24 +22,97 @@ type VcfFileOptions = {
 };
 
 class VcfFile {
-    private parser?: VCF;
-
-    constructor(public tbi: TabixIndexedFile) {}
-
-    async getParser() {
-        if (!this.parser) {
-            const header = await this.tbi.getHeader();
-            this.parser = new VCF({ header });
-        }
-        return this.parser;
+    #parseLine?: (line: string, chromStart: number, prevPos?: number) => VcfTile;
+    #uid: string;
+    constructor(public tbi: TabixIndexedFile, uid: string) {
+        this.#uid = uid;
     }
 
-    static fromUrl(url: string, indexUrl: string) {
+    async getParser() {
+        if (!this.#parseLine) {
+            const header = await this.tbi.getHeader();
+            this.#parseLine = new VcfParser(header).getParser();
+        }
+        return this.#parseLine;
+    }
+
+    static fromUrl(url: string, indexUrl: string, uid: string) {
         const tbi = new TabixIndexedFile({
             filehandle: new RemoteFile(url),
             tbiFilehandle: new RemoteFile(indexUrl)
         });
-        return new VcfFile(tbi);
+        return new VcfFile(tbi, uid);
+    }
+
+    async getTileData(minX: number, maxX: number, callback: (tileRecord: VcfTile) => unknown) {
+        const source = dataSources.get(this.#uid)!;
+        const parseLine = await this.getParser();
+
+        let curMinX = minX;
+        const { chromLengths, cumPositions } = source.chromInfo;
+        const recordPromises: Promise<void>[] = [];
+
+        cumPositions.forEach(cumPos => {
+            const chromName = cumPos.chr;
+            const chromStart = cumPos.pos;
+            const chromEnd = cumPos.pos + chromLengths[chromName];
+            let startPos, endPos;
+            if (chromStart <= curMinX && curMinX < chromEnd) {
+                // start of the visible region is within this chromosome
+                let prevPOS: number | undefined;
+                if (maxX > chromEnd) {
+                    // the visible region extends beyond the end of this chromosome
+                    // fetch from the start until the end of the chromosome
+
+                    startPos = curMinX - chromStart;
+                    endPos = chromEnd - chromStart;
+                    recordPromises.push(
+                        source.file.tbi
+                            .getLines(chromName, startPos, endPos, line => {
+                                const tileRecord = parseLine(line, chromStart, prevPOS);
+                                prevPOS = tileRecord.POS;
+                                callback(tileRecord);
+                            })
+                            .then(() => {})
+                    );
+                } else {
+                    startPos = Math.floor(curMinX - chromStart);
+                    endPos = Math.ceil(maxX - chromStart);
+                    recordPromises.push(
+                        source.file.tbi
+                            .getLines(chromName, startPos, endPos, line => {
+                                const tileRecord = parseLine(line, chromStart, prevPOS);
+                                prevPOS = tileRecord.POS;
+                                callback(tileRecord);
+                            })
+                            .then(() => {})
+                    );
+                    return;
+                }
+
+                curMinX = chromEnd;
+            }
+        });
+        return recordPromises;
+    }
+}
+
+class VcfParser {
+    #header: string;
+
+    constructor(header: string) {
+        this.#header = header;
+    }
+
+    getParser() {
+        const parser = new VCF({ header: this.#header });
+
+        const parseLine = (line: string, chromStart: number, prevPos?: number) => {
+            const vcfRecord: VcfRecord = parser.parseLine(line);
+            const vcfTile = recordToTile(vcfRecord, chromStart, prevPos);
+            return vcfTile;
+        };
+        return parseLine;
     }
 }
 
@@ -57,7 +130,7 @@ function init(
 ) {
     let vcfFile = vcfFiles.get(vcf.url);
     if (!vcfFile) {
-        vcfFile = VcfFile.fromUrl(vcf.url, vcf.indexUrl);
+        vcfFile = VcfFile.fromUrl(vcf.url, vcf.indexUrl, uid);
     }
     const dataSource = new DataSource(vcfFile, chromSizes, {
         sampleLength: 1000,
@@ -73,77 +146,23 @@ const tilesetInfo = (uid: string) => {
 // We return an empty tile. We get the data from SvTrack
 const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
     const source = dataSources.get(uid)!;
-    const parser = await source.file.getParser();
-
     const CACHE_KEY = `${uid}.${z}.${x}`;
 
     // TODO: Caching is needed
     // if (!tileValues[CACHE_KEY]) {
     tileValues[CACHE_KEY] = [];
     // }
-
-    const recordPromises: Promise<void>[] = [];
     const tileWidth = +source.tilesetInfo.max_width / 2 ** +z;
 
     // get bounds of this tile
     const minX = source.tilesetInfo.min_pos[0] + x * tileWidth;
     const maxX = source.tilesetInfo.min_pos[0] + (x + 1) * tileWidth;
 
-    let curMinX = minX;
-
-    const { chromLengths, cumPositions } = source.chromInfo;
-
-    cumPositions.forEach(cumPos => {
-        const chromName = cumPos.chr;
-        const chromStart = cumPos.pos;
-        const chromEnd = cumPos.pos + chromLengths[chromName];
-
-        const parseLineStoreData = (line: string, prevPos?: number) => {
-            const vcfRecord: VcfRecord = parser.parseLine(line);
-            const data = recordToTile(vcfRecord, cumPos.pos, prevPos);
-
-            // Store this column
-            tileValues[CACHE_KEY] = tileValues[CACHE_KEY].concat([data]);
-
-            // Return current POS
-            return vcfRecord.POS;
-        };
-
-        let startPos, endPos;
-        if (chromStart <= curMinX && curMinX < chromEnd) {
-            // start of the visible region is within this chromosome
-            let prevPOS: number | undefined;
-            if (maxX > chromEnd) {
-                // the visible region extends beyond the end of this chromosome
-                // fetch from the start until the end of the chromosome
-
-                startPos = curMinX - chromStart;
-                endPos = chromEnd - chromStart;
-                recordPromises.push(
-                    source.file.tbi
-                        .getLines(chromName, startPos, endPos, line => {
-                            prevPOS = parseLineStoreData(line, prevPOS);
-                        })
-                        .then(() => {})
-                );
-            } else {
-                startPos = Math.floor(curMinX - chromStart);
-                endPos = Math.ceil(maxX - chromStart);
-                recordPromises.push(
-                    source.file.tbi
-                        .getLines(chromName, startPos, endPos, line => {
-                            prevPOS = parseLineStoreData(line, prevPOS);
-                        })
-                        .then(() => {})
-                );
-                return;
-            }
-
-            curMinX = chromEnd;
-        }
+    const recordPromises = await source.file.getTileData(minX, maxX, (vcfTile: VcfTile) => {
+        tileValues[CACHE_KEY] = tileValues[CACHE_KEY].concat([vcfTile]);
     });
 
-    return Promise.all(recordPromises).then(values => values.flat());
+    return Promise.all(recordPromises);
 };
 
 const fetchTilesDebounced = async (uid: string, tileIds: string[]) => {
