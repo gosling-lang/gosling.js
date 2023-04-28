@@ -28,7 +28,7 @@ interface TileInfo {
 /**
  * This is what all the tile information eventually gets organized into.
  */
-interface LoadedTiles {
+export interface LoadedTiles {
     [tilePositionId: string]: TileInfo;
 }
 
@@ -43,7 +43,7 @@ interface TilesetInfo {
     max_pos: number[];
 }
 
-class CsvDataFetcherClass {
+export class CsvDataFetcherClass {
     dataConfig: CsvDataConfig;
     // @ts-ignore
     tilesetInfoLoading: boolean; // Used in TiledPixiTrack
