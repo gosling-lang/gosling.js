@@ -453,10 +453,10 @@
     object.entries-ponyfill "^1.0.1"
     quick-lru "^2.0.0"
 
-"@gmod/bbi@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@gmod/bbi/-/bbi-3.0.0.tgz#12490275280b1965fb2af581c06c3cb13520007f"
-  integrity sha512-QQ7WKLORfR5K/o3Uvd+kd1W5OWGy9jpZgIarzw+4hSQwjajwzJb5jICyWQr/hHNjuQ8cKLefmcDiz7/15WUVcw==
+"@gmod/bbi@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@gmod/bbi/-/bbi-3.0.1.tgz#ce4e2988043bf036e0a148f69a3f235e094d0e6b"
+  integrity sha512-DjvRj/qPPWBSjEjgVsadQmmWBK+EmtYr9xLZ4y7IsnuuHiE+sDgbnSA51OKiKNGLM3srydq22pynNLqswB1XjQ==
   dependencies:
     abortable-promise-cache "^1.4.1"
     binary-parser "^2.1.0"
