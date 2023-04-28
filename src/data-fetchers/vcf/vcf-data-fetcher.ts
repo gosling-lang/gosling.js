@@ -71,18 +71,6 @@ class VcfDataFetcher implements TabularDataFetcher<VcfTile> {
     }
 
     fetchTilesDebounced(receivedTiles: (tiles: Record<string, VcfTile>) => void, tileIds: string[]) {
-        // const { toFetch } = this;
-
-        // const thisZoomLevel = tileIds[0].split('.')[0]; // Example of tileIds: ["3.0", "3.1"]
-        // const toFetchZoomLevel = toFetch.size ? [...toFetch][0].split('.')[0] : null;
-
-        // if (thisZoomLevel !== toFetchZoomLevel) {
-        //     for (const tileId of this.toFetch) {
-        //         this.track.fetching.delete(tileId);
-        //     }
-        //     this.toFetch.clear();
-        // }
-
         this.track.drawLoadingCue();
 
         tileIds.forEach(tileId => this.toFetch.add(tileId));

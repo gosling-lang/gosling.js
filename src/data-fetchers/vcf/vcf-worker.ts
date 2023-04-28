@@ -25,7 +25,7 @@ type VcfFileOptions = {
  * This is a class to represent a VCF file.
  */
 class VcfFile {
-    #parseLine?: (line: string, chromStart: number, prevPos?: number) => VcfTile;
+    #parseLine?: ReturnType<VcfParser['getParser']>;
     #uid: string;
     constructor(public tbi: TabixIndexedFile, uid: string) {
         this.#uid = uid;
