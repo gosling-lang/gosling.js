@@ -865,10 +865,6 @@ export interface BedData {
      */
     customFields?: string[];
     /**
-     * Specify file separator, __Default:__ ','
-     */
-    separator?: string;
-    /**
      * Specify the number of rows loaded from the URL.
      *
      * __Default:__ `1000`

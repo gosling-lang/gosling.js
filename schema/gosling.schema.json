@@ -120,10 +120,6 @@
           "description": "Specify the number of rows loaded from the URL.\n\n__Default:__ `1000`",
           "type": "number"
         },
-        "separator": {
-          "description": "Specify file separator, __Default:__ ','",
-          "type": "string"
-        },
         "type": {
           "const": "bed",
           "type": "string"
