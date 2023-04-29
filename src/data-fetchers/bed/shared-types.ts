@@ -15,8 +15,8 @@ export interface BedTile {
     blockSizes?: number[];
     blockStarts?: number[];
     [customField: string]: string | number | number[] | undefined;
-};
+}
 
 export interface EmptyTile {
     tilePositionId: string;
-};
+}
