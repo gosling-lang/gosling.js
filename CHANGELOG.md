@@ -1,3 +1,22 @@
+## [0.9.29](https://github.com/gosling-lang/gosling.js/compare/v0.9.28...v0.9.29) (2023-04-26)
+
+
+### Bug Fixes
+
+* alias lodash to lodash-es for smaller bundle ([#879](https://github.com/gosling-lang/gosling.js/issues/879)) ([9f1d108](https://github.com/gosling-lang/gosling.js/commit/9f1d10863bcc54e2a58d3cdf6a65c4311dc4039b))
+* **editor:** reduce asset size  ([#859](https://github.com/gosling-lang/gosling.js/issues/859)) ([404bafa](https://github.com/gosling-lang/gosling.js/commit/404bafab5ad31a6b6f6adf27db3323b275b13268))
+* flip the y-axis labels when the track is vertical ([#862](https://github.com/gosling-lang/gosling.js/issues/862)) ([6bd6df2](https://github.com/gosling-lang/gosling.js/commit/6bd6df2794bdfe91ce661037e9b3552f8493b10a))
+
+
+### Features
+
+* add jsx-a11y eslint plugin ([#842](https://github.com/gosling-lang/gosling.js/issues/842)) ([5f12b66](https://github.com/gosling-lang/gosling.js/commit/5f12b66c16e90dd95424aff2cad822cc0f9f9746))
+* **editor:** add link to gosling-lang.org to editor header ([#855](https://github.com/gosling-lang/gosling.js/issues/855)) ([6964671](https://github.com/gosling-lang/gosling.js/commit/696467199b19e933af5cc55d53b0ec4762d81b06))
+* support optional INFO fields of VCF files ([#864](https://github.com/gosling-lang/gosling.js/issues/864)) ([ebb5bea](https://github.com/gosling-lang/gosling.js/commit/ebb5beaca2f27a13d80872fce0ec5846b39dc588))
+* upgrade to HiGlass 1.12.2 ([#866](https://github.com/gosling-lang/gosling.js/issues/866)) ([0bc5691](https://github.com/gosling-lang/gosling.js/commit/0bc569122c53e5f12a0edde647b874b03e8e3b01))
+
+
+
 ## [0.9.28](https://github.com/gosling-lang/gosling.js/compare/v0.9.27...v0.9.28) (2023-01-05)
 
 

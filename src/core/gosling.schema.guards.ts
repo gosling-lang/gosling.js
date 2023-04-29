@@ -185,8 +185,11 @@ export function IsDataDeepTileset(
     );
 }
 
+/**
+ * Checks if a channel is of type ChannelDeep
+ */
 export function IsChannelDeep(channel: ChannelDeep | ChannelValue | undefined): channel is ChannelDeep {
-    return typeof channel === 'object' && !('value' in channel);
+    return isObject(channel) && !('value' in channel);
 }
 
 export function IsOneOfFilter(_: FilterTransform): _ is OneOfFilter {
