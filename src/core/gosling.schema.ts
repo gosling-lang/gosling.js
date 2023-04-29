@@ -861,7 +861,8 @@ export interface BedData {
      */
     indexUrl: string;
     /**
-     * Any non-standard field in the BED file
+     * An array of strings, where each string is the name of a non-standard field in the BED file.
+     * If there are `n` custom fields, we assume that the last `n` columns of the BED file correspond to the custom fields.
      */
     customFields?: string[];
     /**
