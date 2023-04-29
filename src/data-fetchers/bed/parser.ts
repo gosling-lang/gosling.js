@@ -9,7 +9,7 @@ type FieldInfo = [type: string, fieldName: string];
 /**
  * From gmod/bed-js
  */
-const DEFAULT_BED_SCHAMA = `table defaultBedSchema
+const DEFAULT_BED_SCHEMA = `table defaultBedSchema
 "BED12"
     (
     string chrom;      "The name of the chromosome (e.g. chr3, chrY, chr2_random) or scaffold (e.g. scaffold10671)."
@@ -57,7 +57,7 @@ export class BedParser {
             console.warn(customAutoSqlSchema);
             parser = new BED({ autoSql: customAutoSqlSchema });
         } else {
-            parser = new BED({ autoSql: DEFAULT_BED_SCHAMA });
+            parser = new BED({ autoSql: DEFAULT_BED_SCHEMA });
         }
         const lineParser = (line: string, chromStart: number) => {
             const bedRecord: BedTile = parser.parseLine(line) as BedTile;
