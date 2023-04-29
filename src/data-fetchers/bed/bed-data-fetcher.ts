@@ -9,8 +9,9 @@ import { computeChromSizes } from '../../core/utils/assembly';
 
 import type { ModuleThread } from 'threads';
 import type { Assembly, BedData } from '../../core/gosling.schema';
-import type { WorkerApi, TilesetInfo, BedTile } from './bed-worker';
-import type { TabularDataFetcher, EmptyTile } from '../utils';
+import type { WorkerApi, TilesetInfo } from './bed-worker';
+import type { TabularDataFetcher } from '../utils';
+import type { BedTile, EmptyTile } from './shared-types';
 
 const DEBOUNCE_TIME = 200;
 

@@ -3,19 +3,25 @@
  * https://github.com/dbmi-bgm/higlass-sv/blob/main/src/sv-fetcher-worker.js
  */
 
-import BED from '@gmod/bed';
 import { TabixIndexedFile } from '@gmod/tabix';
 import { expose, Transfer } from 'threads/worker';
 import { sampleSize } from 'lodash-es';
 import type { TilesetInfo } from '@higlass/types';
 import type { ChromSizes } from '@gosling.schema';
-import { DataSource, RemoteFile, EmptyTile } from '../utils';
+import { DataSource, RemoteFile } from '../utils';
+import type { EmptyTile, BedTile } from './shared-types';
+import BedParser from './parser';
+
+export type BedFileOptions = {
+    sampleLength: number;
+    customFields?: string[];
+};
 
 /**
  * A class to represent a BED file. It takes care of setting up gmod/tabix.
  */
 export class BedFile {
-    #parseLine?: (line: string, chromStart: number) => BedRecord;
+    #parseLine?: (line: string, chromStart: number) => BedTile;
     #customFields?: string[];
     #uid: string;
 
@@ -85,7 +91,7 @@ export class BedFile {
      * @param callback A callback function which takes in parsed BED file data record
      * @returns A promise of array of promises which resolve when the data has been successfully retrieved
      */
-    async getTileData(minX: number, maxX: number, callback: (bedRecord: BedRecord) => unknown) {
+    async getTileData(minX: number, maxX: number, callback: (bedRecord: BedTile) => unknown) {
         const source = dataSources.get(this.#uid)!;
         const parseLine = await this.getParser();
         const recordPromises: Promise<void>[] = []; // These promises resolve when the data has been retrieved
@@ -135,148 +141,9 @@ export class BedFile {
         return recordPromises;
     }
 }
-/**
- * A class to create a BED file parser
- */
-class BedParser {
-    #customFields?: string[];
-    #n_columns?: number;
-
-    /**
-     * Constructor for BedParser
-     * @param customFields An array of strings, where each string is the name of a custom column
-     * @param n_columns A number which is the number of columns in the Bed File
-     */
-    constructor(customFields?: string[], n_columns?: number) {
-        this.#customFields = customFields;
-        this.#n_columns = n_columns;
-    }
-    /**
-     * Creates an instance of gmod/BED and returns a function which can parse a single BED file line
-     * @returns A function to parse a single line of the BED file
-     */
-    async getLineParser() {
-        /** Helper function to calculate cumulative chromosome positions */
-        function relativeToCumulative(pos: number, chromStart: number) {
-            return chromStart + pos + 1;
-        }
-        let parser: BED;
-        if (this.#customFields) {
-            const customAutoSqlSchema = this.constructBedAutoSql();
-            parser = new BED({ autoSql: customAutoSqlSchema });
-        } else {
-            parser = new BED();
-        }
-        const lineParser = (line: string, chromStart: number) => {
-            const bedRecord: BedRecord = parser.parseLine(line) as BedRecord;
-            const fieldsToConvert = ['chromStart', 'chromEnd', 'thickEnd', 'thickStart'];
-            fieldsToConvert.forEach(field => {
-                if (bedRecord[field]) bedRecord[field] = relativeToCumulative(bedRecord[field] as number, chromStart);
-            });
-            return bedRecord;
-        };
-        return lineParser;
-    }
-    /**
-     * Generates an autoSql schema for a BED file that has custom columns
-     * @returns A string which is the autoSql spec
-     */
-    constructBedAutoSql() {
-        const AUTO_SQL_HEADER = `table customBedSchema\n"BED12"\n    (\n`;
-        const AUTO_SQL_FOOTER = '\n    )';
-
-        const autoSqlFields = this.generateAutoSQLFields();
-        return String.prototype.concat(AUTO_SQL_HEADER, autoSqlFields, AUTO_SQL_FOOTER);
-    }
-    /**
-     * Generates the fields used in the autoSql schema. For custom column names.
-     * @returns A string which is are the fields in the autoSql schema
-     */
-    generateAutoSQLFields() {
-        const BED12Fields: FieldInfo[] = [
-            ['string', 'chrom'],
-            ['uint', 'chromStart'],
-            ['uint', 'chromEnd'],
-            ['string', 'name'],
-            ['float', 'score'],
-            ['char', 'strand'],
-            ['uint', 'thickStart'],
-            ['uint', 'thickEnd'],
-            ['string', 'itemRgb'],
-            ['uint', 'blockCount'],
-            ['uint[blockCount]', 'blockSizes'],
-            ['uint[blockCount]', 'blockStarts']
-        ];
-        if (!this.#n_columns) throw new Error('Number of columns was not able to be determined');
-        if (!this.#customFields) return ''; // This function should never be called if there are no custom fields
-        const customFieldType = 'string';
-        const customFieldsWithTypes = this.#customFields.map(column => [customFieldType, column] as FieldInfo);
-
-        let allFields: FieldInfo[];
-        const REQUIRED_COLS = 3;
-        if (this.#n_columns > BED12Fields.length) {
-            if (this.#n_columns !== BED12Fields.length + this.#customFields.length) {
-                throw new Error(`BED file error: unexpected number of custom fields. Found ${this.#n_columns} columns 
-                    which is different from the expected ${BED12Fields.length + this.#customFields.length}`);
-            }
-            allFields = BED12Fields.concat(customFieldsWithTypes);
-        } else {
-            if (this.#n_columns - this.#customFields.length >= REQUIRED_COLS) {
-                allFields = BED12Fields.slice(0, this.#n_columns - this.#customFields.length).concat(
-                    customFieldsWithTypes
-                );
-            } else {
-                throw new Error(
-                    `Expected ${
-                        REQUIRED_COLS + this.#customFields.length
-                    } columns (${REQUIRED_COLS} required columns and ${
-                        this.#customFields.length
-                    } custom columns) but found ${this.#n_columns} columns`
-                );
-            }
-        }
-
-        const fieldDescription = 'custom input'; // A genetic description to satisfy the autoSQL parser
-        const autoSqlFields = allFields
-            .map(fieldInfo => `    ${fieldInfo[0]} ${fieldInfo[1]}; "${fieldDescription}"`)
-            .join('\n');
-
-        return autoSqlFields;
-    }
-}
-/**
- * Used in BedParser to associate column names with data types
- */
-type FieldInfo = [type: string, fieldName: string];
 
 // promises indexed by urls
 const bedFiles: Map<string, BedFile> = new Map();
-
-type BedFileOptions = {
-    sampleLength: number;
-    customFields?: string[];
-};
-
-/**
- * All data stored in each BED file eventually gets put into this
- */
-type BedRecord = {
-    chrom: string;
-    chromStart: number;
-    chromEnd: number;
-    name?: string;
-    score?: number;
-    strand?: string;
-    thickStart?: number;
-    thickEnd?: number;
-    itemRgb?: string;
-    blockCount?: number;
-    blockSizes?: number;
-    blockStarts?: number;
-    [customField: string]: string | number | undefined;
-};
-
-export type BedTile = BedRecord;
 
 /**
  * Object to store tile data. Each key a string which contains the coordinates of the tile
@@ -334,7 +201,7 @@ const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
     const minX = source.tilesetInfo.min_pos[0] + x * tileWidth;
     const maxX = source.tilesetInfo.min_pos[0] + (x + 1) * tileWidth;
 
-    const recordPromises = await source.file.getTileData(minX, maxX, (bedRecord: BedRecord) => {
+    const recordPromises = await source.file.getTileData(minX, maxX, (bedRecord: BedTile) => {
         tileValues[CACHE_KEY] = tileValues[CACHE_KEY].concat([bedRecord]);
     });
 
