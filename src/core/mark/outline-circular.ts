@@ -3,15 +3,8 @@ import { IsChannelDeep } from '../gosling.schema.guards';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
 import type { CompleteThemeDeep } from '../utils/theme';
-import type { Tile } from '../../gosling-track/gosling-track';
 
-export function drawCircularOutlines(
-    HGC: import('@higlass/types').HGC,
-    trackInfo: any,
-    tile: Tile,
-    tm: GoslingTrackModel,
-    theme: Required<CompleteThemeDeep>
-) {
+export function drawCircularOutlines(trackInfo: any, tm: GoslingTrackModel, theme: Required<CompleteThemeDeep>) {
     /* track spec */
     const spec = tm.spec();
 

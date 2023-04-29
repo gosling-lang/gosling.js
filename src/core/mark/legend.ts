@@ -6,6 +6,7 @@ import type { Dimension } from '../utils/position';
 import { scaleLinear, type ScaleLinear } from 'd3-scale';
 import { getTextStyle } from '../utils/text-style';
 import type { DisplayedLegend } from 'src/gosling-track/gosling-track';
+import type { SubjectPosition, D3DragEvent } from 'd3-drag';
 
 // Just the libraries necesssary fro this module
 type Libraries = Pick<typeof import('@higlass/libraries'), 'PIXI' | 'd3Selection' | 'd3Drag'>;
@@ -209,12 +210,12 @@ export function drawColorLegendQuantitative(
         .call(
             HGC.libraries.d3Drag
                 .drag<Element, Datum>()
-                .on('start', () => {
-                    trackInfo.startEvent = HGC.libraries.d3Selection.event.sourceEvent;
+                .on('start', (event: D3DragEvent<SVGElement, Datum, SubjectPosition>) => {
+                    trackInfo.startEvent = event.sourceEvent;
                 })
-                .on('drag', d => {
+                .on('drag', (event: D3DragEvent<SVGElement, Datum, SubjectPosition>, d: Datum) => {
                     if (channel && channel.scaleOffset) {
-                        const endEvent = HGC.libraries.d3Selection.event.sourceEvent;
+                        const endEvent = event.sourceEvent;
                         const diffY = trackInfo.startEvent.clientY - endEvent.clientY;
                         const newScaleOffset = [channel.scaleOffset[0], channel.scaleOffset[1]];
                         if (d.id === 0) {
@@ -227,7 +228,7 @@ export function drawColorLegendQuantitative(
                         trackInfo.updateScaleOffsetFromOriginalSpec(spec._renderingId, newScaleOffset, channelKey);
                         trackInfo.shareScaleOffsetAcrossTracksAndTiles(newScaleOffset, channelKey);
                         trackInfo.draw();
-                        trackInfo.startEvent = HGC.libraries.d3Selection.event.sourceEvent;
+                        trackInfo.startEvent = event.sourceEvent;
                     }
                 })
         );

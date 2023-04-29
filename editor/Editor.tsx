@@ -6,7 +6,7 @@ import gfm from 'remark-gfm';
 import PubSub from 'pubsub-js';
 import fetchJsonp from 'fetch-jsonp';
 import { drag as d3Drag } from 'd3-drag';
-import { event as d3Event } from 'd3-selection';
+import type * as D3Drag from 'd3-drag';
 import { select as d3Select } from 'd3-selection';
 import stringify from 'json-stringify-pretty-compact';
 import _SplitPane, { type SplitPaneProps } from 'react-split-pane';
@@ -642,20 +642,26 @@ function Editor(props: RouteComponentProps) {
     }
 
     // Set up the d3-drag handler functions (started, ended, dragged).
-    const started = useCallback(() => {
-        if (!hideDescription) {
-            // Drag is enabled only when the description panel is visible
-            dragX.current = d3Event.sourceEvent.clientX;
-            setIsDescResizing(true);
-        }
-    }, [dragX, descPanelWidth]);
+    const started = useCallback(
+        (event: D3Drag.D3DragEvent<SVGElement, undefined, D3Drag.SubjectPosition>) => {
+            if (!hideDescription) {
+                // Drag is enabled only when the description panel is visible
+                dragX.current = event.sourceEvent.clientX;
+                setIsDescResizing(true);
+            }
+        },
+        [dragX, descPanelWidth]
+    );
 
-    const dragged = useCallback(() => {
-        if (dragX.current) {
-            const diff = d3Event.sourceEvent.clientX - dragX.current;
-            setDescPanelWidth(descPanelWidth - diff);
-        }
-    }, [dragX, descPanelWidth]);
+    const dragged = useCallback(
+        (event: D3Drag.D3DragEvent<SVGElement, undefined, D3Drag.SubjectPosition>) => {
+            if (dragX.current) {
+                const diff = event.sourceEvent.clientX - dragX.current;
+                setDescPanelWidth(descPanelWidth - diff);
+            }
+        },
+        [dragX, descPanelWidth]
+    );
 
     const ended = useCallback(() => {
         dragX.current = null;
