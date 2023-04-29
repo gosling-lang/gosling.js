@@ -54,7 +54,6 @@ export class BedParser {
         let parser: BED;
         if (this.#customFields) {
             const customAutoSqlSchema = this.constructBedAutoSql();
-            console.warn(customAutoSqlSchema);
             parser = new BED({ autoSql: customAutoSqlSchema });
         } else {
             parser = new BED({ autoSql: DEFAULT_BED_SCHEMA });

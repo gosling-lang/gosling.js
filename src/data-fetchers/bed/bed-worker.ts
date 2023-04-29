@@ -10,7 +10,7 @@ import type { TilesetInfo } from '@higlass/types';
 import type { ChromSizes } from '@gosling.schema';
 import { DataSource, RemoteFile } from '../utils';
 import type { EmptyTile, BedTile } from './shared-types';
-import BedParser from './parser';
+import BedParser from './bed-parser';
 
 export type BedFileOptions = {
     sampleLength: number;
@@ -81,7 +81,6 @@ export class BedFile {
             });
             if (n_cols > 0) break;
         }
-        console.warn('columns', n_cols);
         return n_cols;
     }
     /**
@@ -160,7 +159,6 @@ function init(
     chromSizes: ChromSizes,
     options: Partial<BedFileOptions> = {}
 ) {
-    console.warn('bed init called');
     let bedFile = bedFiles.get(bed.url);
     if (!bedFile) {
         bedFile = BedFile.fromUrl(bed.url, bed.indexUrl, uid);
@@ -184,7 +182,6 @@ const tilesetInfo = (uid: string) => {
  * @param x A number which is the x coordinate of the tile
  */
 const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
-    console.warn('bed tile called');
     const source = dataSources.get(uid)!;
     // const parseLine = await source.file.getParser();
 
@@ -209,7 +206,6 @@ const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
 };
 
 const fetchTilesDebounced = async (uid: string, tileIds: string[]) => {
-    console.warn('fetch tiles debounced called');
     const tiles: Record<string, EmptyTile> = {};
     const validTileIds: string[] = [];
     const tilePromises: Promise<void[]>[] = [];
