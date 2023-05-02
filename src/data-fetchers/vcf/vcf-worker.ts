@@ -2,7 +2,6 @@
  * This document is heavily based on the following repo by @alexander-veit:
  * https://github.com/dbmi-bgm/higlass-sv/blob/main/src/sv-fetcher-worker.js
  */
-import VCF from '@gmod/vcf';
 import { TabixIndexedFile } from '@gmod/tabix';
 import { expose, Transfer } from 'threads/worker';
 import { sampleSize } from 'lodash-es';
@@ -11,8 +10,8 @@ import { DataSource, RemoteFile } from '../utils';
 
 import type { TilesetInfo } from '@higlass/types';
 import type { ChromSizes } from '@gosling.schema';
-import { recordToTile } from './utils';
-import type { VcfRecord, VcfTile } from './vcf-data-fetcher';
+import type { VcfTile } from './vcf-data-fetcher';
+import VcfParser from './vcf-parser';
 
 // promises indexed by urls
 const vcfFiles: Map<string, VcfFile> = new Map();
@@ -111,28 +110,6 @@ class VcfFile {
             }
         });
         return recordPromises;
-    }
-}
-
-/**
- * Used by VcfFile to parse lines of VCF file
- */
-class VcfParser {
-    #header: string;
-
-    constructor(header: string) {
-        this.#header = header;
-    }
-
-    getParser() {
-        const parser = new VCF({ header: this.#header });
-
-        const parseLine = (line: string, chromStart: number, prevPos?: number) => {
-            const vcfRecord: VcfRecord = parser.parseLine(line);
-            const vcfTile = recordToTile(vcfRecord, chromStart, prevPos);
-            return vcfTile;
-        };
-        return parseLine;
     }
 }
 
