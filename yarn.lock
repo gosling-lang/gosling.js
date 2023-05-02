@@ -914,7 +914,7 @@
   dependencies:
     "@types/d3-selection" "^2"
 
-"@types/d3-dsv@*":
+"@types/d3-dsv@*", "@types/d3-dsv@^3.0.1":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@types/d3-dsv/-/d3-dsv-3.0.1.tgz#c51a3505cee42653454b74a00f8713dc3548c362"
   integrity sha512-76pBHCMTvPLt44wFOieouXcGXWOF0AJCceUvaFkxSZEu4VDUdv93JfpMa6VGNFs01FHfuP4a5Ou68eRG1KBfTw==

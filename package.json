@@ -91,6 +91,7 @@
         "@testing-library/react": "^10.4.8",
         "@testing-library/user-event": "^12.1.1",
         "@types/d3-drag": "^2.0.0",
+        "@types/d3-dsv": "^3.0.1",
         "@types/d3-request": "^1.0.6",
         "@types/d3-selection": "^2.0.0",
         "@types/lodash-es": "^4.17.5",
