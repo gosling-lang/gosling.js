@@ -1,4 +1,4 @@
-import { dsvFormat as d3dsvFormat } from 'd3-dsv';
+import { dsvFormat as d3dsvFormat, type DSVRowString } from 'd3-dsv';
 import { computeChromSizes } from '../../core/utils/assembly';
 import { sampleSize } from 'lodash-es';
 import type { Assembly, CsvData, FilterTransform, Datum } from '@gosling.schema';
@@ -50,7 +50,7 @@ export class CsvDataFetcherClass {
 
     #dataPromise: Promise<void> | undefined;
     #chromSizes: ChromSizes;
-    #parsedData!: { [k: string]: string | number }[]; // Either set in the constructor or in #fetchCsv()
+    #parsedData!: DSVRowString<string>[]; // Either set in the constructor or in #fetchCsv()
     #assembly: Assembly;
     #filter: FilterTransform[] | undefined;
 
@@ -81,62 +81,27 @@ export class CsvDataFetcherClass {
             const response = await fetch(url);
             const text = await (response.ok ? response.text() : Promise.reject(response.status));
             const textWithHeader = headerNames ? `${headerNames.join(separator)}\n${text}` : text;
-            const json = d3dsvFormat(separator).parse(textWithHeader, (row: any) => {
-                let successfullyGotChrInfo = true;
 
-                // !!! Experimental
-                if (genomicFieldsToConvert) {
-                    // This spec is used when multiple chromosomes are stored in a single row
-                    genomicFieldsToConvert.forEach(chromMap => {
-                        const genomicFields_1 = chromMap.genomicFields;
-                        const chromName = row[chromMap.chromosomeField];
+            const parsedCSV = d3dsvFormat(separator).parse(textWithHeader, (row: DSVRowString<string>) =>
+                this.#processCsvRow(row, genomicFieldsToConvert, chromosomeField, genomicFields)
+            );
 
-                        genomicFields_1.forEach((positionCol: string) => {
-                            const chromPosition = row[positionCol];
-                            try {
-                                row[positionCol] = this.#calcCumulativePos(chromName, chromPosition);
-                            } catch (e) {
-                                // genomic position did not parse properly
-                                successfullyGotChrInfo = false;
-                            }
-                        });
-                    });
-                } else if (chromosomeField && genomicFields) {
-                    genomicFields.forEach((positionCol_1: string) => {
-                        if (!row[chromosomeField]) {
-                            // TODO:
-                            return;
-                        }
-                        const chromPosition_1 = row[positionCol_1];
-                        const chromName_1 = row[chromosomeField];
-                        try {
-                            row[positionCol_1] = this.#calcCumulativePos(chromName_1, chromPosition_1);
-                        } catch (e_1) {
-                            successfullyGotChrInfo = false;
-                        }
-                    });
-                }
-                // store row only when chromosome information is correctly parsed
-                if (!successfullyGotChrInfo) return undefined;
-
-                return row;
-            });
-            if (longToWideId && json[0]?.[longToWideId]) {
+            if (longToWideId && parsedCSV[0]?.[longToWideId]) {
                 // rows having identical IDs are juxtaposed horizontally
-                const keys = Object.keys(json[0]);
-                const newJson: { [k: string]: { [k_1: string]: string | number } } = {};
-                json.forEach(d => {
-                    if (!newJson[d[longToWideId]]) {
-                        newJson[d[longToWideId]] = JSON.parse(JSON.stringify(d));
+                const columnNames = Object.keys(parsedCSV[0]);
+                const newJson: { [k: string]: DSVRowString<string> } = {};
+                parsedCSV.forEach(row => {
+                    if (!newJson[row[longToWideId] as string]) {
+                        newJson[row[longToWideId] as string] = JSON.parse(JSON.stringify(row));
                     } else {
-                        keys.forEach(k_2 => {
-                            newJson[d[longToWideId]][`${k_2}_2`] = d[k_2];
+                        columnNames.forEach(colName => {
+                            newJson[row[longToWideId] as string][`${colName}_2`] = row[colName];
                         });
                     }
                 });
                 this.#parsedData = Object.keys(newJson).map(k_3 => newJson[k_3]);
             } else {
-                this.#parsedData = json;
+                this.#parsedData = parsedCSV;
             }
         } catch (error) {
             console.error('[Gosling Data Fetcher] Error fetching data', error);
@@ -144,11 +109,51 @@ export class CsvDataFetcherClass {
     }
 
     /**
+     * Function passed into DSV parser to process each row
+     * @param row An object which contains the row information. The keys are the column names
+     * @param genomicFieldsToConvert From data config
+     * @param chromosomeField From data config
+     * @param genomicFields From data config
+     * @returns The processed row
+     */
+    #processCsvRow(
+        row: DSVRowString,
+        genomicFieldsToConvert: CsvData['genomicFieldsToConvert'],
+        chromosomeField: CsvData['chromosomeField'],
+        genomicFields: CsvData['genomicFields']
+    ) {
+        try {
+            if (genomicFieldsToConvert) {
+                // This spec is used when multiple chromosomes are stored in a single row
+                genomicFieldsToConvert.forEach(chromMap => {
+                    const genomicFields_1 = chromMap.genomicFields;
+                    const chromName = row[chromMap.chromosomeField] as string;
+
+                    genomicFields_1.forEach((positionCol: string) => {
+                        const chromPosition = row[positionCol] as string;
+                        row[positionCol] = String(this.#calcCumulativePos(chromName, chromPosition));
+                    });
+                });
+            } else if (chromosomeField && genomicFields) {
+                genomicFields.forEach((positionCol_1: string) => {
+                    const chromPosition_1 = row[positionCol_1] as string;
+                    const chromName_1 = row[chromosomeField] as string;
+                    row[positionCol_1] = String(this.#calcCumulativePos(chromName_1, chromPosition_1));
+                });
+            }
+            return row;
+        } catch {
+            // skip the rows that had errors in them
+            return undefined;
+        }
+    }
+
+    /**
      * Calculates the cumulative chromosome position based on the chromosome name and position
      * @param chromName A string, the name of the chromosome
-     * @param chromPosition A number, the position within the chromosome
+     * @param chromPosition A string, the position within the chromosome
      */
-    #calcCumulativePos(chromName: string, chromPosition: number) {
+    #calcCumulativePos(chromName: string, chromPosition: string) {
         if (this.#assembly !== 'unknown') {
             // This means we need to use the relative position considering the start position of individual chr.
             const chrName = sanitizeChrName(chromName, this.#assembly, this.dataConfig.chromosomePrefix);
