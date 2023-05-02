@@ -21,7 +21,7 @@ export type BedFileOptions = {
  * A class to represent a BED file. It takes care of setting up gmod/tabix.
  */
 export class BedFile {
-    #parseLine?: (line: string, chromStart: number) => BedTile;
+    #parser?: BedParser;
     #customFields?: string[];
     #uid: string;
 
@@ -48,15 +48,14 @@ export class BedFile {
     /**
      * Creates a parser. Parser cannot be created in the constructor because it relies on chromosome information
      * which gets created by DataSource
-     * @returns A function to parse lines of BED files
+     * @returns A BED parser
      */
     async getParser() {
-        if (!this.#parseLine) {
+        if (!this.#parser) {
             const n_columns = this.#customFields ? await this.#calcNColumns() : undefined;
-            const parseLine = await new BedParser(this.#customFields, n_columns).getLineParser();
-            this.#parseLine = parseLine;
+            this.#parser = await new BedParser(this.#customFields, n_columns);
         }
-        return this.#parseLine;
+        return this.#parser;
     }
     /**
      * Function to calculate the number of columns in the BED file. Needed when custom column names are supplied
@@ -92,7 +91,7 @@ export class BedFile {
      */
     async getTileData(minX: number, maxX: number, callback: (bedRecord: BedTile) => unknown) {
         const source = dataSources.get(this.#uid)!;
-        const parseLine = await this.getParser();
+        const parser = await this.getParser();
         const recordPromises: Promise<void>[] = []; // These promises resolve when the data has been retrieved
 
         let curMinX = minX;
@@ -115,7 +114,7 @@ export class BedFile {
                     recordPromises.push(
                         source.file.tbi
                             .getLines(chromName, startPos, endPos, line => {
-                                const bedRecord = parseLine(line, chromStart);
+                                const bedRecord = parser.parseLine(line, chromStart);
                                 callback(bedRecord);
                             })
                             .then(() => {})
@@ -126,7 +125,7 @@ export class BedFile {
                     recordPromises.push(
                         source.file.tbi
                             .getLines(chromName, startPos, endPos, line => {
-                                const bedRecord = parseLine(line, chromStart);
+                                const bedRecord = parser.parseLine(line, chromStart);
                                 callback(bedRecord);
                             })
                             .then(() => {})

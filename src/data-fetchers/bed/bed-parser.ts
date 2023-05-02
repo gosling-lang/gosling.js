@@ -32,6 +32,7 @@ const DEFAULT_BED_SCHEMA = `table defaultBedSchema
 export class BedParser {
     #customFields?: string[];
     #n_columns?: number;
+    #parser: BED;
 
     /**
      * Constructor for BedParser
@@ -41,32 +42,28 @@ export class BedParser {
     constructor(customFields?: string[], n_columns?: number) {
         this.#customFields = customFields;
         this.#n_columns = n_columns;
+        if (this.#customFields) {
+            const customAutoSqlSchema = this.constructBedAutoSql();
+            this.#parser = new BED({ autoSql: customAutoSqlSchema });
+        } else {
+            this.#parser = new BED({ autoSql: DEFAULT_BED_SCHEMA });
+        }
     }
     /**
-     * Creates an instance of gmod/BED and returns a function which can parse a single BED file line
-     * @returns A function to parse a single line of the BED file
+     * Parses a single BED file line
+     * @returns An object which contains the parsed data from the line
      */
-    async getLineParser() {
+    parseLine(line: string, chromStart: number) {
         /** Helper function to calculate cumulative chromosome positions */
         function relativeToCumulative(pos: number, chromStart: number) {
             return chromStart + pos + 1;
         }
-        let parser: BED;
-        if (this.#customFields) {
-            const customAutoSqlSchema = this.constructBedAutoSql();
-            parser = new BED({ autoSql: customAutoSqlSchema });
-        } else {
-            parser = new BED({ autoSql: DEFAULT_BED_SCHEMA });
-        }
-        const lineParser = (line: string, chromStart: number) => {
-            const bedRecord: BedTile = parser.parseLine(line) as BedTile;
-            const fieldsToConvert = ['chromStart', 'chromEnd', 'thickEnd', 'thickStart'];
-            fieldsToConvert.forEach(field => {
-                if (bedRecord[field]) bedRecord[field] = relativeToCumulative(bedRecord[field] as number, chromStart);
-            });
-            return bedRecord;
-        };
-        return lineParser;
+        const bedRecord: BedTile = this.#parser.parseLine(line) as BedTile;
+        const fieldsToConvert = ['chromStart', 'chromEnd', 'thickEnd', 'thickStart'];
+        fieldsToConvert.forEach(field => {
+            if (bedRecord[field]) bedRecord[field] = relativeToCumulative(bedRecord[field] as number, chromStart);
+        });
+        return bedRecord;
     }
     /**
      * Generates an autoSql schema for a BED file that has custom columns
@@ -76,14 +73,14 @@ export class BedParser {
         const AUTO_SQL_HEADER = `table customBedSchema\n"BED12"\n    (\n`;
         const AUTO_SQL_FOOTER = '\n    )';
 
-        const autoSqlFields = this.generateAutoSQLFields();
+        const autoSqlFields = this.#generateAutoSQLFields();
         return String.prototype.concat(AUTO_SQL_HEADER, autoSqlFields, AUTO_SQL_FOOTER);
     }
     /**
      * Generates the fields used in the autoSql schema. For custom column names.
      * @returns A string which is are the fields in the autoSql schema
      */
-    generateAutoSQLFields() {
+    #generateAutoSQLFields() {
         const BED12Fields: FieldInfo[] = [
             ['string', 'chrom'],
             ['uint', 'chromStart'],

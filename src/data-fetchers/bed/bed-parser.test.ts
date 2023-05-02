@@ -2,14 +2,12 @@ import { BedParser } from './bed-parser';
 
 describe('BED parser with default columns', () => {
     const parser = new BedParser();
-    const lineParserPromise = parser.getLineParser();
     const bedLine =
         'chr1\t11868\t14409\tENST00000456328.2\t0\t+\t11868\t11868\t0,0,0\t3\t359,109,1189\t0,744,1352\t14409';
 
     it('can parse a line correctly', () => {
-        lineParserPromise.then(lineParser => {
-            const parsed = lineParser(bedLine, 0);
-            expect(parsed).toMatchInlineSnapshot(`
+        const parsed = parser.parseLine(bedLine, 0);
+        expect(parsed).toMatchInlineSnapshot(`
               {
                 "blockCount": 3,
                 "blockSizes": [
@@ -33,7 +31,6 @@ describe('BED parser with default columns', () => {
                 "thickStart": 11869,
               }
             `);
-        });
     });
 });
 
@@ -43,7 +40,6 @@ describe('BED parser with custom columns', () => {
     const parser = new BedParser(custom_columns, n_columns);
     const bedLine = 'chr1\t11868\t14409\tENST00000456328.2\t0\t+\t11868';
     const bedLineExtraColumn = 'chr1\t11868\t14409\tENST00000456328.2\t0\t+\t11868\t12334';
-    const lineParserPromise = parser.getLineParser();
     const chromStart = 100;
 
     it('can generate autoSql schema', () => {
@@ -63,9 +59,8 @@ describe('BED parser with custom columns', () => {
         `);
     });
     it('can parse a line correctly', () => {
-        lineParserPromise.then(lineParser => {
-            const parsed = lineParser(bedLine, chromStart);
-            expect(parsed).toMatchInlineSnapshot(`
+        const parsed = parser.parseLine(bedLine, chromStart);
+        expect(parsed).toMatchInlineSnapshot(`
               {
                 "chrom": "chr1",
                 "chromEnd": 14510,
@@ -77,12 +72,10 @@ describe('BED parser with custom columns', () => {
                 "strand": 0,
               }
             `);
-        });
     });
     it('ignores extra columns in a line', () => {
-        lineParserPromise.then(lineParser => {
-            const parsed = lineParser(bedLineExtraColumn, chromStart);
-            expect(parsed).toMatchInlineSnapshot(`
+        const parsed = parser.parseLine(bedLineExtraColumn, chromStart);
+        expect(parsed).toMatchInlineSnapshot(`
               {
                 "chrom": "chr1",
                 "chromEnd": 14510,
@@ -94,6 +87,5 @@ describe('BED parser with custom columns', () => {
                 "strand": 0,
               }
             `);
-        });
     });
 });
