@@ -3,6 +3,7 @@
  * https://github.com/dbmi-bgm/higlass-sv/blob/main/src/sv-fetcher-worker.js
  */
 import { TabixIndexedFile } from '@gmod/tabix';
+import VCF from '@gmod/vcf';
 import { expose, Transfer } from 'threads/worker';
 import { sampleSize } from 'lodash-es';
 
@@ -11,7 +12,7 @@ import { DataSource, RemoteFile } from '../utils';
 import type { TilesetInfo } from '@higlass/types';
 import type { ChromSizes } from '@gosling.schema';
 import type { VcfTile } from './vcf-data-fetcher';
-import VcfParser from './vcf-parser';
+import { recordToTile } from './utils';
 
 // promises indexed by urls
 const vcfFiles: Map<string, VcfFile> = new Map();
@@ -24,7 +25,7 @@ type VcfFileOptions = {
  * This is a class to represent a VCF file.
  */
 class VcfFile {
-    #parseLine?: ReturnType<VcfParser['getParser']>;
+    #parser?: VCF;
     #uid: string;
     constructor(public tbi: TabixIndexedFile, uid: string) {
         this.#uid = uid;
@@ -44,14 +45,14 @@ class VcfFile {
         return new VcfFile(tbi, uid);
     }
     /**
-     * Creates the parser used for the BED file.
+     * Creates the parser used for the VCF file.
      */
     async getParser() {
-        if (!this.#parseLine) {
+        if (!this.#parser) {
             const header = await this.tbi.getHeader();
-            this.#parseLine = new VcfParser(header).getParser();
+            this.#parser = new VCF({ header });
         }
-        return this.#parseLine;
+        return this.#parser;
     }
     /**
      * Retrieves data within a certain coordinate range
@@ -62,7 +63,7 @@ class VcfFile {
      */
     async getTileData(minX: number, maxX: number, callback: (tileRecord: VcfTile) => unknown) {
         const source = dataSources.get(this.#uid)!;
-        const parseLine = await this.getParser();
+        const parser = await this.getParser();
 
         let curMinX = minX;
         const { chromLengths, cumPositions } = source.chromInfo;
@@ -85,9 +86,10 @@ class VcfFile {
                     recordPromises.push(
                         source.file.tbi
                             .getLines(chromName, startPos, endPos, line => {
-                                const tileRecord = parseLine(line, chromStart, prevPOS);
-                                prevPOS = tileRecord.POS;
-                                callback(tileRecord);
+                                const vcfRecord = parser.parseLine(line);
+                                const vcfTile = recordToTile(vcfRecord, chromStart, prevPOS);
+                                prevPOS = vcfTile.POS;
+                                callback(vcfTile);
                             })
                             .then(() => {})
                     );
@@ -97,9 +99,10 @@ class VcfFile {
                     recordPromises.push(
                         source.file.tbi
                             .getLines(chromName, startPos, endPos, line => {
-                                const tileRecord = parseLine(line, chromStart, prevPOS);
-                                prevPOS = tileRecord.POS;
-                                callback(tileRecord);
+                                const vcfRecord = parser.parseLine(line);
+                                const vcfTile = recordToTile(vcfRecord, chromStart, prevPOS);
+                                prevPOS = vcfTile.POS;
+                                callback(vcfTile);
                             })
                             .then(() => {})
                     );
