@@ -1,5 +1,5 @@
 import BED from '@gmod/bed';
-import type { BedTile } from './shared-types';
+import type { BedTile } from './bed-worker';
 
 /**
  * Used in BedParser to associate column names with data types
