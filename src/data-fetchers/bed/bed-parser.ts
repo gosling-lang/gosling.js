@@ -102,20 +102,22 @@ export class BedParser {
 
         let allFields: FieldInfo[];
         const REQUIRED_COLS = 3;
-        if(this.#n_columns - this.#customFields.length < REQUIRED_COLS) {
+        if (this.#n_columns > BED12Fields.length) {
+            // BED12+m so we just want to concat on the extra fields.
+            // But first we make sure that we have the expected number of columns.
+            if (this.#n_columns !== BED12Fields.length + this.#customFields.length) {
+                throw new Error(`BED file error: unexpected number of custom fields. Found ${this.#n_columns} columns 
+                    which is different from the expected ${BED12Fields.length + this.#customFields.length}`);
+            }
+            allFields = BED12Fields.concat(customFieldsWithTypes);
+        } else if (this.#n_columns >= REQUIRED_COLS + this.#customFields.length) {
+            // BEDn or BEDn+. We make sure that the required columns are not removed when we do the slice.
+            allFields = BED12Fields.slice(0, this.#n_columns - this.#customFields.length).concat(customFieldsWithTypes);
+        } else {
             throw new Error(
-                `Expected ${
-                    REQUIRED_COLS + this.#customFields.length
-                } columns (${REQUIRED_COLS} required columns and ${
+                `Expected ${REQUIRED_COLS + this.#customFields.length} columns (${REQUIRED_COLS} required columns and ${
                     this.#customFields.length
                 } custom columns) but found ${this.#n_columns} columns`
-            );
-        } else if(this.#n_columns !== BED12Fields.length + this.#customFields.length) {
-            throw new Error(`BED file error: unexpected number of custom fields. Found ${this.#n_columns} columns 
-                    which is different from the expected ${BED12Fields.length + this.#customFields.length}`);
-        } else {
-            allFields = BED12Fields.slice(0, this.#n_columns - this.#customFields.length).concat(
-                customFieldsWithTypes
             );
         }
 
