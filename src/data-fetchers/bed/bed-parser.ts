@@ -102,26 +102,21 @@ export class BedParser {
 
         let allFields: FieldInfo[];
         const REQUIRED_COLS = 3;
-        if (this.#n_columns > BED12Fields.length) {
-            if (this.#n_columns !== BED12Fields.length + this.#customFields.length) {
-                throw new Error(`BED file error: unexpected number of custom fields. Found ${this.#n_columns} columns 
+        if(this.#n_columns - this.#customFields.length < REQUIRED_COLS) {
+            throw new Error(
+                `Expected ${
+                    REQUIRED_COLS + this.#customFields.length
+                } columns (${REQUIRED_COLS} required columns and ${
+                    this.#customFields.length
+                } custom columns) but found ${this.#n_columns} columns`
+            );
+        } else if(this.#n_columns !== BED12Fields.length + this.#customFields.length) {
+            throw new Error(`BED file error: unexpected number of custom fields. Found ${this.#n_columns} columns 
                     which is different from the expected ${BED12Fields.length + this.#customFields.length}`);
-            }
-            allFields = BED12Fields.concat(customFieldsWithTypes);
         } else {
-            if (this.#n_columns - this.#customFields.length >= REQUIRED_COLS) {
-                allFields = BED12Fields.slice(0, this.#n_columns - this.#customFields.length).concat(
-                    customFieldsWithTypes
-                );
-            } else {
-                throw new Error(
-                    `Expected ${
-                        REQUIRED_COLS + this.#customFields.length
-                    } columns (${REQUIRED_COLS} required columns and ${
-                        this.#customFields.length
-                    } custom columns) but found ${this.#n_columns} columns`
-                );
-            }
+            allFields = BED12Fields.slice(0, this.#n_columns - this.#customFields.length).concat(
+                customFieldsWithTypes
+            );
         }
 
         const fieldDescription = 'custom input'; // A genetic description to satisfy the autoSQL parser
