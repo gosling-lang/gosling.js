@@ -105,7 +105,7 @@ const bedFiles: Map<string, GffFile> = new Map();
 /**
  * Object to store tile data. Each key a string which contains the coordinates of the tile
  */
-const tileValues: Record<string, GffFile[]> = {};
+const tileValues: Record<string, GffTile[]> = {};
 /**
  * Maps from UID to Bed File info
  */
@@ -193,7 +193,7 @@ const fetchTilesDebounced = async (uid: string, tileIds: string[]) => {
  * @returns A transferable buffer
  */
 const getTabularData = (uid: string, tileIds: string[]) => {
-    const data: BedTile[][] = [];
+    const data: GffTile[][] = [];
 
     tileIds.forEach(tileId => {
         const parts = tileId.split('.');
