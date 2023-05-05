@@ -515,6 +515,9 @@
         },
         {
           "$ref": "#/definitions/VcfData"
+        },
+        {
+          "$ref": "#/definitions/GffData"
         }
       ]
     },
@@ -994,6 +997,34 @@
         "startField",
         "endField",
         "newField"
+      ],
+      "type": "object"
+    },
+    "GffData": {
+      "additionalProperties": false,
+      "description": "Generic Feature Format Version 3 (GFF3) format data. It parses files that follow the [GFF3 specification](https://github.com/The-Sequence-Ontology/Specifications/blob/master/gff3.md).",
+      "properties": {
+        "indexUrl": {
+          "description": "URL link to the tabix index file",
+          "type": "string"
+        },
+        "sampleLength": {
+          "description": "The maximum number of rows to be loaded from the URL. __Default:__ `1000`",
+          "type": "number"
+        },
+        "type": {
+          "const": "gff",
+          "type": "string"
+        },
+        "url": {
+          "description": "URL link to the VCF file",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "url",
+        "indexUrl"
       ],
       "type": "object"
     },

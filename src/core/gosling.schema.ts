@@ -808,7 +808,8 @@ export type DataDeep =
     | VectorData
     | MatrixData
     | BamData
-    | VcfData;
+    | VcfData
+    | GffData;
 
 /** Values in the form of JSON. */
 export interface Datum {
@@ -1072,6 +1073,22 @@ export interface BamData {
 
     /** Determines the threshold of insert sizes for determining the structural variants. __Default__: `5000` */
     maxInsertSize?: number; // https://github.com/GMOD/bam-js#async-getrecordsforrangerefname-start-end-opts
+}
+
+/**
+ * Generic Feature Format Version 3 (GFF3) format data. It parses files that follow the
+ * [GFF3 specification](https://github.com/The-Sequence-Ontology/Specifications/blob/master/gff3.md).
+ */
+export interface GffData {
+    type: 'gff';
+    /** URL link to the VCF file */
+    url: string;
+
+    /** URL link to the tabix index file */
+    indexUrl: string;
+
+    /** The maximum number of rows to be loaded from the URL. __Default:__ `1000` */
+    sampleLength?: number;
 }
 
 /**
