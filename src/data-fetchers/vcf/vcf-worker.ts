@@ -61,58 +61,60 @@ class VcfFile {
      * @param callback A callback function which receives the VCF tile
      * @returns A promise of array of promises which resolve when the data has been successfully retrieved
      */
-    async getTileData(minX: number, maxX: number, callback: (tileRecord: VcfTile) => unknown) {
+    async getTileData(minX: number, maxX: number): Promise<VcfTile[]> {
         const source = dataSources.get(this.#uid)!;
         const parser = await this.getParser();
 
         let curMinX = minX;
         const { chromLengths, cumPositions } = source.chromInfo;
-        const recordPromises: Promise<void>[] = [];
+        const recordPromises: Promise<VcfTile[]>[] = [];
 
-        cumPositions.forEach(cumPos => {
+        for (const cumPos of cumPositions) {
             const chromName = cumPos.chr;
             const chromStart = cumPos.pos;
             const chromEnd = cumPos.pos + chromLengths[chromName];
             let startPos, endPos;
-            if (chromStart <= curMinX && curMinX < chromEnd) {
-                // start of the visible region is within this chromosome
-                let prevPOS: number | undefined;
-                if (maxX > chromEnd) {
-                    // the visible region extends beyond the end of this chromosome
-                    // fetch from the start until the end of the chromosome
 
+            // Early break, rather than creating an nested if
+            if (chromStart > curMinX || curMinX >= chromEnd) {
+                continue;
+            }
+
+            // start of the visible region is within this chromosome
+            let prevPOS: number | undefined;
+            const tilesPromise = new Promise<VcfTile[]>(resolve => {
+                const tiles: VcfTile[] = [];
+                const lineCallback = (line: string) => {
+                    const vcfRecord = parser.parseLine(line);
+                    const vcfTile = recordToTile(vcfRecord, chromStart, prevPOS);
+                    prevPOS = vcfTile.POS;
+                    tiles.push(vcfTile);
+                };
+
+                if (maxX > chromEnd) {
                     startPos = curMinX - chromStart;
                     endPos = chromEnd - chromStart;
-                    recordPromises.push(
-                        source.file.tbi
-                            .getLines(chromName, startPos, endPos, line => {
-                                const vcfRecord = parser.parseLine(line);
-                                const vcfTile = recordToTile(vcfRecord, chromStart, prevPOS);
-                                prevPOS = vcfTile.POS;
-                                callback(vcfTile);
-                            })
-                            .then(() => {})
-                    );
                 } else {
                     startPos = Math.floor(curMinX - chromStart);
                     endPos = Math.ceil(maxX - chromStart);
-                    recordPromises.push(
-                        source.file.tbi
-                            .getLines(chromName, startPos, endPos, line => {
-                                const vcfRecord = parser.parseLine(line);
-                                const vcfTile = recordToTile(vcfRecord, chromStart, prevPOS);
-                                prevPOS = vcfTile.POS;
-                                callback(vcfTile);
-                            })
-                            .then(() => {})
-                    );
-                    return;
                 }
 
-                curMinX = chromEnd;
+                source.file.tbi.getLines(chromName, startPos, endPos, lineCallback).then(() => {
+                    resolve(tiles);
+                });
+            });
+
+            recordPromises.push(tilesPromise);
+
+            if (maxX <= chromEnd) {
+                continue;
             }
-        });
-        return recordPromises;
+
+            curMinX = chromEnd;
+        }
+
+        const tileArrays = await Promise.all(recordPromises);
+        return tileArrays.flat();
     }
 }
 
@@ -149,7 +151,7 @@ const tilesetInfo = (uid: string) => {
  * @param z A number which is the z coordinate of the tile
  * @param x A number which is the x coordinate of the tile
  */
-const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
+const tile = async (uid: string, z: number, x: number): Promise<VcfTile[]> => {
     const source = dataSources.get(uid)!;
     const CACHE_KEY = `${uid}.${z}.${x}`;
 
@@ -163,17 +165,15 @@ const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
     const minX = source.tilesetInfo.min_pos[0] + x * tileWidth;
     const maxX = source.tilesetInfo.min_pos[0] + (x + 1) * tileWidth;
 
-    const recordPromises = await source.file.getTileData(minX, maxX, (vcfTile: VcfTile) => {
-        tileValues[CACHE_KEY] = tileValues[CACHE_KEY].concat([vcfTile]);
-    });
+    tileValues[CACHE_KEY] = await source.file.getTileData(minX, maxX);
 
-    return Promise.all(recordPromises);
+    return tileValues[CACHE_KEY];
 };
 
 const fetchTilesDebounced = async (uid: string, tileIds: string[]) => {
     const tiles: Record<string, VcfTile> = {};
     const validTileIds: string[] = [];
-    const tilePromises: Promise<void[]>[] = [];
+    const tilePromises: Promise<VcfTile[]>[] = [];
 
     for (const tileId of tileIds) {
         const parts = tileId.split('.');
