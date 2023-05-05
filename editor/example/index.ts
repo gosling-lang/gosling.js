@@ -51,6 +51,9 @@ import { spec as JSON_SPEC_CORCES_ET_AL } from './spec/corces';
 import JS_SPEC_BASIC_SEMANTIC_ZOOM from './spec/basic-semantic-zoom?raw';
 import { spec as JSON_SPEC_BASIC_SEMANTIC_ZOOM } from './spec/basic-semantic-zoom';
 
+import JS_SPEC_ISLANDVIEWER from './spec/islandviewer?raw';
+import { spec as JSON_SPEC_ISLANDVIEWER } from './spec/islandviewer';
+
 export type ExampleGroup =
     | 'Visual Encoding'
     | 'Mouse Events'
@@ -360,6 +363,14 @@ export const examples: {
         spec: EX_SPEC_TEMPLATE,
         underDevelopment: true,
         image: THUMBNAILS.TEMPLATE
+    },
+    ISLANDVIEWER: {
+        group: 'Applications',
+        name: 'IslandViewer (Bertelli et al. 2017)',
+        spec: JSON_SPEC_ISLANDVIEWER,
+        specJs: JS_SPEC_ISLANDVIEWER,
+        underDevelopment: true,
+        image: THUMBNAILS.ISLANDVIEWER
     },
     // Followings are doc examples that are only accessible via URLs using the key, such as
     // https://gosling.js.org/?example=doc_area
