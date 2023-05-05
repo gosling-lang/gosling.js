@@ -9,13 +9,35 @@ import { sampleSize } from 'lodash-es';
 import type { TilesetInfo } from '@higlass/types';
 import type { ChromSizes } from '@gosling.schema';
 import { DataSource, RemoteFile } from '../utils';
-import type { EmptyTile, BedTile } from './shared-types';
 import BedParser from './bed-parser';
 
 export type BedFileOptions = {
     sampleLength: number;
     customFields?: string[];
 };
+
+/**
+ * All data stored in each BED file eventually gets put into this
+ */
+export interface BedTile {
+    chrom: string;
+    chromStart: number;
+    chromEnd: number;
+    name?: string;
+    score?: number;
+    strand?: string;
+    thickStart?: number;
+    thickEnd?: number;
+    itemRgb?: string;
+    blockCount?: number;
+    blockSizes?: number[];
+    blockStarts?: number[];
+    [customField: string]: string | number | number[] | undefined;
+}
+
+export interface EmptyTile {
+    tilePositionId: string;
+}
 
 /**
  * A class to represent a BED file. It takes care of setting up gmod/tabix.
@@ -89,54 +111,55 @@ export class BedFile {
      * @param callback A callback function which takes in parsed BED file data record
      * @returns A promise of array of promises which resolve when the data has been successfully retrieved
      */
-    async getTileData(minX: number, maxX: number, callback: (bedRecord: BedTile) => unknown) {
+    async getTileData(minX: number, maxX: number): Promise<BedTile[]> {
         const source = dataSources.get(this.#uid)!;
         const parser = await this.getParser();
-        const recordPromises: Promise<void>[] = []; // These promises resolve when the data has been retrieved
-
         let curMinX = minX;
-
         const { chromLengths, cumPositions } = source.chromInfo;
+        const allTiles: Promise<BedTile[]>[] = [];
 
-        cumPositions.forEach(cumPos => {
+        for (const cumPos of cumPositions) {
             const chromName = cumPos.chr;
             const chromStart = cumPos.pos;
             const chromEnd = cumPos.pos + chromLengths[chromName];
-
             let startPos, endPos;
-            if (chromStart <= curMinX && curMinX < chromEnd) {
-                if (maxX > chromEnd) {
-                    // the visible region extends beyond the end of this chromosome
-                    // fetch from the start until the end of the chromosome
 
+            // Early break, rather than creating an nested if
+            if (chromStart > curMinX || curMinX >= chromEnd) {
+                continue;
+            }
+
+            const tilesPromise = new Promise<BedTile[]>(resolve => {
+                const tiles: BedTile[] = [];
+                const lineCallback = (line: string) => {
+                    const bedTile = parser.parseLine(line, chromStart);
+                    tiles.push(bedTile);
+                };
+
+                if (maxX > chromEnd) {
                     startPos = curMinX - chromStart;
                     endPos = chromEnd - chromStart;
-                    recordPromises.push(
-                        source.file.tbi
-                            .getLines(chromName, startPos, endPos, line => {
-                                const bedRecord = parser.parseLine(line, chromStart);
-                                callback(bedRecord);
-                            })
-                            .then(() => {})
-                    );
                 } else {
                     startPos = Math.floor(curMinX - chromStart);
                     endPos = Math.ceil(maxX - chromStart);
-                    recordPromises.push(
-                        source.file.tbi
-                            .getLines(chromName, startPos, endPos, line => {
-                                const bedRecord = parser.parseLine(line, chromStart);
-                                callback(bedRecord);
-                            })
-                            .then(() => {})
-                    );
-                    return;
                 }
 
-                curMinX = chromEnd;
+                source.file.tbi.getLines(chromName, startPos, endPos, lineCallback).then(() => {
+                    resolve(tiles);
+                });
+            });
+
+            allTiles.push(tilesPromise);
+
+            if (maxX <= chromEnd) {
+                continue;
             }
-        });
-        return recordPromises;
+
+            curMinX = chromEnd;
+        }
+
+        const tileArrays = await Promise.all(allTiles);
+        return tileArrays.flat();
     }
 }
 
@@ -180,7 +203,7 @@ const tilesetInfo = (uid: string) => {
  * @param z A number which is the z coordinate of the tile
  * @param x A number which is the x coordinate of the tile
  */
-const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
+const tile = async (uid: string, z: number, x: number): Promise<BedTile[]> => {
     const source = dataSources.get(uid)!;
     // const parseLine = await source.file.getParser();
 
@@ -197,17 +220,15 @@ const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
     const minX = source.tilesetInfo.min_pos[0] + x * tileWidth;
     const maxX = source.tilesetInfo.min_pos[0] + (x + 1) * tileWidth;
 
-    const recordPromises = await source.file.getTileData(minX, maxX, (bedRecord: BedTile) => {
-        tileValues[CACHE_KEY] = tileValues[CACHE_KEY].concat([bedRecord]);
-    });
+    tileValues[CACHE_KEY] = await source.file.getTileData(minX, maxX);
 
-    return Promise.all(recordPromises);
+    return tileValues[CACHE_KEY];
 };
 
 const fetchTilesDebounced = async (uid: string, tileIds: string[]) => {
     const tiles: Record<string, EmptyTile> = {};
     const validTileIds: string[] = [];
-    const tilePromises: Promise<void[]>[] = [];
+    const tilePromises: Promise<BedTile[]>[] = [];
 
     for (const tileId of tileIds) {
         const parts = tileId.split('.');

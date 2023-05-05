@@ -10,8 +10,8 @@ import { computeChromSizes } from '../../core/utils/assembly';
 import type { ModuleThread } from 'threads';
 import type { Assembly, BedData } from '../../core/gosling.schema';
 import type { WorkerApi, TilesetInfo } from './bed-worker';
+import type { BedTile, EmptyTile } from './bed-worker';
 import type { TabularDataFetcher } from '../utils';
-import type { BedTile, EmptyTile } from './shared-types';
 
 const DEBOUNCE_TIME = 200;
 
@@ -65,7 +65,11 @@ class BedDataFetcher implements TabularDataFetcher<BedTile> {
     async sendFetch(receivedTiles: (tiles: Record<string, EmptyTile>) => void, tileIds: string[]) {
         (await this.worker).fetchTilesDebounced(this.uid, tileIds).then(receivedTiles);
     }
-
+    /**
+     * Called by GoslingTrack. This is how the track gets data
+     * @param tileIds The position of the tile
+     * @returns A promise to the BedTiles
+     */
     async getTabularData(tileIds: string[]): Promise<BedTile[]> {
         const buf = await (await this.worker).getTabularData(this.uid, tileIds);
         const parsed = JSON.parse(new TextDecoder().decode(buf));
