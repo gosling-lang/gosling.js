@@ -1,20 +1,18 @@
 import { TabixIndexedFile } from '@gmod/tabix';
 import GFF from '@gmod/gff';
+import type { GFF3FeatureLine } from '@gmod/gff';
 import { expose, Transfer } from 'threads/worker';
-import { sampleSize } from 'lodash-es';
+// import { sampleSize } from 'lodash-es';
 import type { TilesetInfo } from '@higlass/types';
 import type { ChromSizes } from '@gosling.schema';
 import { DataSource, RemoteFile } from '../utils';
+import { parsedDataToTiles } from './utils';
 
 export type GffFileOptions = {
     sampleLength: number;
 };
 
-export interface GffTile {
-    chrom: string;
-    chromStart: number;
-    chromEnd: number;
-}
+export type GffTile = GFF3FeatureLine;
 
 export interface EmptyTile {
     tilePositionId: string;
@@ -92,10 +90,25 @@ export class GffFile {
             curMinX = chromEnd;
         }
 
-        const allLines = (await Promise.all(linePromises)).flat().join('\n');
-        const arrayOfThings = GFF.parseStringSync('1est\0\test');
-        console.warn(arrayOfThings);
-        return allLines;
+        // parseStringSync creates a new Parser object internally when it gets called so we can reduce that overhead if
+        // we parse all of the lines together
+        const allLines = (await Promise.all(linePromises)).flat();
+        console.warn('started parse');
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        // const sampleLength = source.options.sampleLength;
+        // if (allLines.length >= sampleLength) {
+        //     allLines = sampleSize(allLines, sampleLength);
+        // }
+        const parseOptions = {
+            disableDerivesFromReferences: true,
+            parseFeatures: true,
+            parseComments: false,
+            parseDirectives: false,
+            parseSequences: false
+        };
+        const parsedLines = GFF.parseStringSync(allLines.join('\n'), parseOptions);
+        console.warn('parsed', parsedDataToTiles(parsedLines));
+        return [];
     }
 }
 
@@ -208,16 +221,7 @@ const getTabularData = (uid: string, tileIds: string[]) => {
 
         data.push(tileValue);
     });
-
-    let output = Object.values(data).flat();
-
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const sampleLength = dataSources.get(uid)!.options.sampleLength;
-    if (output.length >= sampleLength) {
-        // TODO: we can make this more generic
-        // priotize that mutations with closer each other are selected when sampling.
-        output = sampleSize(output, sampleLength / 2.0);
-    }
+    const output = Object.values(data).flat();
 
     const buffer = new TextEncoder().encode(JSON.stringify(output)).buffer;
     return Transfer(buffer, [buffer]);
