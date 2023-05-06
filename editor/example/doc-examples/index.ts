@@ -10,3 +10,4 @@ export { RECT } from './rect';
 export { SEMANTIC_ZOOM_SEQUENCE, SEMANTIC_ZOOM_CYTO } from './semantic-zoom';
 export { TEXT } from './text';
 export { TRIANGLE } from './triangle';
+export { BED_DEMO } from './bed-demo';

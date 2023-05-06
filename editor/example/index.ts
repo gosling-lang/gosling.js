@@ -375,6 +375,12 @@ export const examples: {
         spec: docExamples.BAR,
         hidden: true
     },
+    doc_bed: {
+        group: 'Doc',
+        name: 'BED file',
+        spec: docExamples.BED_DEMO,
+        hidden: true
+    },
     doc_brush: {
         group: 'Doc',
         name: 'Brush Mark',
