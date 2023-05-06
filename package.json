@@ -39,7 +39,7 @@
         "schema-versioning": "mkdir -p schema/history/$npm_package_version && cp schema/gosling.schema.json schema/history/$npm_package_version/gosling$npm_package_version.schema.json && cp src/core/gosling.schema.ts schema/history/$npm_package_version/gosling$npm_package_version.schema.ts",
         "predeploy": "yarn build-editor; echo \"gosling.js.org\" >> build/CNAME",
         "deploy": "gh-pages -d build",
-        "pre-commit": "run-p changelog schema schema-higlass schema-theme schema-template format && git add ."
+        "pre-commit": "run-p changelog schema schema-higlass schema-theme schema-template format"
     },
     "peerDependencies": {
         "pixi.js": "^6.3.0",
