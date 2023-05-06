@@ -6,6 +6,13 @@ on:
             - master
     pull_request:
 
+concurrency:
+  group: test-${{ github.head_ref }}
+  cancel-in-progress: true
+
+env:
+  FORCE_COLOR: "1"
+
 jobs:
     LintRepo:
         name: Lint Repo
