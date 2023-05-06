@@ -20,7 +20,6 @@ jobs:
             - uses: actions/setup-node@v3
               with:
                   node-version: 16
-                  cache: 'yarn'
             - run: |
                 yarn install
                 yarn pre-commit
@@ -36,7 +35,6 @@ jobs:
               uses: actions/setup-node@v3
               with:
                   node-version: 16
-                  cache: 'yarn'
             - run: yarn install
             - run: yarn build-editor
               env:
@@ -54,7 +52,6 @@ jobs:
               uses: actions/setup-node@v3
               with:
                   node-version: ${{ matrix.node-version }}
-                  cache: 'yarn'
             - run: yarn install
             - run: |
                 yarn build-types # typecheck
@@ -72,6 +69,5 @@ jobs:
             - uses: actions/setup-node@v3
               with:
                   node-version: 16
-                  cache: 'yarn'
             - run: yarn install
             - run: yarn eslint src/ editor/
