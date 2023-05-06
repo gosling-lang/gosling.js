@@ -39,9 +39,9 @@ export class BedParser {
      * @param customFields An array of strings, where each string is the name of a custom column
      * @param n_columns A number which is the number of columns in the Bed File
      */
-    constructor(customFields?: string[], n_columns?: number) {
-        this.#customFields = customFields;
-        this.#n_columns = n_columns;
+    constructor(opt?: { customFields: string[]; n_columns: number }) {
+        this.#customFields = opt?.customFields;
+        this.#n_columns = opt?.n_columns;
         if (this.#customFields) {
             const customAutoSqlSchema = this.constructBedAutoSql();
             this.#parser = new BED({ autoSql: customAutoSqlSchema });

@@ -17,7 +17,7 @@ export type BedFileOptions = {
 };
 
 /**
- * All data stored in each BED file eventually gets put into this
+ * All data stored in each BED file eventually transformed and put into this
  */
 export interface BedTile {
     chrom: string;
@@ -74,8 +74,10 @@ export class BedFile {
      */
     async getParser() {
         if (!this.#parser) {
-            const n_columns = this.#customFields ? await this.#calcNColumns() : undefined;
-            this.#parser = await new BedParser(this.#customFields, n_columns);
+            const opt = this.#customFields
+                ? { customFields: this.#customFields, n_columns: await this.#calcNColumns() }
+                : undefined;
+            this.#parser = new BedParser(opt);
         }
         return this.#parser;
     }
