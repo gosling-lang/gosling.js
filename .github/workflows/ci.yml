@@ -8,6 +8,7 @@ on:
 
 jobs:
     LintRepo:
+        name: Lint Repo
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
@@ -18,7 +19,8 @@ jobs:
             - run: |
                 yarn install
                 yarn pre-commit
-                git diff --exit-code
+            - name: Assert no unstaged changes
+              run: git diff --exit-code
 
     Build:
         name: Build Editor
