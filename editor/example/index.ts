@@ -227,6 +227,12 @@ const docExampleObj: {
         name: 'VCF insertions and deletions',
         spec: docExamples.VCF_POINT_MUTATIONS,
         hidden: true
+    },
+    doc_bed: {
+        group: 'Doc',
+        name: 'BED file',
+        spec: docExamples.BED_DEMO,
+        hidden: true
     }
 };
 

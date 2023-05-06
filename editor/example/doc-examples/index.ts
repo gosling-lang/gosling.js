@@ -10,7 +10,7 @@ export { RECT } from './rect';
 export { SEMANTIC_ZOOM_SEQUENCE, SEMANTIC_ZOOM_CYTO } from './semantic-zoom';
 export { TEXT } from './text';
 export { TRIANGLE } from './triangle';
-
 // File examples
 export { VCF_INDELS } from './vcf-indels';
 export { VCF_POINT_MUTATIONS } from './vcf-point-mutations';
+export { BED_DEMO } from './bed-demo';
