@@ -121,7 +121,123 @@ export interface Example {
     image?: string;
 }
 
-export const examples: {
+// Followings are doc examples that are only accessible via URLs using the key, such as
+// https://gosling.js.org/?example=doc_area
+const docExampleObj: {
+    readonly [id: string]: Example;
+} = {
+    doc_area: {
+        group: 'Doc',
+        name: 'Area Mark',
+        spec: docExamples.AREA,
+        hidden: true
+    },
+    doc_bar: {
+        group: 'Doc',
+        name: 'Bar Mark',
+        spec: docExamples.BAR,
+        hidden: true
+    },
+    doc_brush: {
+        group: 'Doc',
+        name: 'Brush Mark',
+        spec: docExamples.BRUSH,
+        hidden: true
+    },
+    doc_line: {
+        group: 'Doc',
+        name: 'Line Mark',
+        spec: docExamples.LINE,
+        hidden: true
+    },
+    doc_link: {
+        group: 'Doc',
+        name: 'Link Mark',
+        spec: docExamples.LINK,
+        hidden: true
+    },
+    doc_linking_tracks: {
+        group: 'Doc',
+        name: 'Linking Tracks',
+        spec: docExamples.LINKING_TRACKS,
+        hidden: true
+    },
+    doc_point: {
+        group: 'Doc',
+        name: 'Point Mark',
+        spec: docExamples.POINT,
+        hidden: true
+    },
+    doc_rect: {
+        group: 'Doc',
+        name: 'React Mark',
+        spec: docExamples.RECT,
+        hidden: true
+    },
+    doc_text: {
+        group: 'Doc',
+        name: 'Text Mark',
+        spec: docExamples.TEXT,
+        hidden: true
+    },
+    doc_triangle: {
+        group: 'Doc',
+        name: 'Triangle Mark',
+        spec: docExamples.TRIANGLE,
+        hidden: true
+    },
+    doc_overlay_bar_point: {
+        group: 'Doc',
+        name: 'Overlay Tracks: Bar + Point',
+        spec: docExamples.OVERLAY_TRACKS_BAR_POINT,
+        hidden: true
+    },
+    doc_overlay_rect_text: {
+        group: 'Doc',
+        name: 'Overlay Tracks: Rect + Text',
+        spec: docExamples.OVERLAY_TRACKS_RECT_TEXT,
+        hidden: true
+    },
+    doc_overlay_line_point: {
+        group: 'Doc',
+        name: 'Overlay Tracks: Line + Point',
+        spec: docExamples.OVERLAY_TRACKS_LINE_POINT,
+        hidden: true
+    },
+    doc_semantic_zoom_sequence: {
+        group: 'Doc',
+        name: 'A Sequence Example',
+        spec: docExamples.SEMANTIC_ZOOM_SEQUENCE,
+        hidden: true
+    },
+    doc_semantic_zoom_cyto: {
+        group: 'Doc',
+        name: 'Cyto',
+        spec: docExamples.SEMANTIC_ZOOM_CYTO,
+        hidden: true
+    },
+    doc_vcf_indels: {
+        group: 'Doc',
+        name: 'VCF insertions and deletions',
+        spec: docExamples.VCF_INDELS,
+        hidden: true
+    },
+    doc_vcf_point_mutations: {
+        group: 'Doc',
+        name: 'VCF insertions and deletions',
+        spec: docExamples.VCF_POINT_MUTATIONS,
+        hidden: true
+    },
+    doc_bed: {
+        group: 'Doc',
+        name: 'BED file',
+        spec: docExamples.BED_DEMO,
+        hidden: true
+    }
+};
+
+// Examples that show up in the Editor
+const editorExampleObj: {
     readonly [id: string]: Example;
 } = {
     DEBUG: {
@@ -360,103 +476,12 @@ export const examples: {
         spec: EX_SPEC_TEMPLATE,
         underDevelopment: true,
         image: THUMBNAILS.TEMPLATE
-    },
-    // Followings are doc examples that are only accessible via URLs using the key, such as
-    // https://gosling.js.org/?example=doc_area
-    doc_area: {
-        group: 'Doc',
-        name: 'Area Mark',
-        spec: docExamples.AREA,
-        hidden: true
-    },
-    doc_bar: {
-        group: 'Doc',
-        name: 'Bar Mark',
-        spec: docExamples.BAR,
-        hidden: true
-    },
-    doc_bed: {
-        group: 'Doc',
-        name: 'BED file',
-        spec: docExamples.BED_DEMO,
-        hidden: true
-    },
-    doc_brush: {
-        group: 'Doc',
-        name: 'Brush Mark',
-        spec: docExamples.BRUSH,
-        hidden: true
-    },
-    doc_line: {
-        group: 'Doc',
-        name: 'Line Mark',
-        spec: docExamples.LINE,
-        hidden: true
-    },
-    doc_link: {
-        group: 'Doc',
-        name: 'Link Mark',
-        spec: docExamples.LINK,
-        hidden: true
-    },
-    doc_linking_tracks: {
-        group: 'Doc',
-        name: 'Linking Tracks',
-        spec: docExamples.LINKING_TRACKS,
-        hidden: true
-    },
-    doc_point: {
-        group: 'Doc',
-        name: 'Point Mark',
-        spec: docExamples.POINT,
-        hidden: true
-    },
-    doc_rect: {
-        group: 'Doc',
-        name: 'React Mark',
-        spec: docExamples.RECT,
-        hidden: true
-    },
-    doc_text: {
-        group: 'Doc',
-        name: 'Text Mark',
-        spec: docExamples.TEXT,
-        hidden: true
-    },
-    doc_triangle: {
-        group: 'Doc',
-        name: 'Triangle Mark',
-        spec: docExamples.TRIANGLE,
-        hidden: true
-    },
-    doc_overlay_bar_point: {
-        group: 'Doc',
-        name: 'Overlay Tracks: Bar + Point',
-        spec: docExamples.OVERLAY_TRACKS_BAR_POINT,
-        hidden: true
-    },
-    doc_overlay_rect_text: {
-        group: 'Doc',
-        name: 'Overlay Tracks: Rect + Text',
-        spec: docExamples.OVERLAY_TRACKS_RECT_TEXT,
-        hidden: true
-    },
-    doc_overlay_line_point: {
-        group: 'Doc',
-        name: 'Overlay Tracks: Line + Point',
-        spec: docExamples.OVERLAY_TRACKS_LINE_POINT,
-        hidden: true
-    },
-    doc_semantic_zoom_sequence: {
-        group: 'Doc',
-        name: 'A Sequence Example',
-        spec: docExamples.SEMANTIC_ZOOM_SEQUENCE,
-        hidden: true
-    },
-    doc_semantic_zoom_cyto: {
-        group: 'Doc',
-        name: 'Cyto',
-        spec: docExamples.SEMANTIC_ZOOM_CYTO,
-        hidden: true
     }
+};
+
+export const examples: {
+    readonly [id: string]: Example;
+} = {
+    ...editorExampleObj,
+    ...docExampleObj
 };
