@@ -36,8 +36,8 @@ describe('BED parser with default columns', () => {
 
 describe('BED parser with custom columns', () => {
     const n_columns = 7;
-    const custom_columns = ['custom6', 'custom7'];
-    const parser = new BedParser(custom_columns, n_columns);
+    const customFields = ['custom6', 'custom7'];
+    const parser = new BedParser({ customFields, n_columns });
     const bedLine = 'chr1\t11868\t14409\tENST00000456328.2\t0\t+\t11868';
     const bedLineExtraColumn = 'chr1\t11868\t14409\tENST00000456328.2\t0\t+\t11868\t12334';
     const chromStart = 100;
