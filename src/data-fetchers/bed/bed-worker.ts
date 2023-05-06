@@ -84,7 +84,6 @@ export class BedFile {
      * Relatively inefficient because the gmod/tabix API only has a way to retrieve lines based on genomic coordinates,
      * but I believe this is better than fetching the BED file itself because then it only has to be fetched and
      * unzipped once.
-     * @param uid A string which is the UID associated worker. Used to retrieve the chromosome information
      * @returns
      */
     async #calcNColumns() {
