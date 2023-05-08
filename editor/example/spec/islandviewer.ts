@@ -8,6 +8,7 @@ const linearSize = linearHeight / 6;
 const spec: GoslingSpec = {
     title: 'IslandViewer 4 (Bertelli et al. 2017)',
     subtitle: 'Salmonella enterica subsp. enterica serovar Typhi Ty2, complete genome.',
+    description: 'Reimplementation of https://www.pathogenomics.sfu.ca/islandviewer/accession/NC_004631.1/',
     assembly: [['NC_004631.1', 4791961]],
     spacing: 50,
     views: [
@@ -15,8 +16,10 @@ const spec: GoslingSpec = {
             layout: 'circular',
             static: true,
             alignment: 'overlay',
+            spacing: 0.1,
             tracks: [
                 {
+                    style: { outlineWidth: 1, outline: 'black' },
                     data: {
                         url: 'https://s3.amazonaws.com/gosling-lang.org/data/IslandViewer/NC_004631.1_annotations.csv',
                         type: 'csv',
