@@ -1,4 +1,5 @@
-import { filterData, calculateData, aggregateData, splitExon, inferSvType } from './data-transform';
+import { filterData, calculateData, aggregateData, splitExon, inferSvType, displace } from './data-transform';
+import { scaleLinear } from 'd3-scale';
 
 describe('Data Transformation', () => {
     it('Filter', () => {
@@ -11,6 +12,110 @@ describe('Data Transformation', () => {
         expect(filtered).toHaveLength(2);
         expect(filtered.filter(d => d['c'] === 'b')).toHaveLength(0);
         expect(filtered.filter(d => d['q'] === 4)).toHaveLength(0);
+    });
+    it('Pile', () => {
+        const data = [
+            { s: 2, e: 3 },
+            { s: 4, e: 6 },
+            { s: 1, e: 2 },
+            { s: 1, e: 3 }
+        ];
+        const scale = scaleLinear().domain([1, 10]).range([1, 1000]);
+        expect(
+            displace(
+                { type: 'displace', method: 'pile', boundingBox: { startField: 's', endField: 'e' }, newField: 'row' },
+                data,
+                scale
+            )
+        ).toMatchInlineSnapshot(`
+          [
+            {
+              "e": 2,
+              "row": "0",
+              "s": 1,
+            },
+            {
+              "e": 3,
+              "row": "1",
+              "s": 1,
+            },
+            {
+              "e": 3,
+              "row": "2",
+              "s": 2,
+            },
+            {
+              "e": 6,
+              "row": "0",
+              "s": 4,
+            },
+          ]
+        `);
+        expect(
+            displace(
+                { type: 'displace', method: 'pile', boundingBox: { startField: 's', endField: 's' }, newField: 'row' },
+                data,
+                scale
+            )
+        ).toMatchInlineSnapshot(`
+          [
+            {
+              "e": 2,
+              "row": "0",
+              "s": 1,
+            },
+            {
+              "e": 3,
+              "row": "1",
+              "s": 1,
+            },
+            {
+              "e": 3,
+              "row": "0",
+              "s": 2,
+            },
+            {
+              "e": 6,
+              "row": "0",
+              "s": 4,
+            },
+          ]
+        `);
+        expect(
+            displace(
+                {
+                    type: 'displace',
+                    method: 'pile',
+                    boundingBox: { startField: 's', endField: 'e', padding: 1, isPaddingBP: true },
+                    newField: 'row'
+                },
+                data,
+                scale
+            )
+        ).toMatchInlineSnapshot(`
+          [
+            {
+              "e": 2,
+              "row": "0",
+              "s": 1,
+            },
+            {
+              "e": 3,
+              "row": "1",
+              "s": 1,
+            },
+            {
+              "e": 3,
+              "row": "2",
+              "s": 2,
+            },
+            {
+              "e": 6,
+              "row": "3",
+              "s": 4,
+            },
+          ]
+        `);
     });
     it('SV', () => {
         const svTypes = inferSvType(

@@ -39,7 +39,7 @@ export function filterUsingGenoPos(
             return true;
         } else if (definedXFields.length === 1) {
             // filter based on one genomic position
-            const value = d[definedXFields[0]];
+            const value = +d[definedXFields[0]];
             return typeof value === 'number' && minX < value && value <= maxX;
         } else {
             // filter based on two genomic positions, i.e., check overlaps

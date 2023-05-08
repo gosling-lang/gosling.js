@@ -181,7 +181,8 @@ export function IsDataDeepTileset(
             _.type === 'bigwig' ||
             _.type === 'matrix' ||
             _.type === 'bam' ||
-            _.type === 'vcf')
+            _.type === 'vcf' ||
+            _.type === 'bed')
     );
 }
 
