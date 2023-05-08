@@ -6,6 +6,7 @@
 /lib
 /bin
 .vscode
+.idea
 .pnp.js
 .DS_Store
 .env.local

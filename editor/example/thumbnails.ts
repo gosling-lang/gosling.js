@@ -28,6 +28,7 @@ import SEMANTIC_ZOOM from './thumbnails/SEMANTIC_ZOOM.png';
 import TEMPLATE from './thumbnails/TEMPLATE.png';
 import VISUAL_ENCODING from './thumbnails/VISUAL_ENCODING.png';
 import VISUAL_ENCODING_CIRCULAR from './thumbnails/VISUAL_ENCODING_CIRCULAR.png';
+import ISLANDVIEWER from './thumbnails/ISLANDVIEWER.png';
 
 export const THUMBNAILS = {
     ALIGNMENT,
@@ -59,5 +60,6 @@ export const THUMBNAILS = {
     SEMANTIC_ZOOM,
     TEMPLATE,
     VISUAL_ENCODING,
-    VISUAL_ENCODING_CIRCULAR
+    VISUAL_ENCODING_CIRCULAR,
+    ISLANDVIEWER
 };
