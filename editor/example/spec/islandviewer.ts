@@ -23,8 +23,7 @@ const spec: GoslingSpec = {
                     data: {
                         url: 'https://s3.amazonaws.com/gosling-lang.org/data/IslandViewer/NC_004631.1_annotations.csv',
                         type: 'csv',
-                        chromosomeField: 'Accession',
-                        genomicFields: ['Gene start', 'Gene end']
+                        genomicFields: ['Gene start']
                     },
                     dataTransform: [
                         {
@@ -33,7 +32,7 @@ const spec: GoslingSpec = {
                             boundingBox: {
                                 padding: 3.5,
                                 startField: 'Gene start',
-                                endField: 'Gene end'
+                                endField: 'Gene start'
                             },
                             newField: 'row'
                         }
@@ -41,7 +40,6 @@ const spec: GoslingSpec = {
                     row: { field: 'row', type: 'nominal' },
                     mark: 'point',
                     x: { field: 'Gene start', type: 'genomic' },
-                    xe: { field: 'Gene end', type: 'genomic' },
                     size: { value: 3 },
                     color: {
                         field: 'Type',
@@ -242,8 +240,7 @@ const spec: GoslingSpec = {
                     data: {
                         url: 'https://s3.amazonaws.com/gosling-lang.org/data/IslandViewer/NC_004631.1_annotations.csv',
                         type: 'csv',
-                        chromosomeField: 'Accession',
-                        genomicFields: ['Gene start', 'Gene end']
+                        genomicFields: ['Gene start']
                     },
                     dataTransform: [
                         {
@@ -252,7 +249,7 @@ const spec: GoslingSpec = {
                             boundingBox: {
                                 padding: 3.5,
                                 startField: 'Gene start',
-                                endField: 'Gene end'
+                                endField: 'Gene start'
                             },
                             newField: 'row'
                         }
@@ -260,7 +257,6 @@ const spec: GoslingSpec = {
                     row: { field: 'row', type: 'nominal' },
                     mark: 'point',
                     x: { field: 'Gene start', type: 'genomic' },
-                    xe: { field: 'Gene end', type: 'genomic' },
                     size: { value: 3 },
                     color: {
                         field: 'Type',
