@@ -19,6 +19,21 @@ const spec: GoslingSpec = {
             spacing: 0.1,
             tracks: [
                 {
+                    data: {
+                        url: 'https://s3.amazonaws.com/gosling-lang.org/data/IslandViewer/NC_004631.1_GCcontent.csv',
+                        type: 'csv',
+                        separator: '\t',
+                        genomicFields: ['Position']
+                    },
+                    y: { field: 'GCcontent', type: 'quantitative', range: [-250, 0], axis: 'none' },
+                    mark: 'line',
+                    size: { value: 0.5 },
+                    x: { field: 'Position', type: 'genomic' },
+                    color: {
+                        value: 'black'
+                    }
+                },
+                {
                     style: { outlineWidth: 1, outline: 'black' },
                     data: {
                         url: 'https://s3.amazonaws.com/gosling-lang.org/data/IslandViewer/NC_004631.1_annotations.csv',
