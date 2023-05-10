@@ -37,7 +37,7 @@ const spec: GoslingSpec = {
                             newField: 'row'
                         }
                     ],
-                    row: { field: 'row', type: 'nominal' },
+                    y: { field: 'row', type: 'nominal', flip: true },
                     mark: 'point',
                     x: { field: 'Gene start', type: 'genomic' },
                     size: { value: 3 },
