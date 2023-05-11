@@ -10,19 +10,6 @@ env:
   FORCE_COLOR: "1"
 
 jobs:
-    LintRepo:
-        name: Lint Repo
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v3
-            - uses: actions/setup-node@v3
-              with:
-                  node-version: 16
-            - run: |
-                yarn install
-                yarn pre-commit
-            - name: Assert no unstaged changes
-              run: git diff --exit-code
 
     Build:
         name: Build Editor
@@ -68,4 +55,9 @@ jobs:
               with:
                   node-version: 16
             - run: yarn install
-            - run: yarn eslint src/ editor/
+            - name: ESLint
+              run: yarn eslint src/ editor/
+            - name: Assert schemas are all up to date
+              run: |
+                  yarn schema
+                  diff --exit-code
