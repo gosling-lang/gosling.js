@@ -30,7 +30,6 @@
         "check": "tsc --noEmit",
         "test": "vitest",
         "coverage": "vitest run --coverage",
-        "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
         "format": "eslint src/ editor/ --fix && prettier 'editor/**/*.css' --write",
         "schema": "node scripts/generate-schemas.mjs",
         "schema-versioning": "mkdir -p schema/history/$npm_package_version && cp schema/gosling.schema.json schema/history/$npm_package_version/gosling$npm_package_version.schema.json && cp src/core/gosling.schema.ts schema/history/$npm_package_version/gosling$npm_package_version.schema.ts",
