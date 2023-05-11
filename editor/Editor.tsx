@@ -9,7 +9,8 @@ import { drag as d3Drag } from 'd3-drag';
 import type * as D3Drag from 'd3-drag';
 import { select as d3Select } from 'd3-selection';
 import stringify from 'json-stringify-pretty-compact';
-import _SplitPane, { type SplitPaneProps } from 'react-split-pane';
+import { Allotment } from 'allotment';
+import 'allotment/dist/style.css';
 import { debounce, isEqual } from 'lodash-es';
 import stripJsonComments from 'strip-json-comments';
 import JSONCrush from 'jsoncrush';
@@ -26,9 +27,6 @@ import EditorPanel, { type EditorLangauge } from './EditorPanel';
 import EditorExamples from './EditorExamples';
 
 import './Editor.css';
-
-// @ts-expect-error react-split-pane types are incorrect. This is a workaround.
-const SplitPane: React.FC<SplitPaneProps> = _SplitPane;
 
 function json2js(jsonCode: string) {
     return `var spec = ${jsonCode} \nexport { spec }; \n`;
@@ -273,9 +271,6 @@ function Editor(props: RouteComponentProps) {
     const [screenSize, setScreenSize] = useState<undefined | { width: number; height: number }>();
     const [visibleScreenSize, setVisibleScreenSize] = useState<undefined | { width: number; height: number }>();
 
-    // whether to show data preview on the right-bottom
-    const [isShowDataPreview, setIsShowDataPreview] = useState<boolean>(false);
-
     // whether to show a find box
     const [isFindCode, setIsFindCode] = useState<boolean | undefined>(undefined);
 
@@ -288,6 +283,9 @@ function Editor(props: RouteComponentProps) {
 
     // whether to show "about" information
     const [isShowAbout, setIsShowAbout] = useState(false);
+
+    // API for split pane of the right panel
+    const displayPanelRef = useRef<any>();
 
     // Resizer `div`
     const descResizerRef = useRef<any>();
@@ -800,319 +798,323 @@ function Editor(props: RouteComponentProps) {
             </div>
             {/* ------------------------ Main View ------------------------ */}
             <div className={`editor ${theme === 'dark' ? 'dark' : ''}`}>
-                <SplitPane className="side-panel-spliter" split="vertical" defaultSize="50px" allowResize={false}>
-                    <div className={`side-panel ${theme === 'dark' ? 'dark' : ''}`}>
-                        <button
-                            title="Example Gallery"
-                            className="side-panel-button"
-                            onClick={() => setShowExamples(!showExamples)}
-                        >
-                            {showExamples ? getIconSVG(ICONS.GRID, 20, 20, '#E18343') : getIconSVG(ICONS.GRID)}
-                            <br />
-                            EXAMPLE
-                        </button>
-                        <button
-                            title="Automatically update visualization upon editing code"
-                            className="side-panel-button"
-                            onClick={() => setAutoRun(!autoRun)}
-                        >
-                            {autoRun
-                                ? getIconSVG(ICONS.TOGGLE_ON, 23, 23, '#E18343')
-                                : getIconSVG(ICONS.TOGGLE_OFF, 23, 23)}
-                            <br />
-                            AUTO
-                            <br />
-                            RUN
-                        </button>
-                        <button title="Run Code" className="side-panel-button" onClick={() => runSpecUpdateVis(true)}>
-                            {getIconSVG(ICONS.PLAY, 23, 23)}
-                            <br />
-                            RUN
-                        </button>
-                        <button
-                            title="Find"
-                            className="side-panel-button"
-                            onClick={() => {
-                                setIsFindCode(!isFindCode);
-                            }}
-                        >
-                            {getIconSVG(ICONS.FIND, 23, 23)}
-                            <br />
-                            FIND
-                        </button>
-                        <span title="Change Font Size" className="side-panel-button">
-                            {getIconSVG(ICONS.TEXT, 23, 23)}
-                            <br />
-                            FONT SIZE
-                            <span className="side-subpanel">
-                                <button
-                                    title="Use Larger Font"
-                                    className="side-subpanel-button"
-                                    onClick={() => {
-                                        setIsfontZoomIn(!isFontZoomIn);
-                                    }}
-                                >
-                                    {getIconSVG(ICONS.TEXT, 23, 23)}
-                                    +
-                                    <br />
-                                    LARGER
-                                </button>
-                                <button
-                                    title="Use Larger Font"
-                                    className="side-subpanel-button"
-                                    onClick={() => {
-                                        setIsfontZoomOut(!isFontZoomOut);
-                                    }}
-                                >
-                                    {getIconSVG(ICONS.TEXT, 15, 15)}
-                                    -
-                                    <br />
-                                    SMALLER
-                                </button>
+                <Allotment vertical={false}>
+                    <Allotment.Pane minSize={50} maxSize={50}>
+                        <div className={`side-panel ${theme === 'dark' ? 'dark' : ''}`}>
+                            <button
+                                title="Example Gallery"
+                                className="side-panel-button"
+                                onClick={() => setShowExamples(!showExamples)}
+                            >
+                                {showExamples ? getIconSVG(ICONS.GRID, 20, 20, '#E18343') : getIconSVG(ICONS.GRID)}
+                                <br />
+                                EXAMPLE
+                            </button>
+                            <button
+                                title="Automatically update visualization upon editing code"
+                                className="side-panel-button"
+                                onClick={() => setAutoRun(!autoRun)}
+                            >
+                                {autoRun
+                                    ? getIconSVG(ICONS.TOGGLE_ON, 23, 23, '#E18343')
+                                    : getIconSVG(ICONS.TOGGLE_OFF, 23, 23)}
+                                <br />
+                                AUTO
+                                <br />
+                                RUN
+                            </button>
+                            <button
+                                title="Run Code"
+                                className="side-panel-button"
+                                onClick={() => runSpecUpdateVis(true)}
+                            >
+                                {getIconSVG(ICONS.PLAY, 23, 23)}
+                                <br />
+                                RUN
+                            </button>
+                            <button
+                                title="Find"
+                                className="side-panel-button"
+                                onClick={() => {
+                                    setIsFindCode(!isFindCode);
+                                }}
+                            >
+                                {getIconSVG(ICONS.FIND, 23, 23)}
+                                <br />
+                                FIND
+                            </button>
+                            <span title="Change Font Size" className="side-panel-button">
+                                {getIconSVG(ICONS.TEXT, 23, 23)}
+                                <br />
+                                FONT SIZE
+                                <span className="side-subpanel">
+                                    <button
+                                        title="Use Larger Font"
+                                        className="side-subpanel-button"
+                                        onClick={() => {
+                                            setIsfontZoomIn(!isFontZoomIn);
+                                        }}
+                                    >
+                                        {getIconSVG(ICONS.TEXT, 23, 23)}
+                                        +
+                                        <br />
+                                        LARGER
+                                    </button>
+                                    <button
+                                        title="Use Larger Font"
+                                        className="side-subpanel-button"
+                                        onClick={() => {
+                                            setIsfontZoomOut(!isFontZoomOut);
+                                        }}
+                                    >
+                                        {getIconSVG(ICONS.TEXT, 15, 15)}
+                                        -
+                                        <br />
+                                        SMALLER
+                                    </button>
+                                </span>
                             </span>
-                        </span>
 
-                        <button
-                            title="Show or hide a code panel"
-                            className="side-panel-button"
-                            onClick={() => setIsHideCode(!isHideCode)}
-                        >
-                            {getIconSVG(ICONS.SPLIT, 23, 23)}
-                            <br />
-                            LAYOUT
-                        </button>
-                        <button
-                            title="Show or hide a data preview"
-                            className="side-panel-button"
-                            onClick={() => setIsShowDataPreview(!isShowDataPreview)}
-                        >
-                            {getIconSVG(ICONS.TABLE, 23, 23)}
-                            <br />
-                            DATA
-                            <br />
-                            PREVIEW
-                        </button>
+                            <button
+                                title="Show or hide a code panel"
+                                className="side-panel-button"
+                                onClick={() => setIsHideCode(!isHideCode)}
+                            >
+                                {getIconSVG(ICONS.SPLIT, 23, 23)}
+                                <br />
+                                LAYOUT
+                            </button>
+                            <button
+                                title="Show or hide a data preview"
+                                className="side-panel-button"
+                                onClick={() => displayPanelRef.current?.resize([1, 1])}
+                            >
+                                {getIconSVG(ICONS.TABLE, 23, 23)}
+                                <br />
+                                DATA
+                                <br />
+                                PREVIEW
+                            </button>
 
-                        <span title="Export" className="side-panel-button">
-                            {getIconSVG(ICONS.UP_RIGHT, 23, 23)}
-                            <br />
-                            EXPORT
-                            <span className="side-subpanel">
-                                <button
-                                    title="Save PNG file"
-                                    className="side-subpanel-button"
-                                    onClick={() => {
-                                        gosRef.current?.api.exportPng();
-                                    }}
-                                >
-                                    {getIconSVG(ICONS.IMAGE, 23, 23)}
-                                    <br />
-                                    PNG
-                                </button>
-                                <button
-                                    title="Save PDF file"
-                                    className="side-subpanel-button"
-                                    onClick={() => {
-                                        gosRef.current?.api.exportPdf();
-                                    }}
-                                >
-                                    {getIconSVG(ICONS.PDF, 23, 23)}
-                                    <br />
-                                    PDF
-                                </button>
-                                <button
-                                    title="Save HTML file"
-                                    className="side-subpanel-button"
-                                    onClick={() => {
-                                        // TODO (05-02-2022): Release a support of `responsiveSize` on `.embed()` first
-                                        const spec = { ...goslingSpec, responsiveSize: false } as gosling.GoslingSpec;
+                            <span title="Export" className="side-panel-button">
+                                {getIconSVG(ICONS.UP_RIGHT, 23, 23)}
+                                <br />
+                                EXPORT
+                                <span className="side-subpanel">
+                                    <button
+                                        title="Save PNG file"
+                                        className="side-subpanel-button"
+                                        onClick={() => {
+                                            gosRef.current?.api.exportPng();
+                                        }}
+                                    >
+                                        {getIconSVG(ICONS.IMAGE, 23, 23)}
+                                        <br />
+                                        PNG
+                                    </button>
+                                    <button
+                                        title="Save PDF file"
+                                        className="side-subpanel-button"
+                                        onClick={() => {
+                                            gosRef.current?.api.exportPdf();
+                                        }}
+                                    >
+                                        {getIconSVG(ICONS.PDF, 23, 23)}
+                                        <br />
+                                        PDF
+                                    </button>
+                                    <button
+                                        title="Save HTML file"
+                                        className="side-subpanel-button"
+                                        onClick={() => {
+                                            // TODO (05-02-2022): Release a support of `responsiveSize` on `.embed()` first
+                                            const spec = {
+                                                ...goslingSpec,
+                                                responsiveSize: false
+                                            } as gosling.GoslingSpec;
 
-                                        const a = document.createElement('a');
-                                        a.setAttribute(
-                                            'href',
-                                            `data:text/plain;charset=utf-8,${encodeURIComponent(
-                                                getHtmlTemplate(stringifySpec(spec))
-                                            )}`
-                                        );
-                                        a.download = 'gosling-visualization.html';
-                                        document.body.appendChild(a);
-                                        a.click();
-                                        document.body.removeChild(a);
-                                    }}
-                                >
-                                    {getIconSVG(ICONS.HTML, 23, 23)}
-                                </button>
-                                <button
-                                    title={
-                                        stringifySpec(goslingSpec).length <= LIMIT_CLIPBOARD_LEN
-                                            ? `Copy unique URL of current view to clipboard (limit: ${LIMIT_CLIPBOARD_LEN} characters)`
-                                            : `The current code contains characters more than ${LIMIT_CLIPBOARD_LEN}`
-                                    }
-                                    className={
-                                        stringifySpec(goslingSpec).length <= LIMIT_CLIPBOARD_LEN
-                                            ? 'side-subpanel-button'
-                                            : 'side-subpanel-button side-subpanel-button-not-active'
-                                    }
-                                    onClick={() => {
-                                        if (stringifySpec(goslingSpec).length <= LIMIT_CLIPBOARD_LEN) {
-                                            // copy the unique url to clipboard using `<input/>`
-                                            const crushedSpec = encodeURIComponent(
-                                                JSONCrush.crush(stringifySpec(goslingSpec))
+                                            const a = document.createElement('a');
+                                            a.setAttribute(
+                                                'href',
+                                                `data:text/plain;charset=utf-8,${encodeURIComponent(
+                                                    getHtmlTemplate(stringifySpec(spec))
+                                                )}`
                                             );
-                                            const url = `${window.location.origin}${window.location.pathname}?full=${isHideCode}&spec=${crushedSpec}`;
-
-                                            navigator.clipboard
-                                                .writeText(url)
-                                                .then(() =>
-                                                    // eslint-disable-next-line no-alert
-                                                    alert(
-                                                        `URL of the current visualization is copied to your clipboard! `
-                                                    )
-                                                )
-                                                .catch(
-                                                    // eslint-disable-next-line no-alert
-                                                    e => alert(`something went wrong ${e}`)
-                                                );
+                                            a.download = 'gosling-visualization.html';
+                                            document.body.appendChild(a);
+                                            a.click();
+                                            document.body.removeChild(a);
+                                        }}
+                                    >
+                                        {getIconSVG(ICONS.HTML, 23, 23)}
+                                    </button>
+                                    <button
+                                        title={
+                                            stringifySpec(goslingSpec).length <= LIMIT_CLIPBOARD_LEN
+                                                ? `Copy unique URL of current view to clipboard (limit: ${LIMIT_CLIPBOARD_LEN} characters)`
+                                                : `The current code contains characters more than ${LIMIT_CLIPBOARD_LEN}`
                                         }
-                                    }}
-                                >
-                                    {getIconSVG(ICONS.LINK, 23, 23)}
-                                    <br />
-                                    SAVE
-                                    <br />
-                                    URL
-                                </button>
+                                        className={
+                                            stringifySpec(goslingSpec).length <= LIMIT_CLIPBOARD_LEN
+                                                ? 'side-subpanel-button'
+                                                : 'side-subpanel-button side-subpanel-button-not-active'
+                                        }
+                                        onClick={() => {
+                                            if (stringifySpec(goslingSpec).length <= LIMIT_CLIPBOARD_LEN) {
+                                                // copy the unique url to clipboard using `<input/>`
+                                                const crushedSpec = encodeURIComponent(
+                                                    JSONCrush.crush(stringifySpec(goslingSpec))
+                                                );
+                                                const url = `${window.location.origin}${window.location.pathname}?full=${isHideCode}&spec=${crushedSpec}`;
+
+                                                navigator.clipboard
+                                                    .writeText(url)
+                                                    .then(() =>
+                                                        // eslint-disable-next-line no-alert
+                                                        alert(
+                                                            `URL of the current visualization is copied to your clipboard! `
+                                                        )
+                                                    )
+                                                    .catch(
+                                                        // eslint-disable-next-line no-alert
+                                                        e => alert(`something went wrong ${e}`)
+                                                    );
+                                            }
+                                        }}
+                                    >
+                                        {getIconSVG(ICONS.LINK, 23, 23)}
+                                        <br />
+                                        SAVE
+                                        <br />
+                                        URL
+                                    </button>
+                                </span>
                             </span>
-                        </span>
 
-                        <button
-                            title="Expert mode that turns on additional features, such as theme selection"
-                            className="side-panel-button"
-                            onClick={() => setExpertMode(!expertMode)}
-                        >
-                            {expertMode ? getIconSVG(ICONS.TOGGLE_ON, 23, 23, '#E18343') : getIconSVG(ICONS.TOGGLE_OFF)}
-                            <br />
-                            EXPERT
-                            <br />
-                            MODE
-                        </button>
-                        <button
-                            title="Open GitHub repository"
-                            className="side-panel-button"
-                            onClick={() => window.open('https://github.com/gosling-lang/gosling.js', '_blank')}
-                        >
-                            {getIconSVG(ICONS.GITHUB, 23, 23)}
-                            <br />
-                            GITHUB
-                        </button>
-                        <button
-                            title="Open Docs"
-                            className="side-panel-button"
-                            onClick={() => window.open('http://gosling-lang.org/docs/', '_blank')}
-                        >
-                            {getIconSVG(ICONS.DOCS, 23, 23)}
-                            <br />
-                            DOCS
-                        </button>
-                        <button
-                            title="About"
-                            className="side-panel-button"
-                            onClick={() => setIsShowAbout(!isShowAbout)}
-                        >
-                            {getIconSVG(ICONS.INFO_RECT_FILLED, 23, 23)}
-                            <br />
-                            ABOUT
-                        </button>
-                    </div>
-                    <SplitPane
-                        split="vertical"
-                        defaultSize={'calc(40%)'}
-                        size={isHideCode ? '0px' : 'calc(40%)'}
-                        minSize="0px"
-                    >
-                        <SplitPane
-                            split="horizontal"
-                            defaultSize={`calc(100% - ${BOTTOM_PANEL_HEADER_HEIGHT}px)`}
-                            maxSize={window.innerHeight - EDITOR_HEADER_HEIGHT - BOTTOM_PANEL_HEADER_HEIGHT}
-                            onChange={(size: number) => {
-                                const secondSize = window.innerHeight - EDITOR_HEADER_HEIGHT - size;
-                                if (secondSize > BOTTOM_PANEL_HEADER_HEIGHT && !showVC) {
-                                    setShowVC(true);
-                                } else if (secondSize <= BOTTOM_PANEL_HEADER_HEIGHT && showVC) {
-                                    // hide the viewConfig view when no enough space assigned
-                                    setShowVC(false);
-                                }
-                            }}
-                        >
-                            {/* Gosling Editor */}
-                            <>
-                                <div className="tabEditor">
-                                    <div className="tab">
-                                        <button
-                                            className={`tablinks ${language == 'json' && 'active'}`}
-                                            onClick={() => {
-                                                changeLanguage('json');
-                                                setLog({ message: '', state: 'success' });
-                                            }}
-                                        >
-                                            JSON {` `}
-                                            <span className="tooltip">
-                                                {getIconSVG(ICONS.INFO_CIRCLE, 10, 10)}
-                                                <span className="tooltiptext">
-                                                    In this JSON editor, the whole JSON object will be used to create
-                                                    Gosling visualizations.
-                                                </span>
-                                            </span>
-                                        </button>
-                                        <button
-                                            className={`tablinks ${language == 'typescript' && 'active'}`}
-                                            onClick={() => {
-                                                changeLanguage('typescript');
-                                                setLog({ message: '', state: 'success' });
-                                            }}
-                                        >
-                                            JavaScript{` `}
-                                            <span className="tooltip">
-                                                {getIconSVG(ICONS.INFO_CIRCLE, 10, 10)}
-                                                <span className="tooltiptext">
-                                                    In this JavaScript Editor, the variable{` `}
-                                                    <code style={{ backgroundColor: '#e18343' }}>spec</code> will be
-                                                    used to create Gosling visualizations.
-                                                </span>
-                                            </span>
-                                        </button>
-                                    </div>
-
-                                    <div className={`tabContent ${language == 'json' ? 'show' : 'hide'}`}>
-                                        <EditorPanel
-                                            code={code}
-                                            readOnly={readOnly}
-                                            openFindBox={isFindCode}
-                                            fontZoomIn={isFontZoomIn}
-                                            fontZoomOut={isFontZoomOut}
-                                            onChange={debounceCodeEdit.current}
-                                            isDarkTheme={theme === 'dark'}
-                                            language="json"
-                                        />
-                                    </div>
-                                    <div className={`tabContent ${language == 'typescript' ? 'show' : 'hide'}`}>
-                                        <EditorPanel
-                                            code={jsCode}
-                                            readOnly={readOnly}
-                                            openFindBox={isFindCode}
-                                            fontZoomIn={isFontZoomIn}
-                                            fontZoomOut={isFontZoomOut}
-                                            onChange={debounceCodeEdit.current}
-                                            isDarkTheme={theme === 'dark'}
-                                            language="typescript"
-                                        />
-                                    </div>
-                                </div>
-                                <div className={`compile-message compile-message-${log.state}`}>{log.message}</div>
-                            </>
-                            {/* HiGlass View Config */}
-                            <SplitPane split="vertical" defaultSize="100%">
+                            <button
+                                title="Expert mode that turns on additional features, such as theme selection"
+                                className="side-panel-button"
+                                onClick={() => setExpertMode(!expertMode)}
+                            >
+                                {expertMode
+                                    ? getIconSVG(ICONS.TOGGLE_ON, 23, 23, '#E18343')
+                                    : getIconSVG(ICONS.TOGGLE_OFF)}
+                                <br />
+                                EXPERT
+                                <br />
+                                MODE
+                            </button>
+                            <button
+                                title="Open GitHub repository"
+                                className="side-panel-button"
+                                onClick={() => window.open('https://github.com/gosling-lang/gosling.js', '_blank')}
+                            >
+                                {getIconSVG(ICONS.GITHUB, 23, 23)}
+                                <br />
+                                GITHUB
+                            </button>
+                            <button
+                                title="Open Docs"
+                                className="side-panel-button"
+                                onClick={() => window.open('http://gosling-lang.org/docs/', '_blank')}
+                            >
+                                {getIconSVG(ICONS.DOCS, 23, 23)}
+                                <br />
+                                DOCS
+                            </button>
+                            <button
+                                title="About"
+                                className="side-panel-button"
+                                onClick={() => setIsShowAbout(!isShowAbout)}
+                            >
+                                {getIconSVG(ICONS.INFO_RECT_FILLED, 23, 23)}
+                                <br />
+                                ABOUT
+                            </button>
+                        </div>
+                    </Allotment.Pane>
+                    <Allotment vertical={false} defaultSizes={[4, 6]}>
+                        <Allotment.Pane visible={!isHideCode}>
+                            <Allotment
+                                vertical={true}
+                                onChange={sizes => {
+                                    const secondSize = window.innerHeight - EDITOR_HEADER_HEIGHT - sizes[0];
+                                    if (secondSize > BOTTOM_PANEL_HEADER_HEIGHT && !showVC) {
+                                        setShowVC(true);
+                                    } else if (secondSize <= BOTTOM_PANEL_HEADER_HEIGHT && showVC) {
+                                        // hide the viewConfig view when no enough space assigned
+                                        setShowVC(false);
+                                    }
+                                }}
+                            >
+                                {/* Gosling Editor */}
                                 <>
+                                    <div className="tabEditor">
+                                        <div className="tab">
+                                            <button
+                                                className={`tablinks ${language == 'json' && 'active'}`}
+                                                onClick={() => {
+                                                    changeLanguage('json');
+                                                    setLog({ message: '', state: 'success' });
+                                                }}
+                                            >
+                                                JSON {` `}
+                                                <span className="tooltip">
+                                                    {getIconSVG(ICONS.INFO_CIRCLE, 10, 10)}
+                                                    <span className="tooltiptext">
+                                                        In this JSON editor, the whole JSON object will be used to
+                                                        create Gosling visualizations.
+                                                    </span>
+                                                </span>
+                                            </button>
+                                            <button
+                                                className={`tablinks ${language == 'typescript' && 'active'}`}
+                                                onClick={() => {
+                                                    changeLanguage('typescript');
+                                                    setLog({ message: '', state: 'success' });
+                                                }}
+                                            >
+                                                JavaScript{` `}
+                                                <span className="tooltip">
+                                                    {getIconSVG(ICONS.INFO_CIRCLE, 10, 10)}
+                                                    <span className="tooltiptext">
+                                                        In this JavaScript Editor, the variable{` `}
+                                                        <code style={{ backgroundColor: '#e18343' }}>spec</code> will be
+                                                        used to create Gosling visualizations.
+                                                    </span>
+                                                </span>
+                                            </button>
+                                        </div>
+
+                                        <div className={`tabContent ${language == 'json' ? 'show' : 'hide'}`}>
+                                            <EditorPanel
+                                                code={code}
+                                                readOnly={readOnly}
+                                                openFindBox={isFindCode}
+                                                fontZoomIn={isFontZoomIn}
+                                                fontZoomOut={isFontZoomOut}
+                                                onChange={debounceCodeEdit.current}
+                                                isDarkTheme={theme === 'dark'}
+                                                language="json"
+                                            />
+                                        </div>
+                                        <div className={`tabContent ${language == 'typescript' ? 'show' : 'hide'}`}>
+                                            <EditorPanel
+                                                code={jsCode}
+                                                readOnly={readOnly}
+                                                openFindBox={isFindCode}
+                                                fontZoomIn={isFontZoomIn}
+                                                fontZoomOut={isFontZoomOut}
+                                                onChange={debounceCodeEdit.current}
+                                                isDarkTheme={theme === 'dark'}
+                                                language="typescript"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className={`compile-message compile-message-${log.state}`}>{log.message}</div>
+                                </>
+                                {/* HiGlass View Config */}
+                                <Allotment.Pane preferredSize={BOTTOM_PANEL_HEADER_HEIGHT}>
                                     <div className={`editor-header ${theme === 'dark' ? 'dark' : ''}`}>
                                         Compiled HiGlass ViewConfig (Read Only)
                                     </div>
@@ -1124,22 +1126,11 @@ function Editor(props: RouteComponentProps) {
                                             language="json"
                                         />
                                     </div>
-                                </>
-                                {/**
-                                 * TODO: This is only for showing a scroll view for the higlass view config editor
-                                 * Remove the below line and the nearest SplitPane after figuring out a better way
-                                 * of showing the scroll view.
-                                 */}
-                                <></>
-                            </SplitPane>
-                        </SplitPane>
+                                </Allotment.Pane>
+                            </Allotment>
+                        </Allotment.Pane>
                         <ErrorBoundary>
-                            <SplitPane
-                                split="horizontal"
-                                defaultSize={`calc(100% - ${BOTTOM_PANEL_HEADER_HEIGHT}px)`}
-                                size={isShowDataPreview ? '40%' : `calc(100% - ${BOTTOM_PANEL_HEADER_HEIGHT}px)`}
-                                maxSize={window.innerHeight - EDITOR_HEADER_HEIGHT - BOTTOM_PANEL_HEADER_HEIGHT}
-                            >
+                            <Allotment ref={displayPanelRef} vertical={true}>
                                 <div
                                     id="preview-container"
                                     className={`preview-container ${theme === 'dark' ? 'dark' : ''}`}
@@ -1171,122 +1162,116 @@ function Editor(props: RouteComponentProps) {
                                         />
                                     </div>
                                     {/* {expertMode && false ? (
-                                        <div
-                                            style={{
-                                                position: 'absolute',
-                                                right: '2px',
-                                                bottom: '2px',
-                                                padding: '20px',
-                                                background: '#FAFAFAAA',
-                                                border: '1px solid black'
-                                            }}
-                                        >
-                                            <div style={{ fontWeight: 'bold' }}>
-                                                {`${mouseEventInfo?.data.length} Marks Selected By Mouse ${
-                                                    mouseEventInfo?.type === 'click' ? 'Click' : 'Over'
-                                                }`}
-                                            </div>
-                                            <div style={{}}>{`The event occurs at ${mouseEventInfo?.position}`}</div>
-                                            <table>
-                                                {mouseEventInfo?.data && mouseEventInfo?.data.length !== 0
-                                                    ? Object.entries(mouseEventInfo?.data[0]).map(([k, v]) => (
-                                                          <tr key={k}>
-                                                              <td>{k}</td>
-                                                              <td>{v}</td>
-                                                          </tr>
-                                                      ))
-                                                    : null}
-                                            </table>
-                                        </div>
-                                    ) : null} */}
-                                </div>
-                                <SplitPane split="vertical" defaultSize="100%">
-                                    <>
-                                        <button
-                                            className={`editor-header ${theme === 'dark' ? 'dark' : ''}`}
-                                            style={{ cursor: 'pointer' }}
-                                            onClick={() => setIsShowDataPreview(!isShowDataPreview)}
-                                        >
-                                            Data Preview (~100 Rows, Data Before Transformation)
-                                        </button>
-                                        <div className="editor-data-preview-panel">
-                                            <button
-                                                title="Refresh preview data"
-                                                className="data-preview-refresh-button"
-                                                onClick={() => setRefreshData(!refreshData)}
+                                            <div
+                                                style={{
+                                                    position: 'absolute',
+                                                    right: '2px',
+                                                    bottom: '2px',
+                                                    padding: '20px',
+                                                    background: '#FAFAFAAA',
+                                                    border: '1px solid black'
+                                                }}
                                             >
-                                                {getIconSVG(ICONS.REFRESH, 23, 23)}
-                                                <br />
-                                                {'REFRESH DATA'}
-                                            </button>
-                                            {previewData.current.length > selectedPreviewData &&
-                                            previewData.current[selectedPreviewData] &&
-                                            previewData.current[selectedPreviewData].data.length > 0 ? (
-                                                <>
-                                                    <div className="editor-data-preview-tab">
-                                                        {previewData.current.map((d: PreviewData, i: number) => (
-                                                            <button
-                                                                className={
-                                                                    i === selectedPreviewData
-                                                                        ? 'selected-tab'
-                                                                        : 'unselected-tab'
-                                                                }
-                                                                key={JSON.stringify(d)}
-                                                                onClick={() => setSelectedPreviewData(i)}
-                                                            >
-                                                                {`${(
-                                                                    JSON.parse(d.dataConfig).data.type as string
-                                                                ).toLocaleLowerCase()} `}
-                                                                <small>{i}</small>
-                                                            </button>
-                                                        ))}
-                                                    </div>
-                                                    <div className="editor-data-preview-tab-info">
-                                                        {getDataPreviewInfo(
-                                                            previewData.current[selectedPreviewData].dataConfig
-                                                        )}
-                                                    </div>
-                                                    <div className="editor-data-preview-table">
-                                                        <table>
-                                                            <tbody>
-                                                                <tr>
-                                                                    {Object.keys(
-                                                                        previewData.current[selectedPreviewData].data[0]
-                                                                    ).map((field: string, i: number) => (
-                                                                        <th key={i}>{field}</th>
-                                                                    ))}
-                                                                </tr>
-                                                                {previewData.current[selectedPreviewData].data.map(
-                                                                    (row: Datum, i: number) => (
-                                                                        <tr key={i}>
-                                                                            {Object.keys(row).map(
-                                                                                (field: string, j: number) => (
-                                                                                    <td key={j}>
-                                                                                        {row[field]?.toString()}
-                                                                                    </td>
-                                                                                )
-                                                                            )}
-                                                                        </tr>
-                                                                    )
-                                                                )}
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </>
-                                            ) : null}
-                                        </div>
-                                    </>
-                                    {/**
-                                     * TODO: This is only for showing a scroll view for the higlass view config editor
-                                     * Remove the below line and the nearest SplitPane after figuring out a better way
-                                     * of showing the scroll view.
-                                     */}
-                                    <></>
-                                </SplitPane>
-                            </SplitPane>
+                                                <div style={{ fontWeight: 'bold' }}>
+                                                    {`${mouseEventInfo?.data.length} Marks Selected By Mouse ${
+                                                        mouseEventInfo?.type === 'click' ? 'Click' : 'Over'
+                                                    }`}
+                                                </div>
+                                                <div style={{}}>{`The event occurs at ${mouseEventInfo?.position}`}</div>
+                                                <table>
+                                                    {mouseEventInfo?.data && mouseEventInfo?.data.length !== 0
+                                                        ? Object.entries(mouseEventInfo?.data[0]).map(([k, v]) => (
+                                                            <tr key={k}>
+                                                                <td>{k}</td>
+                                                                <td>{v}</td>
+                                                            </tr>
+                                                        ))
+                                                        : null}
+                                                </table>
+                                            </div>
+                                        ) : null} */}
+                                </div>
+                                <Allotment.Pane
+                                    preferredSize={BOTTOM_PANEL_HEADER_HEIGHT}
+                                    minSize={BOTTOM_PANEL_HEADER_HEIGHT}
+                                >
+                                    <button
+                                        className={`editor-header ${theme === 'dark' ? 'dark' : ''}`}
+                                        style={{ cursor: 'pointer' }}
+                                    >
+                                        Data Preview (~100 Rows, Data Before Transformation)
+                                    </button>
+                                    <div className="editor-data-preview-panel">
+                                        <button
+                                            title="Refresh preview data"
+                                            className="data-preview-refresh-button"
+                                            onClick={() => setRefreshData(!refreshData)}
+                                        >
+                                            {getIconSVG(ICONS.REFRESH, 23, 23)}
+                                            <br />
+                                            {'REFRESH DATA'}
+                                        </button>
+                                        {previewData.current.length > selectedPreviewData &&
+                                        previewData.current[selectedPreviewData] &&
+                                        previewData.current[selectedPreviewData].data.length > 0 ? (
+                                            <>
+                                                <div className="editor-data-preview-tab">
+                                                    {previewData.current.map((d: PreviewData, i: number) => (
+                                                        <button
+                                                            className={
+                                                                i === selectedPreviewData
+                                                                    ? 'selected-tab'
+                                                                    : 'unselected-tab'
+                                                            }
+                                                            key={JSON.stringify(d)}
+                                                            onClick={() => setSelectedPreviewData(i)}
+                                                        >
+                                                            {`${(
+                                                                JSON.parse(d.dataConfig).data.type as string
+                                                            ).toLocaleLowerCase()} `}
+                                                            <small>{i}</small>
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                                <div className="editor-data-preview-tab-info">
+                                                    {getDataPreviewInfo(
+                                                        previewData.current[selectedPreviewData].dataConfig
+                                                    )}
+                                                </div>
+                                                <div className="editor-data-preview-table">
+                                                    <table>
+                                                        <tbody>
+                                                            <tr>
+                                                                {Object.keys(
+                                                                    previewData.current[selectedPreviewData].data[0]
+                                                                ).map((field: string, i: number) => (
+                                                                    <th key={i}>{field}</th>
+                                                                ))}
+                                                            </tr>
+                                                            {previewData.current[selectedPreviewData].data.map(
+                                                                (row: Datum, i: number) => (
+                                                                    <tr key={i}>
+                                                                        {Object.keys(row).map(
+                                                                            (field: string, j: number) => (
+                                                                                <td key={j}>
+                                                                                    {row[field]?.toString()}
+                                                                                </td>
+                                                                            )
+                                                                        )}
+                                                                    </tr>
+                                                                )
+                                                            )}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </>
+                                        ) : null}
+                                    </div>
+                                </Allotment.Pane>
+                            </Allotment>
                         </ErrorBoundary>
-                    </SplitPane>
-                </SplitPane>
+                    </Allotment>
+                </Allotment>
                 {/* Description Panel */}
                 <div
                     className={`description ${hideDescription ? '' : 'description-shadow '}${
