@@ -5,13 +5,24 @@ describe('Data Transformation', () => {
     it('Filter', () => {
         let filtered = filterData({ type: 'filter', field: 'c', oneOf: ['a'] }, [
             { c: 'a', q: 1 },
+            { c: 'b', q: '1' }, // string should be converted
             { c: 'a', q: 3 },
-            { c: 'b', q: 4 }
+            { c: 'b', q: 4 },
+            { c: 'b', q: '4' } // string should be converted
         ]);
         filtered = filterData({ type: 'filter', field: 'q', inRange: [1, 3.5] }, filtered);
-        expect(filtered).toHaveLength(2);
-        expect(filtered.filter(d => d['c'] === 'b')).toHaveLength(0);
-        expect(filtered.filter(d => d['q'] === 4)).toHaveLength(0);
+        expect(filtered).toMatchInlineSnapshot(`
+          [
+            {
+              "c": "a",
+              "q": 1,
+            },
+            {
+              "c": "a",
+              "q": 3,
+            },
+          ]
+        `);
     });
     it('Pile', () => {
         const data = [
