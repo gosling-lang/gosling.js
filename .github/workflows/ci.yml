@@ -60,4 +60,4 @@ jobs:
             - name: Assert schemas are all up to date
               run: |
                   yarn schema
-                  diff --exit-code
+                  git diff --exit-code
