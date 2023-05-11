@@ -1,3 +1,21 @@
+## [0.9.30](https://github.com/gosling-lang/gosling.js/compare/v0.9.29...v0.9.30) (2023-05-11)
+
+
+### Bug Fixes
+
+* fix `inRange` filter ([#896](https://github.com/gosling-lang/gosling.js/issues/896)) ([13a70a2](https://github.com/gosling-lang/gosling.js/commit/13a70a2eb367cbbce95ed4c6e617d5e1316439f9))
+* pileup calculation works when start and end fields are the same ([#891](https://github.com/gosling-lang/gosling.js/issues/891)) ([7754a15](https://github.com/gosling-lang/gosling.js/commit/7754a150f602444b1c74cf928c93df9fa6a07251))
+* tile values are correctly filtered based on genomics windows ([#892](https://github.com/gosling-lang/gosling.js/issues/892)) ([cef7953](https://github.com/gosling-lang/gosling.js/commit/cef7953e14c78be7e6638b7be10a3c1900fb5676))
+
+
+### Features
+
+* add BED file datafetcher ([#877](https://github.com/gosling-lang/gosling.js/issues/877)) ([a087340](https://github.com/gosling-lang/gosling.js/commit/a087340e996dc88d0b18094e6ab16bac36521731))
+* add islandviewer example ([#887](https://github.com/gosling-lang/gosling.js/issues/887)) ([897b0ef](https://github.com/gosling-lang/gosling.js/commit/897b0eff6ff7758741f4b42c29a1c6468addf25f))
+* support React 18 ([#898](https://github.com/gosling-lang/gosling.js/issues/898)) ([dc13381](https://github.com/gosling-lang/gosling.js/commit/dc1338110861b9ac50daab6f2e64db2fe75423ee))
+
+
+
 ## [0.9.29](https://github.com/gosling-lang/gosling.js/compare/v0.9.28...v0.9.29) (2023-04-26)
 
 
