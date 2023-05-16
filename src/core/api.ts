@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import type { TrackMouseEventData } from '@gosling.schema';
 import type { HiGlassApi } from './higlass-component-wrapper';
-import type { HiGlassSpec } from './higlass.schema';
+import type { HiGlassSpec } from '@higlass.schema';
 import { subscribe, unsubscribe } from './pubsub';
 import { computeChromSizes, GenomicPositionHelper } from './utils/assembly';
 import type { CompleteThemeDeep } from './utils/theme';

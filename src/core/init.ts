@@ -3,7 +3,7 @@ import higlassRegister from 'higlass-register';
 // @ts-ignore
 import { TextTrack } from 'higlass-text';
 import { AxisTrack } from '../gosling-genomic-axis';
-import { BrushTrack } from '../gosling-brush';
+import { BrushTrack } from '@gosling-brush';
 import { GoslingTrack } from '../gosling-track/index';
 import * as dataFetchers from '../data-fetchers';
 
