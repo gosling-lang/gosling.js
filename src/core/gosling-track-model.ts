@@ -42,7 +42,7 @@ import {
 } from './gosling.schema.guards';
 import { CHANNEL_DEFAULTS } from './channel';
 import { type CompleteThemeDeep, getTheme } from './utils/theme';
-import { MouseEventModel } from '../gosling-mouse-event';
+import { MouseEventModel } from '@gosling-mouse-event';
 
 export type ScaleType =
     | ScaleLinear<any, any>

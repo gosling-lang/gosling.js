@@ -1,5 +1,5 @@
+import type { Tile } from '@gosling-track';
 import type { GoslingTrackModel } from '../gosling-track-model';
-import type { Tile } from '../../gosling-track/gosling-track';
 import { drawPoint } from './point';
 import { drawLine } from './line';
 import { drawBar } from './bar';

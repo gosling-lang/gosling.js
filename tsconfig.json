@@ -26,6 +26,11 @@
       "gosling.js": ["./src/index.ts"],
       "@gosling.schema": ["./src/core/gosling.schema.ts"],
       "@higlass.schema": ["./src/core/higlass.schema.ts"],
+      "@gosling-mouse-event": ["./src/gosling-mouse-event/index.ts"],
+      "@gosling-track": ["./src/gosling-track/index.ts"],
+      "@gosling-genomic-axis": ["./src/gosling-genomic-axis/index.ts"],
+      "@gosling-brush": ["./src/gosling-brush/index.ts"],
+      "@data-fetchers": ["./src/data-fetchers/index.ts"],
       "zlib": ["./src/alias/zlib.ts"]
     },
     "baseUrl": ".",
