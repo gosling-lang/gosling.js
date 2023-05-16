@@ -4201,10 +4201,10 @@ higlass-text@^0.1.1:
     higlass-register "^0.3.0"
     slugid "^2.0.0"
 
-higlass@^1.12.3:
-  version "1.12.3"
-  resolved "https://registry.yarnpkg.com/higlass/-/higlass-1.12.3.tgz#7cac00dab69d3e0d083a0a1c6e721e0b3de3c8ab"
-  integrity sha512-VgK7AAlow/GN8hgc7fJmDHBP6hCaQ508RZ2Oh/Je0y3YFTaVlKhK+I07+xqdgRud+0tKegFJt4O6agZ688hmog==
+higlass@^1.12.4:
+  version "1.12.4"
+  resolved "https://registry.yarnpkg.com/higlass/-/higlass-1.12.4.tgz#e494908a2316055ba31f01dfba4205da930eaf33"
+  integrity sha512-MfjB6RHjTAqWxi5PjoyetnIigdzjcnTBzOdCSaU5ek6G3ewytuXBLD6KIOKUGBRT2D8cfb4Cz/TP6ZzSDBd3kw==
   dependencies:
     ajv "^6.10.0"
     box-intersect "^1.0.1"
