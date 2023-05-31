@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom';
 
 import type { GoslingSpec } from './gosling.schema';
 import type { HiGlassSpec } from './higlass.schema';
@@ -41,8 +41,7 @@ const launchHiglass = (
         className: opts.className,
         options: opts
     });
-    const root = ReactDOM.createRoot(element);
-    root.render(component);
+    ReactDOM.render(component, element);
 
     // For some reason our wrapper component fails to initialize the provided `ref`
     // immediately like `hglib.launch()`. This is a work-around to poll `ref`
