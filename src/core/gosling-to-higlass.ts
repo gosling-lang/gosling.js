@@ -27,17 +27,27 @@ export function goslingToHiGlass(
     gosTrack: Track,
     bb: BoundingBox,
     layout: RelativePosition,
-    theme: Required<CompleteThemeDeep>
+    theme: Required<CompleteThemeDeep>,
+    idTable: Record<string, string>
 ): HiGlassModel {
     // TODO: check whether there are multiple track.data across superposed tracks
     // ...
 
     // we only look into the first resolved spec to get information, such as size of the track
-    const firstResolvedSpec = resolveSuperposedTracks(gosTrack)[0];
+    const resolvedSpecs = resolveSuperposedTracks(gosTrack);
+    const firstResolvedSpec = resolvedSpecs[0];
 
+    // If missing, create a unique track ID that will be used as HiGlass view ID for caching
+    const trackId = firstResolvedSpec.id ?? uuid.v4();
     if (!firstResolvedSpec.id) {
-        firstResolvedSpec.id = uuid.v4();
+        firstResolvedSpec.id = trackId;
     }
+
+    // Store the mapping between Gosling track ID and HiGlass view ID so that any lost track IDs
+    // can be recovered and used for JS APIs.
+    resolvedSpecs.forEach(spec => {
+        idTable[spec.id ?? uuid.v4()] = trackId;
+    });
 
     const assembly = firstResolvedSpec.assembly;
 

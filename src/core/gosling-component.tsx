@@ -43,6 +43,8 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
     const wrapperParentSize = useRef<undefined | { width: number; height: number }>();
     const prevSpec = useRef<undefined | gosling.GoslingSpec>();
     const trackInfos = useRef<TrackMouseEventData[]>([]);
+    /** A mapping table that connects between Gosling track IDs to corresponding HiGlas view IDs */
+    const idTable = useRef<Record<string, string>>({});
 
     // HiGlass API
     // https://dev.to/wojciechmatuszewski/mutable-and-immutable-useref-semantics-with-react-typescript-30c9
@@ -57,7 +59,8 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
         () => {
             const hgApi = refAsReadonlyProxy(hgRef);
             const infos = refAsReadonlyProxy(trackInfos);
-            const api = createApi(hgApi, viewConfig, infos, theme);
+            const table = refAsReadonlyProxy(idTable);
+            const api = createApi(hgApi, viewConfig, infos, theme, table);
             return { api, hgApi };
         },
         [viewConfig, theme]
@@ -75,7 +78,7 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
 
             gosling.compile(
                 props.spec,
-                (newHs, newSize, newGs, newTrackInfos) => {
+                (newHs, newSize, newGs, newTrackInfos, newIdTable) => {
                     // TODO: `linkingId` should be updated
                     // We may not want to re-render this
                     if (
@@ -105,6 +108,7 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
 
                     prevSpec.current = newGs;
                     trackInfos.current = newTrackInfos;
+                    idTable.current = newIdTable;
                 },
                 [...GoslingTemplates], // TODO: allow user definitions
                 theme,

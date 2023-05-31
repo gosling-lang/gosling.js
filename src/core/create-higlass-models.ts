@@ -20,10 +20,13 @@ export function renderHiGlass(
     // HiGlass model
     const hgModel = new HiGlassModel();
 
+    // A mapping table between Gosling track IDs to HiGlass view IDs
+    const idTable: Record<string, string> = {};
+
     /* Update the HiGlass model by iterating tracks */
     trackInfos.forEach(tb => {
         const { track, boundingBox: bb, layout } = tb;
-        goslingToHiGlass(hgModel, track, bb, layout, theme);
+        goslingToHiGlass(hgModel, track, bb, layout, theme, idTable);
     });
 
     /* Add linking information to the HiGlass model */
@@ -86,5 +89,5 @@ export function renderHiGlass(
         };
     });
 
-    callback(hgModel.spec(), getBoundingBox(trackInfos), spec, trackInfosWithShapes);
+    callback(hgModel.spec(), getBoundingBox(trackInfos), spec, trackInfosWithShapes, idTable);
 }

@@ -42,7 +42,8 @@ export function createApi(
     hg: Readonly<HiGlassApi>,
     hgSpec: HiGlassSpec | undefined,
     trackInfos: readonly TrackMouseEventData[],
-    theme: Required<CompleteThemeDeep>
+    theme: Required<CompleteThemeDeep>,
+    idTable: Record<string, string>
 ): GoslingApi {
     const getTracks = () => {
         return [...trackInfos];
@@ -89,26 +90,40 @@ export function createApi(
             canvasHeight: canvas.height
         };
     };
+    /**
+     * Get the HiGlass view ID from the Gosling track ID.
+     */
+    const getHgViewId = (trackId: string) => {
+        const viewId = idTable[trackId];
+        if(!viewId) {
+            console.warn(`Unable to find the track ID, named ${trackId}.`);
+        }
+        return viewId ?? trackId;
+    };
     return {
         subscribe,
         unsubscribe,
-        zoomTo: (viewId, position, padding = 0, duration = 1000) => {
+        zoomTo: (trackId, position, padding = 0, duration = 1000) => {
             // Accepted input: 'chr1' or 'chr1:1-1000'
-            const assembly = getTrack(viewId)?.spec.assembly;
+            const assembly = getTrack(trackId)?.spec.assembly;
             const manager = GenomicPositionHelper.fromString(position);
             const absCoordinates = manager.toAbsoluteCoordinates(assembly, padding);
-            hg.api.zoomTo(viewId, ...absCoordinates, ...absCoordinates, duration);
+            const hgViewId = getHgViewId(trackId);
+            hg.api.zoomTo(hgViewId, ...absCoordinates, ...absCoordinates, duration);
         },
-        zoomToExtent: (viewId, duration = 1000) => {
-            const assembly = getTrack(viewId)?.spec.assembly;
+        zoomToExtent: (trackId, duration = 1000) => {
+            const assembly = getTrack(trackId)?.spec.assembly;
             const [start, end] = [0, computeChromSizes(assembly).total];
-            hg.api.zoomTo(viewId, start, end, start, end, duration);
+            const hgViewId = getHgViewId(trackId);
+            hg.api.zoomTo(hgViewId, start, end, start, end, duration);
         },
-        zoomToGene: (viewId, gene, padding = 0, duration = 1000) => {
-            hg.api.zoomToGene(viewId, gene, padding, duration);
+        zoomToGene: (trackId, gene, padding = 0, duration = 1000) => {
+            const hgViewId = getHgViewId(trackId);
+            hg.api.zoomToGene(hgViewId, gene, padding, duration);
         },
-        suggestGene: (viewId: string, keyword: string, callback: (suggestions: GeneSuggestion[]) => void) => {
-            hg.api.suggestGene(viewId, keyword, callback);
+        suggestGene: (trackId: string, keyword: string, callback: (suggestions: GeneSuggestion[]) => void) => {
+            const hgViewId = getHgViewId(trackId);
+            hg.api.suggestGene(hgViewId, keyword, callback);
         },
         getViewIds: () => {
             if (!hgSpec) return [];
