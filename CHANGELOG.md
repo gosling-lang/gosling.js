@@ -1,3 +1,18 @@
+## [0.9.31](https://github.com/gosling-lang/gosling.js/compare/v0.9.30...v0.9.31) (2023-05-31)
+
+
+### Bug Fixes
+
+* revert breaking React 18 changes ([#913](https://github.com/gosling-lang/gosling.js/issues/913)) ([52bf2f2](https://github.com/gosling-lang/gosling.js/commit/52bf2f27bece7a8ecc038533c8a051c62fb9ba7b))
+
+
+### Features
+
+* islandviewer improvements ([#906](https://github.com/gosling-lang/gosling.js/issues/906)) ([86f50de](https://github.com/gosling-lang/gosling.js/commit/86f50deb3948cc103cde354e49c51d456e7987d1))
+* upgrade higlass to v1.12.4 ([#902](https://github.com/gosling-lang/gosling.js/issues/902)) ([758f730](https://github.com/gosling-lang/gosling.js/commit/758f730cc9407c364e057bfe86971367b89608da)), closes [#903](https://github.com/gosling-lang/gosling.js/issues/903)
+
+
+
 ## [0.9.30](https://github.com/gosling-lang/gosling.js/compare/v0.9.29...v0.9.30) (2023-05-11)
 
 
