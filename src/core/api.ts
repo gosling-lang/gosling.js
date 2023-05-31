@@ -109,12 +109,7 @@ export function createApi(
         return viewId ?? trackId;
     };
     const getTrackIds = () => {
-        if (!hgSpec) return [];
-        const ids: string[] = [];
-        traverseViewsInViewConfig(hgSpec, view => {
-            if (view.uid) ids.push(view.uid);
-        });
-        return ids;
+        return Object.keys(idTable);
     };
     return {
         subscribe,
