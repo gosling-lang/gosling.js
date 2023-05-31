@@ -7,7 +7,13 @@ import type { CompleteThemeDeep } from './utils/theme';
 import { renderHiGlass as createHiGlassModels } from './create-higlass-models';
 import { manageResponsiveSpecs } from './responsive';
 
-export type CompileCallback = (hg: HiGlassSpec, size: Size, gs: GoslingSpec, trackInfos: TrackMouseEventData[], idTable: Record<string, string>) => void;
+export type CompileCallback = (
+    hg: HiGlassSpec,
+    size: Size,
+    gs: GoslingSpec,
+    trackInfos: TrackMouseEventData[],
+    idTable: Record<string, string>
+) => void;
 
 export function compile(
     spec: GoslingSpec,

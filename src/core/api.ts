@@ -5,7 +5,6 @@ import type { HiGlassSpec } from '@higlass.schema';
 import { subscribe, unsubscribe } from './pubsub';
 import { computeChromSizes, GenomicPositionHelper } from './utils/assembly';
 import type { CompleteThemeDeep } from './utils/theme';
-import { traverseViewsInViewConfig } from './utils/view-config';
 
 /**
  * Information of suggested genes.
@@ -103,7 +102,7 @@ export function createApi(
      */
     const getHgViewId = (trackId: string) => {
         const viewId = idTable[trackId];
-        if(!viewId) {
+        if (!viewId) {
             console.warn(`Unable to find the track ID, named ${trackId}.`);
         }
         return viewId ?? trackId;

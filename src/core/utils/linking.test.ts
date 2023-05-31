@@ -34,7 +34,8 @@ describe('Should get linking information correctly', () => {
                 w: 12,
                 h: 12
             },
-            getTheme()
+            getTheme(),
+            {}
         );
         const info = getLinkingInfo(higlass);
         expect(info).toHaveLength(2);

@@ -24,7 +24,8 @@ describe('Should convert gosling spec to higlass view config.', () => {
                 w: 12,
                 h: 12
             },
-            getTheme()
+            getTheme(),
+            {}
         ).spec();
         expect(Object.keys(higlass)).not.toHaveLength(0);
     });
@@ -47,7 +48,8 @@ describe('Should convert gosling spec to higlass view config.', () => {
                 w: 12,
                 h: 12
             },
-            getTheme()
+            getTheme(),
+            {}
         ).spec();
         expect(higlass.views).toHaveLength(0);
     });
