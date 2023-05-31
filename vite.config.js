@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import reactRefresh from '@vitejs/plugin-react-refresh';
+import react from '@vitejs/plugin-react';
 import * as esbuild from 'esbuild';
 import path from 'path';
 import pkg from './package.json';
@@ -7,20 +7,20 @@ import pkg from './package.json';
 /**
  * Bundles vite worker modules during development into single scripts.
  * see: https://github.com/hms-dbmi/viv/pull/469#issuecomment-877276110
- * @returns {import('vite').Plugin}
+ * @type {import('vite').Plugin}
  */
 const bundleWebWorker = {
     name: 'bundle-web-worker',
     apply: 'serve', // plugin only applied with dev-server
     async transform(_, id) {
-        if (/\?worker_file$/.test(id)) {
+        if (/\?type=module&worker_file$/.test(id)) {
             // just use esbuild to bundle the worker dependencies
             const bundle = await esbuild.build({
                 entryPoints: [id],
                 inject: ['./src/alias/buffer-shim.js'],
                 format: 'iife',
                 bundle: true,
-                write: false
+                write: false,
             });
             if (bundle.outputFiles.length !== 1) {
                 throw new Error('Worker must be a single module.');
@@ -32,7 +32,9 @@ const bundleWebWorker = {
 
 // We can't inject a global `Buffer` polyfill for the worker entrypoint using vite alone,
 // so we reuse the `bundle-web-worker` plugin to inject the buffer shim during production.
+/** @type {import('vite').Plugin}*/
 const manualInlineWorker = {
+    name: 'manual-inline-worker',
     apply: 'build',
     async transform(code, id) {
         if (id.endsWith('bam-worker.ts?worker&inline') || id.endsWith('vcf-worker.ts?worker&inline')) {
@@ -86,7 +88,7 @@ const esm = defineConfig({
         rollupOptions: { external }
     },
     resolve: { alias },
-    plugins: [manualInlineWorker]
+    plugins: [manualInlineWorker],
 });
 
 const dev = defineConfig({
@@ -96,7 +98,7 @@ const dev = defineConfig({
         'process.platform': 'undefined',
         'process.env.THREADS_WORKER_INIT_TIMEOUT': 'undefined'
     },
-    plugins: [bundleWebWorker, manualInlineWorker]
+    plugins: [bundleWebWorker, manualInlineWorker],
 });
 
 const testing = defineConfig({
@@ -123,7 +125,7 @@ export default ({ command, mode }) => {
     if (command === 'build' && mode === 'lib') return esm;
     if (mode == 'test') return testing;
     if (mode === 'editor') {
-        dev.plugins.push(reactRefresh());
+        dev.plugins.push(react());
     }
     return dev;
 };

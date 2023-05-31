@@ -1,41 +1,36 @@
-import { afterAll, vi, beforeAll } from 'vitest';
-import { randomFillSync } from 'crypto';
+import { afterAll, vi } from 'vitest';
 
-// global needs to be set before import jest-canvas-mock
-global.jest = vi;
-import getCanvasWindow from 'jest-canvas-mock/lib/window';
+global.jest = vi
 
 const apis = [
-    'Path2D',
-    'CanvasGradient',
-    'CanvasPattern',
-    'CanvasRenderingContext2D',
-    'DOMMatrix',
-    'ImageData',
-    'TextMetrics',
-    'ImageBitmap',
-    'createImageBitmap'
+  'Path2D',
+  'CanvasGradient',
+  'CanvasPattern',
+  'CanvasRenderingContext2D',
+  'DOMMatrix',
+  'ImageData',
+  'TextMetrics',
+  'ImageBitmap',
+  'createImageBitmap',
 ];
 
-const canvasWindow = getCanvasWindow({ document: window.document });
+async function importMockWindow() {
 
-apis.forEach(api => {
-    global[api] = canvasWindow[api];
-    global.window[api] = canvasWindow[api];
-});
+  const getCanvasWindow = await import('jest-canvas-mock/lib/window').then(res => res.default?.default || res.default || res)
 
-beforeAll(() => {
-    // jsdom doesn't come with a WebCrypto implementation (required for uuid)
-    global.crypto = {
-        getRandomValues: function (buffer) {
-            return randomFillSync(buffer);
-        }
-    };
-    // jsdom doesn't come with a `URL.createObjectURL` implementation
-    global.URL.createObjectURL = () => { return ''; };
-});
+  const canvasWindow = getCanvasWindow({ document: window.document })
+
+  apis.forEach((api) => {
+    global[api] = canvasWindow[api]
+    global.window[api] = canvasWindow[api]
+  })
+}
+
+importMockWindow()
 
 afterAll(() => {
-    delete global.jest;
-    delete global.window.jest;
-});
+  delete global.jest
+  delete global.window.jest
+})
+
+export {}
