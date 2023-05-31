@@ -59,8 +59,7 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
         () => {
             const hgApi = refAsReadonlyProxy(hgRef);
             const infos = refAsReadonlyProxy(trackInfos);
-            const table = refAsReadonlyProxy(idTable);
-            const api = createApi(hgApi, viewConfig, infos, theme, table);
+            const api = createApi(hgApi, viewConfig, infos, theme, idTable.current);
             return { api, hgApi };
         },
         [viewConfig, theme]

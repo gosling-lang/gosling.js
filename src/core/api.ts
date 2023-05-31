@@ -50,8 +50,9 @@ export function createApi(
     hgSpec: HiGlassSpec | undefined,
     trackInfos: readonly TrackMouseEventData[],
     theme: Required<CompleteThemeDeep>,
-    idTable: Record<string, string>
+    idTable: Readonly<Record<string, string>>
 ): GoslingApi {
+    const idTableCopy = JSON.parse(JSON.stringify(idTable));
     const getTracks = () => {
         return [...trackInfos];
     };
@@ -101,14 +102,14 @@ export function createApi(
      * Get the HiGlass view ID from the Gosling track ID.
      */
     const getHgViewId = (trackId: string) => {
-        const viewId = idTable[trackId];
+        const viewId = idTableCopy[trackId];
         if (!viewId) {
             console.warn(`Unable to find the track ID, named ${trackId}.`);
         }
         return viewId ?? trackId;
     };
     const getTrackIds = () => {
-        return Object.keys(idTable);
+        return Object.keys(idTableCopy);
     };
     return {
         subscribe,
