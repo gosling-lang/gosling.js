@@ -8,11 +8,11 @@ import type { CompileCallback } from './compile';
 
 /**
  * Create a HiGlass model from the Gosling spec and call the callback function.
- * @param spec 
- * @param trackInfos 
- * @param callback 
- * @param theme 
- * @returns 
+ * @param spec
+ * @param trackInfos
+ * @param callback
+ * @param theme
+ * @returns
  */
 export function renderHiGlass(
     spec: GoslingSpec,

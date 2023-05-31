@@ -104,7 +104,7 @@ export function createApi(
             if (view.uid) ids.push(view.uid);
         });
         return ids;
-    }
+    };
     return {
         subscribe,
         unsubscribe,
