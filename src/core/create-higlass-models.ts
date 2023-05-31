@@ -6,6 +6,14 @@ import type { GoslingSpec, OverlaidTrack, SingleTrack, TrackMouseEventData } fro
 import type { CompleteThemeDeep } from './utils/theme';
 import type { CompileCallback } from './compile';
 
+/**
+ * Create a HiGlass model from the Gosling spec and call the callback function.
+ * @param spec
+ * @param trackInfos
+ * @param callback
+ * @param theme
+ * @returns
+ */
 export function renderHiGlass(
     spec: GoslingSpec,
     trackInfos: TrackInfo[],
