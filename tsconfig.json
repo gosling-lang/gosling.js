@@ -31,6 +31,7 @@
       "@gosling-genomic-axis": ["./src/gosling-genomic-axis/index.ts"],
       "@gosling-brush": ["./src/gosling-brush/index.ts"],
       "@data-fetchers": ["./src/data-fetchers/index.ts"],
+      "@gosling-lang/gosling-higlass": ["./src/gosling-higlass/index.ts"],
       "zlib": ["./src/alias/zlib.ts"]
     },
     "baseUrl": ".",

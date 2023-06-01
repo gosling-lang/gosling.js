@@ -18,7 +18,7 @@ import {
 import { DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM } from './defaults';
 import type { CompleteThemeDeep } from './utils/theme';
 import { DEFAULT_TEXT_STYLE } from './utils/text-style';
-import type { IdManager } from '../higlass-manager';
+import { IdMapper } from '@gosling-lang/gosling-higlass';
 
 /**
  * Convert a gosling track into a HiGlass view and add it into a higlass model.
@@ -29,7 +29,7 @@ export function goslingToHiGlass(
     bb: BoundingBox,
     layout: RelativePosition,
     theme: Required<CompleteThemeDeep>,
-    idManager: IdManager
+    idManager: IdMapper
 ): HiGlassModel {
     // TODO: check whether there are multiple track.data across superposed tracks
     // ...

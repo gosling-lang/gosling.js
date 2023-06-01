@@ -1,7 +1,7 @@
 /**
  * Manage IDs of Gosling tracks and compiled HiGlass views.
  */
-export default class IdManager {
+export default class IdMapper {
     /** A mapping table between Gosling track IDs to HiGlass view IDs */
     #idTable: Record<string, string> = {};
 

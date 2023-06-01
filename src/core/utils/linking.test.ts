@@ -1,4 +1,4 @@
-import { IdManager } from '../../higlass-manager';
+import { IdMapper } from '@gosling-lang/gosling-higlass';
 import { goslingToHiGlass } from '../gosling-to-higlass';
 import { HiGlassModel } from '../higlass-model';
 import { getLinkingInfo } from './linking';
@@ -36,7 +36,7 @@ describe('Should get linking information correctly', () => {
                 h: 12
             },
             getTheme(),
-            new IdManager()
+            new IdMapper()
         );
         const info = getLinkingInfo(higlass);
         expect(info).toHaveLength(2);

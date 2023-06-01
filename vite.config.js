@@ -62,6 +62,7 @@ const alias = {
     "@gosling-genomic-axis": path.resolve(__dirname, "./src/gosling-genomic-axis/index.ts"),
     "@gosling-brush": path.resolve(__dirname, "./src/gosling-brush/index.ts"),
     "@data-fetchers": path.resolve(__dirname, "./src/data-fetchers/index.ts"),
+    "@gosling-lang/gosling-higlass": path.resolve(__dirname, "./src/gosling-higlass/index.ts"),
     zlib: path.resolve(__dirname, './src/alias/zlib.ts'),
     uuid: path.resolve(__dirname, './node_modules/uuid/dist/esm-browser/index.js')
 };
