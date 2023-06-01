@@ -1,33 +1,31 @@
 import { beforeAll, afterAll, vi } from 'vitest';
 import { randomFillSync } from 'crypto';
 
-global.jest = vi
+global.jest = vi;
 
 const apis = [
-  'Path2D',
-  'CanvasGradient',
-  'CanvasPattern',
-  'CanvasRenderingContext2D',
-  'DOMMatrix',
-  'ImageData',
-  'TextMetrics',
-  'ImageBitmap',
-  'createImageBitmap',
+    'Path2D',
+    'CanvasGradient',
+    'CanvasPattern',
+    'CanvasRenderingContext2D',
+    'DOMMatrix',
+    'ImageData',
+    'TextMetrics',
+    'ImageBitmap',
+    'createImageBitmap',
 ];
 
-async function importMockWindow() {
+// global.jest needs to be set before import jest-canvas-mock
+(async () => {
+    const mod = await import('jest-canvas-mock/lib/window');
+    const getCanvasWindow = mod.default?.default || mod.default || mod;
+    const canvasWindow = getCanvasWindow({ document: window.document });
 
-  const getCanvasWindow = await import('jest-canvas-mock/lib/window').then(res => res.default?.default || res.default || res)
-
-  const canvasWindow = getCanvasWindow({ document: window.document })
-
-  apis.forEach((api) => {
-    global[api] = canvasWindow[api]
-    global.window[api] = canvasWindow[api]
-  })
-}
-
-importMockWindow()
+    apis.forEach((api) => {
+        global[api] = canvasWindow[api];
+        global.window[api] = canvasWindow[api];
+    });
+})();
 
 beforeAll(() => {
     // jsdom doesn't come with a WebCrypto implementation (required for uuid)
