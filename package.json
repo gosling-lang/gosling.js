@@ -9,13 +9,13 @@
     },
     "homepage": "https://gosling-lang.github.io/gosling.js/",
     "main": "dist/gosling.js",
-    "module": "dist/gosling.es.js",
+    "module": "dist/gosling.mjs",
     "types": "dist/src/index.d.ts",
     "files": [
         "dist"
     ],
     "exports": {
-        ".": "./dist/gosling.es.js",
+        ".": "./dist/gosling.mjs",
         "./embed": "./dist/embed/index.js"
     },
     "scripts": {

@@ -51,7 +51,7 @@ esbuild.build({
                 // resolve all exact references to `gosling.js` to the ESM build
                 build.onResolve({ filter: /^gosling\.js$/ }, _ => {
                     return {
-                        path: path.join(__dirname, '../dist/gosling.es.js')
+                        path: path.join(__dirname, '../dist/gosling.mjs')
                     };
                 });
             }
