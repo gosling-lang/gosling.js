@@ -81,7 +81,6 @@ const testing = defineConfig({
         globals: true,
         setupFiles: [path.resolve(__dirname, './scripts/setup-vitest.js')],
         environment: 'jsdom',
-        threads: false,
         environmentOptions: {
             jsdom: {
                 resources: 'usable'

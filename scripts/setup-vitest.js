@@ -1,4 +1,5 @@
-import { afterAll, vi } from 'vitest';
+import { beforeAll, afterAll, vi } from 'vitest';
+import { randomFillSync } from 'crypto';
 
 global.jest = vi
 
@@ -27,6 +28,17 @@ async function importMockWindow() {
 }
 
 importMockWindow()
+
+beforeAll(() => {
+    // jsdom doesn't come with a WebCrypto implementation (required for uuid)
+    global.crypto = {
+        getRandomValues: function (buffer) {
+            return randomFillSync(buffer);
+        }
+    };
+    // jsdom doesn't come with a `URL.createObjectURL` implementation
+    global.URL.createObjectURL = () => { return ''; };
+});
 
 afterAll(() => {
   delete global.jest
