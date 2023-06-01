@@ -30,12 +30,12 @@ export function renderHiGlass(
     const hgModel = new HiGlassModel();
 
     // A mapping table between Gosling track IDs to HiGlass view IDs
-    const idManager = new IdMapper();
+    const idMapper = new IdMapper();
 
     /* Update the HiGlass model by iterating tracks */
     trackInfos.forEach(tb => {
         const { track, boundingBox: bb, layout } = tb;
-        goslingToHiGlass(hgModel, track, bb, layout, theme, idManager);
+        goslingToHiGlass(hgModel, track, bb, layout, theme, idMapper);
     });
 
     /* Add linking information to the HiGlass model */
@@ -80,9 +80,10 @@ export function renderHiGlass(
             });
     });
 
-    const trackInfosWithShapes: TrackMouseEventData[] = trackInfos.map(d => {
-        return {
-            id: d.track.id!,
+    const trackInfosWithShapes: TrackMouseEventData[] = trackInfos.flatMap(d => {
+        const trackId = d.track.id!;
+        const siblingIds = idMapper.getSiblingGoslingIds(trackId);
+        const eventData = {
             spec: d.track as SingleTrack | OverlaidTrack,
             shape:
                 d.track.layout === 'linear'
@@ -96,7 +97,8 @@ export function renderHiGlass(
                           endAngle: d.track.endAngle!
                       }
         };
+        return siblingIds.map(id => { return { ...eventData, id }; });
     });
 
-    callback(hgModel.spec(), getBoundingBox(trackInfos), spec, trackInfosWithShapes, idManager.getTable());
+    callback(hgModel.spec(), getBoundingBox(trackInfos), spec, trackInfosWithShapes, idMapper.getMappingTable());
 }

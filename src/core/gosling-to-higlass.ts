@@ -29,7 +29,7 @@ export function goslingToHiGlass(
     bb: BoundingBox,
     layout: RelativePosition,
     theme: Required<CompleteThemeDeep>,
-    idManager: IdMapper
+    idMapper: IdMapper
 ): HiGlassModel {
     // TODO: check whether there are multiple track.data across superposed tracks
     // ...
@@ -46,11 +46,11 @@ export function goslingToHiGlass(
 
     // Store the mapping between Gosling track ID and HiGlass view ID so that any lost track IDs
     // can be recovered and used for JS APIs.
-    idManager.addId(trackId, trackId);
+    idMapper.addMapping(trackId, trackId);
     resolvedSpecs.forEach(spec => {
         // if `id` is not defined, no need to store it in the table
         if(spec.id) {
-            idManager.addId(spec.id, trackId);
+            idMapper.addMapping(spec.id, trackId);
         }
     });
 
