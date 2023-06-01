@@ -5,6 +5,7 @@ import { getLinkingInfo } from './utils/linking';
 import type { GoslingSpec, OverlaidTrack, SingleTrack, TrackMouseEventData } from './gosling.schema';
 import type { CompleteThemeDeep } from './utils/theme';
 import type { CompileCallback } from './compile';
+import { IdManager } from '../higlass-manager';
 
 /**
  * Create a HiGlass model from the Gosling spec and call the callback function.
@@ -29,12 +30,12 @@ export function renderHiGlass(
     const hgModel = new HiGlassModel();
 
     // A mapping table between Gosling track IDs to HiGlass view IDs
-    const idTable: Record<string, string> = {};
+    const idManager = new IdManager();
 
     /* Update the HiGlass model by iterating tracks */
     trackInfos.forEach(tb => {
         const { track, boundingBox: bb, layout } = tb;
-        goslingToHiGlass(hgModel, track, bb, layout, theme, idTable);
+        goslingToHiGlass(hgModel, track, bb, layout, theme, idManager);
     });
 
     /* Add linking information to the HiGlass model */
@@ -97,5 +98,5 @@ export function renderHiGlass(
         };
     });
 
-    callback(hgModel.spec(), getBoundingBox(trackInfos), spec, trackInfosWithShapes, idTable);
+    callback(hgModel.spec(), getBoundingBox(trackInfos), spec, trackInfosWithShapes, idManager.getTable());
 }

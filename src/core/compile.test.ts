@@ -70,27 +70,49 @@ describe('Create correct mapping table between Gosling track IDs and HiGlass vie
             {}
         );
     });
+    const nestedSpec: GoslingSpec = {
+        views: [
+            {
+                tracks: [
+                    { id: 's1' },
+                    { id: 's2' },
+                    {
+                        alignment: 'overlay',
+                        tracks: [{ id: 'o1' }, { id: 'o2' }, { id: 'o3' }]
+                    }
+                ]
+            },
+            {
+                alignment: 'overlay',
+                tracks: [{ id: 'o4' }, { id: 'o5' }, { id: 'o6' }]
+            }
+        ]
+    };
     it('Track IDs should not be lost in nested tracks', () => {
-        const spec: GoslingSpec = {
-            views: [
-                {
-                    tracks: [
-                        { id: 's1' },
-                        { id: 's2' },
-                        {
-                            alignment: 'overlay',
-                            tracks: [{ id: 'o1' }, { id: 'o2' }, { id: 'o3' }]
-                        }
-                    ]
-                },
-                {
-                    alignment: 'overlay',
-                    tracks: [{ id: 'o4' }, { id: 'o5' }, { id: 'o6' }]
-                }
-            ]
-        };
         compile(
-            spec,
+            nestedSpec,
+            (h, s, g, t, table) => {
+                expect(table).toMatchInlineSnapshot(`
+                  {
+                    "o1": "o1",
+                    "o2": "o1",
+                    "o3": "o1",
+                    "o4": "o4",
+                    "o5": "o4",
+                    "o6": "o4",
+                    "s1": "s1",
+                    "s2": "s2",
+                  }
+                `);
+            },
+            [],
+            getTheme(),
+            {}
+        );
+    });
+    it('Track IDs should not be lost in circular views', () => {
+        compile(
+            {...nestedSpec, layout: 'circular' },
             (h, s, g, t, table) => {
                 expect(table).toMatchInlineSnapshot(`
                   {

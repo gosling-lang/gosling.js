@@ -18,6 +18,7 @@ import {
 import { DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM } from './defaults';
 import type { CompleteThemeDeep } from './utils/theme';
 import { DEFAULT_TEXT_STYLE } from './utils/text-style';
+import type { IdManager } from '../higlass-manager';
 
 /**
  * Convert a gosling track into a HiGlass view and add it into a higlass model.
@@ -28,7 +29,7 @@ export function goslingToHiGlass(
     bb: BoundingBox,
     layout: RelativePosition,
     theme: Required<CompleteThemeDeep>,
-    idTable: Record<string, string>
+    idManager: IdManager
 ): HiGlassModel {
     // TODO: check whether there are multiple track.data across superposed tracks
     // ...
@@ -45,8 +46,12 @@ export function goslingToHiGlass(
 
     // Store the mapping between Gosling track ID and HiGlass view ID so that any lost track IDs
     // can be recovered and used for JS APIs.
+    idManager.addId(trackId, trackId);
     resolvedSpecs.forEach(spec => {
-        idTable[spec.id ?? uuid.v4()] = trackId;
+        // if `id` is not defined, no need to store it in the table
+        if(spec.id) {
+            idManager.addId(spec.id, trackId);
+        }
     });
 
     const assembly = firstResolvedSpec.assembly;

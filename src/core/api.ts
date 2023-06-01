@@ -20,10 +20,10 @@ interface GeneSuggestion {
 export interface GoslingApi {
     subscribe: typeof subscribe;
     unsubscribe: typeof unsubscribe;
-    zoomTo(viewId: string, position: string, padding?: number, duration?: number): void;
-    zoomToExtent(viewId: string, duration?: number): void;
-    zoomToGene(viewId: string, gene: string, padding?: number, duration?: number): void;
-    suggestGene(viewId: string, keyword: string, callback: (suggestions: GeneSuggestion[]) => void): void;
+    zoomTo(trackId: string, position: string, padding?: number, duration?: number): void;
+    zoomToExtent(trackId: string, duration?: number): void;
+    zoomToGene(trackId: string, gene: string, padding?: number, duration?: number): void;
+    suggestGene(trackId: string, keyword: string, callback: (suggestions: GeneSuggestion[]) => void): void;
     /**
      * This is for the backward compatibility and will be deprecated. Use `getTrackIds()` instead.
      */
@@ -48,16 +48,16 @@ export interface GoslingApi {
 export function createApi(
     hg: Readonly<HiGlassApi>,
     hgSpec: HiGlassSpec | undefined,
-    trackInfos: readonly TrackMouseEventData[],
+    trackSpecAndShapes: readonly TrackMouseEventData[],
     theme: Required<CompleteThemeDeep>,
     idTable: Readonly<Record<string, string>>
 ): GoslingApi {
     const idTableCopy = JSON.parse(JSON.stringify(idTable));
     const getTracks = () => {
-        return [...trackInfos];
+        return [...trackSpecAndShapes];
     };
     const getTrack = (trackId: string) => {
-        const trackInfoFound = trackInfos.find(d => d.id === trackId);
+        const trackInfoFound = trackSpecAndShapes.find(d => d.id === trackId);
         if (!trackInfoFound) {
             console.warn(`[getTrack()] Unable to find a track using the ID (${trackId})`);
         }
