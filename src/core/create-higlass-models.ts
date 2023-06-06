@@ -97,6 +97,7 @@ export function renderHiGlass(
                           endAngle: d.track.endAngle!
                       }
         };
+        // All siblings of tracks should get the same event data through the JS API.
         return siblingIds.map(id => {
             return { ...eventData, id };
         });

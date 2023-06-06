@@ -1,5 +1,7 @@
 /**
  * Manage IDs of Gosling tracks and compiled HiGlass views.
+ * The IDs for HiGlass correspond to the "UIDs" of HiGlass *views*.
+ * https://docs.higlass.io/view_config.html#uids
  */
 export default class IdMapper {
     /** A mapping table between Gosling track IDs to HiGlass view IDs */

@@ -31,9 +31,6 @@ export function goslingToHiGlass(
     theme: Required<CompleteThemeDeep>,
     idMapper: IdMapper
 ): HiGlassModel {
-    // TODO: check whether there are multiple track.data across superposed tracks
-    // ...
-
     // we only look into the first resolved spec to get information, such as size of the track
     const resolvedSpecs = resolveSuperposedTracks(gosTrack);
     const firstResolvedSpec = resolvedSpecs[0];
@@ -95,6 +92,8 @@ export function goslingToHiGlass(
             width,
             height,
             options: {
+                id: firstResolvedSpec.id,
+                siblingIds: idMapper.getSiblingGoslingIds(firstResolvedSpec.id),
                 /* Mouse hover position */
                 showMousePosition: firstResolvedSpec.layout === 'circular' ? false : theme.root.showMousePosition, // show mouse position only for linear tracks // TODO: or vertical
                 mousePositionColor: theme.root.mousePositionColor,

@@ -70,7 +70,18 @@ const DEFAULT_MOUSE_EVENT_STYLE: Required<EventStyle> = {
     arrange: 'front'
 };
 
+/**
+ * Options for Gosling tracks.
+ */
 interface GoslingTrackOptions {
+    /**
+     * Track ID specified by users
+     */
+    id: string;
+    /**
+     * Track IDs that are superposed with this track, containing the id of this track itself
+     */
+    siblingIds: string[];
     spec: SingleTrack | OverlaidTrack;
     theme: CompleteThemeDeep;
     showMousePosition?: boolean;
@@ -480,7 +491,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
             const flatTileData = ([] as Datum[]).concat(...models.map(d => d.data()));
             if (flatTileData.length !== 0) {
-                publish('rawData', { id: context.viewUid, data: flatTileData });
+                this.options.siblingIds.forEach(id => publish('rawData', { id, data: flatTileData }));
             }
         }
 
@@ -996,11 +1007,11 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 const capturedElements = this.#getElementsWithinMouse(mouseX, mouseY);
 
                 if (capturedElements.length !== 0) {
-                    publish('click', {
-                        id: context.viewUid,
+                    this.options.siblingIds.forEach(id => publish('click', {
+                        id,
                         genomicPosition,
                         data: capturedElements.map(d => d.value)
-                    });
+                    }));
                 }
             }
         }
@@ -1068,18 +1079,18 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                         [startAngle, endAngle]
                     )
                 ) {
-                    publish(eventType, {
-                        id: context.viewUid,
+                    this.options.siblingIds.forEach(id => publish(eventType, {
+                        id,
                         spec: structuredClone(this.options.spec),
                         shape: { cx, cy, innerRadius, outerRadius, startAngle, endAngle }
-                    });
+                    }));
                 }
             } else {
-                publish(eventType, {
-                    id: context.viewUid,
+                this.options.siblingIds.forEach(id => publish(eventType, {
+                    id,
                     spec: structuredClone(this.options.spec),
                     shape: { x, y, width, height }
-                });
+                }));
             }
         }
 
@@ -1089,7 +1100,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             if (range === null) {
                 // brush just removed
                 if (!skipApiTrigger) {
-                    publish('rangeSelect', { id: context.viewUid, genomicRange: null, data: [] });
+                    this.options.siblingIds.forEach(id => publish('rangeSelect', { id, genomicRange: null, data: [] }));
                 }
                 return;
             }
@@ -1138,11 +1149,11 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                     getRelativeGenomicPosition(Math.floor(this._xScale.invert(endX)), this.#assembly)
                 ];
 
-                publish('rangeSelect', {
-                    id: context.viewUid,
+                this.options.siblingIds.forEach(id => publish('rangeSelect', {
+                    id,
                     genomicRange,
                     data: capturedElements.map(d => d.value)
-                });
+                }));
             }
 
             this.forceDraw();
@@ -1238,11 +1249,11 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                     );
 
                     // API call
-                    publish('mouseOver', {
-                        id: context.viewUid,
+                    this.options.siblingIds.forEach(id => publish('mouseOver', {
+                        id,
                         genomicPosition,
                         data: capturedElements.map(d => d.value)
-                    });
+                    }));
                 }
 
                 // Display a tooltip
