@@ -49,7 +49,7 @@ export function goslingToHiGlass(
     idMapper.addMapping(trackId, trackId);
     resolvedSpecs.forEach(spec => {
         // if `id` is not defined, no need to store it in the table
-        if(spec.id) {
+        if (spec.id) {
             idMapper.addMapping(spec.id, trackId);
         }
     });

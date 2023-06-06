@@ -9,7 +9,7 @@ export default class IdMapper {
         return this.#mappingTable;
     }
     addMapping(gtId: string, hvId: string) {
-        if(this.#mappingTable[gtId]) {
+        if (this.#mappingTable[gtId]) {
             console.warn('The given track ID already exists.');
         }
         this.#mappingTable[gtId] = hvId;
@@ -23,10 +23,12 @@ export default class IdMapper {
 
     /**
      * Get IDs of Gosling tracks that became the same HiGlass view.
-     * @param HiGlassId 
-     * @returns 
+     * @param HiGlassId
+     * @returns
      */
     getSiblingGoslingIds(HiGlassId: string) {
-        return Object.entries(this.#mappingTable).filter(([gtId, hvId]) => hvId === HiGlassId).map(([gtId]) => gtId);
+        return Object.entries(this.#mappingTable)
+            .filter(([, hvId]) => hvId === HiGlassId)
+            .map(([gtId]) => gtId);
     }
 }

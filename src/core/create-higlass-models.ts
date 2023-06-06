@@ -97,7 +97,9 @@ export function renderHiGlass(
                           endAngle: d.track.endAngle!
                       }
         };
-        return siblingIds.map(id => { return { ...eventData, id }; });
+        return siblingIds.map(id => {
+            return { ...eventData, id };
+        });
     });
 
     callback(hgModel.spec(), getBoundingBox(trackInfos), spec, trackInfosWithShapes, idMapper.getMappingTable());

@@ -112,7 +112,7 @@ describe('Create correct mapping table between Gosling track IDs and HiGlass vie
     });
     it('Track IDs should not be lost in circular views', () => {
         compile(
-            {...nestedSpec, layout: 'circular' },
+            { ...nestedSpec, layout: 'circular' },
             (h, s, g, t, table) => {
                 expect(table).toMatchInlineSnapshot(`
                   {
