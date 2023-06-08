@@ -18,7 +18,7 @@ Then, you can open http://localhost:3000/ in a web browser to test the online ed
 
 ## Testing Production Build Using Editor
 
-It is sometimes necessary to test the production build of Gosling.js. This frequently happened to us when we needed to ensure that certain data fetchers, like BAM and VCF, work in the production.
+It is sometimes necessary to test the production build of Gosling.js. This frequently happened to us when we needed to ensure that certain data fetchers, like BAM and VCF, work correctly without errors in a deployed app.
 
 To test this, you need to build the project first and then preview the production build.
 
