@@ -5,40 +5,13 @@
         <link rel="icon" href="./favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <meta name="theme-color" content="lightgray" />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QBMJ6HEYKC"></script>
         <script>
-            // Copyright
-            // https://helgeklein.com/blog/2020/06/google-analytics-cookieless-tracking-without-gdpr-consent
-            const cyrb53 = function(str, seed = 0) {
-            let h1 = 0xdeadbeef ^ seed;
-            let h2 = 0x41c6ce57 ^ seed;
-            for (let i = 0, ch; i < str.length; i++) {
-                ch = str.charCodeAt(i);
-                h1 = Math.imul(h1 ^ ch, 2654435761);
-                h2 = Math.imul(h2 ^ ch, 1597334677);
-            }
-            h1 = Math.imul(h1 ^ h1 >>> 16, 2246822507) ^ Math.imul(h2 ^ h2 >>> 13, 3266489909);
-            h2 = Math.imul(h2 ^ h2 >>> 16, 2246822507) ^ Math.imul(h1 ^ h1 >>> 13, 3266489909);
-            return 4294967296 * (2097151 & h2) + (h1 >>> 0);
-            };
-
-            const validityInterval = Math.round (new Date() / 1000 / 3600 / 24 / 4);
-
-            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-            fetch("https://api.ipify.org").then((response) => response.text()).then((ip) => {
-            const clientIDSource = ip + ";" + window.location.host + ";" + navigator.userAgent + ";" + navigator.language + ";" + validityInterval;
-            const clientIDHashed = cyrb53(clientIDSource).toString(16);
-
-            ga('create', 'UA-96954979-3', {
-                'storage': 'none',
-                'clientId': clientIDHashed
-            });
-            ga('set', 'anonymizeIp', true);
-            ga('send', 'pageview');
-            });
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+        
+          gtag('config', 'G-QBMJ6HEYKC');
         </script>
         <title>Gosling.js Editor</title>
     </head>
