@@ -63,6 +63,7 @@ const LIMIT_CLIPBOARD_LEN = 4096;
 // ! these should be updated upon change in css files
 const EDITOR_HEADER_HEIGHT = 40;
 const BOTTOM_PANEL_HEADER_HEIGHT = 30;
+const RIGHT_PANEL_HEADER_HEIGHT = 100;
 
 // A key to store and get a Gosling spec via sessionStorage
 const SESSION_KEY_SPEC = 'session-gosling-spec';
@@ -1271,6 +1272,30 @@ function Editor(props: RouteComponentProps) {
                             </Allotment>
                         </ErrorBoundary>
                     </Allotment>
+                    <Allotment.Pane
+                                    preferredSize={RIGHT_PANEL_HEADER_HEIGHT}
+                                    minSize={RIGHT_PANEL_HEADER_HEIGHT}
+                                >
+                                    <button
+                                        className={`editor-alt-text-header ${theme === 'dark' ? 'dark' : ''}`}
+                                        style={{ cursor: 'pointer' }}
+                                    >
+                                        Text description
+                                    </button>
+                                    <div className="editor-alt-text-panel">
+                                        <button
+                                            title="Refresh text description"
+                                            className="alt-text-refresh-button"
+                                            // onClick={() => setRefreshData(!refreshData)}
+                                        >
+                                            {getIconSVG(ICONS.REFRESH, 23, 23)}
+                                            <br />
+                                            {'REFRESH TEXT DESCRIPTIONS'}
+                                        </button>
+                                        {/* add description here */}
+                                        Test
+                                    </div>
+                                </Allotment.Pane>
                 </Allotment>
                 {/* Description Panel */}
                 <div
