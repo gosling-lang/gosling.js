@@ -110,7 +110,9 @@ export class GffFile {
             const nonChildLines = allLines.filter(line => {
                 const lineColumns = line.split('\t');
                 const attributes = lineColumns[8];
-                return !attributes.includes('Parent=');
+                const lineType = lineColumns[2]; // use this to remove the chromosome features
+
+                return !attributes.includes('Parent=') && !(lineType == 'chromosome');
             });
             allLines = sampleSize(nonChildLines, sampleLength);
         } else {
