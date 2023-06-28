@@ -2,7 +2,7 @@ import { TabixIndexedFile } from '@gmod/tabix';
 import GFF from '@gmod/gff';
 import type { GFF3FeatureLine } from '@gmod/gff';
 import { expose, Transfer } from 'threads/worker';
-// import { sampleSize } from 'lodash-es';
+import { sampleSize } from 'lodash-es';
 import type { TilesetInfo } from '@higlass/types';
 import type { ChromSizes } from '@gosling.schema';
 import { DataSource, RemoteFile } from '../utils';
@@ -43,13 +43,17 @@ export class GffFile {
         });
         return new GffFile(tbi, uid);
     }
-    async getTileData(minX: number, maxX: number): Promise<GffTile[]> {
+    /**
+     * Retrieves the lines between a range of absolute genomic coordinates
+     * @param minX the minimum absolute coordinate
+     * @param maxX the maximum absolute coordinate
+     * @returns A promise to an array of strings, where each string is a line from the GFF
+     */
+    #getLinePromises(minX: number, maxX: number) {
         const source = dataSources.get(this.#uid)!;
-        console.warn('getTileData called');
         let curMinX = minX;
         const { chromLengths, cumPositions } = source.chromInfo;
         const linePromises: Promise<string[]>[] = [];
-
         for (const cumPos of cumPositions) {
             const chromName = cumPos.chr;
             const chromStart = cumPos.pos;
@@ -89,16 +93,34 @@ export class GffFile {
 
             curMinX = chromEnd;
         }
+        return linePromises;
+    }
+    async getTileData(minX: number, maxX: number): Promise<GffTile[]> {
+        console.warn('getTileData called');
+        const source = dataSources.get(this.#uid)!;
+        const sampleLength = source.options.sampleLength;
 
-        // parseStringSync creates a new Parser object internally when it gets called so we can reduce that overhead if
-        // we parse all of the lines together
-        const allLines = (await Promise.all(linePromises)).flat();
-        console.warn('started parse');
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        // const sampleLength = source.options.sampleLength;
-        // if (allLines.length >= sampleLength) {
-        //     allLines = sampleSize(allLines, sampleLength);
-        // }
+        const linePromises = this.#getLinePromises(minX, maxX);
+        let allLines = (await Promise.all(linePromises)).flat();
+        console.warn(allLines);
+
+        if (allLines.length >= sampleLength) {
+            console.warn('Downsampling');
+            // Keep only the non child lines
+            const nonChildLines = allLines.filter(line => {
+                const lineColumns = line.split('\t');
+                const attributes = lineColumns[8];
+                return !attributes.includes('Parent=');
+            });
+            allLines = sampleSize(nonChildLines, sampleLength);
+        } else {
+            // we want to remove the chromosome lines
+            allLines = allLines.filter(line => {
+                const lineColumns = line.split('\t');
+                const lineType = lineColumns[2];
+                return !(lineType == 'chromosome');
+            });
+        }
         const parseOptions = {
             disableDerivesFromReferences: true,
             parseFeatures: true,
@@ -106,9 +128,12 @@ export class GffFile {
             parseDirectives: false,
             parseSequences: false
         };
+        // parseStringSync creates a new Parser object internally when it gets called so we can reduce that overhead if
+        // we parse all of the lines together
         const parsedLines = GFF.parseStringSync(allLines.join('\n'), parseOptions);
+        console.warn('started parse');
         console.warn('parsed', parsedDataToTiles(parsedLines));
-        return [];
+        return parsedDataToTiles(parsedLines);
     }
 }
 
@@ -169,7 +194,6 @@ const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
     const maxX = source.tilesetInfo.min_pos[0] + (x + 1) * tileWidth;
 
     tileValues[CACHE_KEY] = await source.file.getTileData(minX, maxX);
-
     return [];
 };
 
