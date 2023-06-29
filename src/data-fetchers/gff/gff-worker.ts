@@ -19,7 +19,7 @@ export interface EmptyTile {
 }
 
 /**
- * A class to represent a BED file. It takes care of setting up gmod/tabix.
+ * A class to represent a GFF file. It takes care of setting up gmod/tabix.
  */
 export class GffFile {
     #uid: string;
@@ -95,34 +95,49 @@ export class GffFile {
         }
         return linePromises;
     }
+    /**
+     * Makes tiles for a given range of genomic positions
+     * @param minX the minimum absolute coordinate
+     * @param maxX the maximum absolute coordinate
+     * @returns A promise to an array of GffTiles
+     */
     async getTileData(minX: number, maxX: number): Promise<GffTile[]> {
         console.warn('getTileData called');
         const source = dataSources.get(this.#uid)!;
+        // maximum number of features that can be shown
         const sampleLength = source.options.sampleLength;
 
-        const linePromises = this.#getLinePromises(minX, maxX);
-        let allLines = (await Promise.all(linePromises)).flat();
-        console.warn(allLines);
-
-        if (allLines.length >= sampleLength) {
-            console.warn('Downsampling');
-            // Keep only the non child lines
-            const nonChildLines = allLines.filter(line => {
-                const lineColumns = line.split('\t');
-                const attributes = lineColumns[8];
-                const lineType = lineColumns[2]; // use this to remove the chromosome features
-
-                return !attributes.includes('Parent=') && !(lineType == 'chromosome');
-            });
-            allLines = sampleSize(nonChildLines, sampleLength);
-        } else {
-            // we want to remove the chromosome lines
-            allLines = allLines.filter(line => {
-                const lineColumns = line.split('\t');
-                const lineType = lineColumns[2];
-                return !(lineType == 'chromosome');
-            });
+        /**
+         * Filters out chromosome features and child features if there are too many features
+         * @param lines an array of strings, where each string is a line from the GFF
+         * @returns an array of strings, where each string is a line from the GFF
+         */
+        function filterLines(lines: string[]): string[] {
+            if (lines.length >= sampleLength) {
+                console.warn('Downsampling');
+                // Keep only the non child lines
+                const nonChildLines = lines.filter(line => {
+                    const lineColumns = line.split('\t');
+                    const attributes = lineColumns[8];
+                    const lineType = lineColumns[2]; // use this to remove the chromosome features
+                    return !attributes.includes('Parent=') && !(lineType == 'chromosome');
+                });
+                return sampleSize(nonChildLines, sampleLength);
+            } else {
+                // we want to remove the chromosome lines
+                return lines.filter(line => {
+                    const lineColumns = line.split('\t');
+                    const lineType = lineColumns[2];
+                    return !(lineType == 'chromosome');
+                });
+            }
         }
+
+        const linePromises = this.#getLinePromises(minX, maxX);
+        const allLines = (await Promise.all(linePromises)).flat();
+        console.warn(allLines);
+        const filteredLines = filterLines(allLines);
+
         const parseOptions = {
             disableDerivesFromReferences: true,
             parseFeatures: true,
@@ -132,8 +147,8 @@ export class GffFile {
         };
         // parseStringSync creates a new Parser object internally when it gets called so we can reduce that overhead if
         // we parse all of the lines together
-        const parsedLines = GFF.parseStringSync(allLines.join('\n'), parseOptions);
         console.warn('started parse');
+        const parsedLines = GFF.parseStringSync(filteredLines.join('\n'), parseOptions);
         console.warn('parsed', parsedDataToTiles(parsedLines));
         return parsedDataToTiles(parsedLines);
     }
