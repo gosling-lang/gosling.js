@@ -1,6 +1,6 @@
 import { TabixIndexedFile } from '@gmod/tabix';
 import GFF from '@gmod/gff';
-import type { GFF3FeatureLine } from '@gmod/gff';
+import type { GFF3FeatureLineWithRefs } from '@gmod/gff';
 import { expose, Transfer } from 'threads/worker';
 import { sampleSize } from 'lodash-es';
 import type { TilesetInfo } from '@higlass/types';
@@ -10,9 +10,12 @@ import { parsedDataToTiles } from './utils';
 
 export type GffFileOptions = {
     sampleLength: number;
+    extractAttributes?: boolean;
 };
 
-export type GffTile = GFF3FeatureLine;
+export interface GffTile extends GFF3FeatureLineWithRefs {
+    attribute?: string;
+}
 
 export interface EmptyTile {
     tilePositionId: string;
@@ -106,6 +109,7 @@ export class GffFile {
         const source = dataSources.get(this.#uid)!;
         // maximum number of features that can be shown
         const sampleLength = source.options.sampleLength;
+        const isExtractAttributes = source.options.extractAttributes;
 
         /**
          * Filters out chromosome features and child features if there are too many features
@@ -133,11 +137,12 @@ export class GffFile {
             }
         }
 
+        // First we get the lines we want to parse and filter out the lines we don't want to parse
         const linePromises = this.#getLinePromises(minX, maxX);
         const allLines = (await Promise.all(linePromises)).flat();
         console.warn(allLines);
         const filteredLines = filterLines(allLines);
-
+        // Then we parse the set of filtered lines
         const parseOptions = {
             disableDerivesFromReferences: true,
             parseFeatures: true,
@@ -145,12 +150,26 @@ export class GffFile {
             parseDirectives: false,
             parseSequences: false
         };
-        // parseStringSync creates a new Parser object internally when it gets called so we can reduce that overhead if
-        // we parse all of the lines together
         console.warn('started parse');
         const parsedLines = GFF.parseStringSync(filteredLines.join('\n'), parseOptions);
-        console.warn('parsed', parsedDataToTiles(parsedLines));
-        return parsedDataToTiles(parsedLines);
+        let tiles = parsedDataToTiles(parsedLines);
+
+        if (isExtractAttributes) {
+            tiles = tiles.map(tile => {
+                const attributes = tile.attributes;
+                const cleanAtt: { [key: string]: unknown } = {}; // where the cleaned attributes are stored
+                if (attributes == null) return tile;
+                Object.keys(attributes).forEach(key => {
+                    const attVal = attributes[key];
+                    if (Array.isArray(attVal)) {
+                        cleanAtt[key] = attVal.length == 1 ? attVal[0] : attVal;
+                    }
+                });
+                return { ...tile, ...cleanAtt };
+            });
+        }
+        console.warn('tiles', tiles);
+        return tiles;
     }
 }
 
@@ -177,7 +196,8 @@ function init(
         bedFile = GffFile.fromUrl(bed.url, bed.indexUrl, uid);
     }
     const dataSource = new DataSource(bedFile, chromSizes, {
-        sampleLength: 1000,
+        sampleLength: 1000, // default sampleLength
+        extractAttributes: false, // default extractAttributes
         ...options
     });
     dataSources.set(uid, dataSource);

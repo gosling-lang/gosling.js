@@ -1089,6 +1089,12 @@ export interface GffData {
 
     /** The maximum number of rows to be loaded from the URL. __Default:__ `1000` */
     sampleLength?: number;
+
+    /** Determines whether to extract the feature attributes, which have the format in the format `tag=value` in column 9
+     * If true, the tag will become available as a field. If there is an existing field with the same name, then
+     * if will be overwritten by the attribute tag. __Default:__ `false`
+     */
+    extractAttributes?: boolean;
 }
 
 /**

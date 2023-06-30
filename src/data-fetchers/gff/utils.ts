@@ -17,9 +17,10 @@ export function isGFF3Feature(entry: GFF3Feature | GFF3Sequence): entry is GFF3F
 export function parsedDataToTiles(parsed: (GFF3Feature | GFF3Sequence)[]): GffTile[] {
     const tiles: GffTile[] = [];
     for (const line of parsed) {
-        if (!isGFF3Feature(line)) continue;
-        for (const feature of line) {
-            tiles.push(feature);
+        if (isGFF3Feature(line)) {
+            for (const feature of line) {
+                tiles.push(feature);
+            }
         }
     }
     return tiles;
