@@ -12,6 +12,13 @@ import type {
     ValueExtent,
     Range
 } from '@gosling.schema';
+import { type MouseEventData, isPointInsideDonutSlice } from '@gosling-mouse-event';
+import { BamDataFetcher, type TabularDataFetcher } from '@data-fetchers';
+import type { Tile as _Tile, TileData, TileDataBase } from '@higlass/services';
+import { LinearBrushModel } from '@gosling-brush';
+import { getTheme } from 'gosling-theme';
+import { getTabularData } from './data-abstraction';
+
 import type { CompleteThemeDeep } from '../core/utils/theme';
 import { drawMark, drawPostEmbellishment, drawPreEmbellishment } from '../core/mark';
 import { GoslingTrackModel } from '../core/gosling-track-model';
@@ -31,7 +38,6 @@ import {
     splitExon,
     inferSvType
 } from '../core/utils/data-transform';
-import { getTabularData } from './data-abstraction';
 import { publish } from '../core/pubsub';
 import { getRelativeGenomicPosition } from '../core/utils/assembly';
 import { getTextStyle } from '../core/utils/text-style';
@@ -44,15 +50,8 @@ import {
     hasDataTransform
 } from '../core/gosling.schema.guards';
 import { HIGLASS_AXIS_SIZE } from '../core/higlass-model';
-import type { MouseEventData } from '../gosling-mouse-event/mouse-event-model';
 import { flatArrayToPairArray } from '../core/utils/array';
-import { BamDataFetcher } from '../data-fetchers';
-import { LinearBrushModel } from '../gosling-brush/linear-brush-model';
-import { isPointInsideDonutSlice } from '../gosling-mouse-event/polygon';
-import type { Tile as _Tile, TileData, TileDataBase } from '@higlass/services';
-import type { TabularDataFetcher } from 'src/data-fetchers/utils';
 import { createPluginTrack, type PluginTrackFactory, type TrackConfig } from '../core/utils/define-plugin-track';
-import { getTheme } from 'gosling-theme';
 
 // Set `true` to print in what order each function is called
 export const PRINT_RENDERING_CYCLE = false;

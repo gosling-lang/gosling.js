@@ -2,72 +2,122 @@
  * This document is heavily based on the following repo by @alexander-veit:
  * https://github.com/dbmi-bgm/higlass-sv/blob/main/src/sv-fetcher-worker.js
  */
+
 import { TabixIndexedFile } from '@gmod/tabix';
-import VCF from '@gmod/vcf';
 import { expose, Transfer } from 'threads/worker';
 import { sampleSize } from 'lodash-es';
-
-import { DataSource, RemoteFile } from '../utils';
-
 import type { TilesetInfo } from '@higlass/types';
 import type { ChromSizes } from '@gosling.schema';
-import type { VcfTile } from './vcf-data-fetcher';
-import { recordToTile } from './utils';
+import { DataSource, RemoteFile } from '../utils';
+import BedParser from './bed-parser';
 
-// promises indexed by urls
-const vcfFiles: Map<string, VcfFile> = new Map();
-
-type VcfFileOptions = {
+export type BedFileOptions = {
     sampleLength: number;
+    customFields?: string[];
 };
 
 /**
- * This is a class to represent a VCF file.
+ * All data stored in each BED file eventually transformed and put into this
  */
-class VcfFile {
-    #parser?: VCF;
+export interface BedTile {
+    chrom: string;
+    chromStart: number;
+    chromEnd: number;
+    name?: string;
+    score?: number;
+    strand?: string;
+    thickStart?: number;
+    thickEnd?: number;
+    itemRgb?: string;
+    blockCount?: number;
+    blockSizes?: number[];
+    blockStarts?: number[];
+    [customField: string]: string | number | number[] | undefined;
+}
+
+export interface EmptyTile {
+    tilePositionId: string;
+}
+
+/**
+ * A class to represent a BED file. It takes care of setting up gmod/tabix.
+ */
+export class BedFile {
+    #parser?: BedParser;
+    #customFields?: string[];
     #uid: string;
+
     constructor(public tbi: TabixIndexedFile, uid: string) {
         this.#uid = uid;
     }
     /**
-     * Function to create an instance of VcfFile from URLs
+     * Function to create an instance of BedFile
      * @param url A string which is the URL of the bed file
      * @param indexUrl A string which is the URL of the bed  index file
      * @param uid A unique identifier for the worker
-     * @returns an instance of VcfFile
+     * @returns an instance of BedFile
      */
     static fromUrl(url: string, indexUrl: string, uid: string) {
         const tbi = new TabixIndexedFile({
             filehandle: new RemoteFile(url),
             tbiFilehandle: new RemoteFile(indexUrl)
         });
-        return new VcfFile(tbi, uid);
+        return new BedFile(tbi, uid);
+    }
+    set customFields(custom: string[]) {
+        this.#customFields = custom;
     }
     /**
-     * Creates the parser used for the VCF file.
+     * Creates a parser. Parser cannot be created in the constructor because it relies on chromosome information
+     * which gets created by DataSource
+     * @returns A BED parser
      */
     async getParser() {
         if (!this.#parser) {
-            const header = await this.tbi.getHeader();
-            this.#parser = new VCF({ header });
+            const opt = this.#customFields
+                ? { customFields: this.#customFields, n_columns: await this.#calcNColumns() }
+                : undefined;
+            this.#parser = new BedParser(opt);
         }
         return this.#parser;
+    }
+    /**
+     * Function to calculate the number of columns in the BED file. Needed when custom column names are supplied
+     * Relatively inefficient because the gmod/tabix API only has a way to retrieve lines based on genomic coordinates,
+     * but I believe this is better than fetching the BED file itself because then it only has to be fetched and
+     * unzipped once.
+     * @returns
+     */
+    async #calcNColumns() {
+        const source = dataSources.get(this.#uid)!;
+        const { chromLengths, cumPositions } = source.chromInfo;
+        let n_cols = 0;
+        for (const cumPos of cumPositions) {
+            const chromName = cumPos.chr;
+            const chromStart = cumPos.pos;
+            const chromEnd = cumPos.pos + chromLengths[chromName];
+            n_cols = await new Promise(resolve => {
+                source.file.tbi.getLines(chromName, chromStart, chromEnd, line => {
+                    resolve(line.split('\t').length);
+                });
+            });
+            if (n_cols > 0) break;
+        }
+        return n_cols;
     }
     /**
      * Retrieves data within a certain coordinate range
      * @param minX A number which is the minimum X boundary of the tile
      * @param maxX A number which is the maximum X boundary of the tile
-     * @param callback A callback function which receives the VCF tile
+     * @param callback A callback function which takes in parsed BED file data record
      * @returns A promise of array of promises which resolve when the data has been successfully retrieved
      */
-    async getTileData(minX: number, maxX: number): Promise<VcfTile[]> {
+    async getTileData(minX: number, maxX: number): Promise<BedTile[]> {
         const source = dataSources.get(this.#uid)!;
         const parser = await this.getParser();
-
         let curMinX = minX;
         const { chromLengths, cumPositions } = source.chromInfo;
-        const recordPromises: Promise<VcfTile[]>[] = [];
+        const allTiles: Promise<BedTile[]>[] = [];
 
         for (const cumPos of cumPositions) {
             const chromName = cumPos.chr;
@@ -80,15 +130,11 @@ class VcfFile {
                 continue;
             }
 
-            // start of the visible region is within this chromosome
-            let prevPOS: number | undefined;
-            const tilesPromise = new Promise<VcfTile[]>(resolve => {
-                const tiles: VcfTile[] = [];
+            const tilesPromise = new Promise<BedTile[]>(resolve => {
+                const tiles: BedTile[] = [];
                 const lineCallback = (line: string) => {
-                    const vcfRecord = parser.parseLine(line);
-                    const vcfTile = recordToTile(vcfRecord, chromStart, prevPOS);
-                    prevPOS = vcfTile.POS;
-                    tiles.push(vcfTile);
+                    const bedTile = parser.parseLine(line, chromStart);
+                    tiles.push(bedTile);
                 };
 
                 if (maxX > chromEnd) {
@@ -104,7 +150,7 @@ class VcfFile {
                 });
             });
 
-            recordPromises.push(tilesPromise);
+            allTiles.push(tilesPromise);
 
             if (maxX <= chromEnd) {
                 continue;
@@ -113,28 +159,35 @@ class VcfFile {
             curMinX = chromEnd;
         }
 
-        const tileArrays = await Promise.all(recordPromises);
+        const tileArrays = await Promise.all(allTiles);
         return tileArrays.flat();
     }
 }
 
-// promises indexed by url
-const tileValues: Record<string, VcfTile[]> = {}; // new LRU({ max: MAX_TILES });
+// promises indexed by urls
+const bedFiles: Map<string, BedFile> = new Map();
 
-// const vcfData = [];
-const dataSources: Map<string, DataSource<VcfFile, VcfFileOptions>> = new Map();
+/**
+ * Object to store tile data. Each key a string which contains the coordinates of the tile
+ */
+const tileValues: Record<string, BedTile[]> = {};
+/**
+ * Maps from UID to Bed File info
+ */
+const dataSources: Map<string, DataSource<BedFile, BedFileOptions>> = new Map();
 
 function init(
     uid: string,
-    vcf: { url: string; indexUrl: string },
+    bed: { url: string; indexUrl: string },
     chromSizes: ChromSizes,
-    options: Partial<VcfFileOptions> = {}
+    options: Partial<BedFileOptions> = {}
 ) {
-    let vcfFile = vcfFiles.get(vcf.url);
-    if (!vcfFile) {
-        vcfFile = VcfFile.fromUrl(vcf.url, vcf.indexUrl, uid);
+    let bedFile = bedFiles.get(bed.url);
+    if (!bedFile) {
+        bedFile = BedFile.fromUrl(bed.url, bed.indexUrl, uid);
+        if (options.customFields) bedFile.customFields = options.customFields;
     }
-    const dataSource = new DataSource(vcfFile, chromSizes, {
+    const dataSource = new DataSource(bedFile, chromSizes, {
         sampleLength: 1000,
         ...options
     });
@@ -151,14 +204,17 @@ const tilesetInfo = (uid: string) => {
  * @param z A number which is the z coordinate of the tile
  * @param x A number which is the x coordinate of the tile
  */
-const tile = async (uid: string, z: number, x: number): Promise<VcfTile[]> => {
+const tile = async (uid: string, z: number, x: number): Promise<BedTile[]> => {
     const source = dataSources.get(uid)!;
+    // const parseLine = await source.file.getParser();
+
     const CACHE_KEY = `${uid}.${z}.${x}`;
 
     // TODO: Caching is needed
     // if (!tileValues[CACHE_KEY]) {
     tileValues[CACHE_KEY] = [];
     // }
+
     const tileWidth = +source.tilesetInfo.max_width / 2 ** +z;
 
     // get bounds of this tile
@@ -171,9 +227,9 @@ const tile = async (uid: string, z: number, x: number): Promise<VcfTile[]> => {
 };
 
 const fetchTilesDebounced = async (uid: string, tileIds: string[]) => {
-    const tiles: Record<string, VcfTile> = {};
+    const tiles: Record<string, EmptyTile> = {};
     const validTileIds: string[] = [];
-    const tilePromises: Promise<VcfTile[]>[] = [];
+    const tilePromises: Promise<BedTile[]>[] = [];
 
     for (const tileId of tileIds) {
         const parts = tileId.split('.');
@@ -190,16 +246,20 @@ const fetchTilesDebounced = async (uid: string, tileIds: string[]) => {
     return Promise.all(tilePromises).then(values => {
         for (let i = 0; i < values.length; i++) {
             const validTileId = validTileIds[i];
-            // @ts-expect-error values is void, this should never happen.
-            tiles[validTileId] = values[i];
-            tiles[validTileId].tilePositionId = validTileId;
+            tiles[validTileId] = { tilePositionId: validTileId };
         }
         return tiles;
     });
 };
 
+/**
+ * Sends the data fetcher data from `tileValues`
+ * @param uid A string which is the unique identifier of the worker
+ * @param tileIds An array of strings where each string identifies a tile with a particular coordinate
+ * @returns A transferable buffer
+ */
 const getTabularData = (uid: string, tileIds: string[]) => {
-    const data: VcfTile[][] = [];
+    const data: BedTile[][] = [];
 
     tileIds.forEach(tileId => {
         const parts = tileId.split('.');
@@ -217,12 +277,12 @@ const getTabularData = (uid: string, tileIds: string[]) => {
 
     let output = Object.values(data).flat();
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const sampleLength = dataSources.get(uid)!.options.sampleLength;
     if (output.length >= sampleLength) {
         // TODO: we can make this more generic
         // priotize that mutations with closer each other are selected when sampling.
-        const highPriority = output.sort((a, b) => -(a.DISTPREV ?? 0) + (b.DISTPREV ?? 0)).slice(0, sampleLength / 2.0);
-        output = sampleSize(output, sampleLength / 2.0).concat(highPriority);
+        output = sampleSize(output, sampleLength / 2.0);
     }
 
     const buffer = new TextEncoder().encode(JSON.stringify(output)).buffer;

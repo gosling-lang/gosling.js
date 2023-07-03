@@ -3,45 +3,22 @@
  * https://github.com/dbmi-bgm/higlass-sv/blob/main/src/sv-fetcher.js
  */
 import { spawn } from 'threads';
-import Worker from './vcf-worker.ts?worker&inline';
+import Worker from './bed-worker.ts?worker&inline';
 
 import { computeChromSizes } from '../../core/utils/assembly';
 
 import type { ModuleThread } from 'threads';
-import type { Assembly, VcfData } from '@gosling.schema';
-import type { WorkerApi, TilesetInfo } from './vcf-worker';
+import type { Assembly, BedData } from '../../core/gosling.schema';
+import type { WorkerApi, TilesetInfo } from './bed-worker';
+import type { BedTile, EmptyTile } from './bed-worker';
 import type { TabularDataFetcher } from '../utils';
-import { getSubstitutionType, getMutationType } from './utils';
 
 const DEBOUNCE_TIME = 200;
 
-// const MAX_TILES = 20;
-// https://github.com/GMOD/vcf-js/blob/c4a9cbad3ba5a3f0d1c817d685213f111bf9de9b/src/parse.ts#L284-L291
-export type VcfRecord = {
-    CHROM: string;
-    POS: number;
-    ID: null | string[];
-    REF: string;
-    ALT: null | string[];
-    QUAL: null | number;
-    FILTER: null | string;
-    INFO: Record<string, true | (number | null)[] | string[]>;
-};
+export type BedDataConfig = BedData & { assembly: Assembly };
 
-export type VcfTile = Omit<VcfRecord, 'ALT' | 'INFO'> & {
-    ALT: string | undefined;
-    MUTTYPE: ReturnType<typeof getMutationType>;
-    SUBTYPE: ReturnType<typeof getSubstitutionType>;
-    INFO: string;
-    ORIGINALPOS: number;
-    POS: number;
-    POSEND: number;
-    DISTPREV: number | null;
-    DISTPREVLOGE: number | null;
-} & { [infoKey: string]: any };
-
-class VcfDataFetcher implements TabularDataFetcher<VcfTile> {
-    static config = { type: 'vcf' };
+class BedDataFetcher implements TabularDataFetcher<BedTile> {
+    static config = { type: 'bed' };
     dataConfig = {}; // required for higlass
     uid: string;
     prevRequestTime: number;
@@ -51,7 +28,7 @@ class VcfDataFetcher implements TabularDataFetcher<VcfTile> {
     private fetchTimeout?: ReturnType<typeof setTimeout>;
     private worker: Promise<ModuleThread<WorkerApi>>;
 
-    constructor(HGC: import('@higlass/types').HGC, config: VcfData & { assembly: Assembly }) {
+    constructor(HGC: import('@higlass/types').HGC, config: BedDataConfig) {
         this.uid = HGC.libraries.slugid.nice();
         this.prevRequestTime = 0;
         this.toFetch = new Set();
@@ -70,7 +47,7 @@ class VcfDataFetcher implements TabularDataFetcher<VcfTile> {
         (await this.worker).tilesetInfo(this.uid).then(callback);
     }
 
-    fetchTilesDebounced(receivedTiles: (tiles: Record<string, VcfTile>) => void, tileIds: string[]) {
+    fetchTilesDebounced(receivedTiles: (tiles: Record<string, EmptyTile>) => void, tileIds: string[]) {
         this.track.drawLoadingCue();
 
         tileIds.forEach(tileId => this.toFetch.add(tileId));
@@ -85,14 +62,19 @@ class VcfDataFetcher implements TabularDataFetcher<VcfTile> {
         }, DEBOUNCE_TIME);
     }
 
-    async sendFetch(receivedTiles: (tiles: Record<string, VcfTile>) => void, tileIds: string[]) {
+    async sendFetch(receivedTiles: (tiles: Record<string, EmptyTile>) => void, tileIds: string[]) {
         (await this.worker).fetchTilesDebounced(this.uid, tileIds).then(receivedTiles);
     }
-
-    async getTabularData(tileIds: string[]): Promise<VcfTile[]> {
+    /**
+     * Called by GoslingTrack. This is how the track gets data
+     * @param tileIds The position of the tile
+     * @returns A promise to the BedTiles
+     */
+    async getTabularData(tileIds: string[]): Promise<BedTile[]> {
         const buf = await (await this.worker).getTabularData(this.uid, tileIds);
-        return JSON.parse(new TextDecoder().decode(buf));
+        const parsed = JSON.parse(new TextDecoder().decode(buf));
+        return parsed;
     }
 }
 
-export default VcfDataFetcher;
+export default BedDataFetcher;

@@ -9,5 +9,5 @@ ReactDOM.render(
     <BrowserRouter>
         <Route component={Editor} />
     </BrowserRouter>,
-    document.getElementById('root')
+    document.getElementById('root') as HTMLElement
 );

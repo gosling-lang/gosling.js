@@ -40,11 +40,7 @@ export function filterData(filter: FilterTransform, data: Datum[]): Datum[] {
     } else if (IsRangeFilter(filter)) {
         const { inRange } = filter;
         output = output.filter((d: Datum) => {
-            const value = d[field];
-            if (typeof value === 'string') {
-                // can't compare string with number
-                return false;
-            }
+            const value = +d[field];
             return not ? !(inRange[0] <= value && value <= inRange[1]) : inRange[0] <= value && value <= inRange[1];
         });
     } else if (IsIncludeFilter(filter)) {
@@ -228,21 +224,26 @@ export function aggregateCoverage(
     return output;
 }
 
+/**
+ * Mark displacement transform furnctions.
+ * @param t An object that contains data transformation spec.
+ * @param data An array of objects that contain data.
+ * @param scale A d3's linear scale that map between data-level values to screen-level values (px).
+ * @returns
+ */
 export function displace(
     t: DisplaceTransform,
     data: Datum[],
     scale: d3.ScaleContinuousNumeric<number, number>
 ): Datum[] {
-    // Logging.recordTime('displace()');
-
     const { boundingBox, method, newField } = t;
     const { startField, endField, groupField } = boundingBox;
 
-    let padding = 0; // This is a pixel value.
+    let paddingInBp = 0;
     if (boundingBox.padding && scale && !boundingBox.isPaddingBP) {
-        padding = Math.abs(scale.invert(boundingBox.padding) - scale.invert(0));
+        paddingInBp = Math.abs(scale.invert(boundingBox.padding) - scale.invert(0));
     } else if (boundingBox.padding && boundingBox.isPaddingBP) {
-        padding = boundingBox.padding;
+        paddingInBp = boundingBox.padding;
     }
 
     // Check whether we have sufficient information.
@@ -255,90 +256,50 @@ export function displace(
     }
 
     if (method === 'pile') {
-        const oldAlgorithm = false;
+        // This piling algorithm is heavily based on
+        // https://github.com/higlass/higlass-pileup/blob/8538a34c6d884c28455d6178377ee1ea2c2c90ae/src/bam-fetcher-worker.js#L626
+        const { maxRows } = t;
+        const occupiedSpaceInRows: { [group: string]: { start: number; end: number }[] } = {};
 
-        if (oldAlgorithm) {
-            // This will be deprecated soon.
-            const { maxRows } = t;
-            const boundingBoxes: { start: number; end: number; row: number }[] = [];
+        const sorted = base.sort((a: Datum, b: Datum) => (a[startField] as number) - (b[startField] as number));
 
-            base.sort((a: Datum, b: Datum) => (a[startField] as number) - (b[startField] as number)).forEach(
-                (d: Datum) => {
-                    const start = (d[startField] as number) - padding;
-                    const end = (d[endField] as number) + padding;
+        sorted.forEach((d: Datum) => {
+            const start = +d[startField] - paddingInBp;
+            const end = +d[endField] + paddingInBp;
 
-                    const overlapped = boundingBoxes.filter(
-                        box =>
-                            (box.start === start && end === box.end) ||
-                            (box.start <= start && start < box.end) ||
-                            (box.start < end && end <= box.end) ||
-                            (start < box.start && box.end < end)
-                    );
+            // Create object if none
+            const group = groupField ? d[groupField] : '__NO_GROUP__';
+            if (!occupiedSpaceInRows[group]) {
+                occupiedSpaceInRows[group] = [];
+            }
 
-                    // find the lowest non overlapped row
-                    const uniqueRows = [
-                        ...Array.from(new Set(boundingBoxes.map(d => d.row))),
-                        Math.max(...boundingBoxes.map(d => d.row)) + 1
-                    ];
-                    const overlappedRows = overlapped.map(d => d.row);
-                    const lowestNonOverlappedRow = Math.min(
-                        ...uniqueRows.filter(d => overlappedRows.indexOf(d) === -1)
-                    );
-
-                    // row index starts from zero
-                    const row: number = overlapped.length === 0 ? 0 : lowestNonOverlappedRow;
-
-                    d[newField] = `${maxRows && maxRows <= row ? maxRows - 1 : row}`;
-
-                    boundingBoxes.push({ start, end, row });
+            // Find a row to place this segment
+            let rowIndex = occupiedSpaceInRows[group].findIndex(d => {
+                // Find a space and update the occupancy info.
+                if (end < d.start) {
+                    d.start = start;
+                    return true;
+                } else if (d.end < start) {
+                    d.end = end;
+                    return true;
                 }
-            );
-        } else {
-            // This piling algorithm is heavily based on
-            // https://github.com/higlass/higlass-pileup/blob/8538a34c6d884c28455d6178377ee1ea2c2c90ae/src/bam-fetcher-worker.js#L626
-            const { maxRows } = t;
-            const occupiedSpaceInRows: { [group: string]: { start: number; end: number }[] } = {};
-
-            const sorted = base.sort((a: Datum, b: Datum) => (a[startField] as number) - (b[startField] as number));
-
-            sorted.forEach((d: Datum) => {
-                const start = (d[startField] as number) - padding;
-                const end = (d[endField] as number) + padding;
-
-                // Create object if none
-                const group = groupField ? d[groupField] : '__NO_GROUP__';
-                if (!occupiedSpaceInRows[group]) {
-                    occupiedSpaceInRows[group] = [];
-                }
-
-                // Find a row to place this segment
-                let rowIndex = occupiedSpaceInRows[group].findIndex(d => {
-                    // Find a space and update the occupancy info.
-                    if (end < d.start) {
-                        d.start = start;
-                        return true;
-                    } else if (d.end < start) {
-                        d.end = end;
-                        return true;
-                    }
-                    return false;
-                });
-
-                if (rowIndex === -1) {
-                    // We did not find sufficient space from the existing rows, so add a new row.
-                    occupiedSpaceInRows[group].push({ start, end });
-                    rowIndex = occupiedSpaceInRows[group].length - 1;
-                }
-
-                d[newField] = `${maxRows && maxRows <= rowIndex ? maxRows - 1 : rowIndex}`;
+                return false;
             });
-        }
+
+            if (rowIndex === -1) {
+                // We did not find sufficient space from the existing rows, so add a new row.
+                occupiedSpaceInRows[group].push({ start, end });
+                rowIndex = occupiedSpaceInRows[group].length - 1;
+            }
+
+            d[newField] = `${maxRows && maxRows <= rowIndex ? maxRows - 1 : rowIndex}`;
+        });
     } else if (method === 'spread') {
         const boundingBoxes: { start: number; end: number }[] = [];
 
         base.sort((a: Datum, b: Datum) => (a[startField] as number) - (b[startField] as number)).forEach((d: Datum) => {
-            let start = (d[startField] as number) - padding;
-            let end = (d[endField] as number) + padding;
+            let start = (d[startField] as number) - paddingInBp;
+            let end = (d[endField] as number) + paddingInBp;
 
             let overlapped = boundingBoxes.filter(
                 box =>
@@ -360,11 +321,11 @@ export function displace(
                     );
                     if (overlapped.length > 0) {
                         if (trial % 2 === 0) {
-                            start += padding * trial;
-                            end += padding * trial;
+                            start += paddingInBp * trial;
+                            end += paddingInBp * trial;
                         } else {
-                            start -= padding * trial;
-                            end -= padding * trial;
+                            start -= paddingInBp * trial;
+                            end -= paddingInBp * trial;
                         }
                     }
                     trial++;
@@ -372,8 +333,8 @@ export function displace(
                 } while (overlapped.length > 0 && trial < 1000);
             }
 
-            d[`${newField}Start`] = `${start + padding}`;
-            d[`${newField}Etart`] = `${end - padding}`;
+            d[`${newField}Start`] = `${start + paddingInBp}`;
+            d[`${newField}Etart`] = `${end - paddingInBp}`;
 
             boundingBoxes.push({ start, end });
         });

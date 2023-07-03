@@ -1,3 +1,4 @@
+import type { DisplayedLegend } from '@gosling-track';
 import type { GoslingTrackModel } from '../gosling-track-model';
 import { IsChannelDeep } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
@@ -5,7 +6,6 @@ import type { CompleteThemeDeep } from '../utils/theme';
 import type { Dimension } from '../utils/position';
 import { scaleLinear, type ScaleLinear } from 'd3-scale';
 import { getTextStyle } from '../utils/text-style';
-import type { DisplayedLegend } from 'src/gosling-track/gosling-track';
 import type { SubjectPosition, D3DragEvent } from 'd3-drag';
 
 // Just the libraries necesssary fro this module

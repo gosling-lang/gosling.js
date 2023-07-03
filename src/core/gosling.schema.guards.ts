@@ -47,7 +47,7 @@ import {
     interpolateRdPu
 } from 'd3-scale-chromatic';
 import { resolveSuperposedTracks } from './utils/overlay';
-import type { TabularDataFetcher } from 'src/data-fetchers/utils';
+import type { TabularDataFetcher } from '@data-fetchers';
 
 export const PREDEFINED_COLOR_STR_MAP: { [k: string]: (t: number) => string } = {
     viridis: interpolateViridis,
@@ -182,7 +182,8 @@ export function IsDataDeepTileset(
             _.type === 'matrix' ||
             _.type === 'bam' ||
             _.type === 'vcf' ||
-            _.type === 'gff')
+            _.type === 'gff') ||
+            _.type === 'bed')
     );
 }
 
