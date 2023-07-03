@@ -236,6 +236,12 @@ const docExampleObj: {
         name: 'BED file',
         spec: docExamples.BED_DEMO,
         hidden: true
+    },
+    doc_gff: {
+        group: 'Doc',
+        name: 'GFF file',
+        spec: docExamples.GFF_DEMO,
+        hidden: true
     }
 };
 
