@@ -105,44 +105,35 @@ export class GffFile {
      * @returns A promise to an array of GffTiles
      */
     async getTileData(minX: number, maxX: number): Promise<GffTile[]> {
-        console.warn('getTileData called');
         const source = dataSources.get(this.#uid)!;
-        // maximum number of features that can be shown
-        const sampleLength = source.options.sampleLength;
+        const sampleLength = source.options.sampleLength; // maximum number of features that can be shown
         const isExtractAttributes = source.options.extractAttributes;
 
         /**
-         * Filters out chromosome features and child features if there are too many features
+         * Filters out child features if there are too many features
          * @param lines an array of strings, where each string is a line from the GFF
          * @returns an array of strings, where each string is a line from the GFF
          */
         function filterLines(lines: string[]): string[] {
-            if (lines.length >= sampleLength) {
-                console.warn('Downsampling');
-                // Keep only the non child lines
-                const nonChildLines = lines.filter(line => {
-                    const lineColumns = line.split('\t');
-                    const attributes = lineColumns[8];
-                    const lineType = lineColumns[2]; // use this to remove the chromosome features
-                    return !attributes.includes('Parent=') && !(lineType == 'chromosome');
-                });
-                return sampleSize(nonChildLines, sampleLength);
-            } else {
-                // we want to remove the chromosome lines
-                return lines.filter(line => {
-                    const lineColumns = line.split('\t');
-                    const lineType = lineColumns[2];
-                    return !(lineType == 'chromosome');
-                });
-            }
+            // Keep only the non child lines
+            const nonChildLines = lines.filter(line => {
+                const lineColumns = line.split('\t');
+                const attributes = lineColumns[8]; // this is the attributes column
+                return !attributes.includes('Parent=');
+            });
+            return sampleSize(nonChildLines, sampleLength);
         }
 
-        // First we get the lines we want to parse and filter out the lines we don't want to parse
+        // First, we get the lines we want to parse and filter out the lines we don't want to parse
         const linePromises = this.#getLinePromises(minX, maxX);
         const allLines = (await Promise.all(linePromises)).flat();
-        console.warn(allLines);
-        const filteredLines = filterLines(allLines);
-        // Then we parse the set of filtered lines
+        let linesToParse = [];
+        if (allLines.length > sampleLength) {
+            linesToParse = filterLines(allLines);
+        } else {
+            linesToParse = allLines;
+        }
+        // Second, we parse the lines using gmod/gff
         const parseOptions = {
             disableDerivesFromReferences: true,
             parseFeatures: true,
@@ -150,25 +141,9 @@ export class GffFile {
             parseDirectives: false,
             parseSequences: false
         };
-        console.warn('started parse');
-        const parsedLines = GFF.parseStringSync(filteredLines.join('\n'), parseOptions);
-        let tiles = parsedDataToTiles(parsedLines);
-
-        if (isExtractAttributes) {
-            tiles = tiles.map(tile => {
-                const attributes = tile.attributes;
-                const cleanAtt: { [key: string]: unknown } = {}; // where the cleaned attributes are stored
-                if (attributes == null) return tile;
-                Object.keys(attributes).forEach(key => {
-                    const attVal = attributes[key];
-                    if (Array.isArray(attVal)) {
-                        cleanAtt[key] = attVal.length == 1 ? attVal[0] : attVal;
-                    }
-                });
-                return { ...tile, ...cleanAtt };
-            });
-        }
-        console.warn('tiles', tiles);
+        const parsedLines = GFF.parseStringSync(linesToParse.join('\n'), parseOptions);
+        // Third, we reformat the parsed GFF into the expected tile format
+        const tiles = parsedDataToTiles(parsedLines, isExtractAttributes);
         return tiles;
     }
 }
