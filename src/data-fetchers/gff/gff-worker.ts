@@ -6,7 +6,7 @@ import { sampleSize } from 'lodash-es';
 import type { TilesetInfo } from '@higlass/types';
 import type { ChromSizes } from '@gosling.schema';
 import { DataSource, RemoteFile } from '../utils';
-import { isGFF3Feature } from './utils';
+import { isGFF3Feature, makeRandomSortedArray } from './utils';
 
 export type GffFileOptions = {
     sampleLength: number;
@@ -52,11 +52,31 @@ export class GffFile {
      * @param maxX the maximum absolute coordinate
      * @returns A promise to an array of strings, where each string is a line from the GFF
      */
-    #getLinePromises(minX: number, maxX: number) {
+    #getLinePromises(minX: number, maxX: number): Promise<string[]>[] {
         const source = dataSources.get(this.#uid)!;
         let curMinX = minX;
         const { chromLengths, cumPositions } = source.chromInfo;
         const linePromises: Promise<string[]>[] = [];
+
+        // This helps with the performance of viewing many features over a large genomic range
+        // Strategy: Get features from randomly selected windows within the entire region
+        // Could be improved by first checking the total number of features in the file.
+        if (maxX - minX > 1000000) {
+            const diff = maxX - minX;
+            const windowSize = 100000;
+            const n_samples = 100;
+
+            const totalBins = Math.floor(diff / windowSize);
+            const selectedBins = makeRandomSortedArray(n_samples, totalBins);
+            console.warn('selected bins', selectedBins);
+            const binLines = selectedBins.map(bin => {
+                const binStart = minX + bin * windowSize;
+                const binEnd = binStart + windowSize;
+                return this.#getLinePromises(binStart, binEnd);
+            });
+            return binLines.flat();
+        }
+
         for (const cumPos of cumPositions) {
             const chromName = cumPos.chr;
             const chromStart = cumPos.pos;
@@ -185,13 +205,12 @@ export class GffFile {
         const parsedLines = GFF.parseStringSync(linesToParse.join('\n'), parseOptions);
         // Third, we reformat the parsed GFF into the expected tile format
         const tiles = parsedLinesToTiles(parsedLines, isExtractAttributes);
-        console.warn(tiles);
         return tiles;
     }
 }
 
 // promises indexed by urls
-const bedFiles: Map<string, GffFile> = new Map();
+const gffFiles: Map<string, GffFile> = new Map();
 
 /**
  * Object to store tile data. Each key a string which contains the coordinates of the tile
@@ -208,11 +227,11 @@ function init(
     chromSizes: ChromSizes,
     options: Partial<GffFileOptions> = {}
 ) {
-    let bedFile = bedFiles.get(bed.url);
-    if (!bedFile) {
-        bedFile = GffFile.fromUrl(bed.url, bed.indexUrl, uid);
+    let gffFile = gffFiles.get(bed.url);
+    if (!gffFile) {
+        gffFile = GffFile.fromUrl(bed.url, bed.indexUrl, uid);
     }
-    const dataSource = new DataSource(bedFile, chromSizes, {
+    const dataSource = new DataSource(gffFile, chromSizes, {
         sampleLength: 1000, // default sampleLength
         extractAttributes: false, // default extractAttributes
         ...options
@@ -246,7 +265,7 @@ const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
     // get bounds of this tile
     const minX = source.tilesetInfo.min_pos[0] + x * tileWidth;
     const maxX = source.tilesetInfo.min_pos[0] + (x + 1) * tileWidth;
-
+    console.warn("called getTileData");
     tileValues[CACHE_KEY] = await source.file.getTileData(minX, maxX);
     return [];
 };
