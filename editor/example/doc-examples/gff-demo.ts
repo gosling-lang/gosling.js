@@ -14,9 +14,9 @@ export const GFF_DEMO: GoslingSpec = {
                 {
                     template: 'gene',
                     data: {
-                        url: 'https://s3.amazonaws.com/gosling-lang.org/data/gff/Homo_sapiens.GRCh38.94.chr.gff3.gz',
+                        url: 'https://s3.amazonaws.com/gosling-lang.org/data/gff/gencode.v43.basic_sort.annotation.gff3.gz',
                         indexUrl:
-                            'https://s3.amazonaws.com/gosling-lang.org/data/gff/Homo_sapiens.GRCh38.94.chr.gff3.gz.tbi',
+                            'https://s3.amazonaws.com/gosling-lang.org/data/gff/gencode.v43.basic_sort.annotation.gff3.gz.tbi',
                         type: 'gff',
                         extractAttributes: true
                     },

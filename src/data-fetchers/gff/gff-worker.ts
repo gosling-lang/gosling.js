@@ -1,12 +1,12 @@
 import { TabixIndexedFile } from '@gmod/tabix';
 import GFF from '@gmod/gff';
-import type { GFF3FeatureLineWithRefs } from '@gmod/gff';
+import type { GFF3FeatureLineWithRefs, GFF3Feature, GFF3Sequence } from '@gmod/gff';
 import { expose, Transfer } from 'threads/worker';
 import { sampleSize } from 'lodash-es';
 import type { TilesetInfo } from '@higlass/types';
 import type { ChromSizes } from '@gosling.schema';
 import { DataSource, RemoteFile } from '../utils';
-import { parsedDataToTiles } from './utils';
+import { isGFF3Feature } from './utils';
 
 export type GffFileOptions = {
     sampleLength: number;
@@ -83,7 +83,7 @@ export class GffFile {
                     endPos = Math.ceil(maxX - chromStart);
                 }
 
-                this.tbi.getLines(chromName.substring(3), startPos, endPos, lineCallback).then(() => {
+                this.tbi.getLines(chromName, startPos, endPos, lineCallback).then(() => {
                     resolve(lines);
                 });
             });
@@ -124,6 +124,47 @@ export class GffFile {
             return sampleSize(nonChildLines, sampleLength);
         }
 
+        /**
+         * Processes return value of GFF.parseStringSync() into tiles
+         * @param parsed Output from GFF.parseStringSync()
+         * @returns An array of GffTile
+         */
+        function parsedDataToTiles(
+            parsed: (GFF3Feature | GFF3Sequence)[],
+            isExtractAttributes: boolean | undefined
+        ): GffTile[] {
+            let tiles: GffTile[] = [];
+            for (const line of parsed) {
+                if (isGFF3Feature(line)) {
+                    for (const feature of line) {
+                        // make the start and end absolute
+                        if (feature.seq_id && feature.start)
+                            feature.start = source.chromInfo.chrToAbs([feature.seq_id, feature.start]);
+                        if (feature.seq_id && feature.end)
+                            feature.end = source.chromInfo.chrToAbs([feature.seq_id, feature.end]);
+                        tiles.push(feature);
+                    }
+                }
+            }
+            // if the extractAttributes option is set to true, then we put the key-values from the attributes object into the
+            // parent tile object
+            if (isExtractAttributes) {
+                tiles = tiles.map(tile => {
+                    const attributes = tile.attributes;
+                    const cleanAtt: { [key: string]: unknown } = {}; // where the cleaned attributes are stored
+                    if (attributes == null) return tile;
+                    Object.keys(attributes).forEach(key => {
+                        const attVal = attributes[key];
+                        if (Array.isArray(attVal)) {
+                            cleanAtt[key] = attVal.length == 1 ? attVal[0] : attVal;
+                        }
+                    });
+                    return { ...tile, ...cleanAtt };
+                });
+            }
+            return tiles;
+        }
+
         // First, we get the lines we want to parse and filter out the lines we don't want to parse
         const linePromises = this.#getLinePromises(minX, maxX);
         const allLines = (await Promise.all(linePromises)).flat();
@@ -144,6 +185,7 @@ export class GffFile {
         const parsedLines = GFF.parseStringSync(linesToParse.join('\n'), parseOptions);
         // Third, we reformat the parsed GFF into the expected tile format
         const tiles = parsedDataToTiles(parsedLines, isExtractAttributes);
+        console.warn(tiles);
         return tiles;
     }
 }
