@@ -110,7 +110,7 @@ export class GffFile {
         const isExtractAttributes = source.options.extractAttributes;
 
         /**
-         * Filters out child features if there are too many features
+         * Helper function to filter out child features if there are too many features
          * @param lines an array of strings, where each string is a line from the GFF
          * @returns an array of strings, where each string is a line from the GFF
          */
@@ -125,11 +125,11 @@ export class GffFile {
         }
 
         /**
-         * Processes return value of GFF.parseStringSync() into tiles
+         * Helper function to reformat the output of GFF.parseStringSync() into tiles
          * @param parsed Output from GFF.parseStringSync()
          * @returns An array of GffTile
          */
-        function parsedDataToTiles(
+        function parsedLinesToTiles(
             parsed: (GFF3Feature | GFF3Sequence)[],
             isExtractAttributes: boolean | undefined
         ): GffTile[] {
@@ -184,7 +184,7 @@ export class GffFile {
         };
         const parsedLines = GFF.parseStringSync(linesToParse.join('\n'), parseOptions);
         // Third, we reformat the parsed GFF into the expected tile format
-        const tiles = parsedDataToTiles(parsedLines, isExtractAttributes);
+        const tiles = parsedLinesToTiles(parsedLines, isExtractAttributes);
         console.warn(tiles);
         return tiles;
     }
@@ -198,7 +198,7 @@ const bedFiles: Map<string, GffFile> = new Map();
  */
 const tileValues: Record<string, GffTile[]> = {};
 /**
- * Maps from UID to Bed File info
+ * Maps from UID to GFF File info
  */
 const dataSources: Map<string, DataSource<GffFile, GffFileOptions>> = new Map();
 
