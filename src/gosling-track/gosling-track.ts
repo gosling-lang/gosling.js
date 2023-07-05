@@ -495,12 +495,10 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             if (!this.tilesetInfo) return;
 
             const tiles = this.visibleAndFetchedTiles();
-            const tabularData = await tabularDataFetcher.getTabularData(
-                Object.values(tiles).map(x => x.remoteId)
-            );
+            const tabularData = await tabularDataFetcher.getTabularData(Object.values(tiles).map(x => x.remoteId));
             const tilesetInfo = this.tilesetInfo;
             tiles.forEach((tile, i) => {
-                if(i === 0) {
+                if (i === 0) {
                     const [refTile] = HGC.utils.trackUtils.calculate1DVisibleTiles(tilesetInfo, this._xScale);
                     tile.tileData.zoomLevel = refTile[0];
                     tile.tileData.tilePos = [refTile[1], refTile[1]];
@@ -773,7 +771,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             };
             // BAM data fetcher already combines the datasets;
             const isBamDataFetcher = this.dataFetcher instanceof BamDataFetcher;
-            return (includesDisplaceTransform && !hasDenseTiles()) && !isBamDataFetcher;
+            return includesDisplaceTransform && !hasDenseTiles() && !isBamDataFetcher;
         }
 
         /**

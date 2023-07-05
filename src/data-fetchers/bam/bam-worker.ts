@@ -393,9 +393,9 @@ const tile = async (uid: string, z: number, x: number): Promise<JsonBamRecord[]>
 
 /**
  * Not like other data fetchers, the Bam Data Fetcher fetches all the tiles at once.
- * @param uid 
- * @param tileIds 
- * @returns 
+ * @param uid
+ * @param tileIds
+ * @returns
  */
 const fetchTilesDebounced = async (uid: string, tileIds: string[]) => {
     const tiles: Record<string, JsonBamRecord[] & { tilePositionId: string }> = {};
