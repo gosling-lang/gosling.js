@@ -333,12 +333,13 @@ const tile = async (uid: string, z: number, x: number): Promise<JsonBamRecord[]>
         // pairAcrossChr: typeof loadMates === 'undefined' ? false : loadMates,
     };
 
+    tileValues.set(`${uid}.${z}.${x}`, []);
+
     /* eslint-disable-next-line @typescript-eslint/prefer-for-of */
     for (let i = 0; i < cumPositions.length; i++) {
         const chromName = cumPositions[i].chr;
         const chromStart = cumPositions[i].pos;
         const chromEnd = cumPositions[i].pos + chromLengths[chromName];
-        tileValues.set(`${uid}.${z}.${x}`, []);
 
         if (chromStart <= minX && minX < chromEnd) {
             // start of the visible region is within this chromosome
@@ -390,6 +391,12 @@ const tile = async (uid: string, z: number, x: number): Promise<JsonBamRecord[]>
     });
 };
 
+/**
+ * Not like other data fetchers, the Bam Data Fetcher fetches all the tiles at once.
+ * @param uid 
+ * @param tileIds 
+ * @returns 
+ */
 const fetchTilesDebounced = async (uid: string, tileIds: string[]) => {
     const tiles: Record<string, JsonBamRecord[] & { tilePositionId: string }> = {};
     const validTileIds: string[] = [];

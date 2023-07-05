@@ -269,8 +269,12 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             this.pMouseHover?.clear();
 
             const processTilesAndDraw = () => {
+                // Should we force to process all tiles?
+                // For BAM, yes, since all tiles are stored in a single tile and visible tiles had been changed.
+                const isBamDataFetcher = this.dataFetcher instanceof BamDataFetcher;
+
                 // Preprocess all tiles at once so that we can share scales across tiles.
-                this.processAllTiles();
+                this.processAllTiles(isBamDataFetcher);
 
                 // This function calls `drawTile` on each tile.
                 super.draw();
@@ -490,17 +494,21 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         async updateTileAsync<T extends Datum>(tabularDataFetcher: TabularDataFetcher<T>, callback: () => void) {
             if (!this.tilesetInfo) return;
 
-            const tabularData = await tabularDataFetcher.getTabularData(
-                Object.values(this.fetchedTiles).map(x => x.remoteId)
-            );
             const tiles = this.visibleAndFetchedTiles();
-            if (tiles?.[0]) {
-                const tile = tiles[0];
-                const [refTile] = HGC.utils.trackUtils.calculate1DVisibleTiles(this.tilesetInfo, this._xScale);
-                tile.tileData.zoomLevel = refTile[0];
-                tile.tileData.tilePos = [refTile[1], refTile[1]];
-                (tile.tileData as TabularTileData).tabularData = tabularData;
-            }
+            const tabularData = await tabularDataFetcher.getTabularData(
+                Object.values(tiles).map(x => x.remoteId)
+            );
+            const tilesetInfo = this.tilesetInfo;
+            tiles.forEach((tile, i) => {
+                if(i === 0) {
+                    const [refTile] = HGC.utils.trackUtils.calculate1DVisibleTiles(tilesetInfo, this._xScale);
+                    tile.tileData.zoomLevel = refTile[0];
+                    tile.tileData.tilePos = [refTile[1], refTile[1]];
+                    (tile.tileData as TabularTileData).tabularData = tabularData;
+                } else {
+                    (tile.tileData as TabularTileData).tabularData = [];
+                }
+            });
 
             callback();
         }
@@ -765,7 +773,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             };
             // BAM data fetcher already combines the datasets;
             const isBamDataFetcher = this.dataFetcher instanceof BamDataFetcher;
-            return (includesDisplaceTransform && !hasDenseTiles()) || isBamDataFetcher;
+            return (includesDisplaceTransform && !hasDenseTiles()) && !isBamDataFetcher;
         }
 
         /**
