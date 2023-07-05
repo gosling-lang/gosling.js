@@ -1,3 +1,12 @@
+## [0.9.32](https://github.com/gosling-lang/gosling.js/compare/v0.9.31...v0.9.32) (2023-07-05)
+
+
+### Bug Fixes
+
+* fix duplicated data and odd tile load timing in the bam data fetcher ([#927](https://github.com/gosling-lang/gosling.js/issues/927)) ([4e52907](https://github.com/gosling-lang/gosling.js/commit/4e52907b8ed79cc08d8c9ce1b823b72f026a4004))
+
+
+
 ## [0.9.31](https://github.com/gosling-lang/gosling.js/compare/v0.9.30...v0.9.31) (2023-05-31)
 
 
