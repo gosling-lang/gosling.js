@@ -1,6 +1,5 @@
 /*
- * This document is heavily based on the following repo by @alexander-veit:
- * https://github.com/dbmi-bgm/higlass-sv/blob/main/src/sv-fetcher.js
+ * The GFF data fetcher is based heavily on the BED and VCF data fetchers
  */
 import { spawn } from 'threads';
 import Worker from './gff-worker.ts?worker&inline';

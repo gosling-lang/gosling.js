@@ -129,7 +129,7 @@ export class GffFile {
         const isExtractAttributes = source.options.extractAttributes;
 
         /**
-         * Helper function to filter out child features if there are too many features
+         * Function to filter out child features if there are too many features
          * @param lines an array of strings, where each string is a line from the GFF
          * @returns an array of strings, where each string is a line from the GFF
          */
@@ -144,7 +144,7 @@ export class GffFile {
         }
 
         /**
-         * Helper function to reformat the output of GFF.parseStringSync() into tiles
+         * Function to reformat the output of GFF.parseStringSync() into tiles
          * @param parsed Output from GFF.parseStringSync()
          * @returns An array of GffTile
          */
