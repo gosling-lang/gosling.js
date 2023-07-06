@@ -186,15 +186,6 @@ button {
     overflow-x: auto;
 }
 
-.editor-alt-text-header {
-    width: 100%;
-    height: 56px;
-    padding: 4px;
-    padding-left: 10px;
-    background: #fafafa;
-    border-bottom: 1px solid lightgray;
-    overflow-x: auto;
-}
 
 .data-preview-refresh-button {
     padding: 10px;

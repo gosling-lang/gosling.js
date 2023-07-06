@@ -231,6 +231,8 @@ function Editor(props: RouteComponentProps) {
 
     const previewData = useRef<PreviewData[]>([]);
     const [refreshData, setRefreshData] = useState<boolean>(false);
+    const [refreshAlt, setRefreshAlt] = useState<boolean>(false);
+    const [additionalInfoTab, setAdditionalInfoTab] = useState('dataPreview');
     const [language, changeLanguage] = useState<EditorLangauge>('json');
 
     const [demo, setDemo] = useState<Example>(
@@ -1060,7 +1062,7 @@ function Editor(props: RouteComponentProps) {
                                                     setLog({ message: '', state: 'success' });
                                                 }}
                                             >
-                                                JSON {` `}
+                                                JSON{` `}
                                                 <span className="tooltip">
                                                     {getIconSVG(ICONS.INFO_CIRCLE, 10, 10)}
                                                     <span className="tooltiptext">
@@ -1193,109 +1195,133 @@ function Editor(props: RouteComponentProps) {
                                             </div>
                                         ) : null} */}
                                 </div>
+                                
                                 <Allotment.Pane
                                     preferredSize={BOTTOM_PANEL_HEADER_HEIGHT}
                                     minSize={BOTTOM_PANEL_HEADER_HEIGHT}
                                 >
-                                    <button
-                                        className={`editor-header ${theme === 'dark' ? 'dark' : ''}`}
-                                        style={{ cursor: 'pointer' }}
-                                    >
-                                        Data Preview (~100 Rows, Data Before Transformation)
-                                    </button>
-                                    <div className="editor-data-preview-panel">
-                                        <button
-                                            title="Refresh preview data"
-                                            className="data-preview-refresh-button"
-                                            onClick={() => setRefreshData(!refreshData)}
-                                        >
-                                            {getIconSVG(ICONS.REFRESH, 23, 23)}
-                                            <br />
-                                            {'REFRESH DATA'}
-                                        </button>
-                                        {previewData.current.length > selectedPreviewData &&
-                                        previewData.current[selectedPreviewData] &&
-                                        previewData.current[selectedPreviewData].data.length > 0 ? (
-                                            <>
-                                                <div className="editor-data-preview-tab">
-                                                    {previewData.current.map((d: PreviewData, i: number) => (
-                                                        <button
-                                                            className={
-                                                                i === selectedPreviewData
-                                                                    ? 'selected-tab'
-                                                                    : 'unselected-tab'
-                                                            }
-                                                            key={JSON.stringify(d)}
-                                                            onClick={() => setSelectedPreviewData(i)}
-                                                        >
-                                                            {`${(
-                                                                JSON.parse(d.dataConfig).data.type as string
-                                                            ).toLocaleLowerCase()} `}
-                                                            <small>{i}</small>
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                                <div className="editor-data-preview-tab-info">
-                                                    {getDataPreviewInfo(
-                                                        previewData.current[selectedPreviewData].dataConfig
-                                                    )}
-                                                </div>
-                                                <div className="editor-data-preview-table">
-                                                    <table>
-                                                        <tbody>
-                                                            <tr>
-                                                                {Object.keys(
-                                                                    previewData.current[selectedPreviewData].data[0]
-                                                                ).map((field: string, i: number) => (
-                                                                    <th key={i}>{field}</th>
-                                                                ))}
-                                                            </tr>
-                                                            {previewData.current[selectedPreviewData].data.map(
-                                                                (row: Datum, i: number) => (
-                                                                    <tr key={i}>
-                                                                        {Object.keys(row).map(
-                                                                            (field: string, j: number) => (
-                                                                                <td key={j}>
-                                                                                    {row[field]?.toString()}
-                                                                                </td>
-                                                                            )
-                                                                        )}
-                                                                    </tr>
-                                                                )
+                                    <div className="tabEditor">
+                                        <div className="tab">
+                                            <button
+                                                className={`tablinks ${additionalInfoTab == 'dataPreview' && 'active'}`}
+                                                style={{ cursor: 'pointer' }}
+                                                onClick={() => {
+                                                    setAdditionalInfoTab('dataPreview');
+                                                    setLog({ message: '', state: 'success' });
+                                                }}
+                                            >
+                                                Data Preview{` `}
+                                                <span className="tooltip">
+                                                    {getIconSVG(ICONS.INFO_CIRCLE, 10, 10)}
+                                                    <span className="tooltiptext">
+                                                        View a preview of the data (~100 Rows) before transformation.
+                                                    </span>
+                                                </span>
+                                            </button>
+                                            <button
+                                                className={`tablinks ${additionalInfoTab == 'altText' && 'active'}`}
+                                                style={{ cursor: 'pointer' }}
+                                                onClick={() => {
+                                                    setAdditionalInfoTab('altText');
+                                                    setLog({ message: '', state: 'success' });
+                                                }}
+                                            >
+                                                Automatic Text Description{` `}
+                                                <span className="tooltip">
+                                                    {getIconSVG(ICONS.INFO_CIRCLE, 10, 10)}
+                                                    <span className="tooltiptext">
+                                                        View the automatically generated description of this visualization.
+                                                    </span>
+                                                </span>
+                                            </button>
+                                        </div>
+
+                                        <div className={`tabContent ${additionalInfoTab == 'dataPreview' ? 'show' : 'hide'}`}>
+                                            <div className="editor-data-preview-panel">
+                                                <button
+                                                    title="Refresh preview data"
+                                                    className="data-preview-refresh-button"
+                                                    onClick={() => setRefreshData(!refreshData)}
+                                                >
+                                                    {getIconSVG(ICONS.REFRESH, 23, 23)}
+                                                    <br />
+                                                    {'REFRESH DATA'}
+                                                </button>
+                                                {previewData.current.length > selectedPreviewData &&
+                                                previewData.current[selectedPreviewData] &&
+                                                previewData.current[selectedPreviewData].data.length > 0 ? (
+                                                    <>
+                                                        <div className="editor-data-preview-tab">
+                                                            {previewData.current.map((d: PreviewData, i: number) => (
+                                                                <button
+                                                                    className={
+                                                                        i === selectedPreviewData
+                                                                            ? 'selected-tab'
+                                                                            : 'unselected-tab'
+                                                                    }
+                                                                    key={JSON.stringify(d)}
+                                                                    onClick={() => setSelectedPreviewData(i)}
+                                                                >
+                                                                    {`${(
+                                                                        JSON.parse(d.dataConfig).data.type as string
+                                                                    ).toLocaleLowerCase()} `}
+                                                                    <small>{i}</small>
+                                                                </button>
+                                                            ))}
+                                                        </div>
+                                                        <div className="editor-data-preview-tab-info">
+                                                            {getDataPreviewInfo(
+                                                                previewData.current[selectedPreviewData].dataConfig
                                                             )}
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </>
-                                        ) : null}
+                                                        </div>
+                                                        <div className="editor-data-preview-table">
+                                                            <table>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        {Object.keys(
+                                                                            previewData.current[selectedPreviewData].data[0]
+                                                                        ).map((field: string, i: number) => (
+                                                                            <th key={i}>{field}</th>
+                                                                        ))}
+                                                                    </tr>
+                                                                    {previewData.current[selectedPreviewData].data.map(
+                                                                        (row: Datum, i: number) => (
+                                                                            <tr key={i}>
+                                                                                {Object.keys(row).map(
+                                                                                    (field: string, j: number) => (
+                                                                                        <td key={j}>
+                                                                                            {row[field]?.toString()}
+                                                                                        </td>
+                                                                                    )
+                                                                                )}
+                                                                            </tr>
+                                                                        )
+                                                                    )}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </>
+                                                ) : null}
+                                            </div>
+                                        </div>
+                                        
+                                        <div className={`tabContent ${additionalInfoTab == 'altText' ? 'show' : 'hide'}`}>
+                                            <div className="editor-alt-text-panel">
+                                                <button
+                                                    title="Refresh text description"
+                                                    className="alt-text-refresh-button"
+                                                    onClick={() => setRefreshAlt(!refreshAlt)}
+                                                >
+                                                    {getIconSVG(ICONS.REFRESH, 23, 23)}
+                                                    <br />
+                                                    {'REFRESH TEXT DESCRIPTIONS'}
+                                                </button>
+                                                {/* add description here */}
+                                                Test
+                                            </div>
+                                        </div>
                                     </div>
                                 </Allotment.Pane>
-
-                                <Allotment.Pane
-                                    preferredSize={RIGHT_PANEL_HEADER_HEIGHT}
-                                    minSize={RIGHT_PANEL_HEADER_HEIGHT}
-                                >
-                                    <button
-                                        className={`editor-alt-text-header ${theme === 'dark' ? 'dark' : ''}`}
-                                        style={{ cursor: 'pointer' }}
-                                    >
-                                        Text description
-                                    </button>
-                                    <div className="editor-alt-text-panel">
-                                        <button
-                                            title="Refresh text description"
-                                            className="alt-text-refresh-button"
-                                            // onClick={() => setRefreshData(!refreshData)}
-                                        >
-                                            {getIconSVG(ICONS.REFRESH, 23, 23)}
-                                            <br />
-                                            {'REFRESH TEXT DESCRIPTIONS'}
-                                        </button>
-                                        {/* add description here */}
-                                        Test
-                                    </div>
-                                </Allotment.Pane>
-
                             </Allotment>
                         </ErrorBoundary>
                     </Allotment>
