@@ -248,6 +248,7 @@ function Editor(props: RouteComponentProps) {
     const [showExamples, setShowExamples] = useState<boolean>(false);
     const [autoRun, setAutoRun] = useState(true);
     const [selectedPreviewData, setSelectedPreviewData] = useState<number>(0);
+    const [displayAltText, setDisplayAltText] = useState<string>();
     const [gistTitle, setGistTitle] = useState<string>();
     const [description, setDescription] = useState<string | null>();
     const [expertMode, setExpertMode] = useState(false);
@@ -1269,10 +1270,8 @@ function Editor(props: RouteComponentProps) {
                                         ) : null}
                                     </div>
                                 </Allotment.Pane>
-                            </Allotment>
-                        </ErrorBoundary>
-                    </Allotment>
-                    <Allotment.Pane
+
+                                <Allotment.Pane
                                     preferredSize={RIGHT_PANEL_HEADER_HEIGHT}
                                     minSize={RIGHT_PANEL_HEADER_HEIGHT}
                                 >
@@ -1296,6 +1295,10 @@ function Editor(props: RouteComponentProps) {
                                         Test
                                     </div>
                                 </Allotment.Pane>
+
+                            </Allotment>
+                        </ErrorBoundary>
+                    </Allotment>
                 </Allotment>
                 {/* Description Panel */}
                 <div
