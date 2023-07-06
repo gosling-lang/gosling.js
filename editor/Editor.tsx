@@ -250,7 +250,7 @@ function Editor(props: RouteComponentProps) {
     const [showExamples, setShowExamples] = useState<boolean>(false);
     const [autoRun, setAutoRun] = useState(true);
     const [selectedPreviewData, setSelectedPreviewData] = useState<number>(0);
-    const [displayAltText, setDisplayAltText] = useState<string>();
+
     const [gistTitle, setGistTitle] = useState<string>();
     const [description, setDescription] = useState<string | null>();
     const [expertMode, setExpertMode] = useState(false);
