@@ -27,6 +27,7 @@ export interface EmptyTile {
 export class GffFile {
     #uid: string;
     tbi: TabixIndexedFile;
+    #n_features?: number;
 
     constructor(tbi: TabixIndexedFile, uid: string) {
         this.tbi = tbi;
@@ -46,6 +47,21 @@ export class GffFile {
         });
         return new GffFile(tbi, uid);
     }
+    async #getNumberFeatures() {
+        if (!this.#n_features) {
+            const source = dataSources.get(this.#uid)!;
+            const { cumPositions } = source.chromInfo;
+            const countPromises: Promise<number>[] = [];
+            for (const cumPos of cumPositions) {
+                const chromName = cumPos.chr;
+                countPromises.push(this.tbi.lineCount(chromName));
+            }
+            const counts = await Promise.all(countPromises);
+            const total_counts = counts.reduce((acc, cur) => acc + cur, 0);
+            this.#n_features = total_counts;
+        }
+        return this.#n_features;
+    }
     /**
      * Retrieves the lines between a range of absolute genomic coordinates
      * @param minX the minimum absolute coordinate
@@ -57,11 +73,12 @@ export class GffFile {
         let curMinX = minX;
         const { chromLengths, cumPositions } = source.chromInfo;
         const linePromises: Promise<string[]>[] = [];
-
         // This helps with the performance of viewing many features over a large genomic range
         // Strategy: Get features from randomly selected windows within the entire region
-        // Could be improved by first checking the total number of features in the file.
-        if (maxX - minX > 1000000) {
+        // If the total number of features in the file is less than MAX_FEATURES, then we don't do this.
+        const MAX_FEATURES = 500000; // if the number of features is less than this, we just get all the lines
+        const MAX_WINDOW = 4000000; // if the maxX - minX is less than this, then we'll just get all the lines
+        if (this.#n_features && this.#n_features > MAX_FEATURES && maxX - minX > MAX_WINDOW) {
             const diff = maxX - minX;
             const windowSize = 100000;
             const n_samples = 100;
@@ -127,7 +144,7 @@ export class GffFile {
         const source = dataSources.get(this.#uid)!;
         const sampleLength = source.options.sampleLength; // maximum number of features that can be shown
         const isExtractAttributes = source.options.extractAttributes;
-
+        await this.#getNumberFeatures();
         /**
          * Function to filter out child features if there are too many features
          * @param lines an array of strings, where each string is a line from the GFF
