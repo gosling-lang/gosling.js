@@ -27,7 +27,7 @@ export const GFF_DEMO: GoslingSpec = {
                         strandRow: { field: 'strand' },
                         opacity: { value: 0.4 },
                         geneHeight: { value: 10 },
-                        geneLabel: { field: 'ID' },
+                        geneLabel: { field: 'gene_name' },
                         geneLabelFontSize: { value: 10 },
                         geneLabelColor: { field: 'strand', range: ['gray'] },
                         geneLabelStroke: { value: 'white' },

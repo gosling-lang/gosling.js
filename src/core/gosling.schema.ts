@@ -1108,7 +1108,7 @@ export interface BamData {
  */
 export interface GffData {
     type: 'gff';
-    /** URL link to the VCF file */
+    /** URL link to the GFF file */
     url: string;
 
     /** URL link to the tabix index file */
