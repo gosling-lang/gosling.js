@@ -80,7 +80,7 @@ export class GffFile {
         const MAX_WINDOW = 4000000; // if the maxX - minX is less than this, then we'll just get all the lines
         if (this.#n_features && this.#n_features > MAX_FEATURES && maxX - minX > MAX_WINDOW) {
             const diff = maxX - minX;
-            const windowSize = 100000;
+            const windowSize = 50000;
             const n_samples = 100;
 
             const totalBins = Math.floor(diff / windowSize);
@@ -198,6 +198,7 @@ export class GffFile {
                     return { ...tile, ...cleanAtt };
                 });
             }
+            console.warn(tiles);
             return tiles;
         }
 
