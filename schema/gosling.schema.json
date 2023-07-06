@@ -1059,7 +1059,7 @@
           "type": "string"
         },
         "url": {
-          "description": "URL link to the VCF file",
+          "description": "URL link to the GFF file",
           "type": "string"
         }
       },
