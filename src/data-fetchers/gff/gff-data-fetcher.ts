@@ -34,7 +34,6 @@ class GffDataFetcher implements TabularDataFetcher<GffTile> {
         const { url, indexUrl, assembly, ...options } = config;
         this.worker = spawn<WorkerApi>(new Worker()).then(async worker => {
             const chromSizes = Object.entries(computeChromSizes(assembly).size);
-            console.warn('chromsize', chromSizes);
             await worker.init(this.uid, { url, indexUrl }, chromSizes, options);
             return worker;
         });

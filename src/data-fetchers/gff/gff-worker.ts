@@ -68,7 +68,6 @@ export class GffFile {
 
             const totalBins = Math.floor(diff / windowSize);
             const selectedBins = makeRandomSortedArray(n_samples, totalBins);
-            console.warn('selected bins', selectedBins);
             const binLines = selectedBins.map(bin => {
                 const binStart = minX + bin * windowSize;
                 const binEnd = binStart + windowSize;
@@ -265,7 +264,6 @@ const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
     // get bounds of this tile
     const minX = source.tilesetInfo.min_pos[0] + x * tileWidth;
     const maxX = source.tilesetInfo.min_pos[0] + (x + 1) * tileWidth;
-    console.warn("called getTileData");
     tileValues[CACHE_KEY] = await source.file.getTileData(minX, maxX);
     return [];
 };
