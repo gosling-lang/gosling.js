@@ -58,36 +58,32 @@ function JsonDataFetcher(HGC: any, ...args: any): any {
                 chromLengths: chromosomeSizes
             };
 
-            const { chromosomeField, genomicFields } = this.dataConfig;
+            const { chromosomeField, genomicFields, genomicFieldsToConvert } = this.dataConfig;
             this.values = dataConfig.values.map((row: any) => {
-                let successfullyGotChrInfo = true;
+                try {
+                    if (genomicFieldsToConvert) {
+                        // This spec is used when multiple chromosomes are stored in a single row
+                        genomicFieldsToConvert.forEach(chromMap => {
+                            const genomicFields = chromMap.genomicFields;
+                            const chromName = sanitizeChrName(row[chromMap.chromosomeField], this.assembly) as string;
 
-                if (genomicFields && chromosomeField) {
-                    genomicFields.forEach((g: any) => {
-                        if (!row[chromosomeField]) {
-                            // TODO:
-                            return;
-                        }
-                        try {
-                            const chrName = sanitizeChrName(row[chromosomeField], this.assembly);
-                            row[g] = computeChromSizes(this.assembly).interval[chrName][0] + +row[g];
-                        } catch (e) {
-                            // genomic position did not parse properly
-                            successfullyGotChrInfo = false;
-                            // console.warn(
-                            //     '[Gosling Data Fetcher] Genomic position cannot be parsed correctly.',
-                            //     this.dataConfig.chromosomeField
-                            // );
-                        }
-                    });
-                }
-
-                if (!successfullyGotChrInfo) {
-                    // store row only when chromosome information is correctly parsed
+                            genomicFields.forEach((positionCol: string) => {
+                                const chromPosition = row[positionCol] as string;
+                                row[positionCol] = String(this.chromSizes.chrToAbs(chromName, chromPosition));
+                            });
+                        });
+                    } else if (chromosomeField && genomicFields) {
+                        genomicFields.forEach((positionCol: string) => {
+                            const chromPosition = row[positionCol] as string;
+                            const chromName = sanitizeChrName(row[chromosomeField], this.assembly) as string;
+                            row[positionCol] = String(this.chromSizes.chrToAbs(chromName, chromPosition));
+                        });
+                    }
+                    return row;
+                } catch {
+                    // skip the rows that had errors in them
                     return undefined;
                 }
-
-                return row;
             });
         }
 
