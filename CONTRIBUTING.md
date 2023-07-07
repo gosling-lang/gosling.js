@@ -108,11 +108,18 @@ type(scope?): subject  # scope is optional; multiple scopes are supported (curre
 
 where `type` can be either `build`, `ci`, `chore`, `docs`, `feat`, `fix`, `perf`, `refactor`, `revert`, `style`, or `test`.
 
+Also, we have been using the following `scope` categories
+
+- `data-fetcher`: any updates related to data fetchers
+- `editor`: UI and other updates to the online editor
+- `api`: the Gosling APIs
+- ` ` (No scope): any general updates to the library, e.g., grammar change, new rendering, etc.
+
 Example commit messages are as follows:
 
 ```sh
 git commit -m 'fix: correctly position views'
-git commit -m 'feat: add a data preview panel in editor'
+git commit -m 'feat(editor): add a data preview panel in editor'
 git commit -m 'docs: add details about commitlint in README.md'
 ```
 
