@@ -18,8 +18,10 @@ jobs:
         with:
           # Configure which scopes are allowed.
           scopes: |
+            core
+            track
             data-fetcher
             api
             editor
           # Configure if a scope must always be provided.
-          requireScope: false
+          requireScope: true
