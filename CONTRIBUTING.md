@@ -26,19 +26,20 @@ The allowed pattern of commit messages is:
 type(scope?): subject  # scope is optional; multiple scopes are supported (current delimiter options: "/", "\" and ",")
 ```
 
-where `type` can be either `build`, `ci`, `chore`, `docs`, `feat`, `fix`, `perf`, `refactor`, `revert`, `style`, or `test`.
+where `type` can be either `feat`, `fix`, `ci`, `chore`, `docs`, `perf`, `refactor`, or `test`.
 
-Additionally, `scope` can be one of the following: 
+Additionally, `scope` should be defined for `feat` and `fix` which should be one of the following: 
 
+- `core`: any general updates to the library, e.g., grammar change, new rendering, etc.
+- `track`: any updates that are specific to tracks in the library, including `gosling-track` and `gosling-axis`.
 - `data-fetcher`: any updates related to data fetchers
 - `editor`: UI and other updates to the online editor
 - `api`: the Gosling APIs
-- ` ` (No scope): any general updates to the library, e.g., grammar change, new rendering, etc.
 
 Example commit messages are as follows:
 
 ```sh
-git commit -m 'fix: correctly position views'
+git commit -m 'fix(core): correctly position views'
 git commit -m 'feat(editor): add a data preview panel in editor'
 git commit -m 'docs: add details about commitlint in README.md'
 ```
