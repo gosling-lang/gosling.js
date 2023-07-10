@@ -16,6 +16,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          # Configure which types are allowed (newline-delimited).
+          types: |
+            feat
+            fix
+            ci
+            chore
+            docs
+            refactor
+            test
           # Configure which scopes are allowed.
           scopes: |
             core
@@ -25,3 +34,11 @@ jobs:
             editor
           # Configure if a scope must always be provided.
           requireScope: true
+          # Configure which scopes are disallowed in PR titles (newline-delimited).
+          # Anything but `feat` and `fix`
+          disallowScopes: |
+            ci
+            chore
+            docs
+            refactor
+            test
