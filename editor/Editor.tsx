@@ -332,12 +332,17 @@ function Editor(props: RouteComponentProps) {
             // gosRef.current.api.subscribe('trackClick', (type, eventData) => {
             //     console.warn(type, eventData.id, eventData.spec, eventData.shape);
             // });
+            // Location API
+            // gosRef.current.api.subscribe('location', (type, eventData) => {
+            //     console.warn(type, eventData.id, eventData.genomicRange);
+            // });
         }
         return () => {
             // gosRef.current?.api.unsubscribe('mouseOver');
             // gosRef.current?.api.unsubscribe('click');
             // gosRef.current?.api.unsubscribe('rangeSelect');
             // gosRef.current?.api.unsubscribe('trackClick');
+            // gosRef.current?.api.unsubscribe('location');
         };
     }, [gosRef.current]);
 
