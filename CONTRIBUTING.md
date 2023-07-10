@@ -57,6 +57,7 @@ To test this, you need to build the project first and then preview the productio
 
 ```sh
 yarn build
+yarn build-editor
 yarn preview
 ```
 
