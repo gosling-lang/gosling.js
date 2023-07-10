@@ -16,6 +16,38 @@ yarn start
 
 Then, you can open http://localhost:3000/ in a web browser to test the online editor.
 
+## Commit Messages
+
+We use [commitlint](https://github.com/conventional-changelog/commitlint#what-is-commitlint) to maintain commit messages in a consistent manner and automatically update a [CHANGELOG.md](/CHANGELOG.md) based on the commit messages.
+
+The allowed pattern of commit messages is:
+
+```sh
+type(scope?): subject  # scope is optional; multiple scopes are supported (current delimiter options: "/", "\" and ",")
+```
+
+where `type` can be either `build`, `ci`, `chore`, `docs`, `feat`, `fix`, `perf`, `refactor`, `revert`, `style`, or `test`.
+
+Additionally, `scope` can be one of the following: 
+
+- `data-fetcher`: any updates related to data fetchers
+- `editor`: UI and other updates to the online editor
+- `api`: the Gosling APIs
+- ` ` (No scope): any general updates to the library, e.g., grammar change, new rendering, etc.
+
+Example commit messages are as follows:
+
+```sh
+git commit -m 'fix: correctly position views'
+git commit -m 'feat(editor): add a data preview panel in editor'
+git commit -m 'docs: add details about commitlint in README.md'
+```
+
+To learn more about the commitlint, please visit [conventional-changelog/commitlint](https://github.com/conventional-changelog/commitlint#what-is-commitlint).
+
+## Opening Pull Requests
+We use the [commitlint](#commitlint) for the title of PR. So, if the title of PR is not following the commitlint conventions, [Semantic Pull Request](https://github.com/zeke/semantic-pull-requests) will complain about it, disallowing your PR to be merged. When your PR is accepted and merged into the master branch, the title of the PR will be recorded as a single commit message which will then added as a single item in [CHANGELOG.md](/CHANGELOG.md).
+
 ## Testing Production Build Using Editor
 
 It is sometimes necessary to test the production build of Gosling.js. This frequently happened to us when we needed to ensure that certain data fetchers, like BAM and VCF, work correctly without errors in a deployed app.
@@ -96,37 +128,6 @@ If there is an example you would like to add to the editor example library, plea
 
 5. Select the example in the editor to make sure your example works as expected. 
 
-## Commit Messages
-
-We use [commitlint](https://github.com/conventional-changelog/commitlint#what-is-commitlint) to maintain commit messages in a consistent manner and automatically update a [CHANGELOG.md](/CHANGELOG.md) based on the commit messages.
-
-The allowed pattern of commit messages is:
-
-```sh
-type(scope?): subject  # scope is optional; multiple scopes are supported (current delimiter options: "/", "\" and ",")
-```
-
-where `type` can be either `build`, `ci`, `chore`, `docs`, `feat`, `fix`, `perf`, `refactor`, `revert`, `style`, or `test`.
-
-Also, we have been using the following `scope` categories
-
-- `data-fetcher`: any updates related to data fetchers
-- `editor`: UI and other updates to the online editor
-- `api`: the Gosling APIs
-- ` ` (No scope): any general updates to the library, e.g., grammar change, new rendering, etc.
-
-Example commit messages are as follows:
-
-```sh
-git commit -m 'fix: correctly position views'
-git commit -m 'feat(editor): add a data preview panel in editor'
-git commit -m 'docs: add details about commitlint in README.md'
-```
-
-To learn more about the commitlint, please visit [conventional-changelog/commitlint](https://github.com/conventional-changelog/commitlint#what-is-commitlint).
-
-## Opening Pull Requests
-We use the [commitlint](#commitlint) for the title of PR. So, if the title of PR is not following the commitlint conventions, [Semantic Pull Request](https://github.com/zeke/semantic-pull-requests) will complain about it, disallowing your PR to be merged. When your PR is accepted and merged into the master branch, the title of the PR will be recorded as a single commit message which will then added as a single item in [CHANGELOG.md](/CHANGELOG.md).
 
 ## Bumping Gosling.js
 
