@@ -89,6 +89,8 @@ export type Assembly = 'hg38' | 'hg19' | 'hg18' | 'hg17' | 'hg16' | 'mm10' | 'mm
 export type ZoomLimits = [number | null, number | null];
 
 export interface CommonViewDef {
+    /** The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view */
+    id?: string;
     /** Specify the layout type of all tracks. */
     layout?: Layout;
     /** Specify the orientation. */
@@ -155,9 +157,8 @@ export interface CommonViewDef {
 export type Track = SingleTrack | OverlaidTrack | DataTrack | TemplateTrack;
 
 export interface CommonTrackDef extends CommonViewDef {
-    // !! TODO: we can check if the same id is used multiple times.
-    // !! TODO: this should be track-specific and not defined in views.
-    id?: string; // Assigned to `uid` in a HiGlass view config, used for API and caching.
+    /** Assigned to `uid` in a HiGlass view config, used for API and caching. */
+    id?: string;
 
     /** If defined, will show the textual label on the left-top corner of a track. */
     title?: string;

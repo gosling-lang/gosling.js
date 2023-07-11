@@ -1,4 +1,4 @@
-import type { MultipleViews, CommonViewDef, GoslingSpec, Track, SingleView } from '../gosling.schema';
+import type { MultipleViews, CommonViewDef, GoslingSpec, Track, View, SingleView } from '@gosling.schema';
 import { Is2DTrack, IsOverlaidTrack, IsXAxis, IsYAxis } from '../gosling.schema.guards';
 import { HIGLASS_AXIS_SIZE } from '../higlass-model';
 import {
@@ -14,13 +14,6 @@ import type { CompleteThemeDeep } from './theme';
 export interface Size {
     width: number;
     height: number;
-}
-
-export interface GridInfo extends Size {
-    columnSizes: number[];
-    rowSizes: number[];
-    columnGaps: number[];
-    rowGaps: number[];
 }
 
 /**
@@ -48,6 +41,15 @@ export interface TrackInfo {
     track: Track;
     boundingBox: BoundingBox;
     layout: RelativePosition;
+}
+
+/**
+ * The information of a gosling viewk, including its spec and bounding box.
+ */
+export type ViewInfo = {
+    id: string;
+    spec: View,
+    boundingBox: BoundingBox
 }
 
 /**
@@ -79,7 +81,11 @@ export function getBoundingBox(trackInfos: TrackInfo[]) {
 export function getRelativeTrackInfo(
     spec: GoslingSpec,
     theme: CompleteThemeDeep
-): { trackInfos: TrackInfo[]; size: { width: number; height: number } } {
+): { 
+    trackInfos: TrackInfo[]; 
+    size: { width: number; height: number };
+    views: ViewInfo[];
+} {
     let trackInfos: TrackInfo[] = [] as TrackInfo[];
 
     // Collect track information including spec, bounding boxes, and RGL' `layout`.
@@ -119,6 +125,8 @@ export function getRelativeTrackInfo(
         // !! The total height should be multiples of 8. Refer to `getBoundingBox()`
         size.height = size.height + (8 - (size.height % 8));
     }
+
+    // 
 
     const pixelPreciseMarginPadding = !(typeof spec.responsiveSize !== 'object'
         ? spec.responsiveSize

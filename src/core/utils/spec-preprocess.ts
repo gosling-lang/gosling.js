@@ -175,6 +175,11 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
         // Nothing to do when `xLinkID` not suggested
     }
 
+    // ID should be assigned to each view and track for an API usage
+    if (!!!spec.id) {
+        spec.id = uuid.v4();
+    }
+
     if ('tracks' in spec) {
         let tracks: Track[] = convertToFlatTracks(spec);
 
