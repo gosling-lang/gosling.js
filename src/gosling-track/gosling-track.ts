@@ -453,7 +453,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             // Publish the new genomic axis domain
             const genomicRange = newXScale
                 .domain()
-                .map(absPos => getRelativeGenomicPosition(absPos, this.#assembly)) as [
+                .map(absPos => getRelativeGenomicPosition(absPos, this.#assembly, true)) as [
                 GenomicPosition,
                 GenomicPosition
             ];
