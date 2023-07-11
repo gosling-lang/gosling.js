@@ -198,7 +198,6 @@ export class GffFile {
                     return { ...tile, ...cleanAtt };
                 });
             }
-            console.warn(tiles);
             return tiles;
         }
 
