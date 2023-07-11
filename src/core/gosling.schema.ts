@@ -1119,7 +1119,7 @@ export interface GffData {
 
     /** Determines whether to extract the feature attributes, which have the format in the format `tag=value` in column 9
      * If true, the tag will become available as a field. If there is an existing field with the same name, then
-     * if will be overwritten by the attribute tag. __Default:__ `false`
+     * it will be overwritten by the attribute tag. __Default:__ `false`
      */
     extractAttributes?: boolean;
 }
