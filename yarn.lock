@@ -334,7 +334,17 @@
   resolved "https://registry.yarnpkg.com/@gmod/bed/-/bed-2.1.2.tgz#02e27a3a75269dec06ecc22f0ff7eb10b8affc42"
   integrity sha512-LnCmA+jb0xfbSWO7isi1dVvqbQi8Icqaj8FeUcnCc8t4jiNe1eFoe1YU8Chn7a8EDGFqS06kMNpO1vodO+q4IA==
 
-"@gmod/bgzf-filehandle@^1.3.3", "@gmod/bgzf-filehandle@^1.4.4":
+"@gmod/bgzf-filehandle@^1.3.3":
+  version "1.4.6"
+  resolved "https://registry.yarnpkg.com/@gmod/bgzf-filehandle/-/bgzf-filehandle-1.4.6.tgz#151947506e0319f78ffd2377e15f886ece59f4a1"
+  integrity sha512-WFFUv0QmCrUxPWvLf+NmILS9n6dMTRJL0xsHjzWEe7jiJc/AJFo3siBCdmWVioJysjLaI9zw6uPiqThClfexdA==
+  dependencies:
+    es6-promisify "^7.0.0"
+    generic-filehandle "^3.0.0"
+    long "^5.1.0"
+    pako "^1.0.11"
+
+"@gmod/bgzf-filehandle@^1.4.4":
   version "1.4.5"
   resolved "https://registry.yarnpkg.com/@gmod/bgzf-filehandle/-/bgzf-filehandle-1.4.5.tgz#a4749bff7b52cb3dd3f39d03e3a5a8a3853ef946"
   integrity sha512-33HAh5PGxT15XfB3n/ZvUXxkghZ/+aPAcfYn7oaueyObQsPmHU6IS0MzYnOQiQANyXDW1GpJc/lCB5DhHEmhtg==
@@ -345,9 +355,9 @@
     pako "^1.0.11"
 
 "@gmod/tabix@^1.5.6":
-  version "1.5.10"
-  resolved "https://registry.yarnpkg.com/@gmod/tabix/-/tabix-1.5.10.tgz#d4ada7789686f1e229897b9a53049af9592bbc75"
-  integrity sha512-klKSlG2c/JkPatXj7Nj+u/vEQSOMgwXgB+e5pDxuQiD7x2DojnpR1CP+Sacl09OaRt0x1DEQrxqc+hJoCtg7mg==
+  version "1.5.11"
+  resolved "https://registry.yarnpkg.com/@gmod/tabix/-/tabix-1.5.11.tgz#c7fb06a20d2048a487d2cf65d0d360cc2111ac96"
+  integrity sha512-zYgivq8r9pSwNKbzAqHSSfRQ3KEe+oiTNhABJIW9kBqjiKW4m7ncqKhhcmxjG4afhJNUzBJ9Gt/w3grbG+Q5bA==
   dependencies:
     "@gmod/bgzf-filehandle" "^1.3.3"
     abortable-promise-cache "^1.4.1"
