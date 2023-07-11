@@ -1114,7 +1114,8 @@ export interface GffData {
     /** URL link to the tabix index file */
     indexUrl: string;
 
-    /** The maximum number of rows to be loaded from the URL. __Default:__ `1000` */
+    /** The maximum number of samples to be shown on the track. If the number of samples exceeds
+     * this number, the then `sampleLenth` features will be randomly selected. __Default:__ `1000` */
     sampleLength?: number;
 
     /** Determines whether to extract the feature attributes, which have the format in the format `tag=value` in column 9
