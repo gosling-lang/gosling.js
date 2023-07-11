@@ -1,3 +1,13 @@
+## [0.9.33](https://github.com/gosling-lang/gosling.js/compare/v0.9.32...v0.9.33) (2023-07-11)
+
+
+### Bug Fixes
+
+* **data-fetcher:** Bump tabix-js version to fix errors when loading BED files ([#938](https://github.com/gosling-lang/gosling.js/issues/938)) ([d901232](https://github.com/gosling-lang/gosling.js/commit/d9012326f4eadbf0c50f3c70424951c4735dcb69))
+* **data-fetcher:** support genomicFieldsToConvert ([#932](https://github.com/gosling-lang/gosling.js/issues/932)) ([c94ecae](https://github.com/gosling-lang/gosling.js/commit/c94ecaea5ac010e17603816c6bf01c2d2b2a086c))
+
+
+
 ## [0.9.32](https://github.com/gosling-lang/gosling.js/compare/v0.9.31...v0.9.32) (2023-07-05)
 
 
