@@ -1,22 +1,22 @@
-import type { CommonTrackDef, CommonViewDef, GoslingSpec, PartialTrack, View } from "@gosling.schema";
-import { traverseTracksAndViews } from "./utils/spec-preprocess";
+import type { CommonTrackDef, CommonViewDef, GoslingSpec, PartialTrack, View } from '@gosling.schema';
+import { traverseTracksAndViews } from './utils/spec-preprocess';
 
 /**
  * Find all IDs of views in a spec.
- * @param spec 
+ * @param spec
  * @returns
  */
 export function getViewIds(spec: GoslingSpec | View | PartialTrack) {
     const viewIds = new Set<string>();
-    if(spec.id) {
+    if (spec.id) {
         // root view
         viewIds.add(spec.id);
     }
-    traverseTracksAndViews(spec, (subSpec) => {
-        if('views' in subSpec || 'tracks' in subSpec) {
+    traverseTracksAndViews(spec, subSpec => {
+        if ('views' in subSpec || 'tracks' in subSpec) {
             // encountered a view
-            if(subSpec.id) {
-                // found a valid view id 
+            if (subSpec.id) {
+                // found a valid view id
                 viewIds.add(subSpec.id);
             }
         }
@@ -26,16 +26,16 @@ export function getViewIds(spec: GoslingSpec | View | PartialTrack) {
 
 /**
  * Find all IDs of tracks in a spec.
- * @param spec 
+ * @param spec
  * @returns
  */
 export function getTrackIds(spec: GoslingSpec | View | PartialTrack) {
     const trackIds = new Set<string>();
-    traverseTracksAndViews(spec, (subSpec) => {
-        if(!('views' in subSpec) && !('tracks' in subSpec)) {
+    traverseTracksAndViews(spec, subSpec => {
+        if (!('views' in subSpec) && !('tracks' in subSpec)) {
             // encountered a track
-            if(subSpec.id) {
-                // found a valid track id 
+            if (subSpec.id) {
+                // found a valid track id
                 trackIds.add(subSpec.id);
             }
         }
@@ -45,17 +45,17 @@ export function getTrackIds(spec: GoslingSpec | View | PartialTrack) {
 
 /**
  * Get an internal spec using an ID of a track or a view. `undefined` if unfound.
- * @param spec 
+ * @param spec
  * @returns
  */
 export function getInternalSpecById(spec: GoslingSpec | View | PartialTrack, id: string) {
     let internalSpec: CommonViewDef | CommonTrackDef | undefined;
-    if(spec.id === id) {
+    if (spec.id === id) {
         // root view
         internalSpec = spec;
     }
-    traverseTracksAndViews(spec, (subSpec) => {
-        if(subSpec.id === id) {
+    traverseTracksAndViews(spec, subSpec => {
+        if (subSpec.id === id) {
             internalSpec = subSpec;
         }
     });

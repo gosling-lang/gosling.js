@@ -8,9 +8,9 @@ import { renderHiGlass as createHiGlassModels } from './create-higlass-models';
 import { manageResponsiveSpecs } from './responsive';
 
 export type CompileCallback = (
-    hg: HiGlassSpec, 
-    size: Size, 
-    gs: GoslingSpec, 
+    hg: HiGlassSpec,
+    size: Size,
+    gs: GoslingSpec,
     trackInfos: TrackMouseEventData[],
     views: ViewApiData[]
 ) => void;

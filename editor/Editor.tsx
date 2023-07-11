@@ -691,13 +691,13 @@ function Editor(props: RouteComponentProps) {
 
     // visual components that shows the hiererchy of Gosling views
     const viewLayers = useMemo(() => {
+        const tracks = gosRef.current?.api.getTracks();
         const views = gosRef.current?.api.getViews();
-        // XXX
-        console.log(views);
+        // console.log(views);
         return (
             <div style={{ position: 'absolute', top: '66px', left: '66px' }}>
-                {views?.map(view => {
-                    const { x: left, y: top, width, height } = view.shape; 
+                {[...(tracks ?? []), ...(views ?? [])].map(view => {
+                    const { x: left, y: top, width, height } = view.shape;
                     return (
                         <div
                             key={view.id}

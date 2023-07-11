@@ -289,7 +289,7 @@ export type ViewApiData = {
 
     /** The shape of the source view */
     shape: BoundingBox;
-}
+};
 
 /** The information for a track mouse event */
 export type TrackMouseEventData = {
@@ -300,7 +300,7 @@ export type TrackMouseEventData = {
     spec: SingleTrack | OverlaidTrack;
 
     /** The shape of the source track */
-    shape: BoundingBox | CircularTrackShape;
+    shape: BoundingBox | (BoundingBox & CircularTrackShape);
 };
 
 export type _EventMap = {

@@ -59,14 +59,14 @@ export function createApi(
     };
     const getViews = () => {
         return [...views];
-    }
+    };
     const getView = (viewId: string) => {
         const view = getViews().find(d => d.id === viewId);
         if (!view) {
             console.warn(`Unable to find a view with the ID of ${viewId}`);
         }
         return view;
-    }
+    };
     const getCanvas: GoslingApi['getCanvas'] = options => {
         const resolution = options?.resolution ?? 4;
         const transparentBackground = options?.transparentBackground ?? false;

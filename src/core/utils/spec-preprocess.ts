@@ -176,7 +176,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
     }
 
     // ID should be assigned to each view and track for an API usage
-    if (!!!spec.id) {
+    if (!spec.id) {
         spec.id = uuid.v4();
     }
 

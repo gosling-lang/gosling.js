@@ -1,4 +1,4 @@
-import type { MultipleViews, CommonViewDef, GoslingSpec, Track, View, SingleView } from '@gosling.schema';
+import type { MultipleViews, CommonViewDef, GoslingSpec, Track, SingleView } from '@gosling.schema';
 import { Is2DTrack, IsOverlaidTrack, IsXAxis, IsYAxis } from '../gosling.schema.guards';
 import { HIGLASS_AXIS_SIZE } from '../higlass-model';
 import {
@@ -72,8 +72,8 @@ export function getBoundingBox(trackInfos: TrackInfo[]) {
 export function getRelativeTrackInfo(
     spec: GoslingSpec,
     theme: CompleteThemeDeep
-): { 
-    trackInfos: TrackInfo[]; 
+): {
+    trackInfos: TrackInfo[];
     size: { width: number; height: number };
 } {
     let trackInfos: TrackInfo[] = [] as TrackInfo[];
