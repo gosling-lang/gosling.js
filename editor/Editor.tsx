@@ -249,6 +249,7 @@ function Editor(props: RouteComponentProps) {
     const [selectedPreviewData, setSelectedPreviewData] = useState<number>(0);
     const [gistTitle, setGistTitle] = useState<string>();
     const [description, setDescription] = useState<string | null>();
+    const [showViews, setShowViews] = useState(false);
     const [expertMode, setExpertMode] = useState(false);
 
     // This parameter only matter when a markdown description was loaded from a gist but the user wants to hide it
@@ -688,6 +689,34 @@ function Editor(props: RouteComponentProps) {
         setHideDescription(true);
     }
 
+    // visual components that shows the hiererchy of Gosling views
+    const viewLayers = useMemo(() => {
+        const views = gosRef.current?.api.getViews();
+        // XXX
+        console.log(views);
+        return (
+            <div style={{ position: 'absolute', top: '66px', left: '66px' }}>
+                {views?.map(view => {
+                    const { x: left, y: top, width, height } = view.shape; 
+                    return (
+                        <div
+                            key={view.id}
+                            style={{
+                                position: 'absolute',
+                                background: 'rgba(100, 100, 255, 0.1)',
+                                // border: '2px solid black',
+                                left,
+                                top,
+                                width,
+                                height
+                            }}
+                        />
+                    );
+                })}
+            </div>
+        );
+    }, [hg]);
+
     // console.log('editor.render()');
     return (
         <>
@@ -990,7 +1019,19 @@ function Editor(props: RouteComponentProps) {
                                     </button>
                                 </span>
                             </span>
-
+                            <button
+                                title="Automatically update visualization upon editing code"
+                                className="side-panel-button"
+                                onClick={() => setShowViews(!showViews)}
+                            >
+                                {showViews
+                                    ? getIconSVG(ICONS.TOGGLE_ON, 23, 23, '#E18343')
+                                    : getIconSVG(ICONS.TOGGLE_OFF, 23, 23)}
+                                <br />
+                                SHOW
+                                <br />
+                                VIEWS
+                            </button>
                             <button
                                 title="Expert mode that turns on additional features, such as theme selection"
                                 className="side-panel-button"
@@ -1161,6 +1202,7 @@ function Editor(props: RouteComponentProps) {
                                             }}
                                         />
                                     </div>
+                                    {showViews ? viewLayers : null}
                                     {/* {expertMode && false ? (
                                             <div
                                                 style={{

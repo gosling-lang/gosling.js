@@ -44,15 +44,6 @@ export interface TrackInfo {
 }
 
 /**
- * The information of a gosling viewk, including its spec and bounding box.
- */
-export type ViewInfo = {
-    id: string;
-    spec: View,
-    boundingBox: BoundingBox
-}
-
-/**
  * Return the size of entire visualization.
  * @param trackInfos
  */
@@ -84,7 +75,6 @@ export function getRelativeTrackInfo(
 ): { 
     trackInfos: TrackInfo[]; 
     size: { width: number; height: number };
-    views: ViewInfo[];
 } {
     let trackInfos: TrackInfo[] = [] as TrackInfo[];
 
@@ -125,8 +115,6 @@ export function getRelativeTrackInfo(
         // !! The total height should be multiples of 8. Refer to `getBoundingBox()`
         size.height = size.height + (8 - (size.height % 8));
     }
-
-    // 
 
     const pixelPreciseMarginPadding = !(typeof spec.responsiveSize !== 'object'
         ? spec.responsiveSize

@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import type { TrackMouseEventData } from '@gosling.schema';
+import type { TrackMouseEventData, ViewApiData } from '@gosling.schema';
 import type { HiGlassApi } from './higlass-component-wrapper';
 import type { HiGlassSpec } from '@higlass.schema';
 import { subscribe, unsubscribe } from './pubsub';
@@ -28,6 +28,8 @@ export interface GoslingApi {
     getViewIds(): string[];
     getTracks(): TrackMouseEventData[];
     getTrack(trackId: string): TrackMouseEventData | undefined;
+    getViews(): ViewApiData[];
+    getView(viewId: string): ViewApiData | undefined;
     exportPng(transparentBackground?: boolean): void;
     exportPdf(transparentBackground?: boolean): void;
     getCanvas(options?: { resolution?: number; transparentBackground?: boolean }): {
@@ -42,6 +44,7 @@ export function createApi(
     hg: Readonly<HiGlassApi>,
     hgSpec: HiGlassSpec | undefined,
     trackInfos: readonly TrackMouseEventData[],
+    views: readonly ViewApiData[],
     theme: Required<CompleteThemeDeep>
 ): GoslingApi {
     const getTracks = () => {
@@ -54,6 +57,16 @@ export function createApi(
         }
         return trackInfoFound;
     };
+    const getViews = () => {
+        return [...views];
+    }
+    const getView = (viewId: string) => {
+        const view = getViews().find(d => d.id === viewId);
+        if (!view) {
+            console.warn(`Unable to find a view with the ID of ${viewId}`);
+        }
+        return view;
+    }
     const getCanvas: GoslingApi['getCanvas'] = options => {
         const resolution = options?.resolution ?? 4;
         const transparentBackground = options?.transparentBackground ?? false;
@@ -120,6 +133,8 @@ export function createApi(
         },
         getTracks,
         getTrack,
+        getView,
+        getViews,
         getCanvas,
         exportPng: transparentBackground => {
             const { canvas } = getCanvas({ resolution: 4, transparentBackground });

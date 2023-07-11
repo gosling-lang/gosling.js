@@ -255,10 +255,10 @@ interface RangeMouseEventData extends CommonEventData {
 }
 
 /**
- * The visual parameters that determine the shape of a linear track.
+ * The visual parameters that determine the shape of a linear track or a view.
  * Origin is the left top corner.
  */
-interface LinearTrackShape {
+export interface BoundingBox {
     x: number;
     y: number;
     width: number;
@@ -277,6 +277,20 @@ interface CircularTrackShape {
     endAngle: number;
 }
 
+/**
+ * The information of a view.
+ */
+export type ViewApiData = {
+    /** ID of a source view, i.e., `view.id` */
+    id: string;
+
+    /** Expanded view specification processed by the Gosling compiler, e.g., default properties filled in. */
+    spec: View;
+
+    /** The shape of the source view */
+    shape: BoundingBox;
+}
+
 /** The information for a track mouse event */
 export type TrackMouseEventData = {
     /** ID of a source track, i.e., `track.id` */
@@ -286,7 +300,7 @@ export type TrackMouseEventData = {
     spec: SingleTrack | OverlaidTrack;
 
     /** The shape of the source track */
-    shape: LinearTrackShape | CircularTrackShape;
+    shape: BoundingBox | CircularTrackShape;
 };
 
 export type _EventMap = {
