@@ -228,7 +228,6 @@ export class GffFile {
         const parsedLines = GFF.parseStringSync(linesToParse.join('\n'), parseOptions);
         // Third, we reformat the parsed GFF into the expected tile format
         const tiles = parsedLinesToTiles(parsedLines);
-        console.warn(tiles);
         return tiles;
     }
 }
