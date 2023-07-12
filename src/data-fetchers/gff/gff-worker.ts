@@ -10,7 +10,7 @@ import { isGFF3Feature, makeRandomSortedArray } from './utils';
 
 export type GffFileOptions = {
     sampleLength: number;
-    extractAttributes?: boolean;
+    attributesToFields?: { attribute: string; defaultValue: string }[];
 };
 
 export interface GffTile extends GFF3FeatureLineWithRefs {
@@ -47,6 +47,10 @@ export class GffFile {
         });
         return new GffFile(tbi, uid);
     }
+    /**
+     * Calculates the total number of features in a file
+     * @returns A number of the features in a file
+     */
     async #getNumberFeatures() {
         if (!this.#n_features) {
             const source = dataSources.get(this.#uid)!;
@@ -143,7 +147,8 @@ export class GffFile {
     async getTileData(minX: number, maxX: number): Promise<GffTile[]> {
         const source = dataSources.get(this.#uid)!;
         const sampleLength = source.options.sampleLength; // maximum number of features that can be shown
-        const isExtractAttributes = source.options.extractAttributes;
+        const attributesToFields = source.options.attributesToFields;
+
         await this.#getNumberFeatures();
         /**
          * Function to filter out child features if there are too many features
@@ -165,10 +170,7 @@ export class GffFile {
          * @param parsed Output from GFF.parseStringSync()
          * @returns An array of GffTile
          */
-        function parsedLinesToTiles(
-            parsed: (GFF3Feature | GFF3Sequence)[],
-            isExtractAttributes: boolean | undefined
-        ): GffTile[] {
+        function parsedLinesToTiles(parsed: (GFF3Feature | GFF3Sequence)[]): GffTile[] {
             let tiles: GffTile[] = [];
             for (const line of parsed) {
                 if (isGFF3Feature(line)) {
@@ -182,17 +184,22 @@ export class GffFile {
                     }
                 }
             }
-            // if the extractAttributes option is set to true, then we put the key-values from the attributes object into the
-            // parent tile object
-            if (isExtractAttributes) {
+            // Add specific attributes to each tile if specified
+            if (attributesToFields) {
                 tiles = tiles.map(tile => {
                     const attributes = tile.attributes;
-                    const cleanAtt: { [key: string]: unknown } = {}; // where the cleaned attributes are stored
-                    if (attributes == null) return tile;
-                    Object.keys(attributes).forEach(key => {
-                        const attVal = attributes[key];
-                        if (Array.isArray(attVal)) {
-                            cleanAtt[key] = attVal.length == 1 ? attVal[0] : attVal;
+                    const cleanAtt: { [key: string]: unknown } = {};
+                    attributesToFields.forEach(attMap => {
+                        const attName = attMap.attribute;
+                        const attDefault = attMap.defaultValue;
+                        if (attributes == null || !(attName in attributes) || !Array.isArray(attributes[attName]))
+                            cleanAtt[attName] = attDefault;
+                        else {
+                            const attVal = attributes[attName];
+                            if (Array.isArray(attVal)) {
+                                // Join the array array if there is more than one element
+                                cleanAtt[attName] = attVal.length == 1 ? attVal[0] : attVal.join(',');
+                            }
                         }
                     });
                     return { ...tile, ...cleanAtt };
@@ -220,7 +227,8 @@ export class GffFile {
         };
         const parsedLines = GFF.parseStringSync(linesToParse.join('\n'), parseOptions);
         // Third, we reformat the parsed GFF into the expected tile format
-        const tiles = parsedLinesToTiles(parsedLines, isExtractAttributes);
+        const tiles = parsedLinesToTiles(parsedLines);
+        console.warn(tiles);
         return tiles;
     }
 }
@@ -249,7 +257,6 @@ function init(
     }
     const dataSource = new DataSource(gffFile, chromSizes, {
         sampleLength: 1000, // default sampleLength
-        extractAttributes: false, // default extractAttributes
         ...options
     });
     dataSources.set(uid, dataSource);

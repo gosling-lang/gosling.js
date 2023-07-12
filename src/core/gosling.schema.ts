@@ -1117,12 +1117,15 @@ export interface GffData {
     /** The maximum number of samples to be shown on the track. If the number of samples exceeds
      * this number, the then `sampleLenth` features will be randomly selected. __Default:__ `1000` */
     sampleLength?: number;
-
-    /** Determines whether to extract the feature attributes, which have the format in the format `tag=value` in column 9
-     * If true, the tag will become available as a field. If there is an existing field with the same name, then
-     * it will be overwritten by the attribute tag. __Default:__ `false`
+    /**
+     * Specifies which attributes to include as a fields.
+     * GFF files have an "attributes" column which contains a list of attributes which are each tag-value pairs (`tag=value`).
+     * This option allows for specific attributes to be accessible as a field. For example, if you have an attribute
+     * called "gene_name" and you want label features on your track using those values, you can use this option so that you can use
+     * `"field": "gene_name"` in the schema. If a feature does not
+     * have a particular attribute, then the attribute value will be set to the `defaultValue`.
      */
-    extractAttributes?: boolean;
+    attributesToFields?: { attribute: string; defaultValue: string }[];
 }
 
 /**

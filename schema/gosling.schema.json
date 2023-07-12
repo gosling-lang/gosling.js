@@ -1042,9 +1042,25 @@
       "additionalProperties": false,
       "description": "Generic Feature Format Version 3 (GFF3) format data. It parses files that follow the [GFF3 specification](https://github.com/The-Sequence-Ontology/Specifications/blob/master/gff3.md).",
       "properties": {
-        "extractAttributes": {
-          "description": "Determines whether to extract the feature attributes, which have the format in the format `tag=value` in column 9 If true, the tag will become available as a field. If there is an existing field with the same name, then it will be overwritten by the attribute tag. __Default:__ `false`",
-          "type": "boolean"
+        "attributesToFields": {
+          "description": "Specifies which attributes to include as a fields. GFF files have an \"attributes\" column which contains a list of attributes which are each tag-value pairs (`tag=value`). This option allows for specific attributes to be accessible as a field. For example, if you have an attribute called \"gene_name\" and you want label features on your track using those values, you can use this option so that you can use `\"field\": \"gene_name\"` in the schema. If a feature does not have a particular attribute, then the attribute value will be set to the `defaultValue`.",
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "attribute": {
+                "type": "string"
+              },
+              "defaultValue": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "attribute",
+              "defaultValue"
+            ],
+            "type": "object"
+          },
+          "type": "array"
         },
         "indexUrl": {
           "description": "URL link to the tabix index file",
