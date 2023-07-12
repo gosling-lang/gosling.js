@@ -6,6 +6,7 @@ import { getRelativeTrackInfo, type Size } from './utils/bounding-box';
 import type { CompleteThemeDeep } from './utils/theme';
 import { renderHiGlass as createHiGlassModels } from './create-higlass-models';
 import { manageResponsiveSpecs } from './responsive';
+import {getAlt} from '../alt-text/alt-from-spec';
 
 export type CompileCallback = (hg: HiGlassSpec, size: Size, gs: GoslingSpec, trackInfos: TrackMouseEventData[]) => void;
 
@@ -58,6 +59,9 @@ export function compile(
         traverseToFixSpecDownstream(specCopy);
         trackInfos = getRelativeTrackInfo(specCopy, theme).trackInfos;
     }
+
+    // Retrieve alt text
+    const altText = getAlt(spec, specCopy);
 
     // Make HiGlass models for individual tracks
     createHiGlassModels(specCopy, trackInfos, callback, theme);
