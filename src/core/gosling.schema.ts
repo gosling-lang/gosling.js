@@ -1114,8 +1114,8 @@ export interface GffData {
     /** URL link to the tabix index file */
     indexUrl: string;
 
-    /** The maximum number of samples to be shown on the track. If the number of samples exceeds
-     * this number, the then `sampleLenth` features will be randomly selected. __Default:__ `1000` */
+    /** The maximum number of samples to be shown on the track. Samples are uniformly randomly selected so that this
+     * threshold is not exceeded. __Default:__ `1000` */
     sampleLength?: number;
     /**
      * Specifies which attributes to include as a fields.

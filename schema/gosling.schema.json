@@ -1067,7 +1067,7 @@
           "type": "string"
         },
         "sampleLength": {
-          "description": "The maximum number of samples to be shown on the track. If the number of samples exceeds this number, the then `sampleLenth` features will be randomly selected. __Default:__ `1000`",
+          "description": "The maximum number of samples to be shown on the track. Samples are uniformly randomly selected so that this threshold is not exceeded. __Default:__ `1000`",
           "type": "number"
         },
         "type": {
