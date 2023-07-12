@@ -248,6 +248,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 HGC.libraries.PIXI.GRAPHICS_CURVES.maxLength = 1;
                 HGC.libraries.PIXI.GRAPHICS_CURVES.maxSegments = 2048 * 10;
             }
+            this.#publishOnNewTrack();
         }
 
         /* *
@@ -1291,6 +1292,43 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 }
             }
             return '';
+        }
+
+        /**
+         * Javscript subscription API methods (besides for mouse)
+         */
+
+        /**
+         * Publishes track information. Triggered when track gets created
+         */
+        #publishOnNewTrack() {
+            const [x, y] = this.position;
+            const [width, height] = this.dimensions;
+            if (this.options.spec.layout === 'circular') {
+                const cx = x + width / 2.0;
+                const cy = y + height / 2.0;
+                const innerRadius = this.options.spec.innerRadius!;
+                const outerRadius = this.options.spec.outerRadius!;
+                publish('onNewTrack', {
+                    id: context.viewUid,
+                    shape: {
+                        x: cx,
+                        y: cy,
+                        width: innerRadius,
+                        height: outerRadius
+                    }
+                });
+            } else {
+                publish('onNewTrack', {
+                    id: context.viewUid,
+                    shape: {
+                        x,
+                        y,
+                        width,
+                        height
+                    }
+                });
+            }
         }
 
         /* *

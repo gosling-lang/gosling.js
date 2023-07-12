@@ -237,6 +237,13 @@ interface CommonEventData {
     data: Datum[];
 }
 
+interface OnNewTrackEventData {
+    /** Source visualization ID, i.e., `track.id` */
+    id: string;
+    /** The shape of the source track */
+    shape: LinearTrackShape | CircularTrackShape;
+}
+
 export interface GenomicPosition {
     chromosome: string;
     position: number;
@@ -293,6 +300,7 @@ export type _EventMap = {
     click: PointMouseEventData;
     rangeSelect: RangeMouseEventData;
     rawData: CommonEventData;
+    onNewTrack: OnNewTrackEventData;
     trackMouseOver: TrackMouseEventData;
     trackClick: TrackMouseEventData; // TODO (Jul-25-2022): with https://github.com/higlass/higlass/pull/1098, we can support circular layouts
 };
