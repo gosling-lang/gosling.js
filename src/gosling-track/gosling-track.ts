@@ -1077,7 +1077,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                     publish(eventType, {
                         id: context.viewUid,
                         spec: structuredClone(this.options.spec),
-                        shape: { cx, cy, innerRadius, outerRadius, startAngle, endAngle }
+                        shape: { x, y, width, height, cx, cy, innerRadius, outerRadius, startAngle, endAngle }
                     });
                 }
             } else {

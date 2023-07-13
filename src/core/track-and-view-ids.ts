@@ -2,7 +2,7 @@ import type { CommonTrackDef, CommonViewDef, GoslingSpec, PartialTrack, View } f
 import { traverseTracksAndViews } from './utils/spec-preprocess';
 
 /**
- * Find all IDs of views in a spec.
+ * Find all unique IDs of 'views' in a Gosling spec and return them as an array.
  * @param spec
  * @returns
  */
@@ -25,7 +25,7 @@ export function getViewIds(spec: GoslingSpec | View | PartialTrack) {
 }
 
 /**
- * Find all IDs of tracks in a spec.
+ * Find all unique IDs of 'tracks' in a Gosling spec and return them as an array.
  * @param spec
  * @returns
  */
