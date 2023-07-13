@@ -27,7 +27,7 @@ import EditorPanel, { type EditorLangauge } from './EditorPanel';
 import EditorExamples from './EditorExamples';
 
 import './Editor.css';
-import { v4 } from 'uuid'
+import { v4 } from 'uuid';
 
 function json2js(jsonCode: string) {
     return `var spec = ${jsonCode} \nexport { spec }; \n`;
@@ -713,7 +713,7 @@ function Editor(props: RouteComponentProps) {
                                 key={v4()}
                                 style={{
                                     position: 'absolute',
-                                    background,                                        
+                                    background,
                                     border: '1px solid black',
                                     left,
                                     top,

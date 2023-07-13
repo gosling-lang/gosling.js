@@ -1,4 +1,4 @@
-import type { GoslingSpec } from '@gosling.schema'
+import type { GoslingSpec } from '@gosling.schema';
 import { getInternalSpecById, getTrackIds, getViewIds } from './track-and-view-ids';
 
 describe('Retrieve IDs and Sub-spec', () => {
@@ -56,7 +56,7 @@ describe('Retrieve IDs and Sub-spec', () => {
                     ]
                 }
             ]
-        }
+        };
         expect(getViewIds(overlay)).toEqual(['a', 'b', 'c']);
         expect(getTrackIds(overlay)).toEqual(['d']);
         expect(getInternalSpecById(overlay, 'c')).toMatchInlineSnapshot(`

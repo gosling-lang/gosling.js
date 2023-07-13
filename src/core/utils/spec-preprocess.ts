@@ -196,7 +196,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             if (!track.id) {
                 track.id = uuid.v4();
             }
-            
+
             // If size not defined, set default ones
             if (!track.width) {
                 track.width = Is2DTrack(track) ? DEFAULT_TRACK_SIZE_2D : DEFAULT_TRACK_WIDTH_LINEAR;
