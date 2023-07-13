@@ -809,7 +809,8 @@ export type DataDeep =
     | VectorData
     | MatrixData
     | BamData
-    | VcfData;
+    | VcfData
+    | GffData;
 
 /** Values in the form of JSON. */
 export interface Datum {
@@ -1099,6 +1100,35 @@ export interface BamData {
 
     /** Determines the threshold of insert sizes for determining the structural variants. __Default__: `5000` */
     maxInsertSize?: number; // https://github.com/GMOD/bam-js#async-getrecordsforrangerefname-start-end-opts
+}
+
+/**
+ * Generic Feature Format Version 3 (GFF3) format data. It parses files that follow the
+ * [GFF3 specification](https://github.com/The-Sequence-Ontology/Specifications/blob/master/gff3.md).
+ */
+export interface GffData {
+    type: 'gff';
+    /** URL link to the GFF file */
+    url: string;
+
+    /** URL link to the tabix index file */
+    indexUrl: string;
+
+    /** The maximum number of samples to be shown on the track. Samples are uniformly randomly selected so that this
+     * threshold is not exceeded. __Default:__ `1000` */
+    sampleLength?: number;
+    /**
+     * Specifies which attributes to include as a fields.
+     * GFF files have an "attributes" column which contains a list of attributes which are each tag-value pairs (`tag=value`).
+     * This option allows for specific attributes to be accessible as a field. For example, if you have an attribute called
+     * "gene_name" and you want label features on your track using those values, you can use this option so that you can use
+     * `"field": "gene_name"` in the schema.
+     *
+     * If there is a single `value` corresponding to the `tag`, Gosling will parse that value as a string. If there are
+     * multiple `value`s corresponding to a `tag`, Gosling will parse it as a comma-separated list string. If a feature
+     * does not have a particular attribute, then the attribute value will be set to the `defaultValue`.
+     */
+    attributesToFields?: { attribute: string; defaultValue: string }[];
 }
 
 /**

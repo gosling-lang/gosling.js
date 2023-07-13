@@ -14,3 +14,4 @@ export { TRIANGLE } from './triangle';
 export { VCF_INDELS } from './vcf-indels';
 export { VCF_POINT_MUTATIONS } from './vcf-point-mutations';
 export { BED_DEMO } from './bed-demo';
+export { GFF_DEMO } from './gff-demo';

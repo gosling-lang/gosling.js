@@ -117,6 +117,7 @@ export function goslingToHiGlass(
                 firstResolvedSpec.data.type === 'bigwig' ||
                 firstResolvedSpec.data.type === 'bam' ||
                 firstResolvedSpec.data.type === 'vcf' ||
+                firstResolvedSpec.data.type === 'gff' ||
                 firstResolvedSpec.data.type === 'bed')
         ) {
             const getFieldName = (c: 'x' | 'xe' | 'x1' | 'x1e') => {
