@@ -27,6 +27,7 @@ import EditorPanel, { type EditorLangauge } from './EditorPanel';
 import EditorExamples from './EditorExamples';
 
 import './Editor.css';
+import { v4 } from 'uuid'
 
 function json2js(jsonCode: string) {
     return `var spec = ${jsonCode} \nexport { spec }; \n`;
@@ -689,33 +690,42 @@ function Editor(props: RouteComponentProps) {
         setHideDescription(true);
     }
 
-    // visual components that shows the hiererchy of Gosling views
-    const viewLayers = useMemo(() => {
-        const tracks = gosRef.current?.api.getTracks();
-        const views = gosRef.current?.api.getViews();
-        // console.log(views);
+    // Layers to be shown on top of the Gosling visualization to show the hiererchy of Gosling views and tracks
+    const VisHierarchy = useMemo(() => {
+        const tracksAndViews = gosRef.current?.api.getTracksAndViews();
         return (
             <div style={{ position: 'absolute', top: '66px', left: '66px' }}>
-                {[...(tracks ?? []), ...(views ?? [])].map(view => {
-                    const { x: left, y: top, width, height } = view.shape;
-                    return (
-                        <div
-                            key={view.id}
-                            style={{
-                                position: 'absolute',
-                                background: 'rgba(100, 100, 255, 0.1)',
-                                // border: '2px solid black',
-                                left,
-                                top,
-                                width,
-                                height
-                            }}
-                        />
-                    );
-                })}
+                {tracksAndViews
+                    ?.sort(a => (a.type === 'track' ? 1 : -1))
+                    ?.map(d => {
+                        let { x: left, y: top, width, height } = d.shape;
+                        let background = 'rgba(255, 50, 50, 0.3)';
+                        if (d.type === 'view') {
+                            const VIEW_PADDING = 3;
+                            left -= VIEW_PADDING;
+                            top -= VIEW_PADDING;
+                            width += VIEW_PADDING * 2;
+                            height += VIEW_PADDING * 2;
+                            background = 'rgba(50, 50, 255, 0.1)';
+                        }
+                        return (
+                            <div
+                                key={v4()}
+                                style={{
+                                    position: 'absolute',
+                                    background,                                        
+                                    border: '1px solid black',
+                                    left,
+                                    top,
+                                    width,
+                                    height
+                                }}
+                            />
+                        );
+                    })}
             </div>
         );
-    }, [hg]);
+    }, [hg, demo]);
 
     // console.log('editor.render()');
     return (
@@ -1202,7 +1212,7 @@ function Editor(props: RouteComponentProps) {
                                             }}
                                         />
                                     </div>
-                                    {showViews ? viewLayers : null}
+                                    {showViews ? VisHierarchy : null}
                                     {/* {expertMode && false ? (
                                             <div
                                                 style={{

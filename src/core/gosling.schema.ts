@@ -278,7 +278,7 @@ interface CircularTrackShape {
 }
 
 /**
- * The information of a view.
+ * The information of a view exposed to users through JS API.
  */
 export type ViewApiData = {
     /** ID of a source view, i.e., `view.id` */
@@ -292,7 +292,7 @@ export type ViewApiData = {
 };
 
 /** The information for a track mouse event */
-export type TrackMouseEventData = {
+export type TrackApiData = {
     /** ID of a source track, i.e., `track.id` */
     id: string;
 
@@ -303,13 +303,16 @@ export type TrackMouseEventData = {
     shape: BoundingBox | (BoundingBox & CircularTrackShape);
 };
 
+/** The API data of tracks or views */
+export type VisUnitApiData = ({ type: 'view' } & ViewApiData) | ({ type: 'track' } & TrackApiData);
+
 export type _EventMap = {
     mouseOver: PointMouseEventData;
     click: PointMouseEventData;
     rangeSelect: RangeMouseEventData;
     rawData: CommonEventData;
-    trackMouseOver: TrackMouseEventData;
-    trackClick: TrackMouseEventData; // TODO (Jul-25-2022): with https://github.com/higlass/higlass/pull/1098, we can support circular layouts
+    trackMouseOver: TrackApiData;
+    trackClick: TrackApiData; // TODO (Jul-25-2022): with https://github.com/higlass/higlass/pull/1098, we can support circular layouts
 };
 
 /** Options for determining mouse events in detail, e.g., turning on specific events only */

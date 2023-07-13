@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import { type HiGlassApi, HiGlassComponentWrapper } from './higlass-component-wrapper';
+import type { TemplateTrackDef, VisUnitApiData } from './gosling.schema';
 import React, { useState, useEffect, useMemo, useRef, forwardRef, useCallback, useImperativeHandle } from 'react';
 import ResizeSensor from 'css-element-queries/src/ResizeSensor';
 import * as gosling from '..';
@@ -9,8 +10,6 @@ import { GoslingTemplates } from '..';
 import { omitDeep } from './utils/omit-deep';
 import { isEqual } from 'lodash-es';
 import * as uuid from 'uuid';
-
-import type { ViewApiData, TemplateTrackDef, TrackMouseEventData } from './gosling.schema';
 
 // Before rerendering, wait for a few time so that HiGlass container is resized already.
 // If HiGlass is rendered and then the container resizes, the viewport position changes, unmatching `xDomain` specified by users.
@@ -42,8 +41,7 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
     const wrapperSize = useRef<undefined | { width: number; height: number }>();
     const wrapperParentSize = useRef<undefined | { width: number; height: number }>();
     const prevSpec = useRef<undefined | gosling.GoslingSpec>();
-    const trackInfos = useRef<TrackMouseEventData[]>([]);
-    const viewApiData = useRef<ViewApiData[]>([]);
+    const tracksAndViews = useRef<VisUnitApiData[]>([]);
 
     // HiGlass API
     // https://dev.to/wojciechmatuszewski/mutable-and-immutable-useref-semantics-with-react-typescript-30c9
@@ -57,9 +55,8 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
         ref,
         () => {
             const hgApi = refAsReadonlyProxy(hgRef);
-            const infos = refAsReadonlyProxy(trackInfos);
-            const views = refAsReadonlyProxy(viewApiData);
-            const api = createApi(hgApi, viewConfig, infos, views, theme);
+            const visUnits = refAsReadonlyProxy(tracksAndViews);
+            const api = createApi(hgApi, viewConfig, visUnits, theme);
             return { api, hgApi };
         },
         [viewConfig, theme]
@@ -77,7 +74,7 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
 
             gosling.compile(
                 props.spec,
-                (newHs, newSize, newGs, newTrackInfos, newViewApiData) => {
+                (newHs, newSize, newGs, newTrackInfos) => {
                     // TODO: `linkingId` should be updated
                     // We may not want to re-render this
                     if (
@@ -106,8 +103,7 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
                     }
 
                     prevSpec.current = newGs;
-                    trackInfos.current = newTrackInfos;
-                    viewApiData.current = newViewApiData;
+                    tracksAndViews.current = newTrackInfos;
                 },
                 [...GoslingTemplates], // TODO: allow user definitions
                 theme,

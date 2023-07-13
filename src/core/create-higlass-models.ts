@@ -2,7 +2,14 @@ import { getBoundingBox, type TrackInfo } from './utils/bounding-box';
 import { goslingToHiGlass } from './gosling-to-higlass';
 import { HiGlassModel } from './higlass-model';
 import { getLinkingInfo } from './utils/linking';
-import type { GoslingSpec, OverlaidTrack, SingleTrack, TrackMouseEventData, ViewApiData } from '@gosling.schema';
+import type {
+    GoslingSpec,
+    OverlaidTrack,
+    SingleTrack,
+    TrackApiData,
+    VisUnitApiData,
+    ViewApiData
+} from '@gosling.schema';
 import type { CompleteThemeDeep } from './utils/theme';
 import type { CompileCallback } from './compile';
 import { getViewApiData } from './api-data';
@@ -69,7 +76,7 @@ export function renderHiGlass(
             });
     });
 
-    const tracks: TrackMouseEventData[] = trackInfos.map(d => {
+    const tracks: TrackApiData[] = trackInfos.map(d => {
         return {
             id: d.track.id!,
             spec: d.track as SingleTrack | OverlaidTrack,
@@ -91,5 +98,11 @@ export function renderHiGlass(
     // Get the view information needed to support JS APIs (e.g., providing view bounding boxes)
     const views: ViewApiData[] = getViewApiData(spec, tracks);
 
-    callback(hgModel.spec(), getBoundingBox(trackInfos), spec, tracks, views);
+    // Merge the tracks and views
+    const tracksAndViews = [
+        ...tracks.map(d => ({ ...d, type: 'track' } as VisUnitApiData)),
+        ...views.map(d => ({ ...d, type: 'view' } as VisUnitApiData))
+    ];
+
+    callback(hgModel.spec(), getBoundingBox(trackInfos), spec, tracksAndViews);
 }

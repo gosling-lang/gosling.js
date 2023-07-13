@@ -1,9 +1,16 @@
-import type { GoslingSpec, PartialTrack, TrackMouseEventData, View } from '@gosling.schema';
+import type { GoslingSpec, PartialTrack, TrackApiData, View } from '@gosling.schema';
 import { getInternalSpecById, getTrackIds, getViewIds } from './track-and-view-ids';
 
-export function getViewApiData(spec: GoslingSpec, tracks: TrackMouseEventData[]) {
-    return getViewIds(spec).map(id => {
-        const internalSpec = getInternalSpecById(spec, id);
+/**
+ * This collect information of views by referring to the track information.
+ * The information includes the bounding box of tracks.
+ * @param spec
+ * @param tracks
+ * @returns
+ */
+export function getViewApiData(spec: GoslingSpec, tracks: TrackApiData[]) {
+    return getViewIds(spec).map(viewId => {
+        const internalSpec = getInternalSpecById(spec, viewId);
         const trackIds = getTrackIds(internalSpec as View | PartialTrack);
         const bb = {
             x: Number.MAX_SAFE_INTEGER,
@@ -30,7 +37,7 @@ export function getViewApiData(spec: GoslingSpec, tracks: TrackMouseEventData[])
                 }
             });
         return {
-            id,
+            id: viewId,
             spec: internalSpec as View,
             shape: { ...bb, width: bb.xe - bb.x, height: bb.ye - bb.y }
         };
