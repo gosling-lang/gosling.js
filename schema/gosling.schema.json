@@ -648,6 +648,9 @@
           "description": "If defined, will show the textual label on the left-top corner of a track.",
           "type": "string"
         },
+        "viewId": {
+          "type": "string"
+        },
         "width": {
           "description": "Specify the track width in pixels.",
           "type": "number"
@@ -1430,6 +1433,9 @@
                           }
                         ]
                       },
+                      "viewId": {
+                        "type": "string"
+                      },
                       "visibility": {
                         "items": {
                           "$ref": "#/definitions/VisibilityCondition"
@@ -1662,6 +1668,9 @@
                 "$ref": "#/definitions/PartialTrack"
               },
               "type": "array"
+            },
+            "viewId": {
+              "type": "string"
             },
             "visibility": {
               "items": {
@@ -2196,6 +2205,9 @@
                           }
                         ]
                       },
+                      "viewId": {
+                        "type": "string"
+                      },
                       "visibility": {
                         "items": {
                           "$ref": "#/definitions/VisibilityCondition"
@@ -2435,6 +2447,9 @@
                 ]
               },
               "type": "array"
+            },
+            "viewId": {
+              "type": "string"
             },
             "visibility": {
               "items": {
@@ -2864,6 +2879,9 @@
                           }
                         ]
                       },
+                      "viewId": {
+                        "type": "string"
+                      },
                       "visibility": {
                         "items": {
                           "$ref": "#/definitions/VisibilityCondition"
@@ -3033,6 +3051,9 @@
               },
               "type": "array"
             },
+            "viewId": {
+              "type": "string"
+            },
             "xAxis": {
               "$ref": "#/definitions/AxisPosition",
               "description": "not supported"
@@ -3191,6 +3212,9 @@
                         "$ref": "#/definitions/Style",
                         "description": "Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views. Will be overwritten by the style of children elements (e.g., view, track)."
                       },
+                      "viewId": {
+                        "type": "string"
+                      },
                       "views": {
                         "description": "An array of view specifications",
                         "items": {
@@ -3276,6 +3300,9 @@
               "type": "string"
             },
             "title": {
+              "type": "string"
+            },
+            "viewId": {
               "type": "string"
             },
             "views": {
@@ -3656,6 +3683,9 @@
         "style": {
           "$ref": "#/definitions/Style",
           "description": "Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views. Will be overwritten by the style of children elements (e.g., view, track)."
+        },
+        "viewId": {
+          "type": "string"
         },
         "views": {
           "description": "An array of view specifications",
@@ -4159,6 +4189,9 @@
                 },
                 "type": "array"
               },
+              "viewId": {
+                "type": "string"
+              },
               "visibility": {
                 "items": {
                   "$ref": "#/definitions/VisibilityCondition"
@@ -4385,6 +4418,9 @@
             "$ref": "#/definitions/Tooltip"
           },
           "type": "array"
+        },
+        "viewId": {
+          "type": "string"
         },
         "visibility": {
           "items": {
@@ -4746,6 +4782,9 @@
             "$ref": "#/definitions/PartialTrack"
           },
           "type": "array"
+        },
+        "viewId": {
+          "type": "string"
         },
         "visibility": {
           "items": {
@@ -5210,6 +5249,9 @@
                 },
                 "type": "array"
               },
+              "viewId": {
+                "type": "string"
+              },
               "visibility": {
                 "items": {
                   "$ref": "#/definitions/VisibilityCondition"
@@ -5439,6 +5481,9 @@
             "$ref": "#/definitions/Tooltip"
           },
           "type": "array"
+        },
+        "viewId": {
+          "type": "string"
         },
         "visibility": {
           "items": {
@@ -5933,6 +5978,9 @@
             "$ref": "#/definitions/Tooltip"
           },
           "type": "array"
+        },
+        "viewId": {
+          "type": "string"
         },
         "visibility": {
           "items": {
@@ -6462,6 +6510,9 @@
                           }
                         ]
                       },
+                      "viewId": {
+                        "type": "string"
+                      },
                       "visibility": {
                         "items": {
                           "$ref": "#/definitions/VisibilityCondition"
@@ -6694,6 +6745,9 @@
                 "$ref": "#/definitions/PartialTrack"
               },
               "type": "array"
+            },
+            "viewId": {
+              "type": "string"
             },
             "visibility": {
               "items": {
@@ -7221,6 +7275,9 @@
                           }
                         ]
                       },
+                      "viewId": {
+                        "type": "string"
+                      },
                       "visibility": {
                         "items": {
                           "$ref": "#/definitions/VisibilityCondition"
@@ -7460,6 +7517,9 @@
                 ]
               },
               "type": "array"
+            },
+            "viewId": {
+              "type": "string"
             },
             "visibility": {
               "items": {
@@ -7882,6 +7942,9 @@
                           }
                         ]
                       },
+                      "viewId": {
+                        "type": "string"
+                      },
                       "visibility": {
                         "items": {
                           "$ref": "#/definitions/VisibilityCondition"
@@ -8044,6 +8107,9 @@
                 "$ref": "#/definitions/Track"
               },
               "type": "array"
+            },
+            "viewId": {
+              "type": "string"
             },
             "xAxis": {
               "$ref": "#/definitions/AxisPosition",
@@ -8660,6 +8726,9 @@
         },
         "title": {
           "description": "If defined, will show the textual label on the left-top corner of a track.",
+          "type": "string"
+        },
+        "viewId": {
           "type": "string"
         },
         "width": {

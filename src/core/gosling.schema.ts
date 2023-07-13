@@ -67,7 +67,6 @@ export interface MultipleViews extends CommonViewDef {
     arrangement?: 'parallel' | 'serial' | 'horizontal' | 'vertical';
     /** An array of view specifications */
     views: Array<SingleView | MultipleViews>;
-
     /** Internal: Used for responsive spec */
     _assignedWidth?: number;
     _assignedHeight?: number;
@@ -149,6 +148,9 @@ export interface CommonViewDef {
     /** Internal: Used for responsive spec */
     _assignedWidth?: number;
     _assignedHeight?: number;
+
+    //testing
+    viewId?: string;
 }
 
 /* ----------------------------- TRACK ----------------------------- */
@@ -243,6 +245,12 @@ interface OnNewTrackEventData {
     /** The shape of the source track */
     shape: LinearTrackShape | CircularTrackShape;
 }
+/**
+ * Event data for "onNewView" event
+ */
+interface OnNewViewEventData {
+    viewId: string;
+}
 
 export interface GenomicPosition {
     chromosome: string;
@@ -301,6 +309,7 @@ export type _EventMap = {
     rangeSelect: RangeMouseEventData;
     rawData: CommonEventData;
     onNewTrack: OnNewTrackEventData;
+    onNewView: OnNewViewEventData;
     trackMouseOver: TrackMouseEventData;
     trackClick: TrackMouseEventData; // TODO (Jul-25-2022): with https://github.com/higlass/higlass/pull/1098, we can support circular layouts
 };

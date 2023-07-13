@@ -1344,6 +1344,9 @@
           },
           "type": "array"
         },
+        "viewId": {
+          "type": "string"
+        },
         "visibility": {
           "items": {
             "$ref": "#/definitions/VisibilityCondition"

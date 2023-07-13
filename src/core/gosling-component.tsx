@@ -11,6 +11,7 @@ import { isEqual } from 'lodash-es';
 import * as uuid from 'uuid';
 
 import type { TemplateTrackDef, TrackMouseEventData } from './gosling.schema';
+import { publish } from './pubsub';
 
 // Before rerendering, wait for a few time so that HiGlass container is resized already.
 // If HiGlass is rendered and then the container resizes, the viewport position changes, unmatching `xDomain` specified by users.
@@ -63,6 +64,20 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
         [viewConfig, theme]
     );
 
+    function determineNewViews(newTrackInfos: TrackMouseEventData[]) {
+        const oldViewIds = new Set(trackInfos.current.map(info => info.spec.viewId).filter(Boolean));
+        const newViewIds = new Set(newTrackInfos.map(info => info.spec.viewId).filter(Boolean));
+        const diff = [...newViewIds].filter(x => !oldViewIds.has(x));
+
+        return diff;
+    }
+
+    function publishOnNewView(views: (string | undefined)[]) {
+        views.forEach(viewName => {
+            if (viewName) publish('onNewView', { viewId: viewName });
+        });
+    }
+
     // TODO: add a `force` parameter since changing `linkingId` might not update vis
     const compile = useCallback(() => {
         if (props.spec) {
@@ -103,6 +118,10 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
                         setViewConfig(newHs);
                     }
 
+                    const newViews = determineNewViews(newTrackInfos);
+                    if (newViews) {
+                        publishOnNewView(newViews);
+                    }
                     prevSpec.current = newGs;
                     trackInfos.current = newTrackInfos;
                 },

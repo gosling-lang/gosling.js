@@ -152,6 +152,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
         if (spec.xDomain === undefined) spec.xDomain = parentDef.xDomain;
         if (spec.yDomain === undefined) spec.yDomain = parentDef.yDomain;
         if (spec.linkingId === undefined) spec.linkingId = parentDef.linkingId;
+        if (spec.viewId === undefined) spec.viewId = parentDef.viewId;
         if (spec.centerRadius === undefined) spec.centerRadius = parentDef.centerRadius;
         if (spec.spacing === undefined && !('tracks' in spec)) spec.spacing = parentDef.spacing;
         if (spec.xOffset === undefined) spec.xOffset = parentDef.xOffset;
@@ -436,8 +437,11 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
         spec.tracks = tracks;
     } else {
         // we did not reach track definition, so continue traversing
-        spec.views.forEach(v => {
-            traverseToFixSpecDownstream(v, spec as CommonViewDef);
+        spec.views.forEach(view => {
+            if (!view.viewId) {
+                spec.viewId = uuid.v4();
+            }
+            traverseToFixSpecDownstream(view, spec as CommonViewDef);
         });
     }
 }

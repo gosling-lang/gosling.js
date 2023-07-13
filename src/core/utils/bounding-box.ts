@@ -48,6 +48,8 @@ export interface TrackInfo {
     track: Track;
     boundingBox: BoundingBox;
     layout: RelativePosition;
+    // testing
+    viewId?: string;
 }
 
 /**
@@ -206,7 +208,8 @@ function traverseAndCollectTrackInfo(
                         width: track.width,
                         height: cumHeight
                     },
-                    layout: { x: 0, y: 0, w: 0, h: 0 } // Just put a dummy info here, this should be added after entire bounding box has been determined
+                    layout: { x: 0, y: 0, w: 0, h: 0 }, // Just put a dummy info here, this should be added after entire bounding box has been determined
+                    viewId: spec.viewId
                 });
 
                 if (array[i + 1] && array[i + 1].overlayOnPreviousTrack) {
@@ -243,7 +246,8 @@ function traverseAndCollectTrackInfo(
                         width: cumWidth,
                         height: track.height
                     },
-                    layout: { x: 0, y: 0, w: 0, h: 0 } // Just put a dummy info here, this should be added after entire bounding box has been determined
+                    layout: { x: 0, y: 0, w: 0, h: 0 }, // Just put a dummy info here, this should be added after entire bounding box has been determined
+                    viewId: spec.viewId
                 });
 
                 if (array[i + 1] && array[i + 1].overlayOnPreviousTrack) {
