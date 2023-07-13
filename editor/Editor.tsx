@@ -1034,10 +1034,11 @@ function Editor(props: RouteComponentProps) {
                                 title="Automatically update visualization upon editing code"
                                 className="side-panel-button"
                                 onClick={() => setShowViews(!showViews)}
+                                disabled={isResponsive}
                             >
                                 {showViews
-                                    ? getIconSVG(ICONS.TOGGLE_ON, 23, 23, '#E18343')
-                                    : getIconSVG(ICONS.TOGGLE_OFF, 23, 23)}
+                                    ? getIconSVG(ICONS.TOGGLE_ON, 23, 23, isResponsive ? 'lightgrey' : '#E18343')
+                                    : getIconSVG(ICONS.TOGGLE_OFF, 23, 23, isResponsive ? 'lightgrey' : undefined)}
                                 <br />
                                 SHOW
                                 <br />
@@ -1212,7 +1213,7 @@ function Editor(props: RouteComponentProps) {
                                                 setHg(h);
                                             }}
                                         />
-                                        {showViews ? VisHierarchy : null}
+                                        {showViews && !isResponsive ? VisHierarchy : null}
                                     </div>
                                     {/* {expertMode && false ? (
                                             <div
