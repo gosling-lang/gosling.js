@@ -1,4 +1,4 @@
-import type { GoslingSpec, TemplateTrackDef, TrackMouseEventData } from './gosling.schema';
+import type { GoslingSpec, TemplateTrackDef, VisUnitApiData } from './gosling.schema';
 import type { HiGlassSpec } from './higlass.schema';
 import { traverseToFixSpecDownstream, overrideDataTemplates } from './utils/spec-preprocess';
 import { replaceTrackTemplates } from './utils/template';
@@ -7,7 +7,8 @@ import type { CompleteThemeDeep } from './utils/theme';
 import { renderHiGlass as createHiGlassModels } from './create-higlass-models';
 import { manageResponsiveSpecs } from './responsive';
 
-export type CompileCallback = (hg: HiGlassSpec, size: Size, gs: GoslingSpec, trackInfos: TrackMouseEventData[]) => void;
+/** The callback function called everytime after the spec has been compiled */
+export type CompileCallback = (hg: HiGlassSpec, size: Size, gs: GoslingSpec, tracksAndViews: VisUnitApiData[]) => void;
 
 export function compile(
     spec: GoslingSpec,

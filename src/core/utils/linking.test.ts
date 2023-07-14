@@ -9,6 +9,7 @@ describe('Should get linking information correctly', () => {
             new HiGlassModel(),
             {
                 data: { type: 'csv', url: 'https://' },
+                id: 'track',
                 overlay: [
                     {
                         mark: 'point',

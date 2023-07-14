@@ -89,6 +89,8 @@ export type Assembly = 'hg38' | 'hg19' | 'hg18' | 'hg17' | 'hg16' | 'mm10' | 'mm
 export type ZoomLimits = [number | null, number | null];
 
 export interface CommonViewDef {
+    /** The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view */
+    id?: string;
     /** Specify the layout type of all tracks. */
     layout?: Layout;
     /** Specify the orientation. */
@@ -155,9 +157,8 @@ export interface CommonViewDef {
 export type Track = SingleTrack | OverlaidTrack | DataTrack | TemplateTrack;
 
 export interface CommonTrackDef extends CommonViewDef {
-    // !! TODO: we can check if the same id is used multiple times.
-    // !! TODO: this should be track-specific and not defined in views.
-    id?: string; // Assigned to `uid` in a HiGlass view config, used for API and caching.
+    /** Assigned to `uid` in a HiGlass view config, used for API and caching. */
+    id?: string;
 
     /** If defined, will show the textual label on the left-top corner of a track. */
     title?: string;
@@ -254,10 +255,10 @@ interface RangeMouseEventData extends CommonEventData {
 }
 
 /**
- * The visual parameters that determine the shape of a linear track.
+ * The visual parameters that determine the shape of a linear track or a view.
  * Origin is the left top corner.
  */
-interface LinearTrackShape {
+export interface BoundingBox {
     x: number;
     y: number;
     width: number;
@@ -276,8 +277,22 @@ interface CircularTrackShape {
     endAngle: number;
 }
 
+/**
+ * The information of a view exposed to users through JS API.
+ */
+export type ViewApiData = {
+    /** ID of a source view, i.e., `view.id` */
+    id: string;
+
+    /** Expanded view specification processed by the Gosling compiler, e.g., default properties filled in. */
+    spec: View;
+
+    /** The shape of the source view */
+    shape: BoundingBox;
+};
+
 /** The information for a track mouse event */
-export type TrackMouseEventData = {
+export type TrackApiData = {
     /** ID of a source track, i.e., `track.id` */
     id: string;
 
@@ -285,16 +300,19 @@ export type TrackMouseEventData = {
     spec: SingleTrack | OverlaidTrack;
 
     /** The shape of the source track */
-    shape: LinearTrackShape | CircularTrackShape;
+    shape: BoundingBox | (BoundingBox & CircularTrackShape);
 };
+
+/** The API data of tracks or views */
+export type VisUnitApiData = ({ type: 'view' } & ViewApiData) | ({ type: 'track' } & TrackApiData);
 
 export type _EventMap = {
     mouseOver: PointMouseEventData;
     click: PointMouseEventData;
     rangeSelect: RangeMouseEventData;
     rawData: CommonEventData;
-    trackMouseOver: TrackMouseEventData;
-    trackClick: TrackMouseEventData; // TODO (Jul-25-2022): with https://github.com/higlass/higlass/pull/1098, we can support circular layouts
+    trackMouseOver: TrackApiData;
+    trackClick: TrackApiData; // TODO (Jul-25-2022): with https://github.com/higlass/higlass/pull/1098, we can support circular layouts
 };
 
 /** Options for determining mouse events in detail, e.g., turning on specific events only */

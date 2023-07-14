@@ -598,6 +598,7 @@
           "type": "number"
         },
         "id": {
+          "description": "Assigned to `uid` in a HiGlass view config, used for API and caching.",
           "type": "string"
         },
         "innerRadius": {
@@ -1179,6 +1180,7 @@
               "type": "number"
             },
             "id": {
+              "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
               "type": "string"
             },
             "innerRadius": {
@@ -1330,6 +1332,7 @@
                         "type": "number"
                       },
                       "id": {
+                        "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
                         "type": "string"
                       },
                       "innerRadius": {
@@ -1945,6 +1948,7 @@
               "type": "number"
             },
             "id": {
+              "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
               "type": "string"
             },
             "innerRadius": {
@@ -2096,6 +2100,7 @@
                         "type": "number"
                       },
                       "id": {
+                        "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
                         "type": "string"
                       },
                       "innerRadius": {
@@ -2647,6 +2652,10 @@
             "description": {
               "type": "string"
             },
+            "id": {
+              "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
+              "type": "string"
+            },
             "layout": {
               "$ref": "#/definitions/Layout",
               "description": "Specify the layout type of all tracks."
@@ -2764,6 +2773,7 @@
                         "type": "number"
                       },
                       "id": {
+                        "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
                         "type": "string"
                       },
                       "innerRadius": {
@@ -3164,6 +3174,10 @@
             "description": {
               "type": "string"
             },
+            "id": {
+              "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
+              "type": "string"
+            },
             "layout": {
               "$ref": "#/definitions/Layout",
               "description": "Specify the layout type of all tracks."
@@ -3217,6 +3231,10 @@
                       "centerRadius": {
                         "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
                         "type": "number"
+                      },
+                      "id": {
+                        "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
+                        "type": "string"
                       },
                       "layout": {
                         "$ref": "#/definitions/Layout",
@@ -3684,6 +3702,10 @@
           "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
           "type": "number"
         },
+        "id": {
+          "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
+          "type": "string"
+        },
         "layout": {
           "$ref": "#/definitions/Layout",
           "description": "Specify the layout type of all tracks."
@@ -3977,6 +3999,7 @@
           "type": "number"
         },
         "id": {
+          "description": "Assigned to `uid` in a HiGlass view config, used for API and caching.",
           "type": "string"
         },
         "innerRadius": {
@@ -4093,6 +4116,7 @@
                 "type": "boolean"
               },
               "id": {
+                "description": "Assigned to `uid` in a HiGlass view config, used for API and caching.",
                 "type": "string"
               },
               "innerRadius": {
@@ -4664,6 +4688,7 @@
           "type": "number"
         },
         "id": {
+          "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
           "type": "string"
         },
         "innerRadius": {
@@ -5028,6 +5053,7 @@
           "type": "number"
         },
         "id": {
+          "description": "Assigned to `uid` in a HiGlass view config, used for API and caching.",
           "type": "string"
         },
         "innerRadius": {
@@ -5144,6 +5170,7 @@
                 "type": "boolean"
               },
               "id": {
+                "description": "Assigned to `uid` in a HiGlass view config, used for API and caching.",
                 "type": "string"
               },
               "innerRadius": {
@@ -5857,6 +5884,7 @@
           "type": "number"
         },
         "id": {
+          "description": "Assigned to `uid` in a HiGlass view config, used for API and caching.",
           "type": "string"
         },
         "innerRadius": {
@@ -6215,6 +6243,7 @@
               "type": "number"
             },
             "id": {
+              "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
               "type": "string"
             },
             "innerRadius": {
@@ -6362,6 +6391,7 @@
                         "type": "number"
                       },
                       "id": {
+                        "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
                         "type": "string"
                       },
                       "innerRadius": {
@@ -6974,6 +7004,7 @@
               "type": "number"
             },
             "id": {
+              "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
               "type": "string"
             },
             "innerRadius": {
@@ -7121,6 +7152,7 @@
                         "type": "number"
                       },
                       "id": {
+                        "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
                         "type": "string"
                       },
                       "innerRadius": {
@@ -7669,6 +7701,10 @@
               "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
               "type": "number"
             },
+            "id": {
+              "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
+              "type": "string"
+            },
             "layout": {
               "$ref": "#/definitions/Layout",
               "description": "Specify the layout type of all tracks."
@@ -7782,6 +7818,7 @@
                         "type": "number"
                       },
                       "id": {
+                        "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
                         "type": "string"
                       },
                       "innerRadius": {
@@ -8657,6 +8694,7 @@
           "type": "number"
         },
         "id": {
+          "description": "Assigned to `uid` in a HiGlass view config, used for API and caching.",
           "type": "string"
         },
         "innerRadius": {
