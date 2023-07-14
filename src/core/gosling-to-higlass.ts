@@ -35,10 +35,6 @@ export function goslingToHiGlass(
     // we only look into the first resolved spec to get information, such as size of the track
     const firstResolvedSpec = resolveSuperposedTracks(gosTrack)[0];
 
-    if (!firstResolvedSpec.id) {
-        firstResolvedSpec.id = uuid.v4();
-    }
-
     const assembly = firstResolvedSpec.assembly;
 
     if (IsDataDeep(firstResolvedSpec.data)) {
@@ -171,7 +167,7 @@ export function goslingToHiGlass(
             hgModel
                 .setViewOrientation(firstResolvedSpec.orientation) // TODO: Orientation should be assigned to 'individual' views
                 .setAssembly(assembly) // TODO: Assembly should be assigned to 'individual' views
-                .addDefaultView(firstResolvedSpec.id, assembly)
+                .addDefaultView(firstResolvedSpec.id!, assembly)
                 .setDomain(xDomain, yDomain ?? xDomain)
                 .adjustDomain(firstResolvedSpec.orientation, width, height)
                 .setMainTrack(hgTrack)
