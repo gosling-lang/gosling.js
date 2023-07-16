@@ -130,7 +130,6 @@ If there is an example you would like to add to the editor example library, plea
 
 5. Select the example in the editor to make sure your example works as expected. 
 
-
 ## Bumping Gosling.js
 
 GitHub Action handles bumping the version of Gosling.js. The pattern looks like the following:
@@ -138,4 +137,31 @@ GitHub Action handles bumping the version of Gosling.js. The pattern looks like 
 ```
 yarn version --patch
 git push origin master --tags
+```
+
+# Internal Explanations  
+## How does a Gosling schema get turned into a HiGlass schema?
+A Gosling schema goes through the following steps: 
+
+1. **Preprocessing**: The implicit aspects of the Gosling schema is made explicit here. Default values are added, properties set in parent elements are added to child elements, and IDs for every Gosling track and view are generated if they aren't specified by the user. 
+2. **Track data intermediate representation**: From the preprocessed schema, a Gosling track-based intermediate representation is created. All the information from the schema gets converted into an array of Gosling track data objects, each with track-specific data. What happens to Gosling views? View specifications get applied to each track intermediate representation. 
+3.  **HiGlass schema generation**: By iterating over the Gosling track intermediate representations, a HiGlass schema is generated. Each Gosling track corresponds to a HiGlass view. This HiGlass view will contain one or more HiGlass track, depending on the Gosling track it was derived from. 
+
+One important nuance to the Gosling schema to HiGlass schema conversion is that there is not a direct correspondence between Gosling tracks and view and HiGlass tracks and views. Instead, each Gosling track corresponds to a HiGlass view. Please examine the relationship between the view and track IDs.  
+
+- **Gosling track ID**: ID that is associated with each track. It is set by the user or is generated during the preprocessing step. 
+- **Gosling view ID**: ID associated with each view. It is set by the user or is generated during the preprocessing step.   
+- **HiGlass track ID**: The HiGlass track ID is the same as the Gosling track ID with `-track` appended to it. 
+- **HiGlass view ID**: Each HiGlass view has an ID, and *this ID is the same as the Gosling track ID.* An instance of GoslingTrackClass knows what the Gosling track ID is by calling `context.viewUid`, which is the HiGlass view ID which is the same as the Gosling track ID. 
+
+The once exception to this are overlaid tracks where the `id` defined at the root level of an overlaid track is used as the HiGlass' view ID. This limits the number of gosling-track instances generated (i.e., multiple tracks that are overlaid can share the same data, hence reducing the number of data requests).
+```
+tracks: [
+   { ..., id: '1' }, // ← This is a track in Gosling. This becomes a HiGlass view '1'
+   { ..., alignment: 'overlay', id: '2', // ← This is actually a view in Gosling, but this becomes a HiGlass view '2'
+      tracks: [ 
+         { ..., id: '3' }, // ← This track is included in a HiGlass view '2'
+         { ..., id: '4' }, // ← This track is included in a HiGlass view '2'
+   ]}
+]
 ```
