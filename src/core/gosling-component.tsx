@@ -91,18 +91,18 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
 
             gosling.compile(
                 props.spec,
-                (newHs, newSize, newGs, newTrackInfos) => {
+                (newHiGlassSpec, newSize, newGoslingSpec, newTracksAndViews) => {
                     // TODO: `linkingId` should be updated
                     // We may not want to re-render this
                     if (
                         prevSpec.current &&
-                        isEqual(omitDeep(prevSpec.current, ['linkingId']), omitDeep(newGs, ['linkingId']))
+                        isEqual(omitDeep(prevSpec.current, ['linkingId']), omitDeep(newGoslingSpec, ['linkingId']))
                     ) {
                         return;
                     }
 
                     // If a callback function is provided, return compiled information.
-                    props.compiled?.(props.spec!, newHs);
+                    props.compiled?.(props.spec!, newHiGlassSpec);
 
                     // Change the size of wrapper `<div/>` elements
                     setSize(newSize);
@@ -112,15 +112,15 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
                     if (props.experimental?.reactive && isMountedOnce) {
                         // Use API to update visualization.
                         setTimeout(() => {
-                            hgRef.current?.api.setViewConfig(newHs);
+                            hgRef.current?.api.setViewConfig(newHiGlassSpec);
                         }, DELAY_FOR_CONTAINER_RESIZE_BEFORE_RERENDER);
                     } else {
                         // Mount `HiGlassComponent` using this view config.
-                        setViewConfig(newHs);
+                        setViewConfig(newHiGlassSpec);
                     }
-                    publishOnNewView(newTrackInfos);
-                    prevSpec.current = newGs;
-                    tracksAndViews.current = newTrackInfos;
+                    publishOnNewView(newTracksAndViews);
+                    prevSpec.current = newGoslingSpec;
+                    tracksAndViews.current = newTracksAndViews;
                 },
                 [...GoslingTemplates], // TODO: allow user definitions
                 theme,
