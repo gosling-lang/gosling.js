@@ -334,6 +334,10 @@ function Editor(props: RouteComponentProps) {
             // gosRef.current.api.subscribe('trackClick', (type, eventData) => {
             //     console.warn(type, eventData.id, eventData.spec, eventData.shape);
             // });
+            // New Track
+            gosRef.current.api.subscribe('onNewTrack', (type, eventData) => {
+                console.warn(type, eventData);
+            });
         }
         return () => {
             // gosRef.current?.api.unsubscribe('mouseOver');

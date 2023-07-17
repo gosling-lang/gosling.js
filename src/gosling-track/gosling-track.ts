@@ -147,6 +147,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         mRangeBrush: LinearBrushModel;
         #assembly?: Assembly; // Used to get the relative genomic position
         #processedTileInfo: Record<string, ProcessedTileInfo>;
+        #firstDraw = true; // False if draw has been called once already. Used with onNewTrack API
         // Used in mark/legend.ts
         gLegend? = HGC.libraries.d3Selection.select(context.svgElement).append('g');
         displayedLegends: DisplayedLegend[] = []; // Store the color legends added so far so that we can avoid overlaps and redundancy
@@ -294,6 +295,11 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
             // Based on the updated marks, update range selection
             this.mRangeBrush?.drawBrush(true);
+            // Publish onNewTrack if this is the first draw
+            if (this.#firstDraw) {
+                this.#publishOnNewTrack();
+                this.#firstDraw = false;
+            }
         }
 
         /*
@@ -1291,6 +1297,43 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 }
             }
             return '';
+        }
+
+        /**
+         * Javscript subscription API methods (besides for mouse)
+         */
+
+        /**
+         * Publishes track information. Triggered when track gets created
+         */
+        #publishOnNewTrack() {
+            const [x, y] = this.position;
+            const [width, height] = this.dimensions;
+            if (this.options.spec.layout === 'circular') {
+                const cx = x + width / 2.0;
+                const cy = y + height / 2.0;
+                const innerRadius = this.options.spec.innerRadius!;
+                const outerRadius = this.options.spec.outerRadius!;
+                publish('onNewTrack', {
+                    id: context.viewUid,
+                    shape: {
+                        x: cx,
+                        y: cy,
+                        width: innerRadius,
+                        height: outerRadius
+                    }
+                });
+            } else {
+                publish('onNewTrack', {
+                    id: context.viewUid,
+                    shape: {
+                        x,
+                        y,
+                        width,
+                        height
+                    }
+                });
+            }
         }
 
         /* *
