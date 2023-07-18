@@ -154,7 +154,7 @@ One important nuance to the Gosling schema to HiGlass schema conversion is that 
 - **HiGlass track ID**: The HiGlass track ID is the same as the Gosling track ID with `-track` appended to it. 
 - **HiGlass view ID**: Each HiGlass view has an ID, and *this ID is the same as the Gosling track ID.* An instance of GoslingTrackClass knows what the Gosling track ID is by calling `context.viewUid`, which is the HiGlass view ID which is the same as the Gosling track ID. 
 
-The once exception to this are overlaid tracks where the `id` defined at the root level of an overlaid track is used as the HiGlass' view ID. This limits the number of gosling-track instances generated (i.e., multiple tracks that are overlaid can share the same data, hence reducing the number of data requests).
+The one exception to this are overlaid tracks where the `id` defined at the root level of an overlaid track is used as the HiGlass' view ID. This limits the number of gosling-track instances generated (i.e., multiple tracks that are overlaid can share the same data, hence reducing the number of data requests).
 ```
 tracks: [
    { ..., id: '1' }, // ← This is a track in Gosling. This becomes a HiGlass view '1'
