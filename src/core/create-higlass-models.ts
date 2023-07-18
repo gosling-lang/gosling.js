@@ -44,9 +44,9 @@ export function renderHiGlass(
         .forEach(info => {
             hgModel.addBrush(
                 info.layout,
-                info.viewId,
+                info.hgViewId,
                 theme,
-                linkingInfos.find(d => !d.isBrush && d.linkId === info.linkId)?.viewId,
+                linkingInfos.find(d => !d.isBrush && d.linkId === info.linkId)?.hgViewId,
                 info.style
             );
         });
@@ -56,8 +56,8 @@ export function renderHiGlass(
     linkingInfos
         .filter(d => !d.isBrush)
         .forEach(d => {
-            hgModel.spec().zoomLocks.locksByViewUid[d.viewId] = d.linkId;
-            hgModel.spec().locationLocks.locksByViewUid[d.viewId] = d.linkId;
+            hgModel.spec().zoomLocks.locksByViewUid[d.hgViewId] = d.linkId;
+            hgModel.spec().locationLocks.locksByViewUid[d.hgViewId] = d.linkId;
         });
 
     // fill `locksDict`
@@ -71,8 +71,8 @@ export function renderHiGlass(
             .filter(d => !d.isBrush)
             .filter(d => d.linkId === linkId)
             .forEach(d => {
-                hgModel.spec().zoomLocks.locksDict[linkId][d.viewId] = [124625310.5, 124625310.5, 249250.621];
-                hgModel.spec().locationLocks.locksDict[linkId][d.viewId] = [124625310.5, 124625310.5, 249250.621];
+                hgModel.spec().zoomLocks.locksDict[linkId][d.hgViewId] = [124625310.5, 124625310.5, 249250.621];
+                hgModel.spec().locationLocks.locksDict[linkId][d.hgViewId] = [124625310.5, 124625310.5, 249250.621];
             });
     });
 

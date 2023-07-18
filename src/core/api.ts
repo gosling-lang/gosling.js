@@ -26,7 +26,7 @@ export interface GoslingApi {
     zoomToGene(viewId: string, gene: string, padding?: number, duration?: number): void;
     suggestGene(viewId: string, keyword: string, callback: (suggestions: GeneSuggestion[]) => void): void;
     getTracksAndViews(): VisUnitApiData[];
-    getViewIds(): string[];
+    getTrackIds(): string[];
     getTracks(): TrackApiData[];
     getTrack(trackId: string): TrackApiData | undefined;
     getViews(): ViewApiData[];
@@ -115,18 +115,18 @@ export function createApi(
             const absCoordinates = manager.toAbsoluteCoordinates(assembly, padding);
             hg.api.zoomTo(viewId, ...absCoordinates, ...absCoordinates, duration);
         },
-        zoomToExtent: (viewId, duration = 1000) => {
-            const assembly = getTrack(viewId)?.spec.assembly;
+        zoomToExtent: (trackId, duration = 1000) => {
+            const assembly = getTrack(trackId)?.spec.assembly;
             const [start, end] = [0, computeChromSizes(assembly).total];
-            hg.api.zoomTo(viewId, start, end, start, end, duration);
+            hg.api.zoomTo(trackId, start, end, start, end, duration);
         },
-        zoomToGene: (viewId, gene, padding = 0, duration = 1000) => {
-            hg.api.zoomToGene(viewId, gene, padding, duration);
+        zoomToGene: (trackId, gene, padding = 0, duration = 1000) => {
+            hg.api.zoomToGene(trackId, gene, padding, duration);
         },
-        suggestGene: (viewId: string, keyword: string, callback: (suggestions: GeneSuggestion[]) => void) => {
-            hg.api.suggestGene(viewId, keyword, callback);
+        suggestGene: (trackId: string, keyword: string, callback: (suggestions: GeneSuggestion[]) => void) => {
+            hg.api.suggestGene(trackId, keyword, callback);
         },
-        getViewIds: () => {
+        getTrackIds: () => {
             if (!hgSpec) return [];
             const ids: string[] = [];
             traverseViewsInViewConfig(hgSpec, view => {
