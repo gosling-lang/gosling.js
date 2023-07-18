@@ -140,7 +140,7 @@ git push origin master --tags
 ```
 
 # Internal Explanations  
-## How does a Gosling schema get turned into a HiGlass schema?
+## How does a Gosling spec get turned into a HiGlass spec?
 A Gosling schema goes through the following steps: 
 
 1. **Preprocessing**: The implicit aspects of the Gosling schema is made explicit here. Default values are added, properties set in parent elements are added to child elements, and IDs for every Gosling track and view are generated if they aren't specified by the user. 
