@@ -510,7 +510,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
             const flatTileData = ([] as Datum[]).concat(...models.map(d => d.data()));
             if (flatTileData.length !== 0) {
-                publish('rawData', { id: context.viewUid, data: flatTileData });
+                this.options.siblingIds.forEach(id => publish('rawData', { id, data: flatTileData }));
             }
         }
 
@@ -1028,11 +1028,11 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 const capturedElements = this.#getElementsWithinMouse(mouseX, mouseY);
 
                 if (capturedElements.length !== 0) {
-                    publish('click', {
-                        id: context.viewUid,
+                    this.options.siblingIds.forEach(id => publish('click', {
+                        id,
                         genomicPosition,
                         data: capturedElements.map(d => d.value)
-                    });
+                    }));
                 }
             }
         }
