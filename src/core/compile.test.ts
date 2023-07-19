@@ -46,6 +46,7 @@ describe('Create correct mapping table between Gosling track IDs and HiGlass vie
                     tracks: [{ id: 's1' }, { id: 's2' }, { id: 's3' }]
                 },
                 {
+                    id: 'o-root',
                     alignment: 'overlay',
                     tracks: [{ id: 'o1' }, { id: 'o2' }, { id: 'o3' }]
                 }
@@ -59,6 +60,36 @@ describe('Create correct mapping table between Gosling track IDs and HiGlass vie
                     "o1": "o1",
                     "o2": "o1",
                     "o3": "o1",
+                    "s1": "s1",
+                    "s2": "s2",
+                    "s3": "s3",
+                  }
+                `);
+            },
+            [],
+            getTheme(),
+            {}
+        );
+    });
+    it('Used the root level ID in overlaid tracks when IDs are missing in children', () => {
+        const spec: GoslingSpec = {
+            views: [
+                {
+                    tracks: [{ id: 's1' }, { id: 's2' }, { id: 's3' }]
+                },
+                {
+                    id: 'o-root',
+                    alignment: 'overlay',
+                    tracks: [{ }, { }, { }]
+                }
+            ]
+        };
+        compile(
+            spec,
+            (h, s, g, t, table) => {
+                expect(table).toMatchInlineSnapshot(`
+                  {
+                    "o-root": "o-root",
                     "s1": "s1",
                     "s2": "s2",
                     "s3": "s3",
