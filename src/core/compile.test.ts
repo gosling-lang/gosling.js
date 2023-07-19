@@ -80,7 +80,7 @@ describe('Create correct mapping table between Gosling track IDs and HiGlass vie
                 {
                     id: 'o-root',
                     alignment: 'overlay',
-                    tracks: [{ }, { }, { }]
+                    tracks: [{}, {}, {}]
                 }
             ]
         };
