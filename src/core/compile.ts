@@ -9,7 +9,13 @@ import { manageResponsiveSpecs } from './responsive';
 import type { IdTable } from './track-and-view-ids';
 
 /** The callback function called everytime after the spec has been compiled */
-export type CompileCallback = (hg: HiGlassSpec, size: Size, gs: GoslingSpec, tracksAndViews: VisUnitApiData[], idTable: IdTable) => void;
+export type CompileCallback = (
+    hg: HiGlassSpec,
+    size: Size,
+    gs: GoslingSpec,
+    tracksAndViews: VisUnitApiData[],
+    idTable: IdTable
+) => void;
 
 export function compile(
     spec: GoslingSpec,

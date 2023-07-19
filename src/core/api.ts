@@ -5,7 +5,6 @@ import type { HiGlassSpec } from '@higlass.schema';
 import { subscribe, unsubscribe } from './pubsub';
 import { computeChromSizes, GenomicPositionHelper } from './utils/assembly';
 import type { CompleteThemeDeep } from './utils/theme';
-import { traverseViewsInViewConfig } from './utils/view-config';
 import type { IdTable } from './track-and-view-ids';
 
 /**
@@ -66,7 +65,7 @@ export function createApi(
     };
     const getTrackIds = () => {
         return Object.keys(idTableCopy);
-    }
+    };
     const getTracksAndViews = () => {
         return [...tracksAndViews];
     };
