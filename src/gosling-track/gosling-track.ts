@@ -71,6 +71,14 @@ const DEFAULT_MOUSE_EVENT_STYLE: Required<EventStyle> = {
 };
 
 interface GoslingTrackOptions {
+    /**
+     * Track ID specified by users
+     */
+    id: string;
+    /**
+     * Track IDs that are superposed with this track, containing the id of this track itself
+     */
+    siblingIds: string[];
     spec: SingleTrack | OverlaidTrack;
     theme: CompleteThemeDeep;
     showMousePosition?: boolean;

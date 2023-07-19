@@ -5,6 +5,7 @@ import { convertToFlatTracks } from './utils/spec-preprocess';
 import { getTheme } from './utils/theme';
 
 import type { SingleTrack } from './gosling.schema';
+import { GoslingToHiGlassIdMapper } from './track-and-view-ids';
 
 describe('Should convert gosling spec to higlass view config.', () => {
     it('Should return a generated higlass view config correctly', () => {
@@ -24,7 +25,8 @@ describe('Should convert gosling spec to higlass view config.', () => {
                 w: 12,
                 h: 12
             },
-            getTheme()
+            getTheme(),
+            new GoslingToHiGlassIdMapper()
         ).spec();
         expect(Object.keys(higlass)).not.toHaveLength(0);
     });
@@ -47,7 +49,8 @@ describe('Should convert gosling spec to higlass view config.', () => {
                 w: 12,
                 h: 12
             },
-            getTheme()
+            getTheme(),
+            new GoslingToHiGlassIdMapper()
         ).spec();
         expect(higlass.views).toHaveLength(0);
     });

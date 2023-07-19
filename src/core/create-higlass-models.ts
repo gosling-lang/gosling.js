@@ -13,6 +13,7 @@ import type {
 import type { CompleteThemeDeep } from './utils/theme';
 import type { CompileCallback } from './compile';
 import { getViewApiData } from './api-data';
+import { GoslingToHiGlassIdMapper } from './track-and-view-ids';
 
 export function renderHiGlass(
     spec: GoslingSpec,
@@ -28,10 +29,13 @@ export function renderHiGlass(
     // HiGlass model
     const hgModel = new HiGlassModel();
 
+    // A mapping table between Gosling track IDs and HiGlass view IDs
+    const idMapper = new GoslingToHiGlassIdMapper();
+
     /* Update the HiGlass model by iterating tracks */
     trackInfos.forEach(tb => {
         const { track, boundingBox: bb, layout } = tb;
-        goslingToHiGlass(hgModel, track, bb, layout, theme);
+        goslingToHiGlass(hgModel, track, bb, layout, theme, idMapper);
     });
 
     /* Add linking information to the HiGlass model */
@@ -104,5 +108,5 @@ export function renderHiGlass(
         ...views.map(d => ({ ...d, type: 'view' } as VisUnitApiData))
     ];
 
-    callback(hgModel.spec(), getBoundingBox(trackInfos), spec, tracksAndViews);
+    callback(hgModel.spec(), getBoundingBox(trackInfos), spec, tracksAndViews, idMapper.getTable());
 }

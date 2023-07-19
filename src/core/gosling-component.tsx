@@ -11,6 +11,7 @@ import { omitDeep } from './utils/omit-deep';
 import { isEqual } from 'lodash-es';
 import * as uuid from 'uuid';
 import { publish } from './pubsub';
+import type { IdTable } from './track-and-view-ids';
 
 // Before rerendering, wait for a few time so that HiGlass container is resized already.
 // If HiGlass is rendered and then the container resizes, the viewport position changes, unmatching `xDomain` specified by users.
@@ -43,6 +44,8 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
     const wrapperParentSize = useRef<undefined | { width: number; height: number }>();
     const prevSpec = useRef<undefined | gosling.GoslingSpec>();
     const tracksAndViews = useRef<VisUnitApiData[]>([]);
+    /** A mapping table that connects between Gosling track IDs to corresponding HiGlas view IDs */
+    const idTable = useRef<IdTable>({});
 
     // HiGlass API
     // https://dev.to/wojciechmatuszewski/mutable-and-immutable-useref-semantics-with-react-typescript-30c9
@@ -73,7 +76,7 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
         () => {
             const hgApi = refAsReadonlyProxy(hgRef);
             const visUnits = refAsReadonlyProxy(tracksAndViews);
-            const api = createApi(hgApi, viewConfig, visUnits, theme);
+            const api = createApi(hgApi, viewConfig, visUnits, theme, idTable.current);
             return { api, hgApi };
         },
         [viewConfig, theme]
@@ -91,7 +94,7 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
 
             gosling.compile(
                 props.spec,
-                (newHiGlassSpec, newSize, newGoslingSpec, newTracksAndViews) => {
+                (newHiGlassSpec, newSize, newGoslingSpec, newTracksAndViews, newIdTable) => {
                     // TODO: `linkingId` should be updated
                     // We may not want to re-render this
                     if (
@@ -121,6 +124,7 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
                     publishOnNewView(newTracksAndViews);
                     prevSpec.current = newGoslingSpec;
                     tracksAndViews.current = newTracksAndViews;
+                    idTable.current = newIdTable;
                 },
                 [...GoslingTemplates], // TODO: allow user definitions
                 theme,

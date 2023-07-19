@@ -6,6 +6,7 @@ import { subscribe, unsubscribe } from './pubsub';
 import { computeChromSizes, GenomicPositionHelper } from './utils/assembly';
 import type { CompleteThemeDeep } from './utils/theme';
 import { traverseViewsInViewConfig } from './utils/view-config';
+import type { IdTable } from './track-and-view-ids';
 
 /**
  * Information of suggested genes.
@@ -49,8 +50,23 @@ export function createApi(
     hg: Readonly<HiGlassApi>,
     hgSpec: HiGlassSpec | undefined,
     tracksAndViews: readonly VisUnitApiData[],
-    theme: Required<CompleteThemeDeep>
+    theme: Required<CompleteThemeDeep>,
+    idTable: Readonly<IdTable>
 ): GoslingApi {
+    const idTableCopy = JSON.parse(JSON.stringify(idTable));
+    /**
+     * Get the HiGlass view ID from the Gosling track ID.
+     */
+    const getHgViewId = (trackId: string) => {
+        const viewId = idTableCopy[trackId];
+        if (!viewId) {
+            console.warn(`Unable to find the track ID, named ${trackId}.`);
+        }
+        return viewId ?? trackId;
+    };
+    const getTrackIds = () => {
+        return Object.keys(idTableCopy);
+    }
     const getTracksAndViews = () => {
         return [...tracksAndViews];
     };
@@ -112,32 +128,29 @@ export function createApi(
     return {
         subscribe,
         unsubscribe,
-        zoomTo: (viewId, position, padding = 0, duration = 1000) => {
+        zoomTo: (trackId, position, padding = 0, duration = 1000) => {
             // Accepted input: 'chr1' or 'chr1:1-1000'
-            const assembly = getTrack(viewId)?.spec.assembly;
+            const assembly = getTrack(trackId)?.spec.assembly;
             const manager = GenomicPositionHelper.fromString(position);
             const absCoordinates = manager.toAbsoluteCoordinates(assembly, padding);
-            hg.api.zoomTo(viewId, ...absCoordinates, ...absCoordinates, duration);
+            const hgViewId = getHgViewId(trackId);
+            hg.api.zoomTo(hgViewId, ...absCoordinates, ...absCoordinates, duration);
         },
         zoomToExtent: (trackId, duration = 1000) => {
             const assembly = getTrack(trackId)?.spec.assembly;
             const [start, end] = [0, computeChromSizes(assembly).total];
-            hg.api.zoomTo(trackId, start, end, start, end, duration);
+            const hgViewId = getHgViewId(trackId);
+            hg.api.zoomTo(hgViewId, start, end, start, end, duration);
         },
         zoomToGene: (trackId, gene, padding = 0, duration = 1000) => {
-            hg.api.zoomToGene(trackId, gene, padding, duration);
+            const hgViewId = getHgViewId(trackId);
+            hg.api.zoomToGene(hgViewId, gene, padding, duration);
         },
         suggestGene: (trackId: string, keyword: string, callback: (suggestions: GeneSuggestion[]) => void) => {
-            hg.api.suggestGene(trackId, keyword, callback);
+            const hgViewId = getHgViewId(trackId);
+            hg.api.suggestGene(hgViewId, keyword, callback);
         },
-        getTrackIds: () => {
-            if (!hgSpec) return [];
-            const ids: string[] = [];
-            traverseViewsInViewConfig(hgSpec, view => {
-                if (view.uid) ids.push(view.uid);
-            });
-            return ids;
-        },
+        getTrackIds,
         getTracksAndViews,
         getTracks,
         getTrack,
