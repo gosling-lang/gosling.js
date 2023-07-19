@@ -224,7 +224,6 @@ export type Mark =
     | 'triangleLeft'
     | 'triangleRight'
     | 'triangleBottom'
-    // experimental
     | 'brush'
     // TODO: perhaps need to make this invisible to users
     // being used to show title/subtitle internally
