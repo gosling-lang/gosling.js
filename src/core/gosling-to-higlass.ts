@@ -43,6 +43,12 @@ export function goslingToHiGlass(
 
     // Store the mapping between Gosling track ID and HiGlass view ID so that any lost track IDs
     // can be recovered and used for JS APIs.
+    if(gosTrack.id) {
+        // This means an `id` is defined at the top level of a track
+        // We want to store this as well to enable users to safely use the API using the id
+        // e.g., `{ id: 'root', alignment: 'overlay', tracks: [{id: 'c1', ...}, ...] }`
+        idMapper.addMapping(gosTrack.id, trackId);
+    }
     resolvedSpecs.forEach(spec => {
         // if `id` is not defined, no need to store it in the table
         if (spec.id) {
