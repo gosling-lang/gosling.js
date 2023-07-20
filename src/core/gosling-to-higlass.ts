@@ -43,7 +43,6 @@ export function goslingToHiGlass(
 
     // Store the mapping between Gosling track ID and HiGlass view ID so that any lost track IDs
     // can be recovered and used for JS APIs.
-    idMapper.addMapping(trackId, trackId);
     resolvedSpecs.forEach(spec => {
         // if `id` is not defined, no need to store it in the table
         if (spec.id) {

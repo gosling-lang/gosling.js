@@ -1028,11 +1028,13 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 const capturedElements = this.#getElementsWithinMouse(mouseX, mouseY);
 
                 if (capturedElements.length !== 0) {
-                    this.options.siblingIds.forEach(id => publish('click', {
-                        id,
-                        genomicPosition,
-                        data: capturedElements.map(d => d.value)
-                    }));
+                    this.options.siblingIds.forEach(id =>
+                        publish('click', {
+                            id,
+                            genomicPosition,
+                            data: capturedElements.map(d => d.value)
+                        })
+                    );
                 }
             }
         }

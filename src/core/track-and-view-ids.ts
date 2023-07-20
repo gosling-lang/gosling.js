@@ -18,8 +18,8 @@ export class GoslingToHiGlassIdMapper {
     #table: IdTable = {};
 
     addMapping(gtId: string, hvId: string) {
-        if (this.#table[gtId]) {
-            console.warn(`The track ID ${gtId} already exists.`);
+        if (this.#table[gtId] && this.#table[gtId] !== hvId) {
+            console.warn(`The track ID ${gtId} already exists but overwriting with a different ID.`);
         }
         this.#table[gtId] = hvId;
     }
