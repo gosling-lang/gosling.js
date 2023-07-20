@@ -5,6 +5,7 @@ import { TextTrack } from 'higlass-text';
 import { AxisTrack } from '@gosling-genomic-axis';
 import { BrushTrack } from '@gosling-brush';
 import { GoslingTrack } from '@gosling-track';
+import { DummyTrack } from '@gosling-dummy';
 import * as dataFetchers from '@data-fetchers';
 
 let once = false;
@@ -62,6 +63,15 @@ export function init() {
         name: 'BrushTrack',
         track: BrushTrack,
         config: BrushTrack.config
+    });
+
+    /**
+     * Register a dummy plugin track to HiGlassComponent
+     */
+    higlassRegister({
+        name: 'DummyTrack',
+        track: DummyTrack,
+        config: DummyTrack.config
     });
 
     /**

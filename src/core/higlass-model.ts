@@ -120,6 +120,25 @@ export class HiGlassModel {
         return this;
     }
 
+    /**
+     * Sets a dummy track
+     * @param width Width of the track
+     * @param height Height of the track
+     */
+    public setDummyTrack(width: number, height: number, label: string) {
+        if (this.getLastView()) {
+            this.getLastView().tracks.top?.push({
+                type: 'dummy-track',
+                width,
+                height,
+                options: {
+                    label
+                }
+            });
+        }
+        return this;
+    }
+
     public addBrush(
         layout: 'circular' | 'linear',
         viewId: string,

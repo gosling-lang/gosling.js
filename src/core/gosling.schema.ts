@@ -154,7 +154,7 @@ export interface CommonViewDef {
 }
 
 /* ----------------------------- TRACK ----------------------------- */
-export type Track = SingleTrack | OverlaidTrack | DataTrack | TemplateTrack;
+export type Track = SingleTrack | OverlaidTrack | DataTrack | TemplateTrack | DummyTrack;
 
 export interface CommonTrackDef extends CommonViewDef {
     /** Assigned to `uid` in a HiGlass view config, used for API and caching. */
@@ -208,6 +208,13 @@ export interface CommonTrackDef extends CommonViewDef {
  */
 export interface DataTrack extends CommonTrackDef {
     data: DataDeep;
+}
+/**
+ * Dummy track
+ */
+export interface DummyTrack extends CommonTrackDef {
+    type: 'dummy-track';
+    label: string;
 }
 
 /* ----------------------------- MARK ----------------------------- */

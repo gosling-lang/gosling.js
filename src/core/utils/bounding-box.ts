@@ -80,7 +80,6 @@ export function getRelativeTrackInfo(
 
     // Collect track information including spec, bounding boxes, and RGL' `layout`.
     traverseAndCollectTrackInfo(spec, trackInfos); // RGL parameter (`layout`) is not deteremined yet since we do not know the entire size of vis yet.
-
     // Get the size of entire visualization.
     const size = getBoundingBox(trackInfos);
 
@@ -128,8 +127,6 @@ export function getRelativeTrackInfo(
         _.layout.y = pixelPreciseMarginPadding ? _.boundingBox.y : (_.boundingBox.y / size.height) * 12;
         _.layout.h = pixelPreciseMarginPadding ? _.boundingBox.height : (_.boundingBox.height / size.height) * 12;
     });
-
-    // console.log(trackInfos);
 
     return { trackInfos, size };
 }
@@ -223,8 +220,8 @@ function traverseAndCollectTrackInfo(
                 if (getNumOfXAxes([track]) === 1) {
                     track.height += HIGLASS_AXIS_SIZE;
                 }
-
-                if (Is2DTrack(resolveSuperposedTracks(track)[0]) && getNumOfYAxes([track]) === 1) {
+                const singleTrack = resolveSuperposedTracks(track);
+                if (singleTrack.length > 0 && Is2DTrack(singleTrack[0]) && getNumOfYAxes([track]) === 1) {
                     // If this is a 2D track (e.g., matrix), we need to reserve a space for the y-axis track
                     cumWidth += HIGLASS_AXIS_SIZE;
                 }

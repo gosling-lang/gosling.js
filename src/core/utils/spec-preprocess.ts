@@ -182,7 +182,6 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
 
     if ('tracks' in spec) {
         let tracks: Track[] = convertToFlatTracks(spec);
-
         // !!! Be aware that this should be taken before fixing `overlayOnPreviousTrack` options.
         /**
          * Spread superposed tracks if they are assigned to different data spec.
@@ -258,6 +257,10 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             // Override styles
             track.style = getStyleOverridden(spec.style, track.style);
             if (IsOverlaidTrack(track)) {
+                // Remove the dummy tracks from an overlay track
+                track.overlay = track.overlay.filter(overlayTrack => {
+                    return !('type' in overlayTrack && overlayTrack.type == 'dummy-track');
+                });
                 track.overlay.forEach(o => {
                     o.style = getStyleOverridden(track.style, o.style);
                 });
@@ -521,7 +524,7 @@ export function getMultivecTemplate(
  */
 export function overrideDataTemplates(spec: GoslingSpec) {
     traverseTracks(spec, (t, i, ts) => {
-        if (!t.data || !IsDataDeepTileset(t.data)) {
+        if (!('data' in t) || !t.data || !IsDataDeepTileset(t.data)) {
             // if `data` is not specified, we can not provide a correct template.
             return;
         }
