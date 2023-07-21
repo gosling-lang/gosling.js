@@ -213,11 +213,11 @@ export interface DataTrack extends CommonTrackDef {
  * A placeholder track. In contrast to other tracks, this track does not display any data. Instead it provides
  * empty space for third party tools to display their data on top of.
  */
-export interface DummyTrack extends Pick<CommonTrackDef, 'title' | 'width' | 'height' | 'id' | '_invalidTrack'> {
+export interface DummyTrack extends CommonTrackDef {
     /** Used to specify the dummy track */
     type: 'dummy-track';
     /** Defines how the track is styled */
-    style: DummyTrackStyle;
+    style?: DummyTrackStyle;
 }
 
 export interface DummyTrackStyle {
