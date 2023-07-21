@@ -19,7 +19,8 @@ import {
     IsOverlaidTrack,
     IsFlatTracks,
     IsStackedTracks,
-    Is2DTrack
+    Is2DTrack,
+    IsDummyTrack
 } from '../gosling.schema.guards';
 import {
     DEFAULT_INNER_RADIUS_PROP,
@@ -204,6 +205,10 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                 track.height = Is2DTrack(track) ? DEFAULT_TRACK_SIZE_2D : DEFAULT_TRACK_HEIGHT_LINEAR;
             }
 
+            if (IsDummyTrack(track)) {
+                return;
+            }
+
             /**
              * Process a stack option.
              */
@@ -334,7 +339,8 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             if (
                 i === 0 ||
                 (i !== 0 &&
-                    tracks.slice(0, i).filter(d => !d.overlayOnPreviousTrack).length === 1 &&
+                    tracks.slice(0, i).filter(d => 'overlayOnPreviousTrack' in d && !d.overlayOnPreviousTrack)
+                        .length === 1 &&
                     track.overlayOnPreviousTrack === true)
             ) {
                 /**
@@ -416,11 +422,16 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                 // first track can never flipped by default
                 i !== 0 &&
                 // [0, ..., i] tracks should not overlaid as a single track
-                ((i === array.length - 1 && array.slice(0, i + 1).filter(d => d.overlayOnPreviousTrack).length < i) ||
+                ((i === array.length - 1 &&
+                    array.slice(0, i + 1).filter(d => 'overlayOnPreviousTrack' in d && d.overlayOnPreviousTrack)
+                        .length < i) ||
                     // Are the rest of the tracks overlaid as a single track?
                     (i !== array.length - 1 &&
-                        array.slice(i + 1).filter(d => d.overlayOnPreviousTrack).length === array.length - i - 1 &&
-                        array.slice(0, i + 1).filter(d => d.overlayOnPreviousTrack).length < i))
+                        array.slice(i + 1).filter(d => 'overlayOnPreviousTrack' in d && d.overlayOnPreviousTrack)
+                            .length ===
+                            array.length - i - 1 &&
+                        array.slice(0, i + 1).filter(d => 'overlayOnPreviousTrack' in d && d.overlayOnPreviousTrack)
+                            .length < i))
             ) {
                 if (IsSingleTrack(track) && track.mark === 'withinLink' && track.flipY === undefined) {
                     track.flipY = true;
@@ -435,14 +446,15 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                     });
                 }
             }
-
-            if (track.overlayOnPreviousTrack && array[i - 1]) {
+            // If there are no dummy tracks, lastNonDummyTrack === array[i - 1]
+            const lastNonDummyTrack = array.slice(0, i).filter(prevTrack => !IsDummyTrack(prevTrack))[-1];
+            if (track.overlayOnPreviousTrack && lastNonDummyTrack && !IsDummyTrack(lastNonDummyTrack)) {
                 // Use the same size as the previous one
-                track.width = array[i - 1].width;
-                track.height = array[i - 1].height;
+                track.width = lastNonDummyTrack.width;
+                track.height = lastNonDummyTrack.height;
 
-                track.layout = array[i - 1].layout;
-                track.assembly = array[i - 1].assembly;
+                track.layout = lastNonDummyTrack.layout;
+                track.assembly = lastNonDummyTrack.assembly;
             }
         });
 

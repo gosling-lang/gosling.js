@@ -1,13 +1,21 @@
 import { createPluginTrack, type PluginTrackFactory, type TrackConfig } from '../core/utils/define-plugin-track';
+import { type DummyTrackStyle } from '@gosling.schema';
 
-interface DummyTrackOptions {
-    label: string;
+interface DummyTrackOptions extends DummyTrackStyle {
+    title: string;
+    height: number;
+    width: number;
 }
 
 const config: TrackConfig<DummyTrackOptions> = {
     type: 'dummy-track',
     defaultOptions: {
-        label: ''
+        height: 0, // default height gets set in when spec is preprocessed
+        width: 0, // default width gets set in when spec is preprocessed
+        title: '',
+        background: '#fff',
+        textFontSize: 12,
+        textFontWeight: 'normal'
     }
 };
 
@@ -18,11 +26,25 @@ const factory: PluginTrackFactory<never, DummyTrackOptions> = (HGC, context, opt
     class DummyTrackClass extends SVGTrack<typeof options> {
         constructor() {
             super(context, options);
-
-            this.draw();
+            this.gMain.attr('id', 'dummy-track-id');
+            // Background rectangle
+            this.gMain
+                .append('rect')
+                .attr('fill', options.background)
+                .attr('x', 0)
+                .attr('y', 0)
+                .attr('width', options.width)
+                .attr('height', options.height);
+            // Title text
+            this.gMain
+                .append('text')
+                .attr('x', 2)
+                .attr('y', options.textFontSize)
+                .attr('color', 'red')
+                .style('font-size', `${options.textFontSize}px`)
+                .style('font-weight', options.textFontWeight)
+                .text(options.title);
         }
-
-        draw() {}
     }
 
     return new DummyTrackClass();

@@ -210,11 +210,23 @@ export interface DataTrack extends CommonTrackDef {
     data: DataDeep;
 }
 /**
- * Dummy track
+ * A placeholder track. In contrast to other tracks, this track does not display any data. Instead it provides
+ * empty space for third party tools to display their data on top of.
  */
-export interface DummyTrack extends CommonTrackDef {
+export interface DummyTrack extends Pick<CommonTrackDef, 'title' | 'width' | 'height' | 'id' | '_invalidTrack'> {
+    /** Used to specify the dummy track */
     type: 'dummy-track';
-    label: string;
+    /** Defines how the track is styled */
+    style: DummyTrackStyle;
+}
+
+export interface DummyTrackStyle {
+    /** Background color of the track */
+    background?: string;
+    /** Specifies the font size of the title */
+    textFontSize?: number;
+    /** Specify the font weight of `text` marks. */
+    textFontWeight?: 'bold' | 'normal';
 }
 
 /* ----------------------------- MARK ----------------------------- */
