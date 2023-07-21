@@ -2,8 +2,8 @@ import { recordToTile } from './utils';
 import type { VcfRecord } from './vcf-data-fetcher';
 
 describe('VCF file parser', () => {
-  it('Convert a VCF record to a tile data', () => {
-      const chrPos = 123456;
+    it('Convert a VCF record to a tile data', () => {
+        const chrPos = 123456;
         const record: VcfRecord = {
             CHROM: '20',
             POS: chrPos + 14370,
