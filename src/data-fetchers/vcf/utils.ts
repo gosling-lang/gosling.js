@@ -37,10 +37,10 @@ export const getSubstitutionType = (ref: string, alt?: string) => {
  * Convert a VCF record to a tile data
  * @param vcfRecord A row of a VCF files loaded
  * @param chrPos Cumulative start position of a chromosome
- * @param prevPos Previous position of a point mutation for calculating 'distance to previous'
+ * @param prevAbsPos Previous position of a point mutation for calculating 'distance to previous'
  */
-export function recordToTile(vcfRecord: VcfRecord, chrPos: number, prevPos?: number) {
-    const POS = chrPos + vcfRecord.POS + 1;
+export function recordToTile(vcfRecord: VcfRecord, chrPos: number, prevAbsPos?: number) {
+    const absPos = chrPos + vcfRecord.POS + 1;
 
     let ALT: string | undefined;
     if (Array.isArray(vcfRecord.ALT) && vcfRecord.ALT.length > 0) {
@@ -48,11 +48,11 @@ export function recordToTile(vcfRecord: VcfRecord, chrPos: number, prevPos?: num
     }
 
     // Additionally inferred values
-    const DISTPREV = !prevPos ? null : POS - prevPos;
-    const DISTPREVLOGE = !prevPos ? null : Math.log(POS - prevPos);
+    const DISTPREV = !prevAbsPos ? null : absPos - prevAbsPos;
+    const DISTPREVLOGE = !prevAbsPos ? null : Math.log(absPos - prevAbsPos);
     const MUTTYPE = getMutationType(vcfRecord.REF, ALT);
     const SUBTYPE = getSubstitutionType(vcfRecord.REF, ALT);
-    const POSEND = POS + vcfRecord.REF.length;
+    const POSEND = absPos + vcfRecord.REF.length;
 
     // Create key values
     const data: VcfTile = {
@@ -62,7 +62,7 @@ export function recordToTile(vcfRecord: VcfRecord, chrPos: number, prevPos?: num
         SUBTYPE,
         INFO: JSON.stringify(vcfRecord.INFO),
         ORIGINALPOS: vcfRecord.POS,
-        POS,
+        POS: absPos,
         POSEND,
         DISTPREV,
         DISTPREVLOGE
