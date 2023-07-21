@@ -48,8 +48,8 @@ export function recordToTile(vcfRecord: VcfRecord, chrPos: number, prevPos?: num
     }
 
     // Additionally inferred values
-    const DISTPREV = !prevPos ? null : vcfRecord.POS - prevPos;
-    const DISTPREVLOGE = !prevPos ? null : Math.log(vcfRecord.POS - prevPos);
+    const DISTPREV = !prevPos ? null : POS - prevPos;
+    const DISTPREVLOGE = !prevPos ? null : Math.log(POS - prevPos);
     const MUTTYPE = getMutationType(vcfRecord.REF, ALT);
     const SUBTYPE = getSubstitutionType(vcfRecord.REF, ALT);
     const POSEND = POS + vcfRecord.REF.length;
