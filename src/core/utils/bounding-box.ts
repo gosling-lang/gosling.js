@@ -316,7 +316,6 @@ function traverseAndCollectTrackInfo(
         // const numXAxes = getNumOfXAxes(cTracks.map(info => info.track));
 
         cTracks.forEach((t, i) => {
-            // no such thing as a ciricular
             t.track.layout = 'circular';
 
             t.track.outerRadius = TOTAL_RADIUS - PADDING - ((t.boundingBox.y - dy) / cumHeight) * TOTAL_RING_SIZE;

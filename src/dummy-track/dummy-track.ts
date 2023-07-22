@@ -15,7 +15,9 @@ const config: TrackConfig<DummyTrackOptions> = {
         title: '',
         background: '#fff',
         textFontSize: 12,
-        textFontWeight: 'normal'
+        textFontWeight: 'normal',
+        textStroke: '#000',
+        textStrokeWidth: 0.1
     }
 };
 
@@ -43,6 +45,8 @@ const factory: PluginTrackFactory<never, DummyTrackOptions> = (HGC, context, opt
                 .attr('color', 'red')
                 .style('font-size', `${options.textFontSize}px`)
                 .style('font-weight', options.textFontWeight)
+                .style('stroke', options.textStroke)
+                .style('stroke-width', options.textStrokeWidth)
                 .text(options.title);
         }
     }

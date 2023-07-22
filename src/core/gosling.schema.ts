@@ -223,10 +223,14 @@ export interface DummyTrack extends CommonTrackDef {
 export interface DummyTrackStyle {
     /** Background color of the track */
     background?: string;
-    /** Specifies the font size of the title */
+    /** Specify the font size of the title */
     textFontSize?: number;
-    /** Specify the font weight of `text` marks. */
+    /** Specify the font weight of the title. */
     textFontWeight?: 'bold' | 'normal';
+    /** Specify the stroke color of title. */
+    textStroke?: string;
+    /** Specify the stroke width of the title. */
+    textStrokeWidth?: number;
 }
 
 /* ----------------------------- MARK ----------------------------- */
