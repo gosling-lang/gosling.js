@@ -1036,16 +1036,24 @@
           "type": "string"
         },
         "textFontSize": {
-          "description": "Specifies the font size of the title",
+          "description": "Specify the font size of the title",
           "type": "number"
         },
         "textFontWeight": {
-          "description": "Specify the font weight of `text` marks.",
+          "description": "Specify the font weight of the title.",
           "enum": [
             "bold",
             "normal"
           ],
           "type": "string"
+        },
+        "textStroke": {
+          "description": "Specify the stroke color of title.",
+          "type": "string"
+        },
+        "textStrokeWidth": {
+          "description": "Specify the stroke width of the title.",
+          "type": "number"
         }
       },
       "type": "object"
