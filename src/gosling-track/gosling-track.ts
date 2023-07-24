@@ -459,6 +459,18 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             this.refreshTiles();
             this.draw();
             this.forceDraw();
+
+            // Publish the new genomic axis domain
+            const genomicRange = newXScale
+                .domain()
+                .map(absPos => getRelativeGenomicPosition(absPos, this.#assembly, true)) as [
+                GenomicPosition,
+                GenomicPosition
+            ];
+            publish('location', {
+                id: context.viewUid,
+                genomicRange: genomicRange
+            });
         }
 
         /* *

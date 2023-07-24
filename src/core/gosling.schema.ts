@@ -263,6 +263,13 @@ interface RangeMouseEventData extends CommonEventData {
 }
 
 /**
+ * Data about the genomic range of a track
+ */
+interface LocationEventData extends Omit<CommonEventData, 'data'> {
+    genomicRange: [GenomicPosition, GenomicPosition];
+}
+
+/**
  * The visual parameters that determine the shape of a linear track or a view.
  * Origin is the left top corner.
  */
@@ -323,6 +330,7 @@ export type _EventMap = {
     trackClick: TrackApiData; // TODO (Jul-25-2022): with https://github.com/higlass/higlass/pull/1098, we can support circular layouts
     onNewTrack: OnNewTrackEventData;
     onNewView: OnNewViewEventData;
+    location: LocationEventData;
 };
 
 /** Options for determining mouse events in detail, e.g., turning on specific events only */
