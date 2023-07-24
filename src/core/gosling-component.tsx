@@ -63,7 +63,7 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
         const newViews = currentViews.filter(view => !prevViewIds.has(view.id));
         // Publish if there are any new changes
         newViews.forEach(view => {
-            publish('onNewView', { id: view.id, shape: view.shape });
+            publish('onNewView', { id: view.id });
         });
     };
 

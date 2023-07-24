@@ -245,14 +245,10 @@ export interface GenomicPosition {
 interface OnNewTrackEventData {
     /** Source visualization ID, i.e., `track.id` */
     id: string;
-    /** The shape of the source track */
-    shape: BoundingBox | CircularTrackShape;
 }
 interface OnNewViewEventData {
     /** Source visualization ID, i.e., `track.id` */
     id: string;
-    /** The shape of the source track */
-    shape: BoundingBox;
 }
 
 interface PointMouseEventData extends CommonEventData {
