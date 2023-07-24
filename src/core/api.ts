@@ -52,7 +52,7 @@ export function createApi(
     theme: Required<CompleteThemeDeep>,
     idTable: Readonly<IdTable>
 ): GoslingApi {
-    const idTableCopy = JSON.parse(JSON.stringify(idTable));
+    const idTableCopy = structuredClone(idTable);
     /**
      * Get the HiGlass view ID from the Gosling track ID.
      */
