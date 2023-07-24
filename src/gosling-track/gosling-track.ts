@@ -147,6 +147,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         mRangeBrush: LinearBrushModel;
         #assembly?: Assembly; // Used to get the relative genomic position
         #processedTileInfo: Record<string, ProcessedTileInfo>;
+        #firstDraw = true; // False if draw has been called once already. Used with onNewTrack API
         // Used in mark/legend.ts
         gLegend? = HGC.libraries.d3Selection.select(context.svgElement).append('g');
         displayedLegends: DisplayedLegend[] = []; // Store the color legends added so far so that we can avoid overlaps and redundancy
@@ -269,8 +270,12 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             this.pMouseHover?.clear();
 
             const processTilesAndDraw = () => {
+                // Should we force to process all tiles?
+                // For BAM, yes, since all tiles are stored in a single tile and visible tiles had been changed.
+                const isBamDataFetcher = this.dataFetcher instanceof BamDataFetcher;
+
                 // Preprocess all tiles at once so that we can share scales across tiles.
-                this.processAllTiles();
+                this.processAllTiles(isBamDataFetcher);
 
                 // This function calls `drawTile` on each tile.
                 super.draw();
@@ -290,6 +295,11 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
             // Based on the updated marks, update range selection
             this.mRangeBrush?.drawBrush(true);
+            // Publish onNewTrack if this is the first draw
+            if (this.#firstDraw) {
+                this.#publishOnNewTrack();
+                this.#firstDraw = false;
+            }
         }
 
         /*
@@ -502,17 +512,19 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         async updateTileAsync<T extends Datum>(tabularDataFetcher: TabularDataFetcher<T>, callback: () => void) {
             if (!this.tilesetInfo) return;
 
-            const tabularData = await tabularDataFetcher.getTabularData(
-                Object.values(this.fetchedTiles).map(x => x.remoteId)
-            );
             const tiles = this.visibleAndFetchedTiles();
-            if (tiles?.[0]) {
-                const tile = tiles[0];
-                const [refTile] = HGC.utils.trackUtils.calculate1DVisibleTiles(this.tilesetInfo, this._xScale);
-                tile.tileData.zoomLevel = refTile[0];
-                tile.tileData.tilePos = [refTile[1], refTile[1]];
-                (tile.tileData as TabularTileData).tabularData = tabularData;
-            }
+            const tabularData = await tabularDataFetcher.getTabularData(Object.values(tiles).map(x => x.remoteId));
+            const tilesetInfo = this.tilesetInfo;
+            tiles.forEach((tile, i) => {
+                if (i === 0) {
+                    const [refTile] = HGC.utils.trackUtils.calculate1DVisibleTiles(tilesetInfo, this._xScale);
+                    tile.tileData.zoomLevel = refTile[0];
+                    tile.tileData.tilePos = [refTile[1], refTile[1]];
+                    (tile.tileData as TabularTileData).tabularData = tabularData;
+                } else {
+                    (tile.tileData as TabularTileData).tabularData = [];
+                }
+            });
 
             callback();
         }
@@ -777,7 +789,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             };
             // BAM data fetcher already combines the datasets;
             const isBamDataFetcher = this.dataFetcher instanceof BamDataFetcher;
-            return (includesDisplaceTransform && !hasDenseTiles()) || isBamDataFetcher;
+            return includesDisplaceTransform && !hasDenseTiles() && !isBamDataFetcher;
         }
 
         /**
@@ -1083,7 +1095,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                     publish(eventType, {
                         id: context.viewUid,
                         spec: structuredClone(this.options.spec),
-                        shape: { cx, cy, innerRadius, outerRadius, startAngle, endAngle }
+                        shape: { x, y, width, height, cx, cy, innerRadius, outerRadius, startAngle, endAngle }
                     });
                 }
             } else {
@@ -1297,6 +1309,19 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 }
             }
             return '';
+        }
+
+        /**
+         * Javscript subscription API methods (besides for mouse)
+         */
+
+        /**
+         * Publishes track information. Triggered when track gets created
+         */
+        #publishOnNewTrack() {
+            publish('onNewTrack', {
+                id: context.viewUid
+            });
         }
 
         /* *

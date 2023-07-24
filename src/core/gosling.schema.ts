@@ -89,6 +89,8 @@ export type Assembly = 'hg38' | 'hg19' | 'hg18' | 'hg17' | 'hg16' | 'mm10' | 'mm
 export type ZoomLimits = [number | null, number | null];
 
 export interface CommonViewDef {
+    /** The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view */
+    id?: string;
     /** Specify the layout type of all tracks. */
     layout?: Layout;
     /** Specify the orientation. */
@@ -155,9 +157,8 @@ export interface CommonViewDef {
 export type Track = SingleTrack | OverlaidTrack | DataTrack | TemplateTrack;
 
 export interface CommonTrackDef extends CommonViewDef {
-    // !! TODO: we can check if the same id is used multiple times.
-    // !! TODO: this should be track-specific and not defined in views.
-    id?: string; // Assigned to `uid` in a HiGlass view config, used for API and caching.
+    /** Assigned to `uid` in a HiGlass view config, used for API and caching. */
+    id?: string;
 
     /** If defined, will show the textual label on the left-top corner of a track. */
     title?: string;
@@ -241,6 +242,14 @@ export interface GenomicPosition {
     chromosome: string;
     position: number;
 }
+interface OnNewTrackEventData {
+    /** Source visualization ID, i.e., `track.id` */
+    id: string;
+}
+interface OnNewViewEventData {
+    /** Source visualization ID, i.e., `track.id` */
+    id: string;
+}
 
 interface PointMouseEventData extends CommonEventData {
     /** A genomic coordinate, e.g., `chr1:100,000`. */
@@ -261,10 +270,10 @@ interface LocationEventData extends Omit<CommonEventData, 'data'> {
 }
 
 /**
- * The visual parameters that determine the shape of a linear track.
+ * The visual parameters that determine the shape of a linear track or a view.
  * Origin is the left top corner.
  */
-interface LinearTrackShape {
+export interface BoundingBox {
     x: number;
     y: number;
     width: number;
@@ -283,8 +292,22 @@ interface CircularTrackShape {
     endAngle: number;
 }
 
+/**
+ * The information of a view exposed to users through JS API.
+ */
+export type ViewApiData = {
+    /** ID of a source view, i.e., `view.id` */
+    id: string;
+
+    /** Expanded view specification processed by the Gosling compiler, e.g., default properties filled in. */
+    spec: View;
+
+    /** The shape of the source view */
+    shape: BoundingBox;
+};
+
 /** The information for a track mouse event */
-export type TrackMouseEventData = {
+export type TrackApiData = {
     /** ID of a source track, i.e., `track.id` */
     id: string;
 
@@ -292,16 +315,21 @@ export type TrackMouseEventData = {
     spec: SingleTrack | OverlaidTrack;
 
     /** The shape of the source track */
-    shape: LinearTrackShape | CircularTrackShape;
+    shape: BoundingBox | (BoundingBox & CircularTrackShape);
 };
+
+/** The API data of tracks or views */
+export type VisUnitApiData = ({ type: 'view' } & ViewApiData) | ({ type: 'track' } & TrackApiData);
 
 export type _EventMap = {
     mouseOver: PointMouseEventData;
     click: PointMouseEventData;
     rangeSelect: RangeMouseEventData;
     rawData: CommonEventData;
-    trackMouseOver: TrackMouseEventData;
-    trackClick: TrackMouseEventData; // TODO (Jul-25-2022): with https://github.com/higlass/higlass/pull/1098, we can support circular layouts
+    trackMouseOver: TrackApiData;
+    trackClick: TrackApiData; // TODO (Jul-25-2022): with https://github.com/higlass/higlass/pull/1098, we can support circular layouts
+    onNewTrack: OnNewTrackEventData;
+    onNewView: OnNewViewEventData;
     location: LocationEventData;
 };
 
@@ -817,7 +845,8 @@ export type DataDeep =
     | VectorData
     | MatrixData
     | BamData
-    | VcfData;
+    | VcfData
+    | GffData;
 
 /** Values in the form of JSON. */
 export interface Datum {
@@ -1107,6 +1136,35 @@ export interface BamData {
 
     /** Determines the threshold of insert sizes for determining the structural variants. __Default__: `5000` */
     maxInsertSize?: number; // https://github.com/GMOD/bam-js#async-getrecordsforrangerefname-start-end-opts
+}
+
+/**
+ * Generic Feature Format Version 3 (GFF3) format data. It parses files that follow the
+ * [GFF3 specification](https://github.com/The-Sequence-Ontology/Specifications/blob/master/gff3.md).
+ */
+export interface GffData {
+    type: 'gff';
+    /** URL link to the GFF file */
+    url: string;
+
+    /** URL link to the tabix index file */
+    indexUrl: string;
+
+    /** The maximum number of samples to be shown on the track. Samples are uniformly randomly selected so that this
+     * threshold is not exceeded. __Default:__ `1000` */
+    sampleLength?: number;
+    /**
+     * Specifies which attributes to include as a fields.
+     * GFF files have an "attributes" column which contains a list of attributes which are each tag-value pairs (`tag=value`).
+     * This option allows for specific attributes to be accessible as a field. For example, if you have an attribute called
+     * "gene_name" and you want label features on your track using those values, you can use this option so that you can use
+     * `"field": "gene_name"` in the schema.
+     *
+     * If there is a single `value` corresponding to the `tag`, Gosling will parse that value as a string. If there are
+     * multiple `value`s corresponding to a `tag`, Gosling will parse it as a comma-separated list string. If a feature
+     * does not have a particular attribute, then the attribute value will be set to the `defaultValue`.
+     */
+    attributesToFields?: { attribute: string; defaultValue: string }[];
 }
 
 /**

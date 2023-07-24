@@ -27,6 +27,7 @@ import EditorPanel, { type EditorLangauge } from './EditorPanel';
 import EditorExamples from './EditorExamples';
 
 import './Editor.css';
+import { v4 } from 'uuid';
 
 function json2js(jsonCode: string) {
     return `var spec = ${jsonCode} \nexport { spec }; \n`;
@@ -249,6 +250,7 @@ function Editor(props: RouteComponentProps) {
     const [selectedPreviewData, setSelectedPreviewData] = useState<number>(0);
     const [gistTitle, setGistTitle] = useState<string>();
     const [description, setDescription] = useState<string | null>();
+    const [showViews, setShowViews] = useState(false);
     const [expertMode, setExpertMode] = useState(false);
 
     // This parameter only matter when a markdown description was loaded from a gist but the user wants to hide it
@@ -335,6 +337,13 @@ function Editor(props: RouteComponentProps) {
             // Location API
             // gosRef.current.api.subscribe('location', (type, eventData) => {
             //     console.warn(type, eventData.id, eventData.genomicRange);
+            // New Track
+            // gosRef.current.api.subscribe('onNewTrack', (type, eventData) => {
+            //     console.warn(type, eventData);
+            // });
+            // New View
+            // gosRef.current.api.subscribe('onNewView', (type, eventData) => {
+            //     console.warn(type, eventData);
             // });
         }
         return () => {
@@ -693,6 +702,44 @@ function Editor(props: RouteComponentProps) {
         setHideDescription(true);
     }
 
+    // Layers to be shown on top of the Gosling visualization to show the hiererchy of Gosling views and tracks
+    const VisHierarchy = useMemo(() => {
+        const tracksAndViews = gosRef.current?.api.getTracksAndViews();
+        const maxHeight = Math.max(...(tracksAndViews?.map(d => d.shape.height) ?? []));
+        return (
+            <div style={{ position: 'absolute', top: '60px', left: '60px', height: maxHeight, pointerEvents: 'none' }}>
+                {tracksAndViews
+                    ?.sort(a => (a.type === 'track' ? 1 : -1))
+                    ?.map(d => {
+                        let { x: left, y: top, width, height } = d.shape;
+                        let background = 'rgba(255, 50, 50, 0.3)';
+                        if (d.type === 'view') {
+                            const VIEW_PADDING = 3;
+                            left -= VIEW_PADDING;
+                            top -= VIEW_PADDING;
+                            width += VIEW_PADDING * 2;
+                            height += VIEW_PADDING * 2;
+                            background = 'rgba(50, 50, 255, 0.1)';
+                        }
+                        return (
+                            <div
+                                key={v4()}
+                                style={{
+                                    position: 'absolute',
+                                    border: '1px solid black',
+                                    background,
+                                    left,
+                                    top,
+                                    width,
+                                    height
+                                }}
+                            />
+                        );
+                    })}
+            </div>
+        );
+    }, [hg, demo]);
+
     // console.log('editor.render()');
     return (
         <>
@@ -995,7 +1042,20 @@ function Editor(props: RouteComponentProps) {
                                     </button>
                                 </span>
                             </span>
-
+                            <button
+                                title="Automatically update visualization upon editing code"
+                                className="side-panel-button"
+                                onClick={() => setShowViews(!showViews)}
+                                disabled={isResponsive}
+                            >
+                                {showViews
+                                    ? getIconSVG(ICONS.TOGGLE_ON, 23, 23, isResponsive ? 'lightgrey' : '#E18343')
+                                    : getIconSVG(ICONS.TOGGLE_OFF, 23, 23, isResponsive ? 'lightgrey' : undefined)}
+                                <br />
+                                SHOW
+                                <br />
+                                VIEWS
+                            </button>
                             <button
                                 title="Expert mode that turns on additional features, such as theme selection"
                                 className="side-panel-button"
@@ -1165,6 +1225,7 @@ function Editor(props: RouteComponentProps) {
                                                 setHg(h);
                                             }}
                                         />
+                                        {showViews && !isResponsive ? VisHierarchy : null}
                                     </div>
                                     {/* {expertMode && false ? (
                                             <div

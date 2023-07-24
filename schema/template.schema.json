@@ -1269,6 +1269,7 @@
           "type": "boolean"
         },
         "id": {
+          "description": "Assigned to `uid` in a HiGlass view config, used for API and caching.",
           "type": "string"
         },
         "innerRadius": {

@@ -553,6 +553,9 @@
         },
         {
           "$ref": "#/definitions/VcfData"
+        },
+        {
+          "$ref": "#/definitions/GffData"
         }
       ]
     },
@@ -595,6 +598,7 @@
           "type": "number"
         },
         "id": {
+          "description": "Assigned to `uid` in a HiGlass view config, used for API and caching.",
           "type": "string"
         },
         "innerRadius": {
@@ -1035,6 +1039,54 @@
       ],
       "type": "object"
     },
+    "GffData": {
+      "additionalProperties": false,
+      "description": "Generic Feature Format Version 3 (GFF3) format data. It parses files that follow the [GFF3 specification](https://github.com/The-Sequence-Ontology/Specifications/blob/master/gff3.md).",
+      "properties": {
+        "attributesToFields": {
+          "description": "Specifies which attributes to include as a fields. GFF files have an \"attributes\" column which contains a list of attributes which are each tag-value pairs (`tag=value`). This option allows for specific attributes to be accessible as a field. For example, if you have an attribute called \"gene_name\" and you want label features on your track using those values, you can use this option so that you can use `\"field\": \"gene_name\"` in the schema.\n\nIf there is a single `value` corresponding to the `tag`, Gosling will parse that value as a string. If there are multiple `value`s corresponding to a `tag`, Gosling will parse it as a comma-separated list string. If a feature does not have a particular attribute, then the attribute value will be set to the `defaultValue`.",
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "attribute": {
+                "type": "string"
+              },
+              "defaultValue": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "attribute",
+              "defaultValue"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "indexUrl": {
+          "description": "URL link to the tabix index file",
+          "type": "string"
+        },
+        "sampleLength": {
+          "description": "The maximum number of samples to be shown on the track. Samples are uniformly randomly selected so that this threshold is not exceeded. __Default:__ `1000`",
+          "type": "number"
+        },
+        "type": {
+          "const": "gff",
+          "type": "string"
+        },
+        "url": {
+          "description": "URL link to the GFF file",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "url",
+        "indexUrl"
+      ],
+      "type": "object"
+    },
     "GoslingSpec": {
       "anyOf": [
         {
@@ -1128,6 +1180,7 @@
               "type": "number"
             },
             "id": {
+              "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
               "type": "string"
             },
             "innerRadius": {
@@ -1279,6 +1332,7 @@
                         "type": "number"
                       },
                       "id": {
+                        "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
                         "type": "string"
                       },
                       "innerRadius": {
@@ -1894,6 +1948,7 @@
               "type": "number"
             },
             "id": {
+              "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
               "type": "string"
             },
             "innerRadius": {
@@ -2045,6 +2100,7 @@
                         "type": "number"
                       },
                       "id": {
+                        "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
                         "type": "string"
                       },
                       "innerRadius": {
@@ -2596,6 +2652,10 @@
             "description": {
               "type": "string"
             },
+            "id": {
+              "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
+              "type": "string"
+            },
             "layout": {
               "$ref": "#/definitions/Layout",
               "description": "Specify the layout type of all tracks."
@@ -2713,6 +2773,7 @@
                         "type": "number"
                       },
                       "id": {
+                        "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
                         "type": "string"
                       },
                       "innerRadius": {
@@ -3113,6 +3174,10 @@
             "description": {
               "type": "string"
             },
+            "id": {
+              "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
+              "type": "string"
+            },
             "layout": {
               "$ref": "#/definitions/Layout",
               "description": "Specify the layout type of all tracks."
@@ -3166,6 +3231,10 @@
                       "centerRadius": {
                         "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
                         "type": "number"
+                      },
+                      "id": {
+                        "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
+                        "type": "string"
                       },
                       "layout": {
                         "$ref": "#/definitions/Layout",
@@ -3633,6 +3702,10 @@
           "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
           "type": "number"
         },
+        "id": {
+          "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
+          "type": "string"
+        },
         "layout": {
           "$ref": "#/definitions/Layout",
           "description": "Specify the layout type of all tracks."
@@ -3926,6 +3999,7 @@
           "type": "number"
         },
         "id": {
+          "description": "Assigned to `uid` in a HiGlass view config, used for API and caching.",
           "type": "string"
         },
         "innerRadius": {
@@ -4042,6 +4116,7 @@
                 "type": "boolean"
               },
               "id": {
+                "description": "Assigned to `uid` in a HiGlass view config, used for API and caching.",
                 "type": "string"
               },
               "innerRadius": {
@@ -4613,6 +4688,7 @@
           "type": "number"
         },
         "id": {
+          "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
           "type": "string"
         },
         "innerRadius": {
@@ -4977,6 +5053,7 @@
           "type": "number"
         },
         "id": {
+          "description": "Assigned to `uid` in a HiGlass view config, used for API and caching.",
           "type": "string"
         },
         "innerRadius": {
@@ -5093,6 +5170,7 @@
                 "type": "boolean"
               },
               "id": {
+                "description": "Assigned to `uid` in a HiGlass view config, used for API and caching.",
                 "type": "string"
               },
               "innerRadius": {
@@ -5806,6 +5884,7 @@
           "type": "number"
         },
         "id": {
+          "description": "Assigned to `uid` in a HiGlass view config, used for API and caching.",
           "type": "string"
         },
         "innerRadius": {
@@ -6164,6 +6243,7 @@
               "type": "number"
             },
             "id": {
+              "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
               "type": "string"
             },
             "innerRadius": {
@@ -6311,6 +6391,7 @@
                         "type": "number"
                       },
                       "id": {
+                        "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
                         "type": "string"
                       },
                       "innerRadius": {
@@ -6923,6 +7004,7 @@
               "type": "number"
             },
             "id": {
+              "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
               "type": "string"
             },
             "innerRadius": {
@@ -7070,6 +7152,7 @@
                         "type": "number"
                       },
                       "id": {
+                        "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
                         "type": "string"
                       },
                       "innerRadius": {
@@ -7618,6 +7701,10 @@
               "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
               "type": "number"
             },
+            "id": {
+              "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
+              "type": "string"
+            },
             "layout": {
               "$ref": "#/definitions/Layout",
               "description": "Specify the layout type of all tracks."
@@ -7731,6 +7818,7 @@
                         "type": "number"
                       },
                       "id": {
+                        "description": "The ID of a view that is maintained for the use of JS API functions, e.g., positions of a view",
                         "type": "string"
                       },
                       "innerRadius": {
@@ -8606,6 +8694,7 @@
           "type": "number"
         },
         "id": {
+          "description": "Assigned to `uid` in a HiGlass view config, used for API and caching.",
           "type": "string"
         },
         "innerRadius": {

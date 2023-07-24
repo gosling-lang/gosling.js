@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import type { TrackMouseEventData } from '@gosling.schema';
+import type { TrackApiData, VisUnitApiData, ViewApiData } from '@gosling.schema';
 import type { HiGlassApi } from './higlass-component-wrapper';
 import type { HiGlassSpec } from '@higlass.schema';
 import { subscribe, unsubscribe } from './pubsub';
@@ -25,9 +25,12 @@ export interface GoslingApi {
     zoomToExtent(viewId: string, duration?: number): void;
     zoomToGene(viewId: string, gene: string, padding?: number, duration?: number): void;
     suggestGene(viewId: string, keyword: string, callback: (suggestions: GeneSuggestion[]) => void): void;
+    getTracksAndViews(): VisUnitApiData[];
     getViewIds(): string[];
-    getTracks(): TrackMouseEventData[];
-    getTrack(trackId: string): TrackMouseEventData | undefined;
+    getTracks(): TrackApiData[];
+    getTrack(trackId: string): TrackApiData | undefined;
+    getViews(): ViewApiData[];
+    getView(viewId: string): ViewApiData | undefined;
     exportPng(transparentBackground?: boolean): void;
     exportPdf(transparentBackground?: boolean): void;
     getCanvas(options?: { resolution?: number; transparentBackground?: boolean }): {
@@ -41,18 +44,31 @@ export interface GoslingApi {
 export function createApi(
     hg: Readonly<HiGlassApi>,
     hgSpec: HiGlassSpec | undefined,
-    trackInfos: readonly TrackMouseEventData[],
+    tracksAndViews: readonly VisUnitApiData[],
     theme: Required<CompleteThemeDeep>
 ): GoslingApi {
+    const getTracksAndViews = () => {
+        return [...tracksAndViews];
+    };
     const getTracks = () => {
-        return [...trackInfos];
+        return [...getTracksAndViews().filter(d => d.type === 'track')] as TrackApiData[];
     };
     const getTrack = (trackId: string) => {
-        const trackInfoFound = trackInfos.find(d => d.id === trackId);
+        const trackInfoFound = getTracks().find(d => d.id === trackId);
         if (!trackInfoFound) {
             console.warn(`[getTrack()] Unable to find a track using the ID (${trackId})`);
         }
         return trackInfoFound;
+    };
+    const getViews = () => {
+        return [...getTracksAndViews().filter(d => d.type === 'view')] as ViewApiData[];
+    };
+    const getView = (viewId: string) => {
+        const view = getViews().find(d => d.id === viewId);
+        if (!view) {
+            console.warn(`Unable to find a view with the ID of ${viewId}`);
+        }
+        return view;
     };
     const getCanvas: GoslingApi['getCanvas'] = options => {
         const resolution = options?.resolution ?? 4;
@@ -118,8 +134,11 @@ export function createApi(
             });
             return ids;
         },
+        getTracksAndViews,
         getTracks,
         getTrack,
+        getView,
+        getViews,
         getCanvas,
         exportPng: transparentBackground => {
             const { canvas } = getCanvas({ resolution: 4, transparentBackground });

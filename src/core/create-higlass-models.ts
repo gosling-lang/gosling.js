@@ -2,9 +2,17 @@ import { getBoundingBox, type TrackInfo } from './utils/bounding-box';
 import { goslingToHiGlass } from './gosling-to-higlass';
 import { HiGlassModel } from './higlass-model';
 import { getLinkingInfo } from './utils/linking';
-import type { GoslingSpec, OverlaidTrack, SingleTrack, TrackMouseEventData } from './gosling.schema';
+import type {
+    GoslingSpec,
+    OverlaidTrack,
+    SingleTrack,
+    TrackApiData,
+    VisUnitApiData,
+    ViewApiData
+} from '@gosling.schema';
 import type { CompleteThemeDeep } from './utils/theme';
 import type { CompileCallback } from './compile';
+import { getViewApiData } from './api-data';
 
 export function renderHiGlass(
     spec: GoslingSpec,
@@ -68,7 +76,7 @@ export function renderHiGlass(
             });
     });
 
-    const trackInfosWithShapes: TrackMouseEventData[] = trackInfos.map(d => {
+    const tracks: TrackApiData[] = trackInfos.map(d => {
         return {
             id: d.track.id!,
             spec: d.track as SingleTrack | OverlaidTrack,
@@ -76,6 +84,7 @@ export function renderHiGlass(
                 d.track.layout === 'linear'
                     ? d.boundingBox
                     : {
+                          ...d.boundingBox,
                           cx: d.boundingBox.x + d.boundingBox.width / 2.0,
                           cy: d.boundingBox.y + d.boundingBox.height / 2.0,
                           innerRadius: d.track.innerRadius!,
@@ -86,5 +95,14 @@ export function renderHiGlass(
         };
     });
 
-    callback(hgModel.spec(), getBoundingBox(trackInfos), spec, trackInfosWithShapes);
+    // Get the view information needed to support JS APIs (e.g., providing view bounding boxes)
+    const views: ViewApiData[] = getViewApiData(spec, tracks);
+
+    // Merge the tracks and views
+    const tracksAndViews = [
+        ...tracks.map(d => ({ ...d, type: 'track' } as VisUnitApiData)),
+        ...views.map(d => ({ ...d, type: 'view' } as VisUnitApiData))
+    ];
+
+    callback(hgModel.spec(), getBoundingBox(trackInfos), spec, tracksAndViews);
 }
