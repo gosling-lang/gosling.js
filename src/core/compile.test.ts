@@ -40,3 +40,57 @@ describe('gosling track.id => higlass view.uid', () => {
         );
     });
 });
+
+describe('Dummy track', () => {
+    it('can be compiled', () => {
+        const spec: GoslingSpec = {
+            tracks: [
+                {
+                    type: 'dummy-track',
+                    id: 'my-dummy-track',
+                    title: 'Placeholder',
+                    style: {
+                        background: '#000',
+                        textFontSize: 10,
+                        textStroke: 'normal',
+                        textStrokeWidth: 0.2
+                    }
+                }
+            ]
+        };
+        compile(
+            spec,
+            hgSpec => {
+                expect(hgSpec.views[0].tracks).toMatchInlineSnapshot(`
+                  {
+                    "bottom": [],
+                    "center": [],
+                    "gallery": [],
+                    "left": [],
+                    "right": [],
+                    "top": [
+                      {
+                        "height": 130,
+                        "options": {
+                          "background": "#000",
+                          "height": 130,
+                          "textFontSize": 10,
+                          "textStroke": "normal",
+                          "textStrokeWidth": 0.2,
+                          "title": "Placeholder",
+                          "width": 600,
+                        },
+                        "type": "dummy-track",
+                        "width": 600,
+                      },
+                    ],
+                    "whole": [],
+                  }
+                `);
+            },
+            [],
+            getTheme(),
+            {}
+        );
+    });
+});
