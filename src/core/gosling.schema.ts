@@ -242,6 +242,14 @@ export interface GenomicPosition {
     chromosome: string;
     position: number;
 }
+interface OnNewTrackEventData {
+    /** Source visualization ID, i.e., `track.id` */
+    id: string;
+}
+interface OnNewViewEventData {
+    /** Source visualization ID, i.e., `track.id` */
+    id: string;
+}
 
 interface PointMouseEventData extends CommonEventData {
     /** A genomic coordinate, e.g., `chr1:100,000`. */
@@ -313,6 +321,8 @@ export type _EventMap = {
     rawData: CommonEventData;
     trackMouseOver: TrackApiData;
     trackClick: TrackApiData; // TODO (Jul-25-2022): with https://github.com/higlass/higlass/pull/1098, we can support circular layouts
+    onNewTrack: OnNewTrackEventData;
+    onNewView: OnNewViewEventData;
 };
 
 /** Options for determining mouse events in detail, e.g., turning on specific events only */

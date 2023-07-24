@@ -10,6 +10,7 @@ import { GoslingTemplates } from '..';
 import { omitDeep } from './utils/omit-deep';
 import { isEqual } from 'lodash-es';
 import * as uuid from 'uuid';
+import { publish } from './pubsub';
 
 // Before rerendering, wait for a few time so that HiGlass container is resized already.
 // If HiGlass is rendered and then the container resizes, the viewport position changes, unmatching `xDomain` specified by users.
@@ -50,6 +51,22 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
     const theme = getTheme(props.theme || 'light');
     const wrapperDivId = props.id ?? uuid.v4();
 
+    /**
+     * Publishes event if there is a new view added
+     * @param currentTracksAndViews newly retrieved tracks and views from compile() callback
+     */
+    const publishOnNewView = (currentTracksAndViews: VisUnitApiData[]) => {
+        // Compare the previous and current views to figure out the difference
+        const prevViews = tracksAndViews.current.filter(data => data.type == 'view');
+        const currentViews = currentTracksAndViews.filter(data => data.type == 'view');
+        const prevViewIds = new Set(prevViews.map(data => data.id));
+        const newViews = currentViews.filter(view => !prevViewIds.has(view.id));
+        // Publish if there are any new changes
+        newViews.forEach(view => {
+            publish('onNewView', { id: view.id });
+        });
+    };
+
     // Gosling APIs
     useImperativeHandle(
         ref,
@@ -74,18 +91,18 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
 
             gosling.compile(
                 props.spec,
-                (newHs, newSize, newGs, newTrackInfos) => {
+                (newHiGlassSpec, newSize, newGoslingSpec, newTracksAndViews) => {
                     // TODO: `linkingId` should be updated
                     // We may not want to re-render this
                     if (
                         prevSpec.current &&
-                        isEqual(omitDeep(prevSpec.current, ['linkingId']), omitDeep(newGs, ['linkingId']))
+                        isEqual(omitDeep(prevSpec.current, ['linkingId']), omitDeep(newGoslingSpec, ['linkingId']))
                     ) {
                         return;
                     }
 
                     // If a callback function is provided, return compiled information.
-                    props.compiled?.(props.spec!, newHs);
+                    props.compiled?.(props.spec!, newHiGlassSpec);
 
                     // Change the size of wrapper `<div/>` elements
                     setSize(newSize);
@@ -95,15 +112,15 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
                     if (props.experimental?.reactive && isMountedOnce) {
                         // Use API to update visualization.
                         setTimeout(() => {
-                            hgRef.current?.api.setViewConfig(newHs);
+                            hgRef.current?.api.setViewConfig(newHiGlassSpec);
                         }, DELAY_FOR_CONTAINER_RESIZE_BEFORE_RERENDER);
                     } else {
                         // Mount `HiGlassComponent` using this view config.
-                        setViewConfig(newHs);
+                        setViewConfig(newHiGlassSpec);
                     }
-
-                    prevSpec.current = newGs;
-                    tracksAndViews.current = newTrackInfos;
+                    publishOnNewView(newTracksAndViews);
+                    prevSpec.current = newGoslingSpec;
+                    tracksAndViews.current = newTracksAndViews;
                 },
                 [...GoslingTemplates], // TODO: allow user definitions
                 theme,
