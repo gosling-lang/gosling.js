@@ -34,10 +34,7 @@ export function goslingToHiGlass(
 
     // Adds the dummy track to the HiGlass spec
     if (IsDummyTrack(gosTrack)) {
-        hgModel
-            .addDefaultView(gosTrack.id!)
-            .setDummyTrack(gosTrack.width!, gosTrack.height!, gosTrack.title!, gosTrack.style!)
-            .setLayout(layout);
+        hgModel.addDefaultView(gosTrack.id!).setDummyTrack(gosTrack).setLayout(layout);
         return hgModel;
     }
     // we only look into the first resolved spec to get information, such as size of the track

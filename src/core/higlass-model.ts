@@ -1,7 +1,7 @@
 import * as uuid from 'uuid';
 import type { HiGlassSpec, Track } from './higlass.schema';
 import HiGlassSchema from '../../schema/higlass.schema.json';
-import type { Assembly, AxisPosition, Domain, DummyTrackStyle, Orientation, ZoomLimits } from './gosling.schema';
+import type { Assembly, AxisPosition, Domain, DummyTrack, Orientation, ZoomLimits } from './gosling.schema';
 import { getNumericDomain } from './utils/scales';
 import type { RelativePosition } from './utils/bounding-box';
 import { validateSpec } from './utils/validate';
@@ -125,17 +125,20 @@ export class HiGlassModel {
      * @param width Width of the track
      * @param height Height of the track
      */
-    public setDummyTrack(width: number, height: number, title: string, style: DummyTrackStyle) {
+    public setDummyTrack(track: DummyTrack) {
         if (this.getLastView()) {
             this.getLastView().tracks.top?.push({
                 type: 'dummy-track',
-                width,
-                height,
+                width: track.width,
+                height: track.height,
                 options: {
-                    width,
-                    height,
-                    title,
-                    ...style
+                    width: track.width,
+                    height: track.height,
+                    title: track.title,
+                    layout: track.layout,
+                    outerRadius: track.outerRadius,
+                    innerRadius: track.innerRadius,
+                    ...track.style
                 }
             });
         }
