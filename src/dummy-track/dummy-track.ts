@@ -41,8 +41,7 @@ const factory: PluginTrackFactory<never, DummyTrackOptions> = (HGC, context, opt
             this.gMain
                 .append('text')
                 .attr('x', options.width / 2)
-                .attr('y', (options.height + options.textFontSize) / 2)
-                .attr('color', 'red')
+                .attr('y', (options.height + options.textFontSize!) / 2)
                 .style('text-anchor', 'middle')
                 .style('font-size', `${options.textFontSize}px`)
                 .style('font-weight', options.textFontWeight)
