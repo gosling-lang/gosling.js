@@ -1,4 +1,5 @@
 import { createPluginTrack, type PluginTrackFactory, type TrackConfig } from '../core/utils/define-plugin-track';
+import { publish } from '../core/pubsub';
 import { type DummyTrackStyle } from '@gosling.schema';
 
 interface DummyTrackOptions extends DummyTrackStyle {
@@ -30,6 +31,9 @@ const factory: PluginTrackFactory<never, DummyTrackOptions> = (HGC, context, opt
             super(context, options);
             this.#drawBackground();
             this.#drawText();
+            publish('onNewTrack', {
+                id: context.viewUid
+            });
         }
 
         #drawBackground() {
