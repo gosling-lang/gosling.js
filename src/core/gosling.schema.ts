@@ -216,6 +216,8 @@ export interface DataTrack extends CommonTrackDef {
 export interface DummyTrack extends CommonTrackDef {
     /** Used to specify the dummy track */
     type: 'dummy-track';
+    /** Dummy track layout must be linear */
+    layout?: 'linear';
     /** Defines how the track is styled */
     style?: DummyTrackStyle;
 }

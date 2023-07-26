@@ -121,9 +121,8 @@ export class HiGlassModel {
     }
 
     /**
-     * Sets a dummy track
-     * @param width Width of the track
-     * @param height Height of the track
+     * Add a dummy track to the last view
+     * @param track
      */
     public setDummyTrack(track: DummyTrack) {
         if (this.getLastView()) {
@@ -135,9 +134,6 @@ export class HiGlassModel {
                     width: track.width,
                     height: track.height,
                     title: track.title,
-                    layout: track.layout,
-                    outerRadius: track.outerRadius,
-                    innerRadius: track.innerRadius,
                     ...track.style
                 }
             });
