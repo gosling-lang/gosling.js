@@ -1,5 +1,6 @@
 export { AREA, LINE, POINT, BAR } from './single-mark';
 export { BRUSH } from './brush';
+export { DUMMY_TRACK } from './dummy-track';
 export { LINK } from './link';
 export { LINKING_TRACKS } from './linking-tracks';
 export { OVERLAY_TRACKS_BAR_POINT } from './overlay-tracks-bar-point';
