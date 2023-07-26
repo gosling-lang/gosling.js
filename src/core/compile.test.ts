@@ -74,9 +74,6 @@ describe('Dummy track', () => {
                         "options": {
                           "background": "#000",
                           "height": 130,
-                          "innerRadius": undefined,
-                          "layout": "linear",
-                          "outerRadius": undefined,
                           "textFontSize": 10,
                           "textStroke": "normal",
                           "textStrokeWidth": 0.2,
