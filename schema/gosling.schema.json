@@ -924,8 +924,9 @@
           "type": "number"
         },
         "layout": {
-          "$ref": "#/definitions/Layout",
-          "description": "Specify the layout type of all tracks."
+          "const": "linear",
+          "description": "Dummy track layout must be linear",
+          "type": "string"
         },
         "linkingId": {
           "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
@@ -5239,7 +5240,17 @@
           "type": "number"
         },
         "layout": {
-          "$ref": "#/definitions/Layout",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Layout",
+              "description": "Specify the layout type of all tracks."
+            },
+            {
+              "const": "linear",
+              "description": "Dummy track layout must be linear",
+              "type": "string"
+            }
+          ],
           "description": "Specify the layout type of all tracks."
         },
         "linkingId": {
