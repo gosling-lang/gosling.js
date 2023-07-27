@@ -225,6 +225,7 @@ export interface DummyTrack
         | 'orientation'
         | 'layout'
         | 'static'
+        | 'assembly'
     > {
     /** Used to specify the dummy track */
     type: 'dummy-track';
