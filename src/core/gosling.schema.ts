@@ -229,15 +229,16 @@ export interface DummyTrack
     > {
     /** Used to specify the dummy track */
     type: 'dummy-track';
+    /** Text that gets shown on the DummyTrack */
+    title?: string;
     /** Defines how the track is styled */
     style?: DummyTrackStyle;
-    /** Dummy track layout must be linear */
+    /** Only linear layout are supported at this time */
     layout?: 'linear';
-    /** Dummy track can only be static */
     static?: true;
-    /** Dummy track cannot be zoomed in on */
+    /** Unused property for DummyTrack */
     zoomLimits?: [null, null];
-    /** No assemblies are associated with a dummy track */
+    /** No assemblies can be associated with a dummy track */
     assembly?: 'unknown';
 }
 

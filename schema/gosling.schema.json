@@ -890,7 +890,7 @@
         },
         "assembly": {
           "const": "unknown",
-          "description": "No assemblies are associated with a dummy track",
+          "description": "No assemblies can be associated with a dummy track",
           "type": "string"
         },
         "height": {
@@ -903,7 +903,7 @@
         },
         "layout": {
           "const": "linear",
-          "description": "Dummy track layout must be linear",
+          "description": "Only linear layout are supported at this time",
           "type": "string"
         },
         "orientation": {
@@ -915,7 +915,7 @@
         },
         "static": {
           "const": true,
-          "description": "Dummy track can only be static",
+          "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
           "type": "boolean"
         },
         "style": {
@@ -923,7 +923,7 @@
           "description": "Defines how the track is styled"
         },
         "title": {
-          "description": "If defined, will show the textual label on the left-top corner of a track.",
+          "description": "Text that gets shown on the DummyTrack",
           "type": "string"
         },
         "type": {
@@ -936,7 +936,7 @@
           "type": "number"
         },
         "zoomLimits": {
-          "description": "Dummy track cannot be zoomed in on",
+          "description": "Unused property for DummyTrack",
           "items": {
             "type": "null"
           },
@@ -5089,7 +5089,7 @@
             },
             {
               "const": "unknown",
-              "description": "No assemblies are associated with a dummy track",
+              "description": "No assemblies can be associated with a dummy track",
               "type": "string"
             }
           ],
@@ -5178,7 +5178,7 @@
             },
             {
               "const": "linear",
-              "description": "Dummy track layout must be linear",
+              "description": "Only linear layout are supported at this time",
               "type": "string"
             }
           ],
@@ -5589,7 +5589,7 @@
             },
             {
               "const": true,
-              "description": "Dummy track can only be static",
+              "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
               "type": "boolean"
             }
           ],
@@ -5798,7 +5798,7 @@
               "$ref": "#/definitions/ZoomLimits"
             },
             {
-              "description": "Dummy track cannot be zoomed in on",
+              "description": "Unused property for DummyTrack",
               "items": {
                 "type": "null"
               },
