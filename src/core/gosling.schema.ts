@@ -213,13 +213,31 @@ export interface DataTrack extends CommonTrackDef {
  * A placeholder track. In contrast to other tracks, this track does not display any data. Instead it provides
  * empty space for third party tools to display their data on top of.
  */
-export interface DummyTrack extends CommonTrackDef {
+export interface DummyTrack
+    extends Pick<
+        CommonTrackDef,
+        | 'width'
+        | 'height'
+        | 'id'
+        | 'title'
+        | '_invalidTrack'
+        | 'overlayOnPreviousTrack'
+        | 'orientation'
+        | 'layout'
+        | 'static'
+    > {
     /** Used to specify the dummy track */
     type: 'dummy-track';
-    /** Dummy track layout must be linear */
-    layout?: 'linear';
     /** Defines how the track is styled */
     style?: DummyTrackStyle;
+    /** Dummy track layout must be linear */
+    layout?: 'linear';
+    /** Dummy track can only be static */
+    static?: true;
+    /** Dummy track cannot be zoomed in on */
+    zoomLimits?: [null, null];
+    /** No assemblies are associated with a dummy track */
+    assembly?: 'unknown';
 }
 
 export interface DummyTrackStyle {

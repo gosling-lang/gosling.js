@@ -1,5 +1,5 @@
 import type { MultipleViews, CommonViewDef, GoslingSpec, Track, SingleView } from '@gosling.schema';
-import { Is2DTrack, IsOverlaidTrack, IsXAxis, IsYAxis } from '../gosling.schema.guards';
+import { Is2DTrack, IsDummyTrack, IsOverlaidTrack, IsXAxis, IsYAxis } from '../gosling.schema.guards';
 import { HIGLASS_AXIS_SIZE } from '../higlass-model';
 import {
     DEFAULT_CIRCULAR_VIEW_PADDING,
@@ -316,6 +316,10 @@ function traverseAndCollectTrackInfo(
         // const numXAxes = getNumOfXAxes(cTracks.map(info => info.track));
 
         cTracks.forEach((t, i) => {
+            // at this time, circular dummy tracks are not supported, so we don't do anything here
+            if (IsDummyTrack(t.track)) {
+                return;
+            }
             t.track.layout = 'circular';
 
             t.track.outerRadius = TOTAL_RADIUS - PADDING - ((t.boundingBox.y - dy) / cumHeight) * TOTAL_RING_SIZE;
