@@ -61,7 +61,7 @@ const alias = {
     "@gosling-mouse-event": path.resolve(__dirname, "./src/gosling-mouse-event/index.ts"),
     "@gosling-genomic-axis": path.resolve(__dirname, "./src/gosling-genomic-axis/index.ts"),
     "@gosling-brush": path.resolve(__dirname, "./src/gosling-brush/index.ts"),
-    "@gosling–lang/dummy-track": path.resolve(__dirname, "./src/dummy-track/index.ts"),
+    "@gosling-lang/dummy-track": path.resolve(__dirname, "./src/dummy-track/index.ts"),
     "@data-fetchers": path.resolve(__dirname, "./src/data-fetchers/index.ts"),
     zlib: path.resolve(__dirname, './src/alias/zlib.ts'),
     uuid: path.resolve(__dirname, './node_modules/uuid/dist/esm-browser/index.js')
