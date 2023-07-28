@@ -957,6 +957,10 @@
           "description": "Background color of the track",
           "type": "string"
         },
+        "outline": {
+          "description": "Color of the outline of the track",
+          "type": "string"
+        },
         "textFontSize": {
           "description": "Specify the font size of the title",
           "type": "number"
