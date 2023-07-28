@@ -5,7 +5,7 @@ import { TextTrack } from 'higlass-text';
 import { AxisTrack } from '@gosling-genomic-axis';
 import { BrushTrack } from '@gosling-brush';
 import { GoslingTrack } from '@gosling-track';
-import { DummyTrack } from '@gosling-dummy';
+import { DummyTrack } from '@gosling-lang/dummy-track';
 import * as dataFetchers from '@data-fetchers';
 
 let once = false;
