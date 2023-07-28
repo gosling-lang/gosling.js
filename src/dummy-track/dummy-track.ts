@@ -18,7 +18,8 @@ const config: TrackConfig<DummyTrackOptions> = {
         textFontSize: 12,
         textFontWeight: 'normal',
         textStroke: '#000',
-        textStrokeWidth: 0.1
+        textStrokeWidth: 0.1,
+        outline: '#fff'
     }
 };
 
@@ -43,7 +44,8 @@ const factory: PluginTrackFactory<never, DummyTrackOptions> = (HGC, context, opt
                 .attr('x', 0)
                 .attr('y', 0)
                 .attr('width', options.width)
-                .attr('height', options.height);
+                .attr('height', options.height)
+                .style('stroke', options.outline);
         }
         /**
          * Draws the title of the dummy track

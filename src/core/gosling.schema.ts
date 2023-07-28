@@ -245,6 +245,8 @@ export interface DummyTrack
 export interface DummyTrackStyle {
     /** Background color of the track */
     background?: string;
+    /** Color of the outline of the track */
+    outline?: string;
     /** Specify the font size of the title */
     textFontSize?: number;
     /** Specify the font weight of the title. */
