@@ -19,7 +19,8 @@ import {
     IsOverlaidTrack,
     IsFlatTracks,
     IsStackedTracks,
-    Is2DTrack
+    Is2DTrack,
+    IsDummyTrack
 } from '../gosling.schema.guards';
 import {
     DEFAULT_INNER_RADIUS_PROP,
@@ -243,7 +244,6 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
              */
             if (track.layout) track.layout = undefined;
             if (track.zoomLimits) track.zoomLimits = undefined;
-
             /**
              * Override options received from the parent
              */
@@ -252,6 +252,14 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             if (!track.orientation) track.orientation = spec.orientation;
             if (track.static === undefined) track.static = spec.static !== undefined ? spec.static : false;
             if (!track.zoomLimits) track.zoomLimits = spec.zoomLimits;
+
+            /**
+             * Dummy track can't have a circular layout
+             */
+            if (track.layout == 'circular' && IsDummyTrack(track)) {
+                track._invalidTrack = true;
+                return;
+            }
 
             // Override styles
             track.style = getStyleOverridden(spec.style, track.style);
@@ -444,6 +452,8 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                 track.assembly = array[i - 1].assembly;
             }
         });
+        // Filter out any invalid tracks
+        tracks = tracks.filter(track => !track._invalidTrack);
 
         spec.tracks = tracks;
     } else {
