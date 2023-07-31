@@ -77,7 +77,7 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
                 return [t];
             }
 
-            const base: SingleTrack = JSON.parse(JSON.stringify(t));
+            const base: SingleTrack = JSON.parse(JSON.stringify({...t, id: undefined }));
             delete (base as Partial<OverlaidTrack>).overlay; // remove `overlay` from the base spec
 
             const spread: Track[] = [];
