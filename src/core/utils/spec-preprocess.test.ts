@@ -299,6 +299,14 @@ describe('Spec Preprocess', () => {
         }
         {
             const flat = convertToFlatTracks({
+                id: 'view-id',
+                tracks: [{}]
+            });
+            expect(flat).toHaveLength(1);
+            expect(flat[0].id).toBeUndefined();
+        }
+        {
+            const flat = convertToFlatTracks({
                 tracks: [{ ...dummySpec, title: 'A' }]
             });
             expect(flat).toHaveLength(1);
