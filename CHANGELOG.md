@@ -1,3 +1,24 @@
+# [0.10.0](https://github.com/gosling-lang/gosling.js/compare/v0.9.33...v0.10.0) (2023-08-01)
+
+
+### Bug Fixes
+
+* **core:** do not override ID in tracks from views ([#954](https://github.com/gosling-lang/gosling.js/issues/954)) ([6654e0d](https://github.com/gosling-lang/gosling.js/commit/6654e0d315a40978ce26d97fdcf38168472a088b))
+* **data-fetcher:** correctly calculate the distance to previous mutation in VCF (`DISTPREV`) ([#949](https://github.com/gosling-lang/gosling.js/issues/949)) ([ef5f58f](https://github.com/gosling-lang/gosling.js/commit/ef5f58f43ee33ca2de068a547f21ed1767426437))
+* **track:** remove private properties from draw() ([#952](https://github.com/gosling-lang/gosling.js/issues/952)) ([529e9a3](https://github.com/gosling-lang/gosling.js/commit/529e9a38484fe81b624292a582870ae0cc144d28))
+
+
+### Features
+
+* **api:** consistent track/view IDs for JS API ([#944](https://github.com/gosling-lang/gosling.js/issues/944)) ([1c2b766](https://github.com/gosling-lang/gosling.js/commit/1c2b7669660856cae98f88ba38d9326b788c75e1))
+* **api:** onNewTrack, onNewView ([#943](https://github.com/gosling-lang/gosling.js/issues/943)) ([a98ee69](https://github.com/gosling-lang/gosling.js/commit/a98ee69367273943becbeae8696b1511b35f04e4))
+* **api:** subscription for genomic axis changes ([#935](https://github.com/gosling-lang/gosling.js/issues/935)) ([a2c36f5](https://github.com/gosling-lang/gosling.js/commit/a2c36f500f0d8e1181c9c72a970eb385af4fe3b5))
+* **core, api, editor:** support using  view IDs ([#939](https://github.com/gosling-lang/gosling.js/issues/939)) ([cd8d300](https://github.com/gosling-lang/gosling.js/commit/cd8d3000f7e1e86422ec89f765585f6056d64a9f))
+* **data-fetcher:** GFF3 with tabix ([#923](https://github.com/gosling-lang/gosling.js/issues/923)) ([526882f](https://github.com/gosling-lang/gosling.js/commit/526882fb82463ad4262568d9569840431c709fc9))
+* **track:** dummy-track ([#946](https://github.com/gosling-lang/gosling.js/issues/946)) ([ee02d38](https://github.com/gosling-lang/gosling.js/commit/ee02d38312ae7431ccd460a6d5e1904013488427))
+
+
+
 ## [0.9.33](https://github.com/gosling-lang/gosling.js/compare/v0.9.32...v0.9.33) (2023-07-11)
 
 
