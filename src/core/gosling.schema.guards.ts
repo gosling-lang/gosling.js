@@ -32,7 +32,8 @@ import type {
     Range,
     TemplateTrack,
     MouseEventsDeep,
-    DataTransform
+    DataTransform,
+    DummyTrack
 } from './gosling.schema';
 import { SUPPORTED_CHANNELS } from './mark';
 import {
@@ -94,6 +95,9 @@ export function IsStackedTracks(_: SingleView): _ is StackedTracks {
 export function IsDataTrack(_: Track): _ is DataTrack {
     // !!! Track might not contain `mark` when it is superposed one
     return !IsOverlaidTrack(_) && 'data' in _ && !('mark' in _);
+}
+export function IsDummyTrack(_: Track): _ is DummyTrack {
+    return 'type' in _ && _.type == 'dummy-track';
 }
 
 export function IsDataTemplate(_: Partial<Track>): boolean {

@@ -13,7 +13,8 @@ import {
     Is2DTrack,
     IsXAxis,
     IsHiGlassMatrix,
-    getHiGlassColorRange
+    getHiGlassColorRange,
+    IsDummyTrack
 } from './gosling.schema.guards';
 import { DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM } from './defaults';
 import type { CompleteThemeDeep } from './utils/theme';
@@ -31,6 +32,14 @@ export function goslingToHiGlass(
     theme: Required<CompleteThemeDeep>,
     idMapper: GoslingToHiGlassIdMapper
 ): HiGlassModel {
+    // TODO: check whether there are multiple track.data across superposed tracks
+    // ...
+
+    // Adds the dummy track to the HiGlass spec
+    if (IsDummyTrack(gosTrack)) {
+        hgModel.addDefaultView(gosTrack.id!).setDummyTrack(gosTrack).setLayout(layout);
+        return hgModel;
+    }
     // we only look into the first resolved spec to get information, such as size of the track
     const resolvedSpecs = resolveSuperposedTracks(gosTrack);
     const firstResolvedSpec = resolvedSpecs[0];

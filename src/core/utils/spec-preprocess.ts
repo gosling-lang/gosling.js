@@ -19,7 +19,8 @@ import {
     IsOverlaidTrack,
     IsFlatTracks,
     IsStackedTracks,
-    Is2DTrack
+    Is2DTrack,
+    IsDummyTrack
 } from '../gosling.schema.guards';
 import {
     DEFAULT_INNER_RADIUS_PROP,
@@ -182,7 +183,6 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
 
     if ('tracks' in spec) {
         let tracks: Track[] = convertToFlatTracks(spec);
-
         // !!! Be aware that this should be taken before fixing `overlayOnPreviousTrack` options.
         /**
          * Spread superposed tracks if they are assigned to different data spec.
@@ -204,7 +204,6 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             if (!track.height) {
                 track.height = Is2DTrack(track) ? DEFAULT_TRACK_SIZE_2D : DEFAULT_TRACK_HEIGHT_LINEAR;
             }
-
             /**
              * Process a stack option.
              */
@@ -245,7 +244,6 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
              */
             if (track.layout) track.layout = undefined;
             if (track.zoomLimits) track.zoomLimits = undefined;
-
             /**
              * Override options received from the parent
              */
@@ -255,9 +253,21 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             if (track.static === undefined) track.static = spec.static !== undefined ? spec.static : false;
             if (!track.zoomLimits) track.zoomLimits = spec.zoomLimits;
 
+            /**
+             * Dummy track can't have a circular layout
+             */
+            if (track.layout == 'circular' && IsDummyTrack(track)) {
+                track._invalidTrack = true;
+                return;
+            }
+
             // Override styles
             track.style = getStyleOverridden(spec.style, track.style);
             if (IsOverlaidTrack(track)) {
+                // Remove the dummy tracks from an overlay track
+                track.overlay = track.overlay.filter(overlayTrack => {
+                    return !('type' in overlayTrack && overlayTrack.type == 'dummy-track');
+                });
                 track.overlay.forEach(o => {
                     o.style = getStyleOverridden(track.style, o.style);
                 });
@@ -442,6 +452,8 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                 track.assembly = array[i - 1].assembly;
             }
         });
+        // Filter out any invalid tracks
+        tracks = tracks.filter(track => !track._invalidTrack);
 
         spec.tracks = tracks;
     } else {
@@ -521,7 +533,7 @@ export function getMultivecTemplate(
  */
 export function overrideDataTemplates(spec: GoslingSpec) {
     traverseTracks(spec, (t, i, ts) => {
-        if (!t.data || !IsDataDeepTileset(t.data)) {
+        if (!('data' in t) || !t.data || !IsDataDeepTileset(t.data)) {
             // if `data` is not specified, we can not provide a correct template.
             return;
         }

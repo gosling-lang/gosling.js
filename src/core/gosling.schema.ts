@@ -154,7 +154,7 @@ export interface CommonViewDef {
 }
 
 /* ----------------------------- TRACK ----------------------------- */
-export type Track = SingleTrack | OverlaidTrack | DataTrack | TemplateTrack;
+export type Track = SingleTrack | OverlaidTrack | DataTrack | TemplateTrack | DummyTrack;
 
 export interface CommonTrackDef extends CommonViewDef {
     /** Assigned to `uid` in a HiGlass view config, used for API and caching. */
@@ -208,6 +208,53 @@ export interface CommonTrackDef extends CommonViewDef {
  */
 export interface DataTrack extends CommonTrackDef {
     data: DataDeep;
+}
+/**
+ * A placeholder track. In contrast to other tracks, this track does not display any data. Instead it provides
+ * empty space for third party tools to display their data on top of.
+ */
+export interface DummyTrack
+    extends Pick<
+        CommonTrackDef,
+        | 'width'
+        | 'height'
+        | 'id'
+        | 'title'
+        | '_invalidTrack'
+        | 'overlayOnPreviousTrack'
+        | 'orientation'
+        | 'layout'
+        | 'static'
+        | 'assembly'
+    > {
+    /** Used to specify the dummy track */
+    type: 'dummy-track';
+    /** Text that gets shown on the DummyTrack */
+    title?: string;
+    /** Defines how the track is styled */
+    style?: DummyTrackStyle;
+    /** Only linear layout are supported at this time */
+    layout?: 'linear';
+    static?: true;
+    /** Unused property for DummyTrack */
+    zoomLimits?: [null, null];
+    /** No assemblies can be associated with a dummy track */
+    assembly?: 'unknown';
+}
+
+export interface DummyTrackStyle {
+    /** Background color of the track */
+    background?: string;
+    /** Color of the outline of the track */
+    outline?: string;
+    /** Specify the font size of the title */
+    textFontSize?: number;
+    /** Specify the font weight of the title. */
+    textFontWeight?: 'bold' | 'normal';
+    /** Specify the stroke color of title. */
+    textStroke?: string;
+    /** Specify the stroke width of the title. */
+    textStrokeWidth?: number;
 }
 
 /* ----------------------------- MARK ----------------------------- */

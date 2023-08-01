@@ -219,6 +219,12 @@ const docExampleObj: {
         spec: docExamples.SEMANTIC_ZOOM_CYTO,
         hidden: true
     },
+    doc_dummy_track: {
+        group: 'Doc',
+        name: 'Dummy track',
+        spec: docExamples.DUMMY_TRACK,
+        hidden: true
+    },
     doc_vcf_indels: {
         group: 'Doc',
         name: 'VCF insertions and deletions',
