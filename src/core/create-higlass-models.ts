@@ -13,6 +13,7 @@ import type {
 import type { CompleteThemeDeep } from './utils/theme';
 import type { CompileCallback } from './compile';
 import { getViewApiData } from './api-data';
+import { IsDummyTrack } from './gosling.schema.guards';
 
 export function renderHiGlass(
     spec: GoslingSpec,
@@ -81,7 +82,7 @@ export function renderHiGlass(
             id: d.track.id!,
             spec: d.track as SingleTrack | OverlaidTrack,
             shape:
-                d.track.layout === 'linear'
+                d.track.layout === 'linear' || IsDummyTrack(d.track) // Dummy track is always linear
                     ? d.boundingBox
                     : {
                           ...d.boundingBox,

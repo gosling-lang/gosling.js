@@ -221,4 +221,5 @@ export type EnumTrackType =
     | 'gosling-track'
     | 'gosling-2d-track'
     | 'axis-track'
-    | 'text';
+    | 'text'
+    | 'dummy-track';

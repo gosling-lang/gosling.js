@@ -40,3 +40,81 @@ describe('gosling track.id => higlass view.uid', () => {
         );
     });
 });
+
+describe('Dummy track', () => {
+    it('compiles when layout linear', () => {
+        const spec: GoslingSpec = {
+            tracks: [
+                {
+                    type: 'dummy-track',
+                    id: 'my-dummy-track',
+                    title: 'Placeholder',
+                    style: {
+                        background: '#000',
+                        textFontSize: 10,
+                        textStroke: 'normal',
+                        textStrokeWidth: 0.2
+                    }
+                }
+            ],
+            layout: 'linear'
+        };
+        compile(
+            spec,
+            hgSpec => {
+                expect(hgSpec.views[0].tracks.top).toMatchInlineSnapshot(`
+                  [
+                    {
+                      "height": 130,
+                      "options": {
+                        "background": "#000",
+                        "height": 130,
+                        "textFontSize": 10,
+                        "textStroke": "normal",
+                        "textStrokeWidth": 0.2,
+                        "title": "Placeholder",
+                        "width": 600,
+                      },
+                      "type": "dummy-track",
+                      "width": 600,
+                    },
+                  ]
+                `);
+            },
+            [],
+            getTheme(),
+            {}
+        );
+    });
+    it('gets filtered out when layout circular', () => {
+        const spec: GoslingSpec = {
+            tracks: [
+                {
+                    type: 'dummy-track',
+                    id: 'dummy-1'
+                },
+                {
+                    id: 'track-id',
+                    data: {
+                        type: 'csv',
+                        url: ''
+                    },
+                    mark: 'rect',
+                    width: 100,
+                    height: 100
+                }
+            ],
+            layout: 'circular'
+        };
+        compile(
+            spec,
+            hgSpec => {
+                expect(hgSpec.views).toHaveLength(1);
+                expect(hgSpec.views[0].tracks).not.toBeUndefined();
+            },
+            [],
+            getTheme(),
+            {}
+        );
+    });
+});

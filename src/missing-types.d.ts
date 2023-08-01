@@ -123,6 +123,7 @@ declare module '@higlass/services' {
 declare module '@higlass/tracks' {
     import type * as d3 from 'd3';
     import type * as PIXI from 'pixi.js';
+    import type * as d3Selection from 'd3-selection';
     import type { TilesetInfo, ColorRGBA } from '@higlass/services';
     import type { ChromInfo } from '@higlass/utils';
 
@@ -563,6 +564,15 @@ declare module '@higlass/tracks' {
          *
          */
         exportSVG(): [HTMLElement, HTMLElement];
+    }
+
+    export class SVGTrack<Options> extends Track<Options> {
+        /* Properties */
+        gMain: d3Selection.Selection<d3Selection.Datum, d3Selection.PElement, d3Selection.PDatum>;
+        clipUid: string;
+        clipRect: d3Selection.Selection<d3Selection.Datum, d3Selection.PElement, d3Selection.PDatum>;
+        /* Constructor */
+        constructor(context: Context<unknown, Options>, options: Options);
     }
 
     /* eslint-disable-next-line @typescript-eslint/ban-types */

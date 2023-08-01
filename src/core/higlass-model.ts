@@ -1,7 +1,7 @@
 import * as uuid from 'uuid';
 import type { HiGlassSpec, Track } from './higlass.schema';
 import HiGlassSchema from '../../schema/higlass.schema.json';
-import type { Assembly, AxisPosition, Domain, Orientation, ZoomLimits } from './gosling.schema';
+import type { Assembly, AxisPosition, Domain, DummyTrack, Orientation, ZoomLimits } from './gosling.schema';
 import { getNumericDomain } from './utils/scales';
 import type { RelativePosition } from './utils/bounding-box';
 import { validateSpec } from './utils/validate';
@@ -114,6 +114,27 @@ export class HiGlassModel {
                     offsetY: 0, // offset from the top of the track
                     align,
                     text
+                }
+            });
+        }
+        return this;
+    }
+
+    /**
+     * Add a dummy track to the last view
+     * @param track
+     */
+    public setDummyTrack(track: DummyTrack) {
+        if (this.getLastView()) {
+            this.getLastView().tracks.top?.push({
+                type: 'dummy-track',
+                width: track.width,
+                height: track.height,
+                options: {
+                    width: track.width,
+                    height: track.height,
+                    title: track.title,
+                    ...track.style
                 }
             });
         }
