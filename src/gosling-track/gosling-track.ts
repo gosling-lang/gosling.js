@@ -71,6 +71,14 @@ const DEFAULT_MOUSE_EVENT_STYLE: Required<EventStyle> = {
 };
 
 interface GoslingTrackOptions {
+    /**
+     * Track ID specified by users
+     */
+    id: string;
+    /**
+     * Track IDs that are superposed with this track, containing the id of this track itself
+     */
+    siblingIds: string[];
     spec: SingleTrack | OverlaidTrack;
     theme: CompleteThemeDeep;
     showMousePosition?: boolean;
@@ -502,7 +510,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
             const flatTileData = ([] as Datum[]).concat(...models.map(d => d.data()));
             if (flatTileData.length !== 0) {
-                publish('rawData', { id: context.viewUid, data: flatTileData });
+                this.options.siblingIds.forEach(id => publish('rawData', { id, data: flatTileData }));
             }
         }
 
@@ -1020,11 +1028,13 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 const capturedElements = this.#getElementsWithinMouse(mouseX, mouseY);
 
                 if (capturedElements.length !== 0) {
-                    publish('click', {
-                        id: context.viewUid,
-                        genomicPosition,
-                        data: capturedElements.map(d => d.value)
-                    });
+                    this.options.siblingIds.forEach(id =>
+                        publish('click', {
+                            id,
+                            genomicPosition,
+                            data: capturedElements.map(d => d.value)
+                        })
+                    );
                 }
             }
         }

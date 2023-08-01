@@ -6,9 +6,16 @@ import { getRelativeTrackInfo, type Size } from './utils/bounding-box';
 import type { CompleteThemeDeep } from './utils/theme';
 import { renderHiGlass as createHiGlassModels } from './create-higlass-models';
 import { manageResponsiveSpecs } from './responsive';
+import type { IdTable } from './track-and-view-ids';
 
 /** The callback function called everytime after the spec has been compiled */
-export type CompileCallback = (hg: HiGlassSpec, size: Size, gs: GoslingSpec, tracksAndViews: VisUnitApiData[]) => void;
+export type CompileCallback = (
+    hg: HiGlassSpec,
+    size: Size,
+    gs: GoslingSpec,
+    tracksAndViews: VisUnitApiData[],
+    idTable: IdTable
+) => void;
 
 export function compile(
     spec: GoslingSpec,

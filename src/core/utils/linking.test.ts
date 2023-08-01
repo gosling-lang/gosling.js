@@ -1,5 +1,6 @@
 import { goslingToHiGlass } from '../gosling-to-higlass';
 import { HiGlassModel } from '../higlass-model';
+import { GoslingToHiGlassIdMapper } from '../track-and-view-ids';
 import { getLinkingInfo } from './linking';
 import { getTheme } from './theme';
 
@@ -35,7 +36,8 @@ describe('Should get linking information correctly', () => {
                 w: 12,
                 h: 12
             },
-            getTheme()
+            getTheme(),
+            new GoslingToHiGlassIdMapper()
         );
         const info = getLinkingInfo(higlass);
         expect(info).toHaveLength(2);

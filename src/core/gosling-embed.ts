@@ -85,9 +85,9 @@ export function embed(element: HTMLElement, spec: GoslingSpec, opts: GoslingEmbe
 
         compile(
             spec,
-            async (hsSpec, size, _, trackInfos) => {
+            async (hsSpec, size, _, trackInfos, idTable) => {
                 const hg = await launchHiglass(element, hsSpec, size, options);
-                const api = createApi(hg, hsSpec, trackInfos, theme);
+                const api = createApi(hg, hsSpec, trackInfos, theme, idTable);
                 resolve(api);
             },
             [...GoslingTemplates],
