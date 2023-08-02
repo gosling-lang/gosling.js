@@ -1,3 +1,12 @@
+## [0.10.1](https://github.com/gosling-lang/gosling.js/compare/v0.10.0...v0.10.1) (2023-08-02)
+
+
+### Bug Fixes
+
+* **data-fetcher:** gmod/gff stream issue ([#957](https://github.com/gosling-lang/gosling.js/issues/957)) ([c698785](https://github.com/gosling-lang/gosling.js/commit/c6987855c73e82a44a0ea10d7f822f121d480943))
+
+
+
 # [0.10.0](https://github.com/gosling-lang/gosling.js/compare/v0.9.33...v0.10.0) (2023-08-01)
 
 
