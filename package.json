@@ -81,6 +81,7 @@
         "quick-lru": "^6.1.1",
         "rbush": "^3.0.1",
         "react-grid-layout": "^1.2.5",
+        "stream-browserify": "^3.0.0",
         "threads": "^1.6.4",
         "uuid": "^8.3.2"
     },
