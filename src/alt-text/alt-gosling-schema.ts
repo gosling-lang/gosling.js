@@ -5,33 +5,28 @@ export type composition = ''
 
 
 
-export interface Counter {
+export interface AltCounter {
     nTracks: number;
     rowViews: number;
     colViews: number;
 }
 
-export interface allSameValues {
-    assembly: Boolean;
-    layout: Boolean;
-    arrangement: Boolean;
+export interface AltParentValues {
+    layout: 'linear' | 'circular';
+    arrangement: 'parallel' | 'serial' | 'horizontal' | 'vertical';
+    alignment: 'singular' | 'stack' | 'overlay'
     allVertical: Boolean;
     allHorizontal: Boolean;
-    static: Boolean;
-    xDomain: Boolean;
-    yDomain: Boolean;
-    dataSource: Boolean;
-    categories: Boolean;
 }
 
 
-export interface EncodingSeparated {
+export interface AltEncodingSeparated {
     encodingField: Encoding;
     encodingStatic: Encoding;
 }
 
 
-export interface TrackAlt {
+export interface AltTrack {
     description: string;
     
     position: {
@@ -56,7 +51,7 @@ export interface TrackAlt {
             orientation?: Orientation;
             overlaid: boolean;
             mark: Mark | Mark[];
-            encodingSeparated: EncodingSeparated;
+            encodingSeparated: AltEncodingSeparated;
         }
     }
     data: {
@@ -98,20 +93,20 @@ export interface TrackAlt {
 
 // }
 
-export interface GoslingSpecAlt {
+export interface AltGoslingSpec {
     title?: string;
     subtitle?: string;
     composition: {
         description: string;
         nTracks: number;
-        allSame: allSameValues;
-        counter: Counter;
+        allSame: AltParentValues;
+        counter: AltCounter;
     }
-    tracks: Array<TrackAlt> // TrackSingleAlt | TrackOverlaidAlt | TrackMultipleAlt>;
+    tracks: Array<AltTrack> // TrackSingleAlt | TrackOverlaidAlt | TrackMultipleAlt>;
 }
 
 
-export interface AttributesAlt {
+export interface AltAttributes {
     arrangement: 'parallel' | 'serial' | 'horizontal' | 'vertical';
     alignment: 'stack' | 'overlay';
 }
