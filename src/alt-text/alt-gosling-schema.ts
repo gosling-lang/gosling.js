@@ -101,10 +101,13 @@ export interface TrackAlt {
 export interface GoslingSpecAlt {
     title?: string;
     subtitle?: string;
-    allSame: allSameValues;
-    counter: Counter;
-    nTracks: number;
-    structure: Array<TrackAlt> // TrackSingleAlt | TrackOverlaidAlt | TrackMultipleAlt>;
+    composition: {
+        description: string;
+        nTracks: number;
+        allSame: allSameValues;
+        counter: Counter;
+    }
+    tracks: Array<TrackAlt> // TrackSingleAlt | TrackOverlaidAlt | TrackMultipleAlt>;
 }
 
 
