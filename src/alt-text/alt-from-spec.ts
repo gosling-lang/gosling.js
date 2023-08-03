@@ -1,5 +1,5 @@
 import type { GoslingSpec, SingleTrack, View, PartialTrack, RootSpecWithSingleView, ResponsiveSpecOfSingleView, RootSpecWithMultipleViews, ResponsiveSpecOfMultipleViews, ChannelValue, Encoding } from '../core/gosling.schema';
-import type { GoslingSpecFixed, EncodingSeparated, TrackFixed, RootSpecWithSingleViewFixed, Counter, allSameValues, TrackSingleAlt, TrackMultipleAlt, TrackOverlaidAlt, AttributesAlt, GoslingSpecAlt, SingleTrackFixed } from './alt-gosling-schema';
+import type { GoslingSpecFixed, TrackAlt, EncodingSeparated, TrackFixed, RootSpecWithSingleViewFixed, Counter, allSameValues, TrackSingleAlt, TrackMultipleAlt, TrackOverlaidAlt, AttributesAlt, GoslingSpecAlt, SingleTrackFixed } from './alt-gosling-schema';
 import { attributeExists, attributeHasChildValue, attributeExistsAndChildHasValue} from './util';
 import { determineSpecialCases } from './special-cases';
 // import { ExtendedSpecToAlt } from './write-alt';
@@ -86,21 +86,24 @@ function altSingleTrack(
     //  savedAttributes: AttributesAlt, 
     counter: Counter
 ) {
-    var trackSingle = {} as TrackSingleAlt;
+    var trackSingle = {} as TrackAlt;
 
-    trackSingle.trackNumber = counter.nTracks;
-    trackSingle.rowNumber = counter.rowViews;
-    trackSingle.colNumber = counter.colViews;
+
+    trackSingle.position.details.trackNumber = counter.nTracks;
+    trackSingle.position.details.rowNumber = counter.rowViews;
+    trackSingle.position.details.colNumber = counter.colViews;
 
     trackSingle.title = track.title;
-    trackSingle.assembly = track.assembly;
-    trackSingle.layout = track.layout;
-    trackSingle.mark = track.mark;
+    
+    trackSingle.appearance.details.assembly = track.assembly;
+    trackSingle.appearance.details.layout = track.layout;
+    trackSingle.appearance.details.overlaid = false;
+    trackSingle.appearance.details.mark = track.mark;
+    trackSingle.appearance.details.encodingSeparated = checkEncodings(track);
+    
+    trackSingle.data.details.data = track.data;
 
-    trackSingle.encodingSeparated = checkEncodings(track);
-    trackSingle.data = track.data;
-
-    trackSingle.specialDesc = determineSpecialCases(trackSingle);
+    trackSingle.type = determineSpecialCases(trackSingle);
 
     console.log(trackSingle)
 

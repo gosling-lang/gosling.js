@@ -31,32 +31,72 @@ export interface EncodingSeparated {
 }
 
 
-interface TrackAlt {
-    trackNumber: number;
-    rowNumber: number;
-    colNumber: number;
-    title?: string;
-    assembly?: Assembly;
-    layout?: Layout;
-    orientation?: Orientation;
-    xDomain?: DomainInterval | DomainChrInterval | DomainChr;
-    yDomain?: DomainInterval | DomainChrInterval | DomainChr;
-    data: DataDeep;
+export interface TrackAlt {
+    description: string;
+    
+    position: {
+        description: string;
+        details: {
+            trackNumber: number;
+            rowNumber: number;
+            colNumber: number;
+            // width?: number;
+            // height?: number;
+        }
+    }
+    
+    type: string | unknown;
+    title: string | unknown;
+    
+    appearance: {
+        description: string;
+        details: {
+            assembly?: Assembly;
+            layout?: Layout;
+            orientation?: Orientation;
+            overlaid: boolean;
+            mark: Mark | Mark[];
+            encodingSeparated: EncodingSeparated;
+        }
+    }
+    data: {
+        description: string;
+        details: {
+            xDomain?: DomainInterval | DomainChrInterval | DomainChr;
+            yDomain?: DomainInterval | DomainChrInterval | DomainChr;
+            data: DataDeep;
+        }
+    }
 }
 
-export interface TrackSingleAlt extends TrackAlt {
-    mark: Mark;
-    encodingSeparated: EncodingSeparated;
-    specialDesc?: string;
-}
+// interface TrackAltOld {
+//     trackNumber: number;
+//     rowNumber: number;
+//     colNumber: number;
+//     title?: string;
+//     assembly?: Assembly;
+//     layout?: Layout;
+//     orientation?: Orientation;
+//     xDomain?: DomainInterval | DomainChrInterval | DomainChr;
+//     yDomain?: DomainInterval | DomainChrInterval | DomainChr;
+//     data: DataDeep;
+// }
 
-export interface TrackOverlaidAlt extends TrackAlt {
+// export interface TrackSingleAlt extends TrackAlt {
+//     mark: Mark;
+//     encodingSeparated: EncodingSeparated;
+//     width?: number;
+//     height?: number;
+//     specialDesc?: string;
+// }
 
-}
+// export interface TrackOverlaidAlt extends TrackAlt {
 
-export interface TrackMultipleAlt extends TrackAlt {
+// }
 
-}
+// export interface TrackMultipleAlt extends TrackAlt {
+
+// }
 
 export interface GoslingSpecAlt {
     title?: string;
@@ -64,7 +104,7 @@ export interface GoslingSpecAlt {
     allSame: allSameValues;
     counter: Counter;
     nTracks: number;
-    structure: Array<TrackSingleAlt> // | TrackOverlaidAlt | TrackMultipleAlt>;
+    structure: Array<TrackAlt> // TrackSingleAlt | TrackOverlaidAlt | TrackMultipleAlt>;
 }
 
 
@@ -170,3 +210,5 @@ export interface DataInfo {
     peakMax?: any,
     peakAvr?: any,
 }
+
+//xport type specPart
