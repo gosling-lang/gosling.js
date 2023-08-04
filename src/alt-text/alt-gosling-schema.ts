@@ -156,6 +156,8 @@ export interface AltSpecComposition {
 export interface AltGoslingSpec {
     title?: string;
     subtitle?: string;
+    alt: string;
+    longDescription: string;
     composition: AltSpecComposition;
     tracks: Array<AltTrack> // TrackSingleAlt | TrackOverlaidAlt | TrackMultipleAlt>;
 }

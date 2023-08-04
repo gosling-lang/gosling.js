@@ -2,7 +2,7 @@ import type { GoslingSpec, SingleTrack, View, PartialTrack, RootSpecWithSingleVi
 import type { GoslingSpecFixed, AltSpecComposition, AltTrackPosition, AltTrackAppearance, AltTrackData, AltTrackDataDetails, AltTrackAppearanceDetails, AltTrackPositionDetails, AltTrack, AltEncodingSeparated, TrackFixed, RootSpecWithSingleViewFixed, AltCounter, AltParentValues, AltGoslingSpec, SingleTrackFixed } from './alt-gosling-schema';
 import { attributeExists, attributeHasChildValue, attributeExistsAndChildHasValue} from './util';
 import { determineSpecialCases } from './special-cases';
-// import { ExtendedSpecToAlt } from './write-alt';
+import { addDescriptions } from './alt-to-text';
 import {
     // single tracks
     IsSingleTrack,
@@ -24,7 +24,16 @@ export function getAlt(
     const altText = 'test';
     console.log(spec)
 
+    // get altSpec
     const altSpec = getAltSpec(spec);
+
+    // add descriptions
+    addDescriptions(altSpec)
+    
+
+    console.log(altSpec);
+
+
     //let altSpecDef = AltExtendSpec(specCopy);
     // console.log(altSpecDef);
 
@@ -57,7 +66,8 @@ export function getAltSpec(
     var composition: AltSpecComposition = { description: "", nTracks: counter.nTracks, allSame: altParentValues, counter: counter }
     altSpec.composition = composition;
 
-    console.log(altSpec);
+    altSpec.alt = "";
+    altSpec.longDescription = "";
 
     return altSpec;
 }
@@ -171,6 +181,9 @@ function altSingleTrack(
     
     // determine type if possible
     altTrack.type = determineSpecialCases(altTrack);
+
+    // empty description, to be filled in.
+    altTrack.description = "";
 
     //console.log(altTrack)
 

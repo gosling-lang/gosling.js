@@ -6,7 +6,7 @@ import { getRelativeTrackInfo, type Size } from './utils/bounding-box';
 import type { CompleteThemeDeep } from './utils/theme';
 import { renderHiGlass as createHiGlassModels } from './create-higlass-models';
 import { manageResponsiveSpecs } from './responsive';
-import {getAlt} from '../alt-text/alt-from-spec';
+import {getAlt} from '../alt-text/init';
 
 export type CompileCallback = (hg: HiGlassSpec, size: Size, gs: GoslingSpec, trackInfos: TrackMouseEventData[]) => void;
 
