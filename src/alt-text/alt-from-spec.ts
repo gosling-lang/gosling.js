@@ -2,7 +2,7 @@ import type { GoslingSpec, SingleTrack, View, PartialTrack, RootSpecWithSingleVi
 import type { GoslingSpecFixed, AltSpecComposition, AltTrackPosition, AltTrackAppearance, AltTrackData, AltTrackDataDetails, AltTrackAppearanceDetails, AltTrackPositionDetails, AltTrack, AltEncodingSeparated, TrackFixed, RootSpecWithSingleViewFixed, AltCounter, AltParentValues, AltGoslingSpec, SingleTrackFixed } from './alt-gosling-schema';
 import { attributeExists, attributeHasChildValue, attributeExistsAndChildHasValue} from './util';
 import { determineSpecialCases } from './special-cases';
-import { addDescriptions } from './alt-to-text';
+
 import {
     // single tracks
     IsSingleTrack,
@@ -16,35 +16,6 @@ import {
     IsChannelValue
 } from '../core/gosling.schema.guards';
 
-
-export function getAlt(
-    spec: GoslingSpec,
-    specCopy: GoslingSpec
-): string {
-    const altText = 'test';
-    console.log(spec)
-
-    // get altSpec
-    const altSpec = getAltSpec(spec);
-
-    // add descriptions
-    addDescriptions(altSpec)
-    
-
-    console.log(altSpec);
-
-
-    //let altSpecDef = AltExtendSpec(specCopy);
-    // console.log(altSpecDef);
-
-    // function isMultiple(sp: (RootSpecWithSingleView & ResponsiveSpecOfSingleView) | (RootSpecWithMultipleViews & ResponsiveSpecOfMultipleViews)): sp is (RootSpecWithSingleView & ResponsiveSpecOfSingleView) {
-    //     return true
-    // }
-
-    //let altTextGen = ExtendedSpecToAlt(altSpecDef);
-    //console.log(altTextGen);
-    return altText;
-}
 
 
 export function getAltSpec(
