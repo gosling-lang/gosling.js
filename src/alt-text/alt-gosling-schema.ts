@@ -21,8 +21,8 @@ export interface AltParentValues {
 
 
 export interface AltEncodingSeparated {
-    encodingField: Encoding;
-    encodingStatic: Encoding;
+    encodingField: Encoding[];
+    encodingStatic: Encoding[];
 }
 
 
@@ -33,12 +33,12 @@ export interface AltTrackPositionDetails {
 }
 
 export interface AltTrackAppearanceDetails {
-    assembly?: Assembly;
-    layout?: Layout;
-    orientation?: Orientation;
+    layout: Layout;
     overlaid: boolean;
     mark: Mark | Mark[];
-    encodingSeparated: AltEncodingSeparated;
+    encodings: AltEncodingSeparated;
+    orientation?: Orientation;
+    assembly?: Assembly;
 }
 
 export interface AltTrackDataDetails {
@@ -145,15 +145,18 @@ export interface AltTrack {
 
 // }
 
+
+export interface AltSpecComposition {
+    description: string;
+    nTracks: number;
+    allSame: AltParentValues;
+    counter: AltCounter;
+}
+
 export interface AltGoslingSpec {
     title?: string;
     subtitle?: string;
-    composition: {
-        description: string;
-        nTracks: number;
-        allSame: AltParentValues;
-        counter: AltCounter;
-    }
+    composition: AltSpecComposition;
     tracks: Array<AltTrack> // TrackSingleAlt | TrackOverlaidAlt | TrackMultipleAlt>;
 }
 

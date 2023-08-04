@@ -1,9 +1,9 @@
-import type { TrackSingleAlt } from './alt-gosling-schema';
+import type { AltTrack } from './alt-gosling-schema';
 import { attributeExists, attributeExistsAndChildHasValue } from './util';
 
-export function determineSpecialCases(trackSingle: TrackSingleAlt): string | undefined {
-    let _mark = trackSingle.mark;
-    let _encodingField = trackSingle.encodingSeparated.encodingField;
+export function determineSpecialCases(altTrack: AltTrack): string | undefined {
+    let _mark = altTrack.appearance.details.mark;
+    let _encodingField = altTrack.appearance.details.encodings.encodingField;
 
     if (_mark === 'point' && attributeExistsAndChildHasValue(_encodingField, 'x', 'type', 'quantitative') && attributeExistsAndChildHasValue(_encodingField, 'y', 'type', 'quantitative')) {
         return 'scatter plot';
