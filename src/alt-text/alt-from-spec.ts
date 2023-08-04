@@ -1,5 +1,5 @@
 import type { GoslingSpec, SingleTrack, View, PartialTrack, RootSpecWithSingleView, ResponsiveSpecOfSingleView, RootSpecWithMultipleViews, ResponsiveSpecOfMultipleViews, ChannelValue, Encoding } from '../core/gosling.schema';
-import type { GoslingSpecFixed, AltTrack, AltEncodingSeparated, TrackFixed, RootSpecWithSingleViewFixed, AltCounter, AltParentValues, AltGoslingSpec, SingleTrackFixed } from './alt-gosling-schema';
+import type { GoslingSpecFixed, AltTrackPosition, AltTrackAppearance, AltTrackData, AltTrackDataDetails, AltTrackAppearanceDetails, AltTrackPositionDetails, AltTrack, AltEncodingSeparated, TrackFixed, RootSpecWithSingleViewFixed, AltCounter, AltParentValues, AltGoslingSpec, SingleTrackFixed } from './alt-gosling-schema';
 import { attributeExists, attributeHasChildValue, attributeExistsAndChildHasValue} from './util';
 import { determineSpecialCases } from './special-cases';
 // import { ExtendedSpecToAlt } from './write-alt';
@@ -47,7 +47,7 @@ export function getAltSpec(
     altParentValues.arrangement = 'vertical';
     altParentValues.layout = 'linear';
 
-    determineStructure(spec, spec, altParentValues, counter)
+    determineStructure(spec, altSpec, altParentValues, counter)
 
     return altSpec;
 }
@@ -64,18 +64,22 @@ export function determineStructure(
         if (specPart.tracks.length > 1) {
             if (IsOverlaidTracks(specPart)) {
                 altOverlaidTracks(specPart, altParentValues, counter);
+                counter.nTracks ++;
             } else if (IsStackedTracks(specPart)) {
                 altStackedTracks(specPart, altParentValues, counter);
+                counter.nTracks ++;
             } else {
-                specPart.tracks.forEach(t => {
-                     altSingleTrack(t, altParentValues, counter)
-                });
+                for (const i in specPart.tracks) {
+                    const track =  specPart.tracks[i] as SingleTrack;
+                    altSpec.tracks[counter.nTracks] = altSingleTrack(track, altParentValues, counter);
+                    counter.nTracks ++;
+                }
             }
          
         } else {
             const track = specPart.tracks[0] as SingleTrack;
-            console.log(specPart.tracks)
             altSpec.tracks[counter.nTracks] = altSingleTrack(track, altParentValues, counter);
+            counter.nTracks ++;
         }
     }
     // multiview
@@ -118,40 +122,41 @@ function altUpdateParentValues(
     return altParentValuesCopy;
 }
 
-function altFlatTracks() {
-
-}
-
 function altSingleTrack(
     track: SingleTrack,
     altParentValues: AltParentValues, 
     counter: AltCounter
 ): AltTrack {
-    var trackSingle = {} as AltTrack;
-
-    trackSingle.position.details.trackNumber = counter.nTracks;
-    trackSingle.position.details.rowNumber = counter.rowViews;
-    trackSingle.position.details.colNumber = counter.colViews;
-
-    trackSingle.title = track.title;
+    var altTrack = {} as AltTrack;
     
-    trackSingle.appearance.details.assembly = track.assembly;
-    trackSingle.appearance.details.layout = track.layout;
-    trackSingle.appearance.details.overlaid = false;
-    trackSingle.appearance.details.mark = track.mark;
-    trackSingle.appearance.details.encodingSeparated = checkEncodings(track);
+    var positionDetails: AltTrackPositionDetails = {trackNumber: counter.nTracks, rowNumber: counter.rowViews, colNumber: counter.colViews}
+
+    var appearanceDetails = {} as AltTrackAppearanceDetails;
+
+    appearanceDetails.assembly = track.assembly;
+    appearanceDetails.layout = track.layout;
+    appearanceDetails.overlaid = false;
+    appearanceDetails.mark = track.mark;
+    appearanceDetails.encodingSeparated = checkEncodings(track);
     
-    trackSingle.data.details.data = track.data;
+    var dataDetails: AltTrackDataDetails = {data: track.data};
+   
+    var position: AltTrackPosition = {description: "", details: positionDetails}
+    var appearance: AltTrackAppearance = {description: "", details: appearanceDetails};
+    var data: AltTrackData = {description: "", details: dataDetails};
 
-    trackSingle.type = determineSpecialCases(trackSingle);
 
-    console.log(trackSingle)
+    altTrack.position = position;
+    altTrack.appearance = appearance;
+    altTrack.title = track.title;
+    altTrack.data = data;
+    altTrack.type = determineSpecialCases(altTrack);
 
-    return trackSingle;
+    console.log(altTrack)
+
+    return altTrack;
     
 }
-
-
 
 function checkEncodings(
     track: SingleTrack
@@ -176,6 +181,10 @@ function checkEncodings(
     // bundle together into one object
     const encodingSeparated: AltEncodingSeparated = {encodingField: encodingField, encodingStatic: encodingStatic}
     return encodingSeparated;
+}
+
+function altFlatTracks() {
+
 }
 
 function altStackedTracks(

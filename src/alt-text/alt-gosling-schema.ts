@@ -26,43 +26,95 @@ export interface AltEncodingSeparated {
 }
 
 
+export interface AltTrackPositionDetails {
+    trackNumber: number;
+    rowNumber: number;
+    colNumber: number;
+}
+
+export interface AltTrackAppearanceDetails {
+    assembly?: Assembly;
+    layout?: Layout;
+    orientation?: Orientation;
+    overlaid: boolean;
+    mark: Mark | Mark[];
+    encodingSeparated: AltEncodingSeparated;
+}
+
+export interface AltTrackDataDetails {
+    xDomain?: DomainInterval | DomainChrInterval | DomainChr;
+    yDomain?: DomainInterval | DomainChrInterval | DomainChr;
+    data: DataDeep;
+}
+
+export interface AltTrackPosition {
+    description: string;
+    details: AltTrackPositionDetails;
+}
+export interface AltTrackAppearance {
+    description: string;
+    details: AltTrackAppearanceDetails;
+}
+
+export interface AltTrackData {
+    description: string;
+    details: AltTrackDataDetails;
+}
+
 export interface AltTrack {
     description: string;
-    
-    position: {
-        description: string;
-        details: {
-            trackNumber: number;
-            rowNumber: number;
-            colNumber: number;
-            // width?: number;
-            // height?: number;
-        }
-    }
-    
+
     type: string | unknown;
     title: string | unknown;
     
-    appearance: {
-        description: string;
-        details: {
-            assembly?: Assembly;
-            layout?: Layout;
-            orientation?: Orientation;
-            overlaid: boolean;
-            mark: Mark | Mark[];
-            encodingSeparated: AltEncodingSeparated;
-        }
-    }
-    data: {
-        description: string;
-        details: {
-            xDomain?: DomainInterval | DomainChrInterval | DomainChr;
-            yDomain?: DomainInterval | DomainChrInterval | DomainChr;
-            data: DataDeep;
-        }
-    }
+    position: AltTrackPosition;
+    appearance: AltTrackAppearance;
+    data: AltTrackData; 
 }
+
+
+
+
+
+
+// export interface AltTrack {
+//     description: string;
+    
+//     position: {
+//         description: string;
+//         details: {
+//             trackNumber: number;
+//             rowNumber: number;
+//             colNumber: number;
+//             // width?: number;
+//             // height?: number;
+//         }
+//     }
+    
+//     type: string | unknown;
+//     title: string | unknown;
+    
+//     appearance: {
+//         description: string;
+//         details: {
+//             assembly?: Assembly;
+//             layout?: Layout;
+//             orientation?: Orientation;
+//             overlaid: boolean;
+//             mark: Mark | Mark[];
+//             encodingSeparated: AltEncodingSeparated;
+//         }
+//     }
+//     data: {
+//         description: string;
+//         details: {
+//             xDomain?: DomainInterval | DomainChrInterval | DomainChr;
+//             yDomain?: DomainInterval | DomainChrInterval | DomainChr;
+//             data: DataDeep;
+//         }
+//     }
+// }
+
 
 // interface TrackAltOld {
 //     trackNumber: number;
