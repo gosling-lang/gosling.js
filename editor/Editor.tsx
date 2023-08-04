@@ -210,6 +210,13 @@ interface PreviewAlt {
     data: Datum[];
 }
 
+function createTree(data: AltGoslingSpec) {
+    return (
+        <div>
+            Test
+        </div>
+    )
+}
 
 /**
  * React component for editing Gosling specs
@@ -1361,7 +1368,8 @@ function Editor(props: RouteComponentProps) {
                                                                                 <li>{key}</li> 
                                                                             ))}
                                             
-
+                                                                        {createTree(previewAlt.current[selectedPreviewAlt].data)}
+                            
 
                                                                 </ul>
 
