@@ -1,4 +1,5 @@
 import type { AltGoslingSpec, AltTrack } from "./alt-gosling-schema";
+import { attributeExists, attributeExistsReturn, attributeExistsAndChildHasValue } from "./util";
 
 export function addDescriptions(altGoslingSpec: AltGoslingSpec) {
     addTrackPositionDescriptions(altGoslingSpec);
@@ -9,13 +10,13 @@ export function addDescriptions(altGoslingSpec: AltGoslingSpec) {
 }
 
 
-export function addTrackPositionDescriptions(altGoslingSpec: AltGoslingSpec) {
+function addTrackPositionDescriptions(altGoslingSpec: AltGoslingSpec) {
     if (altGoslingSpec.composition.nTracks == 1) {
         altGoslingSpec.tracks[0].position.description = 'This is the only track.'
     }
 }
 
-export function addTrackAppearanceDescriptions(altGoslingSpec: AltGoslingSpec) {
+function addTrackAppearanceDescriptions(altGoslingSpec: AltGoslingSpec) {
     for (const i in altGoslingSpec.tracks) {
         var track = altGoslingSpec.tracks[i];
         addTrackAppearanceDescription(track);
@@ -23,21 +24,129 @@ export function addTrackAppearanceDescriptions(altGoslingSpec: AltGoslingSpec) {
     
 }
 
-export function addTrackAppearanceDescription(altTrack: AltTrack) {
-    altTrack.description = "Nu echt iets."
+
+function addTrackAppearanceDescription(altTrack: AltTrack) {
+    //altTrack.description = "Nu echt iets."
+    const appearanceDet = altTrack.appearance.details;
+    var desc = ""
+
+
+    if (altTrack.type !== 'unknown') {
+        trackAppearanceKnownType(altTrack);
+    } else {
+        trackAppearanceUnknownType(altTrack);
+    }
+
+
+
+
+    
 }
 
 
-export function addTrackDataDescriptions(altGoslingSpec: AltGoslingSpec) {
+function trackAppearanceKnownType(altTrack: AltTrack) {
+    var desc = ""
+    if (altTrack.type === 'bar chart') {
+        var binSize = 1;
+        if (attributeExists(altTrack.appearance.details.encodings.encodingStatic, 'size')) {
+            var size = attributeExistsReturn(altTrack.appearance.details.encodings.encodingStatic, 'size');
+            binSize = size.value;
+        } else {
+             binSize = 1
+        }
+        desc = desc.concat('Barchart.') 
+
+        if (altTrack.appearance.details.layout == 'linear') {
+            desc = desc.concat(' On the x-axis, the genome is shown. There are vertical bars, with a width of ', (binSize * 256).toString(), ' bp, which height corresponds to the expression on that section of the genome. ')
+        } else {
+            desc = desc.concat(' On the circular x-axis, the genome is shown. The height of the bars (pointing outwards of the circel), correspond to the expression on that section of the genome. The width of the bars is ', (binSize * 256).toString(), ' bp. ')
+        }
+
+       
+        //categories
+        //if ()
+
+    }
+
+    if (altTrack.type === 'line chart') {
+
+    }
+
+    if (altTrack.type === 'heat map') {
+
+    }
+
+    altTrack.description = desc;
+}
+
+function trackAppearanceUnknownType(altTrack: AltTrack) {
+    var desc = ""
+
+    desc = desc.concat('Visualization.')
+
+    if (altTrack.title !== 'unknown') {
+        //desc = desc.concat(' titled: ' + altTrack.title + '.');
+    }
+   
+    const encodingImportant = ['x', 'y', 'row', 'color']
+    let _first = true;
+    for (let encoding of encodingImportant) {
+        if (attributeExists(appearanceDet.encodings.encodingField, encoding)) {
+            let encodingObj = appearanceDet.encodings.encodingField[encoding];
+            if (_first) {
+                desc = desc.concat(' with ')
+                _first = false;
+            } else {
+                desc = desc.concat(', ')
+            }
+            desc = desc.concat(encodingObj.type + ' ' + encoding + '-axis')
+        }
+    }
+
+    if (attributeExistsAndChildHasValue(appearanceDet.encodings.encodingField, 'x', 'type', 'genomic') || (attributeExistsAndChildHasValue(appearanceDet.encodings.encodingField, 'y', 'type', 'genomic'))) {
+        desc = desc.concat(',  with ' + appearanceDet.layout + ' genome,')
+    }
+        
+
+    if (attributeExists(altTrack.data.details.data, 'binSize')) {
+        desc = desc.concat(" Data is binned in intervals of " + altTrack.data.details.data.binSize * 256 + " bp.");
+    }
+
+    
+    if (attributeExists(altTrack.data.details.data, 'categories')) {
+        if (altTrack.data.details.data.categories.length === 1) {
+            //desc = desc.concat(" The only category shown is " + altTrack.data.details.data.categories[0] + ".");
+        } else {
+            desc = desc.concat(" The " + altTrack.data.details.data.categories.length + " different categories shown are: " + altTrack.data.details.data.categories.slice(0, -1).join(", ") + " and " + altTrack.data.details.data.categories.slice(-1) + ".");
+        }
+    }
+
+    desc = desc.charAt(0).toUpperCase() + desc.slice(1);
+        
+    return desc;
 
 }
 
-export function addGlobalPositionDescriptions(altGoslingSpec: AltGoslingSpec) {
+
+
+
+function addTrackDataDescriptions(altGoslingSpec: AltGoslingSpec) {
 
 }
 
-export function addGlobalDescription(altGoslingSpec: AltGoslingSpec) {
-    altGoslingSpec.longDescription = 'fun'
+function addGlobalPositionDescriptions(altGoslingSpec: AltGoslingSpec) {
+    if (altGoslingSpec.composition.nTracks == 1) {
+        altGoslingSpec.composition.description = 'There is only one track.'
+    }
+
+}
+
+function addGlobalDescription(altGoslingSpec: AltGoslingSpec) {
+
+    if (altGoslingSpec.composition.nTracks == 1) {
+        altGoslingSpec.longDescription = altGoslingSpec.tracks[0].description;
+    }
+    
 }
 
 

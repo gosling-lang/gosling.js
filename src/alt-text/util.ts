@@ -2,6 +2,10 @@ export function attributeExists(object: any, attribute: any) {
     return(attribute in object);
 };
 
+export function attributeExistsReturn(object: any, attribute: any) {
+    return(object[attribute]);
+};
+
 export function attributeHasChildValue(object: any, attribute: any, attributeChild: any, value: any) {
     return(object[attribute][attributeChild] === value);
 };
