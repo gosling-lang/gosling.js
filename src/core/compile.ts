@@ -63,6 +63,18 @@ export function compile(
     // Retrieve alt text
     const altText = getAlt(spec, specCopy);
 
+    try {
+        if (PubSub) {
+            PubSub.publish('alt-preview', {
+                id: 'first',
+                data:
+                    altText
+            });
+        }
+    } catch (e) {
+        // ..
+    }
+
     // Make HiGlass models for individual tracks
     createHiGlassModels(specCopy, trackInfos, callback, theme);
 }

@@ -7,7 +7,7 @@ import { addDescriptions } from './alt-to-text';
 export function getAlt(
     specTraversed: GoslingSpec,
     specOriginal: GoslingSpec
-): string {
+): AltGoslingSpec {
     console.log(specTraversed)
 
     // get altSpec
@@ -18,5 +18,5 @@ export function getAlt(
 
     console.log(altSpec);
 
-    return 'hello';
+    return altSpec;
 }

@@ -27,6 +27,7 @@ import EditorPanel, { type EditorLangauge } from './EditorPanel';
 import EditorExamples from './EditorExamples';
 
 import './Editor.css';
+import type { AltGoslingSpec } from 'src/alt-text/alt-gosling-schema';
 
 function json2js(jsonCode: string) {
     return `var spec = ${jsonCode} \nexport { spec }; \n`;
@@ -204,6 +205,12 @@ interface PreviewData {
     data: Datum[];
 }
 
+interface PreviewAlt {
+    id: string;
+    data: Datum[];
+}
+
+
 /**
  * React component for editing Gosling specs
  */
@@ -230,6 +237,7 @@ function Editor(props: RouteComponentProps) {
     const defaultJsCode = urlGist || urlExampleId || !INIT_DEMO.specJs ? json2js(defaultCode) : INIT_DEMO.specJs;
 
     const previewData = useRef<PreviewData[]>([]);
+    const previewAlt = useRef<PreviewAlt[]>([]);
     const [refreshData, setRefreshData] = useState<boolean>(false);
     const [refreshAlt, setRefreshAlt] = useState<boolean>(false);
     const [additionalInfoTab, setAdditionalInfoTab] = useState('dataPreview');
@@ -250,6 +258,7 @@ function Editor(props: RouteComponentProps) {
     const [showExamples, setShowExamples] = useState<boolean>(false);
     const [autoRun, setAutoRun] = useState(true);
     const [selectedPreviewData, setSelectedPreviewData] = useState<number>(0);
+    const [selectedPreviewAlt, setSelectedPreviewAlt] = useState<number>(0);
 
     const [gistTitle, setGistTitle] = useState<string>();
     const [description, setDescription] = useState<string | null>();
@@ -351,6 +360,8 @@ function Editor(props: RouteComponentProps) {
     useEffect(() => {
         previewData.current = [];
         setSelectedPreviewData(0);
+        previewAlt.current = [];
+        setSelectedPreviewAlt(0);
         if (isImportDemo) {
             const jsonCode = stringifySpec(demo.spec as gosling.GoslingSpec);
             setCode(jsonCode);
@@ -606,11 +617,31 @@ function Editor(props: RouteComponentProps) {
     });
 
     /**
+     * Subscribe alt from Gosling compile.
+     */
+    useEffect(() => {
+        // We want to show alt text in the editor.
+        const token = PubSub.subscribe('alt-preview', (_: string, data: PreviewAlt) => {
+
+            //const id = `${data.dataConfig}`;
+            //const newPreviewAlt = previewAlt.current.filter(d => d.id !== id);
+            const id = data.id
+            const newPreviewAlt = previewAlt.current.filter(d => d.id !== id);
+            previewAlt.current = [...newPreviewAlt, { ...data, id }];
+        });
+        return () => {
+            PubSub.unsubscribe(token);
+        };
+    });
+
+    /**
      * Render visualization when edited
      */
     useEffect(() => {
         previewData.current = [];
         setSelectedPreviewData(0);
+        previewAlt.current = [];
+        setSelectedPreviewAlt(0);
         runSpecUpdateVis();
     }, [code, jsCode, autoRun, language, theme]);
 
@@ -1316,8 +1347,32 @@ function Editor(props: RouteComponentProps) {
                                                     <br />
                                                     {'REFRESH TEXT DESCRIPTIONS'}
                                                 </button>
-                                                {/* add description here */}
-                                                Test
+                                                                                        
+                                                {previewAlt.current.length > selectedPreviewAlt &&
+                                                previewAlt.current[selectedPreviewAlt] &&
+                                                Object.keys(previewAlt.current[selectedPreviewAlt].data).length > 0 ? (
+                            
+                                                    <>
+                                                        <div className="editor-alt-preview-table">
+                                                            <div>
+                                                                <ul>
+                                                                    {Object.keys(previewAlt.current[selectedPreviewAlt].data).map(
+                                                                        (key: string) => (
+                                                                                <li>{key}</li> 
+                                                                            ))}
+                                            
+
+
+                                                                </ul>
+
+                                                            </div>
+                                                        </div>
+                                                    </>
+                                                ) : null}
+
+
+
+
                                             </div>
                                         </div>
                                     </div>
