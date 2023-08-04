@@ -39,40 +39,49 @@ function addTrackAppearanceDescription(altTrack: AltTrack) {
 
 
 
-
     
 }
 
 
 function trackAppearanceKnownType(altTrack: AltTrack) {
     var desc = ""
-    if (altTrack.type === 'bar chart') {
-        var binSize = 1;
-        if (attributeExists(altTrack.appearance.details.encodings.encodingStatic, 'size')) {
-            var size = attributeExistsReturn(altTrack.appearance.details.encodings.encodingStatic, 'size');
-            binSize = size.value;
-        } else {
-             binSize = 1
+
+    switch(altTrack.type) {
+        case 'bar chart': {
+    
+            var binSize = 1;
+            if (attributeExists(altTrack.appearance.details.encodings.encodingStatic, 'size')) {
+                var size = attributeExistsReturn(altTrack.appearance.details.encodings.encodingStatic, 'size');
+                binSize = size.value;
+            } else {
+                binSize = 1
+            }
+            desc = desc.concat('Barchart.') 
+
+            if (altTrack.appearance.details.layout == 'linear') {
+                desc = desc.concat(' On the x-axis, the genome is shown. There are vertical bars, with a width of ', (binSize * 256).toString(), ' bp, which height corresponds to the expression on that section of the genome. ')
+            } else {
+                desc = desc.concat(' On the circular x-axis, the genome is shown. The height of the bars (pointing outwards of the circel), correspond to the expression on that section of the genome. The width of the bars is ', (binSize * 256).toString(), ' bp. ')
+            }
+
+        
+            //categories
+            //if ()
+
+            break;
         }
-        desc = desc.concat('Barchart.') 
 
-        if (altTrack.appearance.details.layout == 'linear') {
-            desc = desc.concat(' On the x-axis, the genome is shown. There are vertical bars, with a width of ', (binSize * 256).toString(), ' bp, which height corresponds to the expression on that section of the genome. ')
-        } else {
-            desc = desc.concat(' On the circular x-axis, the genome is shown. The height of the bars (pointing outwards of the circel), correspond to the expression on that section of the genome. The width of the bars is ', (binSize * 256).toString(), ' bp. ')
+        case 'line chart': {
+            break;
         }
 
-       
-        //categories
-        //if ()
+        case 'heat map': {
+            break;
+        }
 
-    }
-
-    if (altTrack.type === 'line chart') {
-
-    }
-
-    if (altTrack.type === 'heat map') {
+        default: {
+            // move unknowntype here?
+        }
 
     }
 
@@ -87,6 +96,8 @@ function trackAppearanceUnknownType(altTrack: AltTrack) {
     if (altTrack.title !== 'unknown') {
         //desc = desc.concat(' titled: ' + altTrack.title + '.');
     }
+
+    var appearanceDet = altTrack.appearance.details;
    
     const encodingImportant = ['x', 'y', 'row', 'color']
     let _first = true;
