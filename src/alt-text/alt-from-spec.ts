@@ -1,7 +1,8 @@
-import type { GoslingSpec, SingleTrack, View, PartialTrack, RootSpecWithSingleView, ResponsiveSpecOfSingleView, RootSpecWithMultipleViews, ResponsiveSpecOfMultipleViews, ChannelValue, Encoding, DataDeep, MultivecData } from '../core/gosling.schema';
+import type { GoslingSpec, SingleTrack, View, PartialTrack, RootSpecWithSingleView, ResponsiveSpecOfSingleView, RootSpecWithMultipleViews, ResponsiveSpecOfMultipleViews, ChannelValue, Encoding, DataDeep, MultivecData, Y } from '../core/gosling.schema';
 import type { GoslingSpecFixed, AltTrackDataFields, AltSpecComposition, AltTrackPosition, AltTrackAppearance, AltTrackData, AltTrackDataDetails, AltTrackAppearanceDetails, AltTrackPositionDetails, AltTrack, AltEncodingSeparated, TrackFixed, RootSpecWithSingleViewFixed, AltCounter, AltParentValues, AltGoslingSpec, SingleTrackFixed } from './alt-gosling-schema';
 import { attributeExists, attributeExistsDefaultString, attributeHasChildValue, attributeExistsAndChildHasValue} from './util';
 import { determineSpecialCases } from './special-cases';
+import { IsChannelDeep } from '../core/gosling.schema.guards';
 
 import {
     // single tracks
@@ -178,7 +179,7 @@ function determineFields(
         if (dataMultivec.row !== 'unknown') {
             fields.categoryField = dataMultivec.row;
         }
-        fields.genomicField = attributeExistsDefaultString(dataMultivec.start, 'start');
+        fields.genomicField = attributeExistsDefaultString(dataMultivec.start, 'position');
         fields.valueField = attributeExistsDefaultString(dataMultivec.start, 'value');
     }
 
@@ -189,20 +190,22 @@ function checkEncodings(
     track: SingleTrack
 ): AltEncodingSeparated {
 
-    var encodingFields = [];
-    var encodingStatics = [];
+    var encodingFields = {} as Encoding;
+    var encodingStatics = {} as Encoding;
 
     const supportedEncodings = ['x', 'y', 'xe', 'ye', 'x1', 'y1', 'x1e', 'y1e', 'row', 'color', 'size', 'text', 'stroke', 'strokeWidth', 'opacity'];
 
-    for (const i in supportedEncodings) {
-        const encoding = supportedEncodings[i];
-        if (attributeExists(track, encoding)) {
-            // todo: use IsChannelDeep / isChannelValue type guard instead
-            if(attributeExists(track[encoding],'field')) {
-                encodingFields[encoding] = track[encoding];
-            } else {
-                encodingStatics[encoding] = track[encoding];
-            }
+    for (const encoding of supportedEncodings) {
+        
+        if (IsChannelDeep(track[encoding])) {
+            encodingFields[encoding] = track[encoding];
+        } 
+
+
+        if (IsChannelDeep(track[encoding])) {
+            encodingFields[encoding] = track[encoding];
+        } else if (IsChannelValue(track[encoding])) {
+            encodingStatics[encoding] = track[encoding];
         }
     }
     

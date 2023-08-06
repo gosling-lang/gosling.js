@@ -21,8 +21,8 @@ export interface AltParentValues {
 
 
 export interface AltEncodingSeparated {
-    encodingField: Encoding[];
-    encodingStatic: Encoding[];
+    encodingField: Encoding;
+    encodingStatic: Encoding;
 }
 
 
