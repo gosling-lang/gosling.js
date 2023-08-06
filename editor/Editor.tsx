@@ -27,7 +27,8 @@ import EditorPanel, { type EditorLangauge } from './EditorPanel';
 import EditorExamples from './EditorExamples';
 
 import './Editor.css';
-import type { AltGoslingSpec } from 'src/alt-text/alt-gosling-schema';
+import type { AltGoslingSpec } from '../../gosling.js/src/alt-text/alt-gosling-schema';
+import { altUpdateSpecWithData } from '../../gosling.js/src/alt-text/alt-from-data';
 
 function json2js(jsonCode: string) {
     return `var spec = ${jsonCode} \nexport { spec }; \n`;
@@ -207,7 +208,7 @@ interface PreviewData {
 
 interface PreviewAlt {
     id: string;
-    data: Datum[];
+    data: AltGoslingSpec;
 }
 
 function createTree(data: AltGoslingSpec) {
@@ -632,9 +633,30 @@ function Editor(props: RouteComponentProps) {
 
             //const id = `${data.dataConfig}`;
             //const newPreviewAlt = previewAlt.current.filter(d => d.id !== id);
-            const id = data.id
+            const id = data.id;
             const newPreviewAlt = previewAlt.current.filter(d => d.id !== id);
             previewAlt.current = [...newPreviewAlt, { ...data, id }];
+        });
+        return () => {
+            PubSub.unsubscribe(token);
+        };
+    });
+
+    /**
+     * Subscribe to raw data publishing from gosling-track;
+     */
+    useEffect(() => {
+        // Every time the raw data refreshes, we want update the AltGoslingSpec with the new data.
+        const token = PubSub.subscribe('rawData', (_: string, data: {id: string, data: Datum[]}) => {
+            // console.log(data.id);
+
+            // get latest AltGoslingSpec
+            const updatedAlt = altUpdateSpecWithData(previewAlt.current[selectedPreviewAlt].data, data.id, data.data)
+            const id = JSON.stringify(updatedAlt)
+            const updatedPreviewAlt: PreviewAlt = {id: id, data: updatedAlt};
+           
+            const newPreviewAlt = previewAlt.current.filter(d => d.id !== id);       
+            previewAlt.current = [...newPreviewAlt, { ...updatedPreviewAlt, id }];
         });
         return () => {
             PubSub.unsubscribe(token);
@@ -1368,7 +1390,8 @@ function Editor(props: RouteComponentProps) {
                                                                                 <li>{key}</li> 
                                                                             ))}
                                             
-                                                                        {createTree(previewAlt.current[selectedPreviewAlt].data)}
+                                                                        {selectedPreviewAlt}
+                                                                        {/* {createTree(previewAlt.current[selectedPreviewAlt].data)} */}
                             
 
                                                                 </ul>

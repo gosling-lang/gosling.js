@@ -48,3 +48,20 @@ export function altRetrieveDataStatistics(id: string, flatTileData: Datum[], dat
 
     return(altDataStatistics);
 }
+
+
+export function altUpdateSpecWithData(
+    altGoslingSpec: AltGoslingSpec, 
+    id: string, 
+    flatTileData: Datum[]
+): AltGoslingSpec {
+    // get correct track
+
+    // get genomic field headers for that track
+
+    // fill in data
+
+    // update description
+
+    return(altGoslingSpec);
+}
