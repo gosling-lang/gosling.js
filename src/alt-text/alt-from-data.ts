@@ -56,10 +56,14 @@ export function altUpdateSpecWithData(
     flatTileData: Datum[]
 ): AltGoslingSpec {
     // get correct track
+    const track = altGoslingSpec.tracks.filter(t => t.uid = id)[0];
 
-    // get genomic field headers for that track
+    // get genomic field headers for that track, call
+    const fields = track.data.details.fields;
+    const altDataStatistics = altRetrieveDataStatistics(id, flatTileData, fields);
 
     // fill in data
+    track.data.details.dataStatistics = altDataStatistics;
 
     // update description
 

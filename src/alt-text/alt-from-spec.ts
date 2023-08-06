@@ -127,6 +127,15 @@ function altSingleTrack(
     counter: AltCounter
 ): AltTrack {
     var altTrack = {} as AltTrack;
+
+    // uid
+    if (track.id !== 'unknown') {
+        var uid = track.id as string;
+    } else {
+        // figure out how to get the uid.
+        var uid = '';
+    }
+    
     
     // position
     var positionDetails: AltTrackPositionDetails = {trackNumber: counter.nTracks, rowNumber: counter.rowViews, colNumber: counter.colViews}
@@ -151,6 +160,7 @@ function altSingleTrack(
     var data: AltTrackData = {description: "", details: dataDetails};
     
     // add to altTrack
+    altTrack.uid = uid;
     altTrack.position = position;
     altTrack.appearance = appearance;
     altTrack.title = track.title;

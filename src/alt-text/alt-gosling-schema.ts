@@ -49,6 +49,7 @@ export interface AltTrackDataDetails {
     // yDomain?: DomainInterval | DomainChrInterval | DomainChr;
     data: DataDeep;
     fields: AltTrackDataFields;
+    dataStatistics?: AltDataStatistics;
 }
 
 export interface AltTrackPosition {
@@ -66,6 +67,7 @@ export interface AltTrackData {
 }
 
 export interface AltTrack {
+    uid: string;
     description: string;
 
     type: string | unknown;
