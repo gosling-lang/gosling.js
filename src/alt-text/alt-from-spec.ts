@@ -193,22 +193,98 @@ function checkEncodings(
     var encodingFields = {} as Encoding;
     var encodingStatics = {} as Encoding;
 
-    const supportedEncodings = ['x', 'y', 'xe', 'ye', 'x1', 'y1', 'x1e', 'y1e', 'row', 'color', 'size', 'text', 'stroke', 'strokeWidth', 'opacity'];
+    // supportedEncodings = ['x', 'y', 'xe', 'ye', 'x1', 'y1', 'x1e', 'y1e', 'row', 'color', 'size', 'text', 'stroke', 'strokeWidth', 'opacity'];
 
-    for (const encoding of supportedEncodings) {
-        
-        if (IsChannelDeep(track[encoding])) {
-            encodingFields[encoding] = track[encoding];
-        } 
-
-
-        if (IsChannelDeep(track[encoding])) {
-            encodingFields[encoding] = track[encoding];
-        } else if (IsChannelValue(track[encoding])) {
-            encodingStatics[encoding] = track[encoding];
-        }
+    if (IsChannelDeep(track.x)) {
+        encodingFields.x = track.x;
+    } else if (IsChannelValue(track.x)) {
+        encodingStatics.x = track.x;
     }
-    
+
+    if (IsChannelDeep(track.y)) {
+        encodingFields.y = track.y;
+    } else if (IsChannelValue(track.y)) {
+        encodingStatics.y = track.y;
+    }
+
+    if (IsChannelDeep(track.xe)) {
+        encodingFields.xe = track.xe;
+    } else if (IsChannelValue(track.xe)) {
+        encodingStatics.xe = track.xe;
+    }
+
+    if (IsChannelDeep(track.ye)) {
+        encodingFields.ye = track.ye;
+    } else if (IsChannelValue(track.ye)) {
+        encodingStatics.ye = track.ye;
+    }
+
+    if (IsChannelDeep(track.x1)) {
+        encodingFields.x1 = track.x1;
+    } else if (IsChannelValue(track.x1)) {
+        encodingStatics.x1 = track.x1;
+    }
+
+    if (IsChannelDeep(track.y1)) {
+        encodingFields.y1 = track.y1;
+    } else if (IsChannelValue(track.y1)) {
+        encodingStatics.y1 = track.y1;
+    }
+
+    if (IsChannelDeep(track.x1e)) {
+        encodingFields.x1e = track.x1e;
+    } else if (IsChannelValue(track.x1e)) {
+        encodingStatics.x1e = track.x1e;
+    }
+
+    if (IsChannelDeep(track.y1e)) {
+        encodingFields.y1e = track.y1e;
+    } else if (IsChannelValue(track.y1e)) {
+        encodingStatics.y1e = track.y1e;
+    }
+
+    if (IsChannelDeep(track.row)) {
+        encodingFields.row = track.row;
+    } else if (IsChannelValue(track.row)) {
+        encodingStatics.row = track.row;
+    }
+
+    if (IsChannelDeep(track.color)) {
+        encodingFields.color = track.color;
+    } else if (IsChannelValue(track.color)) {
+        encodingStatics.color = track.color;
+    }
+
+    if (IsChannelDeep(track.size)) {
+        encodingFields.size = track.size;
+    } else if (IsChannelValue(track.size)) {
+        encodingStatics.size = track.size;
+    }
+
+    if (IsChannelDeep(track.text)) {
+        encodingFields.text = track.text;
+    } else if (IsChannelValue(track.text)) {
+        encodingStatics.text = track.text;
+    }
+
+    if (IsChannelDeep(track.stroke)) {
+        encodingFields.stroke = track.stroke;
+    } else if (IsChannelValue(track.stroke)) {
+        encodingStatics.stroke = track.stroke;
+    }
+
+    if (IsChannelDeep(track.strokeWidth)) {
+        encodingFields.strokeWidth = track.strokeWidth;
+    } else if (IsChannelValue(track.strokeWidth)) {
+        encodingStatics.strokeWidth = track.strokeWidth;
+    }
+
+    if (IsChannelDeep(track.opacity)) {
+        encodingFields.opacity = track.opacity;
+    } else if (IsChannelValue(track.opacity)) {
+        encodingStatics.opacity = track.opacity;
+    }
+
     // bundle together into one object
     const encodingSeparated: AltEncodingSeparated = {encodingField: encodingFields, encodingStatic: encodingStatics}
     return encodingSeparated;
