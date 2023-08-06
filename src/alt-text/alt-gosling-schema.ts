@@ -1,8 +1,5 @@
 import type { List } from 'lodash';
-import type { GoslingSpec, Track, PartialTrack, DataDeep, DataTransform, Mark, Encoding, Assembly, Layout, Orientation, DomainInterval, DomainChrInterval, DomainChr, ZoomLimits, AxisPosition, Style } from '../core/gosling.schema';
-
-export type composition = ''
-
+import type { GoslingSpec, Track, PartialTrack, DataDeep, DataTransform, Mark, Encoding, Assembly, Layout, Orientation, DomainInterval, DomainChrInterval, DomainChr, ZoomLimits, AxisPosition, Style, Datum } from '../core/gosling.schema';
 
 
 export interface AltCounter {
@@ -44,7 +41,7 @@ export interface AltTrackAppearanceDetails {
 export interface AltTrackDataFields {
     genomicField: string;
     valueField: string;
-    categoryField?: string;
+    categoryField: string;
 }
 
 export interface AltTrackDataDetails {
@@ -79,6 +76,16 @@ export interface AltTrack {
     data: AltTrackData; 
 }
 
+export interface AltDataStatistics {
+    id: string;
+    flatTileData: Datum[];
+    genomicMin: number;
+    genomicMax: number;
+    valueMin: number;
+    valueMax: number;
+    categories?: string[];
+    categoryMinMaxWG?: { [key: string]: (number | number[])[] };
+}
 
 
 

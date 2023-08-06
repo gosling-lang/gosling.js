@@ -52,6 +52,8 @@ import {
 import { HIGLASS_AXIS_SIZE } from '../core/higlass-model';
 import { flatArrayToPairArray } from '../core/utils/array';
 import { createPluginTrack, type PluginTrackFactory, type TrackConfig } from '../core/utils/define-plugin-track';
+import type { AltTrackDataFields } from '../alt-text/alt-gosling-schema';
+import { altRetrieveDataStatistics } from '../alt-text/alt-from-data';
 
 // Set `true` to print in what order each function is called
 export const PRINT_RENDERING_CYCLE = false;
@@ -483,72 +485,17 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 publish('rawData', { id: context.viewUid, data: flatTileData });
             }
 
-            if (flatTileData.length !== 0) {
-
-                //const _spec = models[0]?.spec(); _spec?.id
-                
-                console.log(context.viewUid)
-                //console.log(_spec)
-                //console.log(flatTileData)
-
-                var genomicField = 'position';
-                var valueField = 'value';
-
-                // only for multivec
-                var categoryField = 'category';
-
-
-                valueField = 'peak';
-                categoryField = 'sample';
-                  
-                // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/max
-                function getMaxArray(arr: number[]): number {
-                    const max = arr.reduce((a, b) => Math.max(a, b), -Infinity);
-                    return max;
-                }
-
-                // Genomic range: 
-                const genomicValues = (flatTileData.map(d => d[genomicField]) as unknown as number[]).filter(d => !isNaN(d));
-                const genomicMin = Math.min(...genomicValues)
-                const genomicMax = Math.max(...genomicValues)
-                
-                console.log('genomic range: ', genomicMin, genomicMax)
-                //Math.max(flatTileData.map(d => d.peak)). To refer to the user spec, you can const _spec = models[0]?.spec(); _spec?.id for example (screenshot).
-
-                const valueValues = (flatTileData.map(d => d[valueField]) as unknown as number[]).filter(d => !isNaN(d));
-                const valueMin = Math.min(...valueValues)
-                const valueMax = Math.max(...valueValues)
-                //Math.max(flatTileData.map(d => d.peak)). To refer to the user spec, you can const _spec = models[0]?.spec(); _spec?.id for example (screenshot).
-
-                if (true) {
-                    var categoryValues = flatTileData.map(d => d[categoryField]);
-                    const categories = [... new Set(categoryValues)]
-                    //const categoryMinMax: { [key: string]: number[] } = {};
-                    const categoryMinMaxWG: { [key: string]: (number | number[])[] } = {};
-
-                    for (let category of categories as unknown as string[]) {
-                        let dataCat = flatTileData.filter(d => d[categoryField] === category);
-                        let valueValuesCat = (dataCat.map(d => d[valueField]) as unknown as number[]).filter(d => !isNaN(d));
-                        let valueMinCat = Math.min(...valueValuesCat);
-                        let valueMaxCat = Math.max(...valueValuesCat);
-
-                        let valueMinCatGenomic = (dataCat.filter(d => d[valueField] == valueMinCat).map(d => d[genomicField]) as unknown as number[])
-                        let valueMaxCatGenomic = (dataCat.filter(d => d[valueField] == valueMaxCat).map(d => d[genomicField]) as unknown as number[])
-
-                        //categoryMinMax[category] = [valueMinCat, valueMaxCat];
-                        categoryMinMaxWG[category] = [valueMinCat, valueMinCatGenomic, valueMaxCat, valueMaxCatGenomic];
-                    }
-
-                    console.log(categoryMinMaxWG)
-                }
-
-            }
-
-            
-
             // call function wtih flatTileData that gets the latest spec and updates it
             // publish the updated spec
-        
+            if (flatTileData.length !== 0) {
+                console.log(context.viewUid)
+
+                const dataFields: AltTrackDataFields = {genomicField: 'position', valueField: 'value', categoryField: ''};
+                const altDataStatistics = altRetrieveDataStatistics(context.viewUid, flatTileData, dataFields);
+
+                console.log(altDataStatistics);
+            }
+            
         }
 
         /**

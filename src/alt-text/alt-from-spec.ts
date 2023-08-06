@@ -252,6 +252,8 @@ function determineFields(
         if ((encodingField.opacity as Opacity).type == 'nominal') {
             fields.categoryField = (encodingField.opacity as Opacity).field as string;
         }
+    } else {
+       fields.categoryField = ''; 
     }
 
     return fields;
