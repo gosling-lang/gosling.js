@@ -1,4 +1,4 @@
-import type { GoslingSpec, SingleTrack, View, PartialTrack, RootSpecWithSingleView, ResponsiveSpecOfSingleView, RootSpecWithMultipleViews, ResponsiveSpecOfMultipleViews, ChannelValue, Encoding, DataDeep, MultivecData, Y } from '../core/gosling.schema';
+import type { GoslingSpec, SingleTrack, View, PartialTrack, RootSpecWithSingleView, ResponsiveSpecOfSingleView, RootSpecWithMultipleViews, ResponsiveSpecOfMultipleViews, ChannelValue, Encoding, DataDeep, MultivecData, X, Y, Color, Size, Text, Stroke, StrokeWidth, Opacity, Row } from '../core/gosling.schema';
 import type { GoslingSpecFixed, AltTrackDataFields, AltSpecComposition, AltTrackPosition, AltTrackAppearance, AltTrackData, AltTrackDataDetails, AltTrackAppearanceDetails, AltTrackPositionDetails, AltTrack, AltEncodingSeparated, TrackFixed, RootSpecWithSingleViewFixed, AltCounter, AltParentValues, AltGoslingSpec, SingleTrackFixed } from './alt-gosling-schema';
 import { attributeExists, attributeExistsDefaultString, attributeHasChildValue, attributeExistsAndChildHasValue} from './util';
 import { determineSpecialCases } from './special-cases';
@@ -142,7 +142,7 @@ function altSingleTrack(
     
     // data
     // add genomic_field, value_field, category_field for data retrieval
-    var dataFields = determineFields(track.data);
+    var dataFields = determineFields(track.data, appearanceDetails.encodings.encodingField);
     var dataDetails: AltTrackDataDetails = {data: track.data, fields: dataFields};
    
     // add temporary empty descriptions
@@ -170,17 +170,88 @@ function altSingleTrack(
 
 
 function determineFields(
-    data: DataDeep
+    data: DataDeep,
+    encodingField: Encoding
 ): AltTrackDataFields {
     const fields = {} as AltTrackDataFields;
 
-    if (data.type === 'multivec') {
-        let dataMultivec = data as MultivecData;
-        if (dataMultivec.row !== 'unknown') {
-            fields.categoryField = dataMultivec.row;
+    // retrieve genomicField
+    if (attributeExists(encodingField, 'x')) {
+        fields.genomicField = (encodingField.x as X).field as string; // x is always genomic
+    } else if (attributeExists(encodingField, 'y')) {
+        if ((encodingField.y as Y).type == 'genomic') {
+            fields.genomicField = (encodingField.y as Y).field as string;
         }
-        fields.genomicField = attributeExistsDefaultString(dataMultivec.start, 'position');
-        fields.valueField = attributeExistsDefaultString(dataMultivec.start, 'value');
+    } else {
+        fields.genomicField = "position";
+    }
+
+    // retrieve valueField
+    if (attributeExists(encodingField, 'y')) {
+        if ((encodingField.y as Y).type == 'quantitative') {
+            fields.valueField = (encodingField.y as Y).field as string;
+        }
+    } else if (attributeExists(encodingField, 'color')) {
+        if ((encodingField.color as Color).type == 'quantitative') {
+            fields.valueField = (encodingField.color as Color).field as string;
+        }
+    } else if (attributeExists(encodingField, 'size')) {
+        if ((encodingField.size as Size).type == 'quantitative') {
+            fields.valueField = (encodingField.size as Size).field as string;
+        }
+    } else if (attributeExists(encodingField, 'text')) {
+        if ((encodingField.text as Text).type == 'quantitative') {
+            fields.valueField = (encodingField.size as Size).field as string;
+        }
+    } else if (attributeExists(encodingField, 'stroke')) {
+        if ((encodingField.stroke as Stroke).type == 'quantitative') {
+            fields.valueField = (encodingField.stroke as Stroke).field as string;
+        }
+    } else if (attributeExists(encodingField, 'strokeWidth')) {
+        if ((encodingField.strokeWidth as StrokeWidth).type == 'quantitative') {
+            fields.valueField = (encodingField.strokeWidth as StrokeWidth).field as string;
+        }
+    } else if (attributeExists(encodingField, 'opacity')) {
+        if ((encodingField.opacity as Opacity).type == 'quantitative') {
+            fields.valueField = (encodingField.opacity as Opacity).field as string;
+        }
+    } else {
+        fields.valueField = "value";
+    }
+
+    // retrieve categoryField
+    if (attributeExists(encodingField, 'row')) {
+        if ((encodingField.row as Row).type == 'nominal') {
+            fields.categoryField = (encodingField.row as Row).field as string;
+        }
+    } else if (attributeExists(encodingField, 'color')) {
+        if ((encodingField.color as Color).type == 'nominal') {
+            fields.categoryField = (encodingField.color as Color).field as string;
+        }
+    } else if (attributeExists(encodingField, 'y')) {
+        if ((encodingField.y as Y).type == 'nominal') {
+            fields.categoryField = (encodingField.y as Y).field as string;
+        }
+    } else if (attributeExists(encodingField, 'size')) {
+        if ((encodingField.size as Size).type == 'nominal') {
+            fields.categoryField = (encodingField.size as Size).field as string;
+        }
+    } else if (attributeExists(encodingField, 'text')) {
+        if ((encodingField.text as Text).type == 'nominal') {
+            fields.categoryField = (encodingField.size as Size).field as string;
+        }
+    } else if (attributeExists(encodingField, 'stroke')) {
+        if ((encodingField.stroke as Stroke).type == 'nominal') {
+            fields.categoryField = (encodingField.stroke as Stroke).field as string;
+        }
+    } else if (attributeExists(encodingField, 'nominal')) {
+        if ((encodingField.strokeWidth as StrokeWidth).type == 'nominal') {
+            fields.categoryField = (encodingField.strokeWidth as StrokeWidth).field as string;
+        }
+    } else if (attributeExists(encodingField, 'nominal')) {
+        if ((encodingField.opacity as Opacity).type == 'nominal') {
+            fields.categoryField = (encodingField.opacity as Opacity).field as string;
+        }
     }
 
     return fields;
