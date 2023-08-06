@@ -1,6 +1,6 @@
-import type { GoslingSpec, SingleTrack, View, PartialTrack, RootSpecWithSingleView, ResponsiveSpecOfSingleView, RootSpecWithMultipleViews, ResponsiveSpecOfMultipleViews, ChannelValue, Encoding } from '../core/gosling.schema';
-import type { GoslingSpecFixed, AltSpecComposition, AltTrackPosition, AltTrackAppearance, AltTrackData, AltTrackDataDetails, AltTrackAppearanceDetails, AltTrackPositionDetails, AltTrack, AltEncodingSeparated, TrackFixed, RootSpecWithSingleViewFixed, AltCounter, AltParentValues, AltGoslingSpec, SingleTrackFixed } from './alt-gosling-schema';
-import { attributeExists, attributeHasChildValue, attributeExistsAndChildHasValue} from './util';
+import type { GoslingSpec, SingleTrack, View, PartialTrack, RootSpecWithSingleView, ResponsiveSpecOfSingleView, RootSpecWithMultipleViews, ResponsiveSpecOfMultipleViews, ChannelValue, Encoding, DataDeep, MultivecData } from '../core/gosling.schema';
+import type { GoslingSpecFixed, AltTrackDataFields, AltSpecComposition, AltTrackPosition, AltTrackAppearance, AltTrackData, AltTrackDataDetails, AltTrackAppearanceDetails, AltTrackPositionDetails, AltTrack, AltEncodingSeparated, TrackFixed, RootSpecWithSingleViewFixed, AltCounter, AltParentValues, AltGoslingSpec, SingleTrackFixed } from './alt-gosling-schema';
+import { attributeExists, attributeExistsDefaultString, attributeHasChildValue, attributeExistsAndChildHasValue} from './util';
 import { determineSpecialCases } from './special-cases';
 
 import {
@@ -127,23 +127,28 @@ function altSingleTrack(
 ): AltTrack {
     var altTrack = {} as AltTrack;
     
+    // position
     var positionDetails: AltTrackPositionDetails = {trackNumber: counter.nTracks, rowNumber: counter.rowViews, colNumber: counter.colViews}
 
+    // appearance (anything from mark to layout to encodings)
     var appearanceDetails = {} as AltTrackAppearanceDetails;
 
-    //appearanceDetails.assembly = track.assembly;
+    // appearanceDetails.assembly = track.assembly;
     appearanceDetails.layout = altParentValues.layout;
     appearanceDetails.overlaid = false;
     appearanceDetails.mark = track.mark;
     appearanceDetails.encodings = checkEncodings(track);
     
-    var dataDetails: AltTrackDataDetails = {data: track.data};
+    // data
+    // add genomic_field, value_field, category_field for data retrieval
+    var dataFields = determineFields(track.data);
+    var dataDetails: AltTrackDataDetails = {data: track.data, fields: dataFields};
    
     // add temporary empty descriptions
     var position: AltTrackPosition = {description: "", details: positionDetails}
     var appearance: AltTrackAppearance = {description: "", details: appearanceDetails};
     var data: AltTrackData = {description: "", details: dataDetails};
-
+    
     // add to altTrack
     altTrack.position = position;
     altTrack.appearance = appearance;
@@ -162,6 +167,24 @@ function altSingleTrack(
     
 }
 
+
+function determineFields(
+    data: DataDeep
+): AltTrackDataFields {
+    const fields = {} as AltTrackDataFields;
+
+    if (data.type === 'multivec') {
+        let dataMultivec = data as MultivecData;
+        if (dataMultivec.row !== 'unknown') {
+            fields.categoryField = dataMultivec.row;
+        }
+        fields.genomicField = attributeExistsDefaultString(dataMultivec.start, 'start');
+        fields.valueField = attributeExistsDefaultString(dataMultivec.start, 'value');
+    }
+
+    return fields;
+}
+
 function checkEncodings(
     track: SingleTrack
 ): AltEncodingSeparated {
@@ -174,6 +197,7 @@ function checkEncodings(
     for (const i in supportedEncodings) {
         const encoding = supportedEncodings[i];
         if (attributeExists(track, encoding)) {
+            // todo: use IsChannelDeep / isChannelValue type guard instead
             if(attributeExists(track[encoding],'field')) {
                 encodingFields[encoding] = track[encoding];
             } else {

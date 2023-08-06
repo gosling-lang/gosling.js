@@ -41,10 +41,17 @@ export interface AltTrackAppearanceDetails {
     assembly?: Assembly;
 }
 
+export interface AltTrackDataFields {
+    genomicField: string;
+    valueField: string;
+    categoryField?: string;
+}
+
 export interface AltTrackDataDetails {
-    xDomain?: DomainInterval | DomainChrInterval | DomainChr;
-    yDomain?: DomainInterval | DomainChrInterval | DomainChr;
+    // xDomain?: DomainInterval | DomainChrInterval | DomainChr;
+    // yDomain?: DomainInterval | DomainChrInterval | DomainChr;
     data: DataDeep;
+    fields: AltTrackDataFields;
 }
 
 export interface AltTrackPosition {
