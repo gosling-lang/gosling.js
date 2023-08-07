@@ -27,9 +27,11 @@ import EditorPanel, { type EditorLangauge } from './EditorPanel';
 import EditorExamples from './EditorExamples';
 
 import './Editor.css';
-import './alt-tree.css';
+
 import type { AltGoslingSpec, AltTrack } from '../../gosling.js/src/alt-text/alt-gosling-schema';
 import { altUpdateSpecWithData } from '../../gosling.js/src/alt-text/alt-from-data';
+import { createTree } from '../../gosling.js/src/alt-text/alt-tree';
+import '../../gosling.js/src/alt-text/alt-tree.css';
 
 function json2js(jsonCode: string) {
     return `var spec = ${jsonCode} \nexport { spec }; \n`;
@@ -210,130 +212,6 @@ interface PreviewData {
 interface PreviewAlt {
     id: string;
     data: AltGoslingSpec;
-}
-
-// function createTreeTraversal(data: any, item: any) {
-//     if(typeof(data[item]) === 'object') {
-//         return (
-//             <ul>
-//                 {Object.keys(data[item]).map(key => 
-//                     <li>
-//                         {key}
-//                         {createTreeTraversal(data[item], key)}
-//                     </li>)}
-//             </ul>
-//         )
-//     } else {
-//         return (
-//             ': ' + data[item]
-//         )
-//     }
-// }
-
-// function createTree2(data: AltGoslingSpec) {
-
-//     return(
-//         <div>
-//             <ul>
-//                 {/* {true === true ? (
-//                     <> 
-//                     <li>s</li> </>
-//                 ): null} */}
-
-//                 {data.longDescription ? (
-//                      <li>
-//                         {data.longDescription}
-//                      </li>
-//                 ) : null}
-
-//                 {data.longDescription ? data.longDescription : null}
-
-//                 {data && Object.keys(data).map(key => 
-//                     <li>
-//                         {key}
-//                         {createTreeTraversal(data, key)}
-//                     </li>
-//                     )}
-
-//             </ul>
-
-//         </div>
-//     )
-// }
-
-
-function createTree(data: AltGoslingSpec) {
-
-    return(
-        <div>
-            <ul className = 'alt-tree'>
-                <li className = 'alt-single'>
-                    Alt text: {data.alt}
-                </li>
-
-                <li className = 'alt-single'>
-                    Long description: {data.longDescription}
-                </li>
-
-                {data.title ? (
-                    <li className = 'alt-single'>
-                        Title: '{data.title}'
-                    </li>
-                ): null}
-                
-                {data.subtitle ? (
-                    <li className = 'alt-single'>
-                     Subtitle: '{data.subtitle}'
-                    </li>
-                ): null}
-
-                <li className = 'alt-parent'>
-                    Composition
-                    <ul>
-                        <li className = 'alt-single'>
-                            Description: {data.composition.description}
-                        </li>
-                        <li className = 'alt-single'>
-                            Number of tracks: {data.composition.nTracks}
-                        </li>             
-                    </ul>
-                </li>
-
-                <li>
-                    Tracks
-                    <ul>
-                        <li>
-                            0
-                            {createTreeTrack(data.tracks[0])}
-                        </li>
-                    </ul>
-                    
-                     {/* {Object.keys(data.tracks).map(t => 
-                    <li>
-                        {data.tracks[t]}
-                        {createTreeTrack(t)}
-                    </li>
-                    )} */}
-                </li>
-
-            </ul>
-        </div>
-    )
-}
-
-
-function createTreeTrack(t: AltTrack) {
-
-    return(
-        <ul>
-            <li>
-                Track description: {t.description}
-            </li>
-            <li>
-                Track position: {t.position.description}
-            </li>
-        </ul>
-    )
 }
 
 /**
