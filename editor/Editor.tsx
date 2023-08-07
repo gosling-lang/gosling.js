@@ -211,12 +211,60 @@ interface PreviewAlt {
     data: AltGoslingSpec;
 }
 
+function createTreeTraversal(data: any, item: any) {
+    if(typeof(data[item]) === 'object') {
+        return (
+            <ul>
+                {Object.keys(data[item]).map(key => 
+                    <li>
+                        {key}
+                        {createTreeTraversal(data[item], key)}
+                    </li>)}
+            </ul>
+        )
+    } else {
+        return (
+            ': ' + data[item]
+        )
+    }
+}
+
 function createTree(data: AltGoslingSpec) {
-    return (
+
+    return(
         <div>
-            Test
+            <ul>
+                {data && Object.keys(data).map(key => 
+                    <li>
+                        {key}
+                        {createTreeTraversal(data, key)}
+                    </li>
+                    )}
+
+            </ul>
+
         </div>
     )
+   
+        
+        
+        // data && Object.entries(data).(function(key, index) => (
+        //             <li> 
+        //                 {key}
+        //                 {/* {key && Object.entries(key).map(child => (
+        //                     <li>
+        //                         child
+        //                     </li>
+        //                 ))} */}
+        //             </li>
+        //         ))}
+    // return (
+    //     <div>
+    //         <ul>
+                
+    //         </ul>
+    //     </div>
+    // )
 }
 
 /**
@@ -649,6 +697,7 @@ function Editor(props: RouteComponentProps) {
         // Every time the raw data refreshes, we want update the AltGoslingSpec with the new data.
         const token = PubSub.subscribe('rawData', (_: string, data: {id: string, data: Datum[]}) => {
             // console.log(data.id);
+            console.log('Updated data was seen for', data.id);
 
             // get latest AltGoslingSpec
             const updatedAlt = altUpdateSpecWithData(previewAlt.current[selectedPreviewAlt].data, data.id, data.data)
@@ -657,6 +706,10 @@ function Editor(props: RouteComponentProps) {
            
             const newPreviewAlt = previewAlt.current.filter(d => d.id !== id);       
             previewAlt.current = [...newPreviewAlt, { ...updatedPreviewAlt, id }];
+            console.log('length', previewAlt.current.length)
+
+            setSelectedPreviewAlt(previewAlt.current.length - 1);
+
         });
         return () => {
             PubSub.unsubscribe(token);
@@ -1384,17 +1437,23 @@ function Editor(props: RouteComponentProps) {
                                                     <>
                                                         <div className="editor-alt-preview-table">
                                                             <div>
+                                                          
+                                                                {createTree(previewAlt.current[selectedPreviewAlt].data)}
                                                                 <ul>
                                                                     {Object.keys(previewAlt.current[selectedPreviewAlt].data).map(
                                                                         (key: string) => (
+                                                                                // {if previewAlt.current[selectedPreviewAlt].data}
                                                                                 <li>{key}</li> 
                                                                             ))}
                                             
                                                                         {selectedPreviewAlt}
+                                                                        {previewAlt.current.length}
+                                                                        {JSON.stringify(previewAlt.current[selectedPreviewAlt].data)}
                                                                         {/* {createTree(previewAlt.current[selectedPreviewAlt].data)} */}
-                            
+
 
                                                                 </ul>
+                                                                
 
                                                             </div>
                                                         </div>
