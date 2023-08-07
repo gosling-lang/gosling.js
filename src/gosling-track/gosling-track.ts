@@ -488,12 +488,13 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             // call function wtih flatTileData that gets the latest spec and updates it
             // publish the updated spec
             if (flatTileData.length !== 0) {
-                console.log(context.viewUid)
+                console.log('Data was updated for', context.viewUid)
 
                 const dataFields: AltTrackDataFields = {genomicField: 'position', valueField: 'value', categoryField: ''};
                 const altDataStatistics = altRetrieveDataStatistics(context.viewUid, flatTileData, dataFields);
 
-                console.log(altDataStatistics);
+
+                //console.log(altDataStatistics);
             }
             
         }
