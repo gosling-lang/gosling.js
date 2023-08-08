@@ -1,11 +1,10 @@
 import type { AltGoslingSpec, AltTrack } from './alt-gosling-schema';
-import { attributeExists, attributeExistsReturn, attributeExistsAndChildHasValue } from './util';
+import { attributeExists, attributeExistsReturn, attributeExistsAndChildHasValue, arrayToString } from './util';
 
 export function addDescriptions(altGoslingSpec: AltGoslingSpec) {
     addTrackPositionDescriptions(altGoslingSpec);
     addTrackAppearanceDescriptions(altGoslingSpec);
     addTrackDataDescriptions(altGoslingSpec);
-    addGlobalPositionDescriptions(altGoslingSpec);
     addGlobalDescription(altGoslingSpec);
 }
 
@@ -60,18 +59,18 @@ function addTrackPositionDescriptions(altGoslingSpec: AltGoslingSpec) {
                 comb = ''.concat('One linear and one circular track ', comb);
             }
         }
-        altGoslingSpec.tracks[0].position.description = 'This track is shown on the ' + firstPlace;
-        altGoslingSpec.tracks[1].position.description = 'This track is shown on the ' + secondPlace;
+        altGoslingSpec.tracks[0].position.description = 'This track is shown on the ' + firstPlace + '.';
+        altGoslingSpec.tracks[1].position.description = 'This track is shown on the ' + secondPlace + '.';
         altGoslingSpec.composition.description = comb;
         
     } else {
-        
+
     }
 }
 
 function addTrackAppearanceDescriptions(altGoslingSpec: AltGoslingSpec) {
     for (const i in altGoslingSpec.tracks) {
-        var track = altGoslingSpec.tracks[i];
+        const track = altGoslingSpec.tracks[i];
         addTrackAppearanceDescription(track);
     }
     
@@ -109,7 +108,7 @@ function trackAppearanceKnownType(altTrack: AltTrack) {
             } else {
                 binSize = 1
             }
-            desc = desc.concat('Barchart.') 
+            desc = desc.concat('Bar chart.') 
 
             if (altTrack.appearance.details.layout == 'linear') {
                 desc = desc.concat(' On the x-axis, the genome is shown. There are vertical bars, with a width of ', (binSize * 256).toString(), ' bp, which height corresponds to the expression on that section of the genome. ')
@@ -117,7 +116,13 @@ function trackAppearanceKnownType(altTrack: AltTrack) {
                 desc = desc.concat(' On the circular x-axis, the genome is shown. The height of the bars (pointing outwards of the circel), correspond to the expression on that section of the genome. The width of the bars is ', (binSize * 256).toString(), ' bp. ')
             }
 
-        
+            // // altTrack.appearance.details.encodings.encodingField // nominal field? 
+            // for {let i in Object.keys(altTrack.appearance.details.encodings.encodingField)} {
+            // }
+
+            if (altTrack.data.details.dataStatistics?.categories) {
+                desc = desc.concat(' There are ' + altTrack.data.details.dataStatistics?.categories.length + ' categories visible, spread ')
+            }
             //categories
             //if ()
 
@@ -192,23 +197,42 @@ function trackAppearanceUnknownType(altTrack: AltTrack) {
 }
 
 
-
+function addMinMaxDescription(values: number[], key: 'minimum' | 'maximum') {
+    var descMinMax = ''
+    if (values.length === 1 ) {
+        descMinMax = descMinMax.concat(' The ' + key + ' expression is shown at genomic position ' + values[0] + ' bp.');
+    } else if (values.length < 6 ) {
+        descMinMax = descMinMax.concat( ' The ' + key + ' expression is shown at genomic positions ' + arrayToString(values) + ' bp.')
+    } else {
+        descMinMax = descMinMax.concat( ' The ' + key + ' expression is shown at ' + values.length + ' genomic positions.')
+    }
+    return descMinMax;
+}
 
 function addTrackDataDescriptions(altGoslingSpec: AltGoslingSpec) {
-    // The genomic range shown is ... The expression value ranges from ... to ... 
-    // Tthe max expression is at genomic position
-    // the Min expression is at genomic positions (if more than 5, say 'a lot')
-    // If categories, there are xx categories
-    // Category xxx has the highest expression point
-    // Check if same genomic positions for min and for max
-}
-
-function addGlobalPositionDescriptions(altGoslingSpec: AltGoslingSpec) {
-    if (altGoslingSpec.composition.nTracks == 1) {
-        altGoslingSpec.composition.description = 'There is only one track.'
+    for (const i in altGoslingSpec.tracks) {
+        const track = altGoslingSpec.tracks[i];
+        if (track.data.details.dataStatistics) {
+            var desc = '';
+            desc = desc.concat('The genomic range shown is from ' + track.data.details.dataStatistics?.genomicMin + ' to ' + track.data.details.dataStatistics?.genomicMax + ' basepairs.')
+            desc = desc.concat(' The expression values range from ' + track.data.details.dataStatistics?.valueMin + ' to ' + track.data.details.dataStatistics?.valueMax + '.')
+            
+            desc.concat(addMinMaxDescription(track.data.details.dataStatistics?.valueMaxGenomic, 'maximum'));
+            desc.concat(addMinMaxDescription(track.data.details.dataStatistics?.valueMinGenomic, 'minimum'));
+            
+            if (track.data.details.dataStatistics?.categories) {
+                // add category data information
+                // Number of categories
+                // Which category has the highest expression peak
+                // If genomic positions are the same for the min and max values of each category
+            }
+            altGoslingSpec.tracks[i].data.description = desc;
+        }
     }
 
+    // retrieve global information somehow
 }
+
 
 function addGlobalDescription(altGoslingSpec: AltGoslingSpec) {
 
