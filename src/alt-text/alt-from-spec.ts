@@ -28,18 +28,18 @@ export function getAltSpec(
     altSpec.title =  spec.title;
     altSpec.subtitle =  spec.subtitle;
 
-    var counter = {"nTracks" : 0, "rowViews" : 0, "colViews" : 0};
+    var counter = {'nTracks' : 0, 'rowViews' : 0, 'colViews' : 0};
     var altParentValues = {} as AltParentValues;
     altParentValues.arrangement = 'vertical';
     altParentValues.layout = 'linear';
 
     determineStructure(spec, altSpec, altParentValues, counter)
 
-    var composition: AltSpecComposition = { description: "", nTracks: counter.nTracks, allSame: altParentValues, counter: counter }
+    var composition: AltSpecComposition = { description: '', nTracks: counter.nTracks, parentValues: altParentValues, counter: counter }
     altSpec.composition = composition;
 
-    altSpec.alt = "";
-    altSpec.longDescription = "";
+    altSpec.alt = '';
+    altSpec.longDescription = '';
 
     return altSpec;
 }
@@ -88,7 +88,7 @@ export function determineStructure(
 
         specPart.views.forEach((view, i) => {
             if (i !== 0) {
-                if (altParentValues.arrangement === "vertical" || altParentValues.arrangement === "parallel") {
+                if (altParentValues.arrangement === 'vertical' || altParentValues.arrangement === 'parallel') {
                     counter.rowViews ++;
                 } else {
                     counter.colViews ++;
@@ -98,7 +98,7 @@ export function determineStructure(
             determineStructure(view, altSpec, altParentValuesCopy, counter);
         });
 
-        if (altParentValues.arrangement === "vertical" || altParentValues.arrangement === "parallel") {
+        if (altParentValues.arrangement === 'vertical' || altParentValues.arrangement === 'parallel') {
             counter.rowViews = currRow;
         } else {
             counter.colViews = currCol;
@@ -155,9 +155,9 @@ function altSingleTrack(
     var dataDetails: AltTrackDataDetails = {data: track.data, fields: dataFields};
    
     // add temporary empty descriptions
-    var position: AltTrackPosition = {description: "", details: positionDetails}
-    var appearance: AltTrackAppearance = {description: "", details: appearanceDetails};
-    var data: AltTrackData = {description: "", details: dataDetails};
+    var position: AltTrackPosition = {description: '', details: positionDetails}
+    var appearance: AltTrackAppearance = {description: '', details: appearanceDetails};
+    var data: AltTrackData = {description: '', details: dataDetails};
     
     // add to altTrack
     altTrack.uid = uid;
@@ -170,7 +170,7 @@ function altSingleTrack(
     altTrack.type = determineSpecialCases(altTrack);
 
     // empty description, to be filled in.
-    altTrack.description = "";
+    altTrack.description = '';
 
     //console.log(altTrack)
 
@@ -193,7 +193,7 @@ function determineFields(
             fields.genomicField = (encodingField.y as Y).field as string;
         }
     } else {
-        fields.genomicField = "position";
+        fields.genomicField = 'position';
     }
 
     // retrieve valueField
@@ -226,7 +226,7 @@ function determineFields(
             fields.valueField = (encodingField.opacity as Opacity).field as string;
         }
     } else {
-        fields.valueField = "value";
+        fields.valueField = 'value';
     }
 
     // retrieve categoryField

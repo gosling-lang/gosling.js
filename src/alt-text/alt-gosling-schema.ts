@@ -85,6 +85,8 @@ export interface AltDataStatistics {
     genomicMax: number;
     valueMin: number;
     valueMax: number;
+    valueMinGenomic: number | number[];
+    valueMaxGenomic: number | number[];
     categories?: string[];
     categoryMinMaxWG?: { [key: string]: (number | number[])[] };
 }
@@ -165,7 +167,7 @@ export interface AltDataStatistics {
 export interface AltSpecComposition {
     description: string;
     nTracks: number;
-    allSame: AltParentValues;
+    parentValues: AltParentValues;
     counter: AltCounter;
 }
 
