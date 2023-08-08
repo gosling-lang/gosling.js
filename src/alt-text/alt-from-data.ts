@@ -5,14 +5,15 @@ import type { Datum } from '../core/gosling.schema';
 export function altRetrieveDataStatistics(id: string, flatTileData: Datum[], dataFields: AltTrackDataFields): AltDataStatistics {
 
     const genomicValues = (flatTileData.map(d => d[dataFields.genomicField]) as unknown as number[]).filter(d => !isNaN(d));
-    const genomicMin = Math.min(...genomicValues)
-    const genomicMax = Math.max(...genomicValues)
-    
-    console.log('genomic range: ', genomicMin, genomicMax)
+    const genomicMin = Math.min(...genomicValues);
+    const genomicMax = Math.max(...genomicValues);
 
     const valueValues = (flatTileData.map(d => d[dataFields.valueField]) as unknown as number[]).filter(d => !isNaN(d));
-    const valueMin = Math.min(...valueValues)
-    const valueMax = Math.max(...valueValues)
+    const valueMin = Math.min(...valueValues);
+    const valueMax = Math.max(...valueValues);
+
+    const valueMinGenomic = (flatTileData.filter(d => d[dataFields.valueField] == valueMin).map(d => d[dataFields.genomicField]) as unknown as number[]);
+    const valueMaxGenomic = (flatTileData.filter(d => d[dataFields.valueField] == valueMax).map(d => d[dataFields.genomicField]) as unknown as number[]);
 
     const altDataStatistics: AltDataStatistics = {
         id: id,
@@ -20,10 +21,12 @@ export function altRetrieveDataStatistics(id: string, flatTileData: Datum[], dat
         genomicMin: genomicMin,
         genomicMax: genomicMax,
         valueMin: valueMin,
-        valueMax: valueMax
+        valueMax: valueMax,
+        valueMinGenomic: valueMinGenomic,
+        valueMaxGenomic: valueMaxGenomic
     }
 
-    if (dataFields.categoryField !== '') {
+    if (dataFields.categoryField !== 'unknown' && dataFields.categoryField !== '' && dataFields.categoryField !== undefined) {
         var categoryValues = flatTileData.map(d => d[dataFields.categoryField]);
         const categories = [... new Set(categoryValues)] as unknown as string[]
         //const categoryMinMax: { [key: string]: number[] } = {};
