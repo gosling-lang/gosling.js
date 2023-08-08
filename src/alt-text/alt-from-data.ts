@@ -14,16 +14,21 @@ export function altRetrieveDataStatistics(id: string, flatTileData: Datum[], dat
     const valueMin = Math.min(...valueValues)
     const valueMax = Math.max(...valueValues)
 
+    const valueMinGenomic = (flatTileData.filter(d => d[dataFields.valueField] == valueMin).map(d => d[dataFields.genomicField]) as unknown as number[])
+    const valueMaxGenomic = (flatTileData.filter(d => d[dataFields.valueField] == valueMax).map(d => d[dataFields.genomicField]) as unknown as number[])
+
     const altDataStatistics: AltDataStatistics = {
         id: id,
         flatTileData: flatTileData,
         genomicMin: genomicMin,
         genomicMax: genomicMax,
         valueMin: valueMin,
-        valueMax: valueMax
+        valueMax: valueMax,
+        valueMinGenomic: valueMinGenomic,
+        valueMaxGenomic: valueMaxGenomic
     }
 
-    if (dataFields.categoryField !== '') {
+    if (dataFields.categoryField !== 'unknown' && dataFields.categoryField !== '' && dataFields.categoryField !== undefined) {
         var categoryValues = flatTileData.map(d => d[dataFields.categoryField]);
         const categories = [... new Set(categoryValues)] as unknown as string[]
         //const categoryMinMax: { [key: string]: number[] } = {};

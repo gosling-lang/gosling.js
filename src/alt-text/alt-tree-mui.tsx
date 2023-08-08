@@ -101,7 +101,24 @@ function createTreeTrackMUI(t: AltTrack) {
                     <TreeItem key={'T-'+t.uid+'-details-app-details'} nodeId={'T-'+t.uid+'-details-app-details'} label={'Details'}>
                         {createTreeItemLeaf('T-'+t.uid+'-details-pos-details-mark', 'Mark', t.appearance.details.mark)} 
                             <TreeItem key={'T-'+t.uid+'-details-app-details-encodings'} nodeId={'T-'+t.uid+'-details-app-encodings'} label={'Encodings'}>
-                            
+                                <TreeItem key={'T-'+t.uid+'-details-app-details-encodings-field'} nodeId={'T-'+t.uid+'-details-app-encodings-field'} label={'Encodings dependent on data fields'}>
+                                    {Object.keys(t.appearance.details.encodings.encodingField).map(e => (
+                                        <TreeItem key={'T-'+t.uid+'-details-app-details-encodings-field-'+e} nodeId={'T-'+t.uid+'-details-app-encodings-field-'+e} label={e}>
+                                            {createTreeItemLeaf('T-'+t.uid+'-details-app-details-encodings-field-'+e+'-field', 'Field', t.appearance.details.encodings.encodingField[e].field)}
+                                            {createTreeItemLeaf('T-'+t.uid+'-details-app-details-encodings-field-'+e+'-type', 'Type', t.appearance.details.encodings.encodingField[e].type)}
+                                            {t.appearance.details.encodings.encodingField[e].axis ? (
+                                                createTreeItemLeaf('T-'+t.uid+'-details-app-details-encodings-field-'+e+'-axis', 'Axis', t.appearance.details.encodings.encodingField[e].axis)
+                                            ):null}
+                                        </TreeItem>
+                                    ))}
+                                </TreeItem>
+                                <TreeItem key={'T-'+t.uid+'-details-app-details-encodings-static'} nodeId={'T-'+t.uid+'-details-app-encodings-static'} label={'Static encodings'}>
+                                    {Object.keys(t.appearance.details.encodings.encodingStatic).map(e => (
+                                        <TreeItem key={'T-'+t.uid+'-details-app-details-encodings-static-'+e} nodeId={'T-'+t.uid+'-details-app-encodings-static-'+e} label={e}>
+                                            {createTreeItemLeaf('T-'+t.uid+'-details-app-details-encodings-static-'+e+'-value', 'Value', t.appearance.details.encodings.encodingStatic[e].value)}
+                                        </TreeItem>
+                                    ))}
+                                </TreeItem>
                             </TreeItem>
                         {createTreeItemLeaf('T-'+t.uid+'-details-pos-details-layout', 'Layout (linear or circular)', t.appearance.details.layout)} 
                         {createTreeItemLeaf('T-'+t.uid+'-details-pos-details-overlaid', 'Overlaid', t.appearance.details.overlaid)}   
@@ -117,10 +134,10 @@ function createTreeTrackMUI(t: AltTrack) {
                         </TreeItem>
                         <TreeItem key={'T-'+t.uid+'-details-data-details-stats-value'} nodeId={'T-'+t.uid+'-details-data-details-stats-value'} label={'Value range'}>
                             <TreeItem key={'T-'+t.uid+'-details-data-details-stats-value-min'} nodeId={'T-'+t.uid+'-details-data-details-stats-value-min'} label={'Minimum: ' + t.data.details.dataStatistics?.valueMin}>
-                                {/* {createTreeItemLeaf('T-'+t.uid+'-details-data-details-stats-value-min-genomic', 'Found at: ', t.data.details.dataStatistics.genomicMin)}     */}
+                                {createTreeItemLeaf('T-'+t.uid+'-details-data-details-stats-value-min-genomic', 'Found at position(s): ', t.data.details.dataStatistics?.valueMinGenomic.toString())}    
                             </TreeItem>
                             <TreeItem key={'T-'+t.uid+'-details-data-details-stats-value-max'} nodeId={'T-'+t.uid+'-details-data-details-stats-value-max'} label={'Maxmimum: ' + t.data.details.dataStatistics?.valueMax}>
-                                {/* {createTreeItemLeaf('T-'+t.uid+'-details-data-details-stats-value-max-genomic', 'Found at: ', t.data.details.dataStatistics.genomicMin)}     */}
+                                {createTreeItemLeaf('T-'+t.uid+'-details-data-details-stats-value-max-genomic', 'Found at position(s): ', t.data.details.dataStatistics?.valueMaxGenomic.toString())}    
                             </TreeItem>
                         </TreeItem>
 
@@ -129,6 +146,35 @@ function createTreeTrackMUI(t: AltTrack) {
                                 {createTreeItemLeaf('T-'+t.uid+'-details-data-details-stats-category-list', 'Categories', t.data.details.dataStatistics.categories)}    
                             </TreeItem>
                         ): null}
+                    </TreeItem>
+                    <TreeItem key={'T-'+t.uid+'-details-data-details-rawdata'} nodeId={'T-'+t.uid+'-details-data-details-rawdata'} label={'Raw data table'}>
+                        {t.data.details.dataStatistics?.flatTileData ? (
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        {Object.keys(
+                                            (t.data.details.dataStatistics?.flatTileData[0])
+                                        ).map((field: string, i: number) => (
+                                            <th key={i}>{field}</th>
+                                        ))}
+                                    </tr>
+                                    {t.data.details.dataStatistics?.flatTileData.map(
+                                        (row: Datum, i: number) => (
+                                            <tr key={i}>
+                                                {Object.keys(row).map(
+                                                    (field: string, j: number) => (
+                                                        <td key={j}>
+                                                            {row[field]?.toString()}
+                                                        </td>
+                                                    )
+                                                )}
+                                            </tr>
+                                        )
+                                    )}
+                                </tbody>
+                            </table>
+                            
+                        ): null}       
                     </TreeItem>
                 </TreeItem>
             </TreeItem>
