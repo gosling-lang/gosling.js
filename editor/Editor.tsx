@@ -31,6 +31,7 @@ import './Editor.css';
 import type { AltGoslingSpec, AltTrack } from '../../gosling.js/src/alt-text/alt-gosling-schema';
 import { altUpdateSpecWithData } from '../../gosling.js/src/alt-text/alt-from-data';
 import { createTree } from '../../gosling.js/src/alt-text/alt-tree';
+import { createTreeMUI } from '../../gosling.js/src/alt-text/alt-tree-mui';
 import '../../gosling.js/src/alt-text/alt-tree.css';
 
 function json2js(jsonCode: string) {
@@ -1388,7 +1389,8 @@ function Editor(props: RouteComponentProps) {
                                                                 {previewAlt.current.length}
                                                                 {JSON.stringify(previewAlt.current[selectedPreviewAlt].data)} */}
                                                      
-                                                                {createTree(previewAlt.current[selectedPreviewAlt].data)}
+                                                                {/* {createTree(previewAlt.current[selectedPreviewAlt].data)} */}
+                                                                {createTreeMUI(previewAlt.current[selectedPreviewAlt].data)}
                                                             </div>
                                                         </div>
                                                     </>
