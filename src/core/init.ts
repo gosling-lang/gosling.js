@@ -4,7 +4,7 @@ import higlassRegister from 'higlass-register';
 import { TextTrack } from 'higlass-text';
 import { AxisTrack } from '@gosling-lang/gosling-genomic-axis';
 import { BrushTrack } from '@gosling-lang/gosling-brush';
-import { GoslingTrack } from '@gosling-track';
+import { GoslingTrack } from '@gosling-lang/gosling-track';
 import { DummyTrack } from '@gosling-lang/dummy-track';
 import * as dataFetchers from '@data-fetchers';
 

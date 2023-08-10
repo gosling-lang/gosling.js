@@ -5,7 +5,7 @@ import { convertToFlatTracks } from './spec-preprocess';
 import { getTheme } from '../core/utils/theme';
 
 import type { SingleTrack } from '../schema/gosling.schema';
-import { GoslingToHiGlassIdMapper } from '../core/track-and-view-ids';
+import { GoslingToHiGlassIdMapper } from '../api/track-and-view-ids';
 
 describe('Should convert gosling spec to higlass view config.', () => {
     it('Should return a generated higlass view config correctly', () => {

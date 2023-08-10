@@ -1,4 +1,4 @@
-import type { Tile } from '@gosling-track';
+import type { Tile } from '@gosling-lang/gosling-track';
 import type { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import type { PIXIVisualProperty } from '../visual-property.schema';

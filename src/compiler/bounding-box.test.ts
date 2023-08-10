@@ -1,7 +1,7 @@
 import type { GoslingSpec, Track } from '../schema/gosling.schema';
 import { DEFAULT_CIRCULAR_VIEW_PADDING, DEFAULT_VIEW_SPACING } from '../core/defaults';
 import { getBoundingBox, getRelativeTrackInfo } from './bounding-box';
-import { traverseToFixSpecDownstream } from '../core/utils/spec-preprocess';
+import { traverseToFixSpecDownstream } from '../compiler/spec-preprocess';
 import { getTheme } from '../core/utils/theme';
 
 describe('Arrangement', () => {

@@ -1,4 +1,4 @@
-import type { Tile } from '@gosling-track';
+import type { Tile } from '@gosling-lang/gosling-track';
 import type { Channel } from 'src/schema/gosling.schema';
 import type { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
 import { group } from 'd3-array';
