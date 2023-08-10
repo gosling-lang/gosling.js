@@ -65,6 +65,11 @@ function addTrackPositionDescriptions(altGoslingSpec: AltGoslingSpec) {
         
     } else {
 
+        // create dictionary of the sizes
+        // check if all vertical or horizontal
+        // otherwise, for each, check if there is any left or right
+        
+
     }
 }
 

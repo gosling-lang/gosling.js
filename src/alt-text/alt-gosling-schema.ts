@@ -6,14 +6,19 @@ export interface AltCounter {
     nTracks: number;
     rowViews: number;
     colViews: number;
+    allPositions: number[][];
+    totalRows: number;
+    totalCols: number;
+    matrix: number[][];
 }
 
 export interface AltParentValues {
     layout: 'linear' | 'circular';
     arrangement: 'parallel' | 'serial' | 'horizontal' | 'vertical';
-    alignment: 'singular' | 'stack' | 'overlay'
-    allVertical: Boolean;
-    allHorizontal: Boolean;
+    alignment: 'singular' | 'stack' | 'overlay';
+    data?: DataDeep;
+    mark?: Mark;
+    //encodings?
 }
 
 
@@ -92,6 +97,15 @@ export interface AltDataStatistics {
     highestCategory?: string[];
 }
 
+
+export interface compositionTracker {
+    nRows: number;
+    nCols: number;
+    allVertical: boolean;
+    allHorizontal: boolean;
+    everyRowSameCols: boolean;
+    RowsCols: number[]
+}
 
 
 
@@ -195,6 +209,7 @@ export interface AltAttributes {
 
 
 import type { ResponsiveSize, ResponsiveSpecOfSingleView, ResponsiveSpecOfMultipleViews} from '../core/gosling.schema';
+import type { Data } from '@higlass.schema';
 
 
 

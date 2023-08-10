@@ -28,12 +28,14 @@ export function getAltSpec(
     altSpec.title =  spec.title;
     altSpec.subtitle =  spec.subtitle;
 
-    var counter = {'nTracks' : 0, 'rowViews' : 0, 'colViews' : 0};
+    var counter = {'nTracks' : 0, 'rowViews' : 0, 'colViews' : 0, 'allPositions': [[0,0]] as number[][], 'totalRows': 0, 'totalCols': 0, 'matrix': {} as number[][]};
     var altParentValues = {} as AltParentValues;
     altParentValues.arrangement = 'vertical';
     altParentValues.layout = 'linear';
 
-    determineStructure(spec, altSpec, altParentValues, counter)
+    determineStructure(spec, altSpec, altParentValues, counter);
+
+    getPositionMatrix(counter);
 
     var composition: AltSpecComposition = { description: '', nTracks: counter.nTracks, parentValues: altParentValues, counter: counter }
     altSpec.composition = composition;
@@ -44,7 +46,8 @@ export function getAltSpec(
     return altSpec;
 }
 
-export function determineStructure(
+
+function determineStructure(
     specPart: GoslingSpec,
     altSpec: AltGoslingSpec,
     altParentValues: AltParentValues,
@@ -61,15 +64,22 @@ export function determineStructure(
             // check if overlaid or stacked
             if (IsOverlaidTracks(specPart)) {
                 altOverlaidTracks(specPart, altParentValuesCopy, counter);
+                if (counter.nTracks > 0) {
+                    counter.allPositions = [...counter.allPositions, [counter.rowViews, counter.colViews]]
+                }
                 counter.nTracks ++;
-            } else if (IsStackedTracks(specPart)) {
-                altStackedTracks(specPart, altParentValuesCopy, counter);
-                counter.nTracks ++;
+               
+            // } else if (IsStackedTracks(specPart)) {
+            //     altStackedTracks(specPart, altParentValuesCopy, counter);
+            //     counter.nTracks ++;
             } else {
                 // otherwise treat every track as a single track
                 for (const i in specPart.tracks) {
                     const track =  specPart.tracks[i] as SingleTrack;
                     altSpec.tracks[counter.nTracks] = altSingleTrack(track, altParentValuesCopy, counter);
+                    if (counter.nTracks > 0) {
+                        counter.allPositions = [...counter.allPositions, [counter.rowViews, counter.colViews]]
+                    }
                     counter.nTracks ++;
                 }
             }
@@ -78,6 +88,9 @@ export function determineStructure(
         } else {
             const track = specPart.tracks[0] as SingleTrack;
             altSpec.tracks[counter.nTracks] = altSingleTrack(track, altParentValues, counter);
+            if (counter.nTracks > 0) {
+                counter.allPositions = [...counter.allPositions, [counter.rowViews, counter.colViews]]
+            }
             counter.nTracks ++;
         }
     }
@@ -391,4 +404,27 @@ function altOverlaidTracks(
     counter: AltCounter
 ) {
 
+}
+
+
+
+
+function getPositionMatrix(counter: AltCounter) {
+    counter.totalRows = Math.max(...counter.allPositions.map(t => t[0]));
+    counter.totalCols = Math.max(...counter.allPositions.map(t => t[1]));
+
+    let matrix = {} as number[][];
+    for (let i of Array.from(Array(counter.totalRows + 1).keys())) {
+        let colValsI  = counter.allPositions.filter(t => t[0] === i).map(t => t[1])
+        let colValsIStructured = {} as number[];
+        for (let j of colValsI) {
+            if (colValsIStructured[j]) {
+                colValsIStructured[j] = colValsIStructured[j] + 1;
+            } else {
+                colValsIStructured[j] = 1;
+            }
+        }
+        matrix[i] = colValsIStructured;
+    }
+    counter.matrix = matrix;
 }
