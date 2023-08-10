@@ -15,9 +15,9 @@ function addTrackPositionDescriptions(altGoslingSpec: AltGoslingSpec) {
         altGoslingSpec.composition.description = 'There is one (' + altGoslingSpec.tracks[0].appearance.details.layout + ') track.'
     } else if (altGoslingSpec.composition.nTracks == 2) {
 
-        var firstPlace;
-        var secondPlace;
-        var comb;
+        let firstPlace = '';
+        let secondPlace = '';
+        let desc = '';
 
         if (altGoslingSpec.tracks[0].appearance.details.layout === 'circular' && altGoslingSpec.tracks[1].appearance.details.layout === 'circular') {
             
@@ -25,21 +25,21 @@ function addTrackPositionDescriptions(altGoslingSpec: AltGoslingSpec) {
                 case 'serial': 
                     firstPlace = 'left half of ring';
                     secondPlace = 'right half of ring';
-                    comb = 'Two circular tracks form one ring, with both the half of the ring.'
+                    desc = 'Two circular tracks form one ring, with both the half of the ring.'
                     break;
                 case 'parallel': 
                     firstPlace = 'outer ring';
                     secondPlace = 'inner ring';
-                    comb = 'Two circular tracks form two rings, one around the other.'
+                    desc = 'Two circular tracks form two rings, one around the other.'
                 case 'horizontal':
                     firstPlace = 'left';
                     secondPlace = 'right';
-                    comb = 'Two circular tracks are shown next to each other.'
+                    desc = 'Two circular tracks are shown next to each other.'
                     break;
                 default: 
                     firstPlace = 'top';
                     secondPlace = 'bottom';
-                    comb = 'Two circular tracks are shown below each other.'
+                    desc = 'Two circular tracks are shown below each other.'
             }
         } else {
             const bothLinear = altGoslingSpec.tracks[0].appearance.details.layout === altGoslingSpec.tracks[1].appearance.details.layout;
@@ -47,29 +47,113 @@ function addTrackPositionDescriptions(altGoslingSpec: AltGoslingSpec) {
                 case 'serial' || 'horizontal': 
                     firstPlace = 'left';
                     secondPlace = 'right';
-                    comb = ' are shown next to each other.'
+                    desc = ' are shown next to each other.'
                 default: 
                     firstPlace = 'top';
                     secondPlace = 'bottom';
-                    comb = 'are shown below each other.'
+                    desc = 'are shown below each other.'
             }
             if (bothLinear) {
-                comb = ''.concat('Two linear tracks ', comb);
+                desc = ''.concat('Two linear tracks ', desc);
             } else {
-                comb = ''.concat('One linear and one circular track ', comb);
+                desc = ''.concat('One linear and one circular track ', desc);
             }
         }
         altGoslingSpec.tracks[0].position.description = 'This track is shown on the ' + firstPlace + '.';
         altGoslingSpec.tracks[1].position.description = 'This track is shown on the ' + secondPlace + '.';
-        altGoslingSpec.composition.description = comb;
+        altGoslingSpec.composition.description = desc;
         
     } else {
+        const words = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth'];
 
-        // create dictionary of the sizes
-        // check if all vertical or horizontal
-        // otherwise, for each, check if there is any left or right
-        
+        let desc = ''
+        if (altGoslingSpec.composition.counter.totalRows === 1) {
+            // all horizontal
+            desc = desc.concat('There are ' + (altGoslingSpec.composition.counter.nTracks + 1) + ' tracks, displayed next to each other.')
 
+        } else if (altGoslingSpec.composition.counter.totalCols === 1) {
+            // all vertical
+            desc = desc.concat('There are ' + (altGoslingSpec.composition.counter.nTracks + 1) + ' tracks, displayed below each other.')
+        }
+
+        else {
+            desc = desc.concat('There are ' + (altGoslingSpec.composition.counter.nTracks + 1) + ' tracks.')
+            desc = desc.concat('There are ' + (altGoslingSpec.composition.counter.totalRows + 1) + ' rows.');
+
+            const rowLengths = altGoslingSpec.composition.counter.matrix.map(t => t.length);
+            const rowLengthsUnique = [...new Set(rowLengths)];
+            
+            if (rowLengthsUnique.length == 1) {
+                desc = desc.concat(' Each row has ' + rowLengthsUnique[0] + ' tracks next to each other');
+            } else if (rowLengthsUnique.length == 2) {
+                let rowsWithFirstLength = {} as number[];
+                let rowsWithSecondLength = {} as number[];
+                for(let i = 0; i < rowLengths.length; i++) {
+                    if (rowLengths[i] === rowLengthsUnique[0]) {
+                        rowsWithFirstLength.push(i);
+                    } else {
+                        rowsWithSecondLength.push(i);
+                    }  
+                }
+
+                if (0 in rowsWithFirstLength) {
+                    desc = desc.concat(' Row(s) ' + arrayToString(rowsWithFirstLength) + ' have ' + rowLengthsUnique[0] + ' column(s) each.');
+                } else {
+                    desc = desc.concat(' Row(s) ' + arrayToString(rowsWithSecondLength) + ' have ' + rowLengthsUnique[1] + ' column(s) each.');
+                }
+            }
+            else {
+                for (let i = 0; i < altGoslingSpec.composition.counter.totalRows; i++) {
+                    if (i > 9) {
+                        desc = desc.concat(' Row number ' + i + ' has ' + altGoslingSpec.composition.counter.matrix[i].length + ' track(s) next to each other.')
+                    } else {
+                        desc = desc.concat(' The ' + words[i] + ' row has ' + altGoslingSpec.composition.counter.matrix[i].length + ' track(s) next to each other.')
+                    }
+                }
+            }
+
+        }
+
+        // add the description to altGoslingSpec
+        altGoslingSpec.composition.description = desc;
+
+        // if only 1 row / 1 column, dont do this
+        for (const i in altGoslingSpec.tracks) {
+            let descTrack = '';
+            const trackPosition = altGoslingSpec.tracks[i].position.details;
+            let counter = altGoslingSpec.composition.counter;
+
+            // indication of row is only useful if there is more than 1 row
+            if (altGoslingSpec.composition.counter.totalRows > 1) {
+                if (trackPosition.rowNumber === 1) {
+                    descTrack = descTrack.concat('top row');
+                } else if (trackPosition.rowNumber === counter.totalRows - 1) {
+                    descTrack = descTrack.concat('bottom row');
+                } else if (trackPosition.rowNumber < 10) {
+                    descTrack = descTrack.concat(words[trackPosition.rowNumber] + 'row');
+                } else {
+                    descTrack = descTrack.concat('row ' + trackPosition.rowNumber + 1);
+                }
+            }
+            // indication of column is only useful if there is more than 1 row
+            if (altGoslingSpec.composition.counter.totalCols > 1) {
+                if (descTrack.length > 1) {
+                    descTrack = descTrack.concat(', ');
+                }
+                if (counter.matrix[trackPosition.rowNumber].length > 1) {
+                    if (trackPosition.colNumber === 1) {
+                        descTrack = descTrack.concat('left');
+                    } else if (trackPosition.colNumber === counter.matrix[trackPosition.rowNumber].length) {
+                        descTrack = descTrack.concat('right');
+                    } else if (trackPosition.colNumber === 1 && counter.matrix[trackPosition.rowNumber].length === 3) {
+                        descTrack = descTrack.concat('middle');
+                    } else {
+                        descTrack = descTrack.concat(words[trackPosition.colNumber] + ' from left');
+                    }
+                }
+            }
+            altGoslingSpec.tracks[i].position.description = descTrack;
+        }
     }
 }
 
