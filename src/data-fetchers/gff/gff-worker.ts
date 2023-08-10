@@ -4,7 +4,7 @@ import type { GFF3FeatureLineWithRefs, GFF3Feature, GFF3Sequence } from '@gmod/g
 import { expose, Transfer } from 'threads/worker';
 import { sampleSize } from 'lodash-es';
 import type { TilesetInfo } from '@higlass/types';
-import type { ChromSizes } from '@gosling.schema';
+import type { ChromSizes } from 'src/schema/gosling.schema';
 import { DataSource, RemoteFile } from '../utils';
 import { isGFF3Feature, makeRandomSortedArray } from './utils';
 

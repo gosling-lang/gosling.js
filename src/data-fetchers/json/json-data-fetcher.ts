@@ -1,6 +1,6 @@
 import { computeChromSizes } from '../../core/utils/assembly';
 import { sampleSize } from 'lodash-es';
-import type { Assembly, JsonData } from '@gosling.schema';
+import type { Assembly, JsonData } from 'src/schema/gosling.schema';
 import { type CommonDataConfig, filterUsingGenoPos, sanitizeChrName } from '../utils';
 
 type CsvDataConfig = JsonData & CommonDataConfig;

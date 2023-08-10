@@ -1,5 +1,5 @@
-import type { OverlaidTrack } from '../gosling.schema';
-import { IsChannelDeep } from '../gosling.schema.guards';
+import type { OverlaidTrack } from '../../schema/gosling.schema';
+import { IsChannelDeep } from '../../schema/gosling.schema.guards';
 import { resolveSuperposedTracks, spreadTracksByData } from './overlay';
 
 describe('Should handle superposition options correctly', () => {

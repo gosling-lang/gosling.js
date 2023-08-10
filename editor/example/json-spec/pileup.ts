@@ -1,4 +1,4 @@
-import type { Domain, GoslingSpec, View } from '@gosling.schema';
+import type { Domain, GoslingSpec, View } from 'src/schema/gosling.schema';
 
 export function EX_SPEC_VIEW_PILEUP(
     id: string,

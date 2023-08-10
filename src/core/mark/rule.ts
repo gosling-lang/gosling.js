@@ -1,7 +1,7 @@
 import type { Tile } from '@gosling-track';
-import type { Channel } from '@gosling.schema';
-import type { GoslingTrackModel } from '../gosling-track-model';
-import { getValueUsingChannel } from '../gosling.schema.guards';
+import type { Channel } from 'src/schema/gosling.schema';
+import type { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
+import { getValueUsingChannel } from '../../schema/gosling.schema.guards';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
 

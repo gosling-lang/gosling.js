@@ -1,4 +1,4 @@
-import type { GoslingSpec } from '@gosling.schema';
+import type { GoslingSpec } from 'src/schema/gosling.schema';
 
 const circularRadius = 250;
 const centerRadius = 0.5;

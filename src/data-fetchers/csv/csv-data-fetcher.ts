@@ -1,7 +1,7 @@
 import { dsvFormat as d3dsvFormat, type DSVRowString } from 'd3-dsv';
 import { computeChromSizes } from '../../core/utils/assembly';
 import { sampleSize } from 'lodash-es';
-import type { Assembly, CsvData, FilterTransform, Datum } from '@gosling.schema';
+import type { Assembly, CsvData, FilterTransform, Datum } from 'src/schema/gosling.schema';
 import { filterData } from '../../core/utils/data-transform';
 import { type CommonDataConfig, filterUsingGenoPos, sanitizeChrName } from '../utils';
 

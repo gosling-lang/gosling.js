@@ -3,7 +3,7 @@
  * https://github.com/higlass/higlass-bigwig-datafetcher/blob/main/src/BigwigDataFetcher.js
  */
 import { BigWig } from '@gmod/bbi';
-import type { Assembly, BigWigData } from '@gosling.schema';
+import type { Assembly, BigWigData } from 'src/schema/gosling.schema';
 import { computeChromSizes } from '../../core/utils/assembly';
 import { type CommonDataConfig, RemoteFile } from '../utils';
 

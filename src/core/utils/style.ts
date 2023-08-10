@@ -1,4 +1,4 @@
-import type { Style } from '../gosling.schema';
+import type { Style } from '../../schema/gosling.schema';
 
 export function getStyleOverridden(parent: Style | undefined, child: Style | undefined) {
     // Deep overriding instead of replacing.

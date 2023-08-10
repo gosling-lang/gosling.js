@@ -1,6 +1,6 @@
-import type { GoslingSpec } from '@gosling.schema';
+import type { GoslingSpec } from 'src/schema/gosling.schema';
 import { cloneDeepWith } from 'lodash-es';
-import { isObject } from '../gosling.schema.guards';
+import { isObject } from '../../schema/gosling.schema.guards';
 
 export function omitDeep(spec: GoslingSpec, omitKeys: string[]) {
     return cloneDeepWith(spec, (value: unknown) => {

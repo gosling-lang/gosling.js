@@ -7,7 +7,7 @@ import type { TilesetInfo } from '@higlass/types';
 import type { BamRecord } from '@gmod/bam';
 
 import { DataSource, RemoteFile } from '../utils';
-import type { ChromSizes } from '@gosling.schema';
+import type { ChromSizes } from 'src/schema/gosling.schema';
 
 function parseMD(mdString: string, useCounts: true): { type: string; length: number }[];
 function parseMD(mdString: string, useCounts: false): { pos: number; base: string; length: 1; bamSeqShift: number }[];

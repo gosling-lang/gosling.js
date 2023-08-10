@@ -13,7 +13,7 @@ import type {
     CoverageTransform,
     DisplaceTransform,
     JsonParseTransform
-} from '../gosling.schema';
+} from '../../schema/gosling.schema';
 import {
     getChannelKeysByAggregateFnc,
     getChannelKeysByType,
@@ -21,7 +21,7 @@ import {
     IsIncludeFilter,
     IsOneOfFilter,
     IsRangeFilter
-} from '../gosling.schema.guards';
+} from '../../schema/gosling.schema.guards';
 import { computeChromSizes } from './assembly';
 // import Logging from './log';
 

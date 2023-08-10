@@ -1,4 +1,4 @@
-import type { GoslingSpec, Mark, DataDeep } from '@gosling.schema';
+import type { GoslingSpec, Mark, DataDeep } from 'src/schema/gosling.schema';
 
 export const data: DataDeep = {
     url: 'https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ',

@@ -1,17 +1,17 @@
 /* eslint-disable react/prop-types */
 import { type HiGlassApi, HiGlassComponentWrapper } from './higlass-component-wrapper';
-import type { TemplateTrackDef, VisUnitApiData } from './gosling.schema';
+import type { TemplateTrackDef, VisUnitApiData } from '../schema/gosling.schema';
 import React, { useState, useEffect, useMemo, useRef, forwardRef, useCallback, useImperativeHandle } from 'react';
 import ResizeSensor from 'css-element-queries/src/ResizeSensor';
 import * as gosling from '..';
 import { getTheme, type Theme } from './utils/theme';
-import { createApi, type GoslingApi } from './api';
+import { createApi, type GoslingApi } from '../api/api';
 import { GoslingTemplates } from '..';
 import { omitDeep } from './utils/omit-deep';
 import { isEqual } from 'lodash-es';
 import * as uuid from 'uuid';
-import { publish } from './pubsub';
-import type { IdTable } from './track-and-view-ids';
+import { publish } from '../api/pubsub';
+import type { IdTable } from '../api/track-and-view-ids';
 
 // Before rerendering, wait for a few time so that HiGlass container is resized already.
 // If HiGlass is rendered and then the container resizes, the viewport position changes, unmatching `xDomain` specified by users.

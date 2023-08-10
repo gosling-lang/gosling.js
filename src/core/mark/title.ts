@@ -1,6 +1,6 @@
 import type * as PIXI from 'pixi.js';
 import type { Tile } from '@gosling-track';
-import type { GoslingTrackModel } from '../gosling-track-model';
+import type { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
 import type { CompleteThemeDeep } from '../utils/theme';

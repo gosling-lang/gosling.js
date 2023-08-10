@@ -1,7 +1,7 @@
-import type { GoslingTrackModel } from '../gosling-track-model';
-import type { Assembly, Domain } from '../gosling.schema';
+import type { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
+import type { Assembly, Domain } from '../../schema/gosling.schema';
 import { SUPPORTED_CHANNELS } from '../mark';
-import { IsDomainChr, IsDomainInterval, IsDomainChrInterval, IsChannelDeep } from '../gosling.schema.guards';
+import { IsDomainChr, IsDomainInterval, IsDomainChrInterval, IsChannelDeep } from '../../schema/gosling.schema.guards';
 import { computeChromSizes } from './assembly';
 
 /**

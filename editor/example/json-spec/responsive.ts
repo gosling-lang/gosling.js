@@ -1,4 +1,4 @@
-import type { GoslingSpec } from '@gosling.schema';
+import type { GoslingSpec } from 'src/schema/gosling.schema';
 
 export const EX_SPEC_RESPONSIVE_SEGREGATED_AREA_CHART: GoslingSpec = {
     // title: 'Responsive Visualization',

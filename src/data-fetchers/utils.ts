@@ -2,7 +2,7 @@ import { bisector } from 'd3-array';
 import { RemoteFile as _RemoteFile } from 'generic-filehandle';
 
 import type * as HiGlass from '@higlass/types';
-import type { Assembly, ChromSizes, Datum } from '@gosling.schema';
+import type { Assembly, ChromSizes, Datum } from 'src/schema/gosling.schema';
 
 export type CommonDataConfig = {
     assembly: Assembly;

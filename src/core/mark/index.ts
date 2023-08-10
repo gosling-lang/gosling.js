@@ -1,11 +1,11 @@
 import type { Tile } from '@gosling-track';
-import type { GoslingTrackModel } from '../gosling-track-model';
+import type { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
 import { drawPoint } from './point';
 import { drawLine } from './line';
 import { drawBar } from './bar';
 import { drawArea } from './area';
 import { drawRect } from './rect';
-import type { ChannelTypes } from '../gosling.schema';
+import type { ChannelTypes } from '../../schema/gosling.schema';
 import { drawTriangle } from './triangle';
 import { drawText } from './text';
 import { drawRule } from './rule';
@@ -18,7 +18,7 @@ import { drawCircularYAxis, drawLinearYAxis } from './axis';
 import { drawCircularOutlines } from './outline-circular';
 import { drawBackground } from './background';
 import type { CompleteThemeDeep } from '../utils/theme';
-import { Is2DTrack, IsVerticalRule } from '../gosling.schema.guards';
+import { Is2DTrack, IsVerticalRule } from '../../schema/gosling.schema.guards';
 import { drawBetweenLink } from './betweenLink';
 
 /**

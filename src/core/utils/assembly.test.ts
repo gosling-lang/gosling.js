@@ -1,4 +1,4 @@
-import type { Assembly } from '@gosling.schema';
+import type { Assembly } from 'src/schema/gosling.schema';
 import {
     getChromInterval,
     getChromTotalSize,
