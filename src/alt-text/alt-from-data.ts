@@ -32,6 +32,8 @@ export function altRetrieveDataStatistics(id: string, flatTileData: Datum[], dat
         //const categoryMinMax: { [key: string]: number[] } = {};
         const categoryMinMaxWG: { [key: string]: (number | number[])[] } = {};
 
+        var highestCategory = {} as string[];
+
         for (let category of categories) {
             let dataCat = flatTileData.filter(d => d[dataFields.categoryField] === category);
             let valueValuesCat = (dataCat.map(d => d[dataFields.valueField]) as unknown as number[]).filter(d => !isNaN(d));
@@ -43,10 +45,15 @@ export function altRetrieveDataStatistics(id: string, flatTileData: Datum[], dat
 
             //categoryMinMax[category] = [valueMinCat, valueMaxCat];
             categoryMinMaxWG[category] = [valueMinCat, valueMinCatGenomic, valueMaxCat, valueMaxCatGenomic];
+
+            if (valueMaxCat === valueMax) {
+                highestCategory = [...highestCategory, category]
+            }
         }
 
         altDataStatistics.categories = categories;
         altDataStatistics.categoryMinMaxWG = categoryMinMaxWG;
+        altDataStatistics.highestCategory = highestCategory;
     }
 
     return(altDataStatistics);

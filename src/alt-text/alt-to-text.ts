@@ -196,7 +196,7 @@ function trackAppearanceUnknownType(altTrack: AltTrack) {
 
 }
 
-
+// used in addTrackDataDescriptions
 function addMinMaxDescription(values: number[], key: 'minimum' | 'maximum') {
     var descMinMax = ''
     if (values.length === 1 ) {
@@ -214,17 +214,31 @@ function addTrackDataDescriptions(altGoslingSpec: AltGoslingSpec) {
         const track = altGoslingSpec.tracks[i];
         if (track.data.details.dataStatistics) {
             var desc = '';
-            desc = desc.concat('The genomic range shown is from ' + track.data.details.dataStatistics?.genomicMin + ' to ' + track.data.details.dataStatistics?.genomicMax + ' basepairs.')
-            desc = desc.concat(' The expression values range from ' + track.data.details.dataStatistics?.valueMin + ' to ' + track.data.details.dataStatistics?.valueMax + '.')
+
+            // genomic and expression ranges
+            desc = desc.concat('The genomic range shown is from ' + track.data.details.dataStatistics?.genomicMin + ' to ' + track.data.details.dataStatistics?.genomicMax + ' basepairs.');
+            desc = desc.concat(' The expression values range from ' + track.data.details.dataStatistics?.valueMin + ' to ' + track.data.details.dataStatistics?.valueMax + '.');
             
-            desc.concat(addMinMaxDescription(track.data.details.dataStatistics?.valueMaxGenomic, 'maximum'));
-            desc.concat(addMinMaxDescription(track.data.details.dataStatistics?.valueMinGenomic, 'minimum'));
+            // where on the genome are the minimum and maximum expression
+            desc = desc.concat(addMinMaxDescription(track.data.details.dataStatistics?.valueMaxGenomic, 'maximum'));
+            desc = desc.concat(addMinMaxDescription(track.data.details.dataStatistics?.valueMinGenomic, 'minimum'));
             
+            // add category data information
             if (track.data.details.dataStatistics?.categories) {
-                // add category data information
-                // Number of categories
-                // Which category has the highest expression peak
-                // If genomic positions are the same for the min and max values of each category
+
+                // number of categories
+                desc = desc.concat(' There are ' + track.data.details.dataStatistics?.categories.length + ' samples.');
+
+                // which category has the highest expression peak
+                if (track.data.details.dataStatistics?.highestCategory.length === 1) {
+                    desc = desc.concat(' The highest value is observed in sample ' + track.data.details.dataStatistics?.highestCategory[0] + '.');
+                } else {
+                    desc = desc.concat(' The highest value is observed in samples ' + arrayToString(track.data.details.dataStatistics?.highestCategory) + '.');
+                }
+                     
+                // Are genomic positions are the same for the min and max values of each category
+                // todo
+
             }
             altGoslingSpec.tracks[i].data.description = desc;
         }

@@ -89,6 +89,7 @@ export interface AltDataStatistics {
     valueMaxGenomic: number[];
     categories?: string[];
     categoryMinMaxWG?: { [key: string]: (number | number[])[] };
+    highestCategory?: string[];
 }
 
 
