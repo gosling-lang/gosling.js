@@ -410,11 +410,11 @@ function altOverlaidTracks(
 
 
 function getPositionMatrix(counter: AltCounter) {
-    counter.totalRows = Math.max(...counter.allPositions.map(t => t[0]));
-    counter.totalCols = Math.max(...counter.allPositions.map(t => t[1]));
+    counter.totalRows = Math.max(...counter.allPositions.map(t => t[0])) + 1;
+    counter.totalCols = Math.max(...counter.allPositions.map(t => t[1])) + 1;
 
     let matrix = {} as number[][];
-    for (let i of Array.from(Array(counter.totalRows + 1).keys())) {
+    for (let i = 0; i < counter.totalRows; i++) {
         let colValsI  = counter.allPositions.filter(t => t[0] === i).map(t => t[1])
         let colValsIStructured = {} as number[];
         for (let j of colValsI) {
