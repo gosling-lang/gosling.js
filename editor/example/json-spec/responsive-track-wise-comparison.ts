@@ -1,4 +1,4 @@
-import type { DomainChrInterval, GoslingSpec, OverlaidTracks, SingleTrack, TemplateTrack } from 'src/schema/gosling.schema';
+import type { DomainChrInterval, GoslingSpec, OverlaidTracks, SingleTrack, TemplateTrack } from '../../../src/schema/gosling.schema';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 const trackColor = {
