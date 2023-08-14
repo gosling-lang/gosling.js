@@ -1,11 +1,11 @@
 import * as uuid from 'uuid';
-import type { Track as HiGlassTrack } from '../schema/higlass.schema';
+import type { Track as HiGlassTrack } from '@gosling-lang/higlass-schema';
 import { HiGlassModel, HIGLASS_AXIS_SIZE } from './higlass-model';
 import { parseServerAndTilesetUidFromUrl } from '../core/utils';
-import type { Track, Domain } from '../schema/gosling.schema';
+import type { Track, Domain } from '@gosling-lang/gosling-schema';
 import type { BoundingBox, RelativePosition } from './bounding-box';
 import { resolveSuperposedTracks } from '../core/utils/overlay';
-import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from '../schema/validate';
+import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from '../gosling-schema/validate';
 import {
     IsDataDeep,
     IsChannelDeep,
@@ -15,7 +15,7 @@ import {
     IsHiGlassMatrix,
     getHiGlassColorRange,
     IsDummyTrack
-} from '../schema/gosling.schema.guards';
+} from '@gosling-lang/gosling-schema';
 import { DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM } from '../core/defaults';
 import type { CompleteThemeDeep } from '../core/utils/theme';
 import { DEFAULT_TEXT_STYLE } from '../core/utils/text-style';

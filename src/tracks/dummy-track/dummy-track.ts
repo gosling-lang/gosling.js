@@ -1,6 +1,6 @@
 import { createPluginTrack, type PluginTrackFactory, type TrackConfig } from '../../core/utils/define-plugin-track';
 import { publish } from '../../api/pubsub';
-import { type DummyTrackStyle } from 'src/schema/gosling.schema';
+import { type DummyTrackStyle } from '@gosling-lang/gosling-schema';
 
 interface DummyTrackOptions extends DummyTrackStyle {
     title: string;

@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
-import type { TrackApiData, VisUnitApiData, ViewApiData } from 'src/schema/gosling.schema';
+import type { TrackApiData, VisUnitApiData, ViewApiData } from '@gosling-lang/gosling-schema';
+import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
 import type { HiGlassApi } from '../core/higlass-component-wrapper';
-import type { HiGlassSpec } from 'src/schema/higlass.schema';
 import { subscribe, unsubscribe } from './pubsub';
 import { computeChromSizes, GenomicPositionHelper } from '../core/utils/assembly';
 import type { CompleteThemeDeep } from '../core/utils/theme';

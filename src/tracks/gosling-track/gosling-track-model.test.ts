@@ -1,7 +1,7 @@
 import { GoslingTrackModel } from './gosling-track-model';
-import type { Track } from '../../schema/gosling.schema';
+import type { Track } from '@gosling-lang/gosling-schema';
 import { isEqual } from 'lodash-es';
-import { IsChannelDeep, IsChannelValue } from '../../schema/gosling.schema.guards';
+import { IsChannelDeep, IsChannelValue } from '@gosling-lang/gosling-schema';
 import { getTheme } from '../../core/utils/theme';
 
 const MINIMAL_TRACK_SPEC: Track = {

@@ -10,7 +10,7 @@ import type {
     CommonViewDef,
     MultipleViews,
     DisplaceTransform
-} from 'src/schema/gosling.schema';
+} from '@gosling-lang/gosling-schema';
 import {
     IsDataTemplate,
     IsDataDeepTileset,
@@ -21,7 +21,7 @@ import {
     IsStackedTracks,
     Is2DTrack,
     IsDummyTrack
-} from '../schema/gosling.schema.guards';
+} from '@gosling-lang/gosling-schema';
 import {
     DEFAULT_INNER_RADIUS_PROP,
     DEFAULT_TRACK_HEIGHT_LINEAR,

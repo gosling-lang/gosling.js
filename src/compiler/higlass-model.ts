@@ -1,10 +1,10 @@
 import * as uuid from 'uuid';
-import type { HiGlassSpec, Track } from '../schema/higlass.schema';
-import HiGlassSchema from '../../schema/higlass.schema.json';
-import type { Assembly, AxisPosition, Domain, DummyTrack, Orientation, ZoomLimits } from '../schema/gosling.schema';
+import type { HiGlassSpec, Track } from '@gosling-lang/higlass-schema';
+import { HiGlassSchema } from '@gosling-lang/higlass-schema';
+import type { Assembly, AxisPosition, Domain, DummyTrack, Orientation, ZoomLimits } from '@gosling-lang/gosling-schema';
 import { getNumericDomain } from '../core/utils/scales';
 import type { RelativePosition } from './bounding-box';
-import { validateSpec } from '../schema/validate';
+import { validateSpec } from '@gosling-lang/gosling-schema';
 import { getAutoCompleteId, computeChromSizes } from '../core/utils/assembly';
 import type { CompleteThemeDeep } from '../core/utils/theme';
 import exampleHg from '../core/example/hg-view-config-1';

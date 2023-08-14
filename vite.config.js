@@ -55,8 +55,8 @@ export default function() {
 
 const alias = {
     'gosling.js': path.resolve(__dirname, './src/index.ts'),
-    '@gosling-lang/gosling-schema': path.resolve(__dirname, './src/schema'),
-    '@higlass.schema': path.resolve(__dirname, './src/core/higlass.schema'),
+    '@gosling-lang/gosling-schema': path.resolve(__dirname, './src/gosling-schema/index.ts'),
+    '@gosling-lang/higlass-schema': path.resolve(__dirname, './src/higlass-schema/index.ts'),
     "@gosling-lang/gosling-track": path.resolve(__dirname, "./src/tracks/gosling-track/index.ts"),
     "@gosling-lang/gosling-genomic-axis": path.resolve(__dirname, "./src/tracks/gosling-genomic-axis/index.ts"),
     "@gosling-lang/gosling-brush": path.resolve(__dirname, "./src/tracks/gosling-brush/index.ts"),

@@ -1,4 +1,4 @@
-import type { HiGlassSpec, View } from '../../schema/higlass.schema';
+import type { HiGlassSpec, View } from '@gosling-lang/higlass-schema';
 
 /**
  * Traverse all views in a HiGlass viewConfig.

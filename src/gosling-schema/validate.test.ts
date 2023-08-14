@@ -1,4 +1,4 @@
-import { validateGoslingSpec } from './validate';
+import { validateGoslingSpec } from '@gosling-lang/gosling-schema';
 import { EX_SPEC_CYTOBANDS } from '../../editor/example/json-spec/ideograms';
 
 describe('Validate Spec', () => {

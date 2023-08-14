@@ -4,7 +4,7 @@ import { EX_TRACK_SEMANTIC_ZOOM } from '../../editor/example/json-spec/semantic-
 import { convertToFlatTracks } from './spec-preprocess';
 import { getTheme } from '../core/utils/theme';
 
-import type { SingleTrack } from '../schema/gosling.schema';
+import type { SingleTrack } from '@gosling-lang/gosling-schema';
 import { GoslingToHiGlassIdMapper } from '../api/track-and-view-ids';
 
 describe('Should convert gosling spec to higlass view config.', () => {

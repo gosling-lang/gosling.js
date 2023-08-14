@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { type HiGlassApi, HiGlassComponentWrapper } from './higlass-component-wrapper';
-import type { TemplateTrackDef, VisUnitApiData } from '../schema/gosling.schema';
+import type { TemplateTrackDef, VisUnitApiData } from '@gosling-lang/gosling-schema';
 import React, { useState, useEffect, useMemo, useRef, forwardRef, useCallback, useImperativeHandle } from 'react';
 import ResizeSensor from 'css-element-queries/src/ResizeSensor';
 import * as gosling from '..';

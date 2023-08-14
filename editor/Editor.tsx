@@ -14,8 +14,8 @@ import 'allotment/dist/style.css';
 import { debounce, isEqual } from 'lodash-es';
 import stripJsonComments from 'strip-json-comments';
 import JSONCrush from 'jsoncrush';
-import type { HiGlassSpec } from '../src/schema/higlass.schema';
-import type { Datum } from '../src/schema/gosling.schema';
+import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
+import type { Datum } from '@gosling-lang/gosling-schema';
 import { Themes } from 'gosling-theme';
 
 import { ICONS, type ICON_INFO } from './icon';

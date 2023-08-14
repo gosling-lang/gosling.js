@@ -1,5 +1,5 @@
 import type { GoslingSpec } from 'gosling.js';
-import type { SingleView } from 'src/schema/gosling.schema';
+import type { SingleView } from '@gosling-lang/gosling-schema';
 import { DEFAULT_VIEW_SPACING } from '../../../src/core/defaults';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 

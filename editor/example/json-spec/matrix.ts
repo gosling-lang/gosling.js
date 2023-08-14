@@ -1,4 +1,4 @@
-import type { PredefinedColors, SingleTrack } from '../../../src/schema/gosling.schema';
+import type { PredefinedColors, SingleTrack } from '@gosling-lang/gosling-schema';
 import type { GoslingSpec } from 'gosling.js';
 import { random } from 'lodash-es';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';

@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import type { SingleTrack } from 'src/schema/gosling.schema';
+import type { SingleTrack } from '@gosling-lang/gosling-schema';
 import { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
 import { getTheme } from '../utils/theme';
 import { drawBar } from './bar';

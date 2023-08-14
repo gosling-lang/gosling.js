@@ -1,4 +1,4 @@
-import type { GoslingSpec, PartialTrack, TrackApiData, View } from 'src/schema/gosling.schema';
+import type { GoslingSpec, PartialTrack, TrackApiData, View } from '@gosling-lang/gosling-schema';
 import { getInternalSpecById, getTrackIds, getViewIds } from '../api/track-and-view-ids';
 
 /**

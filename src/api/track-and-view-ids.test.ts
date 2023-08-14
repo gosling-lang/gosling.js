@@ -1,4 +1,4 @@
-import type { GoslingSpec } from 'src/schema/gosling.schema';
+import type { GoslingSpec } from '@gosling-lang/gosling-schema';
 import { getInternalSpecById, getTrackIds, getViewIds } from './track-and-view-ids';
 
 describe('Retrieve IDs and Sub-spec', () => {

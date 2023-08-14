@@ -1,4 +1,4 @@
-import type { Datum } from 'src/schema/gosling.schema';
+import type { Datum } from '@gosling-lang/gosling-schema';
 import {
     isAllPointsWithinRange,
     isPointInPolygon,

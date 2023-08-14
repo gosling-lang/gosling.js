@@ -3,7 +3,7 @@ import * as d3Selection from 'd3-selection';
 import * as d3Drag from 'd3-drag';
 
 import { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
-import type { SingleTrack } from '../../schema/gosling.schema';
+import type { SingleTrack } from '@gosling-lang/gosling-schema';
 import { getTheme } from '../utils/theme';
 import { drawColorLegend } from './legend';
 

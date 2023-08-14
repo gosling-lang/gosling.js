@@ -1,4 +1,4 @@
-import type { CommonTrackDef, CommonViewDef, GoslingSpec, PartialTrack, View } from 'src/schema/gosling.schema';
+import type { CommonTrackDef, CommonViewDef, GoslingSpec, PartialTrack, View } from '@gosling-lang/gosling-schema';
 import { traverseTracksAndViews } from '../compiler/spec-preprocess';
 
 /**

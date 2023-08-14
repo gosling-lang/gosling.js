@@ -1,4 +1,4 @@
-import type { GoslingSpec } from 'src/schema/gosling.schema';
+import type { GoslingSpec } from '@gosling-lang/gosling-schema';
 import { manageResponsiveSpecs } from './responsive';
 
 describe('ResponsiveSpec', () => {

@@ -8,8 +8,8 @@ import type {
     Channel,
     Color,
     Stroke
-} from '../../schema/gosling.schema';
-import { validateTrack, getGenomicChannelFromTrack, getGenomicChannelKeyFromTrack } from '../../schema/validate';
+} from '@gosling-lang/gosling-schema';
+import { validateTrack, getGenomicChannelFromTrack, getGenomicChannelKeyFromTrack } from '@gosling-lang/gosling-schema';
 import {
     type ScaleLinear,
     scaleLinear,
@@ -39,7 +39,7 @@ import {
     IsDomainArray,
     PREDEFINED_COLOR_STR_MAP,
     IsRangeArray
-} from '../../schema/gosling.schema.guards';
+} from '@gosling-lang/gosling-schema';
 import { CHANNEL_DEFAULTS } from '../../core/channel';
 import { type CompleteThemeDeep, getTheme } from '../../core/utils/theme';
 import { MouseEventModel } from '../gosling-track/gosling-mouse-event';

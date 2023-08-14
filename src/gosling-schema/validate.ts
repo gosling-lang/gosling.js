@@ -2,7 +2,7 @@ import Ajv from 'ajv';
 import type { SingleTrack, ChannelDeep, ChannelTypes, OverlaidTrack, Track } from './gosling.schema';
 import { IsChannelDeep } from './gosling.schema.guards';
 import { resolveSuperposedTracks } from '../core/utils/overlay';
-import GoslingSchema from '../../schema/gosling.schema.json';
+import GoslingSchema from './gosling.schema.json';
 
 export interface Validity {
     message: string;

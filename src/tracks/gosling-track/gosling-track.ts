@@ -11,7 +11,7 @@ import type {
     Assembly,
     ValueExtent,
     Range
-} from 'src/schema/gosling.schema';
+} from '@gosling-lang/gosling-schema';
 import { type MouseEventData, isPointInsideDonutSlice } from '../gosling-track/gosling-mouse-event';
 import { BamDataFetcher, type TabularDataFetcher } from '@data-fetchers';
 import type { Tile as _Tile, TileData, TileDataBase } from '@higlass/services';
@@ -22,7 +22,7 @@ import { getTabularData } from './data-abstraction';
 import type { CompleteThemeDeep } from '../../core/utils/theme';
 import { drawMark, drawPostEmbellishment, drawPreEmbellishment } from '../../core/mark';
 import { GoslingTrackModel } from './gosling-track-model';
-import { validateTrack } from '../../schema/validate';
+import { validateTrack } from '@gosling-lang/gosling-schema';
 import { shareScaleAcrossTracks } from '../../core/utils/scales';
 import { resolveSuperposedTracks } from '../../core/utils/overlay';
 import colorToHex from '../../core/utils/color-to-hex';
@@ -48,7 +48,7 @@ import {
     IsXAxis,
     isTabularDataFetcher,
     hasDataTransform
-} from '../../schema/gosling.schema.guards';
+} from '@gosling-lang/gosling-schema';
 import { HIGLASS_AXIS_SIZE } from '../../compiler/higlass-model';
 import { flatArrayToPairArray } from '../../core/utils/array';
 import { createPluginTrack, type PluginTrackFactory, type TrackConfig } from '../../core/utils/define-plugin-track';

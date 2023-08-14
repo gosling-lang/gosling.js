@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import type { GoslingSpec } from '../schema/gosling.schema';
-import type { HiGlassSpec } from '../schema/higlass.schema';
+import type { GoslingSpec } from '@gosling-lang/gosling-schema';
+import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
 
-import { validateGoslingSpec } from '../schema/validate';
+import { validateGoslingSpec } from '@gosling-lang/gosling-schema';
 import { compile } from '../compiler/compile';
 import { getTheme, type Theme } from './utils/theme';
 import { GoslingTemplates } from './utils/template';

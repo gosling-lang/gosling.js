@@ -1,6 +1,6 @@
 import type { SparseTile, TileData } from '@higlass/services';
-import type { Datum, SingleTrack } from '@gosling.schema';
-import { IsDataDeepTileset } from '../../schema/gosling.schema.guards';
+import type { Datum, SingleTrack } from '@gosling-lang/gosling-schema';
+import { IsDataDeepTileset } from '@gosling-lang/gosling-schema';
 
 export const GOSLING_DATA_ROW_UID_FIELD = 'gosling-data-row-uid';
 

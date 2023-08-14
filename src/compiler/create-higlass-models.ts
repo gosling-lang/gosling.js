@@ -9,12 +9,12 @@ import type {
     TrackApiData,
     VisUnitApiData,
     ViewApiData
-} from 'src/schema/gosling.schema';
+} from '@gosling-lang/gosling-schema';
 import type { CompleteThemeDeep } from '../core/utils/theme';
 import type { CompileCallback } from './compile';
 import { getViewApiData } from '../api/api-data';
 import { GoslingToHiGlassIdMapper } from '../api/track-and-view-ids';
-import { IsDummyTrack } from '../schema/gosling.schema.guards';
+import { IsDummyTrack } from '@gosling-lang/gosling-schema';
 
 export function renderHiGlass(
     spec: GoslingSpec,

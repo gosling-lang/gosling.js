@@ -1,7 +1,7 @@
 // HiGlass Specification Should be consistent to the following scheme:
 // https://github.com/higlass/higlass/blob/develop/app/schema.json (2ced037)
 
-import type { Assembly, FilterTransform } from 'src/schema/gosling.schema';
+import type { Assembly, FilterTransform } from '@gosling-lang/gosling-schema';
 
 // The json schema is converted to TypeScript codes using:
 // https://github.com/quicktype/quicktype

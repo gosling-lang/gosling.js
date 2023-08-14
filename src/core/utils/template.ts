@@ -7,8 +7,8 @@ import type {
     TemplateTrackDef,
     TemplateTrackMappingDef,
     Track
-} from '../../schema/gosling.schema';
-import { IsTemplateTrack } from '../../schema/gosling.schema.guards';
+} from '@gosling-lang/gosling-schema';
+import { IsTemplateTrack } from '@gosling-lang/gosling-schema';
 import { traverseTracks } from '../../compiler/spec-preprocess';
 
 /**

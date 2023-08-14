@@ -1,5 +1,5 @@
-import type { GoslingSpec, TemplateTrackDef, VisUnitApiData } from '../schema/gosling.schema';
-import type { HiGlassSpec } from '../schema/higlass.schema';
+import type { GoslingSpec, TemplateTrackDef, VisUnitApiData } from '@gosling-lang/gosling-schema';
+import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
 import { traverseToFixSpecDownstream, overrideDataTemplates } from './spec-preprocess';
 import { replaceTrackTemplates } from '../core/utils/template';
 import { getRelativeTrackInfo, type Size } from './bounding-box';

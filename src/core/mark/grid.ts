@@ -1,6 +1,6 @@
 import type { ScaleLinear } from 'd3-scale';
 import type { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
-import { IsChannelDeep } from '../../schema/gosling.schema.guards';
+import { IsChannelDeep } from '@gosling-lang/gosling-schema';
 import colorToHex from '../utils/color-to-hex';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import { isNumberArray, isStringArray } from '../utils/array';

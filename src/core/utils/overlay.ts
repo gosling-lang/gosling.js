@@ -1,5 +1,5 @@
-import type { AxisPosition, SingleTrack, OverlaidTrack, Track, ChannelDeep, DataDeep } from '../../schema/gosling.schema';
-import { IsChannelDeep, IsDataTrack, IsOverlaidTrack, IsSingleTrack, IsDummyTrack } from '../../schema/gosling.schema.guards';
+import type { AxisPosition, SingleTrack, OverlaidTrack, Track, ChannelDeep, DataDeep } from '@gosling-lang/gosling-schema';
+import { IsChannelDeep, IsDataTrack, IsOverlaidTrack, IsSingleTrack, IsDummyTrack } from '@gosling-lang/gosling-schema';
 
 /**
  * Resolve superposed tracks into multiple track specifications.

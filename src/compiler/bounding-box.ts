@@ -1,5 +1,5 @@
-import type { MultipleViews, CommonViewDef, GoslingSpec, Track, SingleView } from 'src/schema/gosling.schema';
-import { Is2DTrack, IsDummyTrack, IsOverlaidTrack, IsXAxis, IsYAxis } from '../schema/gosling.schema.guards';
+import type { MultipleViews, CommonViewDef, GoslingSpec, Track, SingleView } from '@gosling-lang/gosling-schema';
+import { Is2DTrack, IsDummyTrack, IsOverlaidTrack, IsXAxis, IsYAxis } from '@gosling-lang/gosling-schema';
 import { HIGLASS_AXIS_SIZE } from './higlass-model';
 import {
     DEFAULT_CIRCULAR_VIEW_PADDING,

@@ -1,7 +1,7 @@
 import { createNanoEvents, Emitter } from 'nanoevents';
 import type * as D3Selection from 'd3-selection';
 import type * as D3Drag from 'd3-drag';
-import type { EventStyle } from 'src/schema/gosling.schema';
+import type { EventStyle } from '@gosling-lang/gosling-schema';
 
 const HIDDEN_BRUSH_EDGE_SIZE = 3;
 
