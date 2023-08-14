@@ -21,3 +21,7 @@ export function attributeHasChildValue(object: any, attribute: any, attributeChi
 export function attributeExistsAndChildHasValue(object: any, attribute: any, attributeChild: any, value: any) {
     return(attributeExists(object, attribute) && attributeHasChildValue(object, attribute, attributeChild, value));
 };
+
+export function arrayToString(arr: string[] | number[]) {
+    return arr.slice(0, -1).join(', ') + ' and ' + arr.slice(-1);
+}

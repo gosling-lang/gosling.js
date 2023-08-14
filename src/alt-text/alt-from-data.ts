@@ -5,14 +5,15 @@ import type { Datum } from '../core/gosling.schema';
 export function altRetrieveDataStatistics(id: string, flatTileData: Datum[], dataFields: AltTrackDataFields): AltDataStatistics {
 
     const genomicValues = (flatTileData.map(d => d[dataFields.genomicField]) as unknown as number[]).filter(d => !isNaN(d));
-    const genomicMin = Math.min(...genomicValues)
-    const genomicMax = Math.max(...genomicValues)
-    
-    console.log('genomic range: ', genomicMin, genomicMax)
+    const genomicMin = Math.min(...genomicValues);
+    const genomicMax = Math.max(...genomicValues);
 
     const valueValues = (flatTileData.map(d => d[dataFields.valueField]) as unknown as number[]).filter(d => !isNaN(d));
-    const valueMin = Math.min(...valueValues)
-    const valueMax = Math.max(...valueValues)
+    const valueMin = Math.min(...valueValues);
+    const valueMax = Math.max(...valueValues);
+
+    const valueMinGenomic = (flatTileData.filter(d => d[dataFields.valueField] == valueMin).map(d => d[dataFields.genomicField]) as unknown as number[]);
+    const valueMaxGenomic = (flatTileData.filter(d => d[dataFields.valueField] == valueMax).map(d => d[dataFields.genomicField]) as unknown as number[]);
 
     const valueMinGenomic = (flatTileData.filter(d => d[dataFields.valueField] == valueMin).map(d => d[dataFields.genomicField]) as unknown as number[])
     const valueMaxGenomic = (flatTileData.filter(d => d[dataFields.valueField] == valueMax).map(d => d[dataFields.genomicField]) as unknown as number[])
@@ -34,6 +35,8 @@ export function altRetrieveDataStatistics(id: string, flatTileData: Datum[], dat
         //const categoryMinMax: { [key: string]: number[] } = {};
         const categoryMinMaxWG: { [key: string]: (number | number[])[] } = {};
 
+        var highestCategory = {} as string[];
+
         for (let category of categories) {
             let dataCat = flatTileData.filter(d => d[dataFields.categoryField] === category);
             let valueValuesCat = (dataCat.map(d => d[dataFields.valueField]) as unknown as number[]).filter(d => !isNaN(d));
@@ -45,10 +48,15 @@ export function altRetrieveDataStatistics(id: string, flatTileData: Datum[], dat
 
             //categoryMinMax[category] = [valueMinCat, valueMaxCat];
             categoryMinMaxWG[category] = [valueMinCat, valueMinCatGenomic, valueMaxCat, valueMaxCatGenomic];
+
+            if (valueMaxCat === valueMax) {
+                highestCategory = [...highestCategory, category]
+            }
         }
 
         altDataStatistics.categories = categories;
         altDataStatistics.categoryMinMaxWG = categoryMinMaxWG;
+        altDataStatistics.highestCategory = highestCategory;
     }
 
     return(altDataStatistics);

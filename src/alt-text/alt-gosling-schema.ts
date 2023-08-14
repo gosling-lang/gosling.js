@@ -6,14 +6,19 @@ export interface AltCounter {
     nTracks: number;
     rowViews: number;
     colViews: number;
+    allPositions: number[][];
+    totalRows: number;
+    totalCols: number;
+    matrix: number[][];
 }
 
 export interface AltParentValues {
     layout: 'linear' | 'circular';
     arrangement: 'parallel' | 'serial' | 'horizontal' | 'vertical';
-    alignment: 'singular' | 'stack' | 'overlay'
-    allVertical: Boolean;
-    allHorizontal: Boolean;
+    alignment: 'singular' | 'stack' | 'overlay';
+    data?: DataDeep;
+    mark?: Mark;
+    //encodings?
 }
 
 
@@ -85,12 +90,22 @@ export interface AltDataStatistics {
     genomicMax: number;
     valueMin: number;
     valueMax: number;
-    valueMinGenomic: number | number[];
-    valueMaxGenomic: number | number[];
+    valueMinGenomic: number[];
+    valueMaxGenomic: number[];
     categories?: string[];
     categoryMinMaxWG?: { [key: string]: (number | number[])[] };
+    highestCategory?: string[];
 }
 
+
+export interface compositionTracker {
+    nRows: number;
+    nCols: number;
+    allVertical: boolean;
+    allHorizontal: boolean;
+    everyRowSameCols: boolean;
+    RowsCols: number[]
+}
 
 
 
@@ -167,7 +182,7 @@ export interface AltDataStatistics {
 export interface AltSpecComposition {
     description: string;
     nTracks: number;
-    allSame: AltParentValues;
+    parentValues: AltParentValues;
     counter: AltCounter;
 }
 
@@ -194,6 +209,7 @@ export interface AltAttributes {
 
 
 import type { ResponsiveSize, ResponsiveSpecOfSingleView, ResponsiveSpecOfMultipleViews} from '../core/gosling.schema';
+import type { Data } from '@higlass.schema';
 
 
 
