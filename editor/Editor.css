@@ -326,7 +326,7 @@ td {
 .editor-alt-text-body {
     overflow: auto;
     width: calc(100%);
-    height: calc(100%);
+    height: calc(85%);
 }
 
 .preview-container {
