@@ -14,14 +14,14 @@ import 'allotment/dist/style.css';
 import { debounce, isEqual } from 'lodash-es';
 import stripJsonComments from 'strip-json-comments';
 import JSONCrush from 'jsoncrush';
-import type { HiGlassSpec } from '@higlass.schema';
-import type { Datum } from '@gosling.schema';
+import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
+import type { Datum } from '@gosling-lang/gosling-schema';
 import { Themes } from 'gosling-theme';
 
 import { ICONS, type ICON_INFO } from './icon';
 import { getHtmlTemplate } from './html-template';
 import ErrorBoundary from './error-boundary';
-import { traverseTracksAndViews } from '../src/core/utils/spec-preprocess';
+import { traverseTracksAndViews } from '../src/compiler/spec-preprocess';
 import { examples, type Example } from './example';
 import EditorPanel, { type EditorLangauge } from './EditorPanel';
 import EditorExamples from './EditorExamples';

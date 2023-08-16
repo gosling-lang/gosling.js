@@ -1,7 +1,7 @@
 import type * as PIXI from 'pixi.js';
-import type { GoslingTrackModel } from '../gosling-track-model';
-import type { Channel } from '../gosling.schema';
-import { IsChannelDeep, getValueUsingChannel, Is2DTrack } from '../gosling.schema.guards';
+import type { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
+import type { Channel } from '@gosling-lang/gosling-schema';
+import { IsChannelDeep, getValueUsingChannel, Is2DTrack } from '@gosling-lang/gosling-schema';
 import { cartesianToPolar, positionToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
 import { Bezier } from 'bezier-js';

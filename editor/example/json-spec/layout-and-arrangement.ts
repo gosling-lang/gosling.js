@@ -1,6 +1,6 @@
 import type { GoslingSpec } from 'gosling.js';
-import type { SingleView } from '@gosling.schema';
-import { DEFAULT_VIEW_SPACING } from '../../../src/core/defaults';
+import type { SingleView } from '@gosling-lang/gosling-schema';
+import { DEFAULT_VIEW_SPACING } from '../../../src/compiler/defaults';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 const COLORS = ['#D45E00', '#029F73', '#0072B2', '#CB7AA7', '#E79F00'];

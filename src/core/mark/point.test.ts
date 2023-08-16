@@ -1,9 +1,9 @@
 import * as PIXI from 'pixi.js';
 import { CHANNEL_DEFAULTS } from '../channel';
-import { GoslingTrackModel } from '../gosling-track-model';
-import type { Track } from '../gosling.schema';
-import { HIGLASS_AXIS_SIZE } from '../higlass-model';
-import type { SingleTrack } from '../gosling.schema';
+import { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
+import type { Track } from '@gosling-lang/gosling-schema';
+import { HIGLASS_AXIS_SIZE } from '../../compiler/higlass-model';
+import type { SingleTrack } from '@gosling-lang/gosling-schema';
 import { drawPoint } from './point';
 import { getTheme } from '../utils/theme';
 

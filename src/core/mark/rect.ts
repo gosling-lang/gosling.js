@@ -1,9 +1,9 @@
-import type { Tile } from '@gosling-track';
-import type { GoslingTrackModel } from '../gosling-track-model';
+import type { Tile } from '@gosling-lang/gosling-track';
+import type { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import type { PIXIVisualProperty } from '../visual-property.schema';
 import colorToHex from '../utils/color-to-hex';
-import { IsChannelDeep } from '../gosling.schema.guards';
+import { IsChannelDeep } from '@gosling-lang/gosling-schema';
 
 export function drawRect(HGC: import('@higlass/types').HGC, track: any, tile: Tile, model: GoslingTrackModel) {
     /* track spec */

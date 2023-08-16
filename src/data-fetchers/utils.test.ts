@@ -1,4 +1,4 @@
-import type { Datum } from '@gosling.schema';
+import type { Datum } from '@gosling-lang/gosling-schema';
 import { filterUsingGenoPos } from './utils';
 
 describe('Data Fetcher Utils', () => {

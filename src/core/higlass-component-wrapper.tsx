@@ -6,7 +6,7 @@ import * as uuid from 'uuid';
 import * as gosling from '..';
 // @ts-ignore
 import { HiGlassComponent } from 'higlass';
-import type { HiGlassSpec } from './higlass.schema';
+import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
 
 /**
  * Register plugin tracks and data fetchers to HiGlass. This is necessary for the first time before using Gosling.

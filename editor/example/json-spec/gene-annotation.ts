@@ -1,4 +1,4 @@
-import type { DataDeep, GoslingSpec, OverlaidTracks } from '@gosling.schema';
+import type { DataDeep, GoslingSpec, OverlaidTracks } from '@gosling-lang/gosling-schema';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 const width = 350;

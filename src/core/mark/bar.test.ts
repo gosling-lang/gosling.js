@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
-import type { SingleTrack } from '@gosling.schema';
-import { GoslingTrackModel } from '../gosling-track-model';
+import type { SingleTrack } from '@gosling-lang/gosling-schema';
+import { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
 import { getTheme } from '../utils/theme';
 import { drawBar } from './bar';
 import type { Tile } from '@higlass/services';

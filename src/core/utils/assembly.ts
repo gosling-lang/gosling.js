@@ -1,4 +1,4 @@
-import type { Assembly, ChromSizes, GenomicPosition } from '@gosling.schema';
+import type { Assembly, ChromSizes, GenomicPosition } from '@gosling-lang/gosling-schema';
 import {
     CHROM_SIZE_HG16,
     CHROM_SIZE_HG17,

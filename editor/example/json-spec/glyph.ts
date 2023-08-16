@@ -1,4 +1,4 @@
-import type { Mark } from '@gosling.schema';
+import type { Mark } from '@gosling-lang/gosling-schema';
 
 export const GLYPH_PRESETS: {
     name: GLYPH_LOCAL_PRESET_TYPE;

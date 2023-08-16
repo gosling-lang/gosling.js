@@ -12,10 +12,10 @@ import stableStringify from "safe-stable-stringify";
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 const SCHEMAS = [
-  ["GoslingSpec", "gosling.schema.json"],
-  ["HiGlassSpec", "higlass.schema.json"],
-  ["Theme", "theme.schema.json"],
-  ["TemplateTrackDef", "template.schema.json"],
+  ["GoslingSpec", "gosling.schema.json", "../src/gosling-schema/"],
+  ["HiGlassSpec", "higlass.schema.json", "../src/higlass-schema/"],
+  ["Theme", "theme.schema.json", "../src/gosling-schema/"],
+  ["TemplateTrackDef", "template.schema.json", "../src/gosling-schema/"],
 ];
 
 const generator = tsj.createGenerator({
@@ -25,10 +25,10 @@ const generator = tsj.createGenerator({
   encodeRefs: false,
 });
 
-for (const [type, filename] of SCHEMAS) {
+for (const [type, filename, dir] of SCHEMAS) {
   const schema = generator.createSchema(type);
   fs.promises.writeFile(
-      path.resolve(__dirname, `../schema/${filename}`),
+      path.resolve(__dirname, `${dir}/${filename}`),
       stableStringify(schema, null, 2) + "\n",
   );
 }

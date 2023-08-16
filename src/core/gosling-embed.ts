@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import type { GoslingSpec } from './gosling.schema';
-import type { HiGlassSpec } from './higlass.schema';
+import type { GoslingSpec } from '@gosling-lang/gosling-schema';
+import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
 
-import { validateGoslingSpec } from './utils/validate';
-import { compile } from './compile';
+import { validateGoslingSpec } from '@gosling-lang/gosling-schema';
+import { compile } from '../compiler/compile';
 import { getTheme, type Theme } from './utils/theme';
 import { GoslingTemplates } from './utils/template';
-import { type GoslingApi, createApi } from './api';
+import { type GoslingApi, createApi } from '../api/api';
 
 import {
     type HiGlassApi,

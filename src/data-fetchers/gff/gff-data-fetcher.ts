@@ -7,7 +7,7 @@ import Worker from './gff-worker.ts?worker&inline';
 import { computeChromSizes } from '../../core/utils/assembly';
 
 import type { ModuleThread } from 'threads';
-import type { Assembly, GffData } from '../../core/gosling.schema';
+import type { Assembly, GffData } from '@gosling-lang/gosling-schema';
 import type { WorkerApi, TilesetInfo, GffTile, EmptyTile } from './gff-worker';
 import type { TabularDataFetcher } from '../utils';
 

@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
-import { GoslingTrackModel } from '../gosling-track-model';
-import type { SingleTrack } from '../gosling.schema';
+import { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
+import type { SingleTrack } from '@gosling-lang/gosling-schema';
 import { getTheme } from '../utils/theme';
 import { drawGrid } from './grid';
 

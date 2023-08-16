@@ -7,7 +7,7 @@ import { TabixIndexedFile } from '@gmod/tabix';
 import { expose, Transfer } from 'threads/worker';
 import { sampleSize } from 'lodash-es';
 import type { TilesetInfo } from '@higlass/types';
-import type { ChromSizes } from '@gosling.schema';
+import type { ChromSizes } from '@gosling-lang/gosling-schema';
 import { DataSource, RemoteFile } from '../utils';
 import BedParser from './bed-parser';
 

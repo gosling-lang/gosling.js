@@ -1,6 +1,6 @@
-import { goslingToHiGlass } from '../gosling-to-higlass';
-import { HiGlassModel } from '../higlass-model';
-import { GoslingToHiGlassIdMapper } from '../track-and-view-ids';
+import { goslingToHiGlass } from '../../compiler/gosling-to-higlass';
+import { HiGlassModel } from '../../compiler/higlass-model';
+import { GoslingToHiGlassIdMapper } from '../../api/track-and-view-ids';
 import { getLinkingInfo } from './linking';
 import { getTheme } from './theme';
 

@@ -1,5 +1,5 @@
 import { embed as goslingEmbed } from 'gosling.js';
-import type { GoslingSpec } from '@gosling.schema';
+import type { GoslingSpec } from '@gosling-lang/gosling-schema';
 import 'higlass/dist/hglib.css';
 
 // https://github.com/vega/vega-embed/blob/master/src/container.ts

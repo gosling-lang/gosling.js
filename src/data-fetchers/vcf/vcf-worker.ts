@@ -10,7 +10,7 @@ import { sampleSize } from 'lodash-es';
 import { DataSource, RemoteFile } from '../utils';
 
 import type { TilesetInfo } from '@higlass/types';
-import type { ChromSizes } from '@gosling.schema';
+import type { ChromSizes } from '@gosling-lang/gosling-schema';
 import type { VcfTile } from './vcf-data-fetcher';
 import { recordToTile } from './utils';
 

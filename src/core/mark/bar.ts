@@ -1,9 +1,9 @@
-import type { Tile } from '@gosling-track';
-import type { Channel } from '@gosling.schema';
-import type { GoslingTrackModel } from '../gosling-track-model';
+import type { Tile } from '@gosling-lang/gosling-track';
+import type { Channel } from '@gosling-lang/gosling-schema';
+import type { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
 import { group } from 'd3-array';
 import type { PIXIVisualProperty } from '../visual-property.schema';
-import { IsChannelDeep, IsStackedMark, getValueUsingChannel } from '../gosling.schema.guards';
+import { IsChannelDeep, IsStackedMark, getValueUsingChannel } from '@gosling-lang/gosling-schema';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
 
