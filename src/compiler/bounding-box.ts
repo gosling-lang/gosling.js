@@ -6,7 +6,7 @@ import {
     DEFAULT_INNER_RADIUS_PROP,
     DEFAULT_VIEW_SPACING,
     DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM
-} from '../core/defaults';
+} from './defaults';
 import { resolveSuperposedTracks } from '../core/utils/overlay';
 import { traverseTracksAndViews, traverseViewArrangements } from './spec-preprocess';
 import type { CompleteThemeDeep } from '../core/utils/theme';

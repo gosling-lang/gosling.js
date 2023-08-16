@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { color } from 'd3-color';
-import { DEFAULT_BACKUP_COLOR } from '../defaults';
+import { DEFAULT_BACKUP_COLOR } from '../../compiler/defaults';
 
 /**
  * Convert a regular color value (e.g. 'red', '#FF0000', 'rgb(255,0,0)') to a hex value which is legible by PIXI.

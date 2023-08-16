@@ -5,7 +5,7 @@ import { replaceTrackTemplates } from '../core/utils/template';
 import { getRelativeTrackInfo, type Size } from './bounding-box';
 import type { CompleteThemeDeep } from '../core/utils/theme';
 import { renderHiGlass as createHiGlassModels } from './create-higlass-models';
-import { manageResponsiveSpecs } from '../core/responsive';
+import { manageResponsiveSpecs } from './responsive';
 import type { IdTable } from '../api/track-and-view-ids';
 
 /** The callback function called everytime after the spec has been compiled */

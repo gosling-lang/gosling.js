@@ -28,7 +28,7 @@ import {
     DEFAULT_TRACK_SIZE_2D,
     DEFAULT_TRACK_WIDTH_LINEAR,
     DEFAULT_VIEW_SPACING
-} from '../core/defaults';
+} from './defaults';
 import { spreadTracksByData } from '../core/utils/overlay';
 import { getStyleOverridden } from '../core/utils/style';
 

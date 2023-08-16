@@ -16,7 +16,7 @@ import {
     getHiGlassColorRange,
     IsDummyTrack
 } from '@gosling-lang/gosling-schema';
-import { DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM } from '../core/defaults';
+import { DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM } from './defaults';
 import type { CompleteThemeDeep } from '../core/utils/theme';
 import { DEFAULT_TEXT_STYLE } from '../core/utils/text-style';
 import type { GoslingToHiGlassIdMapper } from '../api/track-and-view-ids';

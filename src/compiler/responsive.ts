@@ -1,5 +1,5 @@
 import type { GoslingSpec, SelectivityCondition, SingleView } from '@gosling-lang/gosling-schema';
-import { logicalComparison } from './utils/semantic-zoom';
+import { logicalComparison } from '../core/utils/semantic-zoom';
 
 export function manageResponsiveSpecs(
     spec: GoslingSpec | SingleView,
