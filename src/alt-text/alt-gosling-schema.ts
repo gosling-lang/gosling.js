@@ -1,5 +1,5 @@
 import type { List } from 'lodash';
-import type { GoslingSpec, Track, PartialTrack, DataDeep, DataTransform, Mark, Encoding, Assembly, Layout, Orientation, DomainInterval, DomainChrInterval, DomainChr, ZoomLimits, AxisPosition, Style, Datum } from '../core/gosling.schema';
+import type { GoslingSpec, Track, PartialTrack,ChannelDeep, ChannelValue, ChannelTypes, DataDeep, DataTransform, Mark, Encoding, Assembly, Layout, Orientation, DomainInterval, DomainChrInterval, DomainChr, ZoomLimits, AxisPosition, Style, Datum, X, Y, Row, Color, Size, Stroke, StrokeWidth, Opacity } from '../core/gosling.schema';
 
 
 export interface AltCounter {
@@ -23,10 +23,23 @@ export interface AltParentValues {
 
 
 export interface AltEncodingSeparated {
-    encodingField: Encoding;
-    encodingStatic: Encoding;
+    encodingDeepGenomic: EncodingDeepSingle[];
+    encodingDeepQuantitative: EncodingDeepSingle[];
+    encodingDeepNominal: EncodingDeepSingle[];
+    encodingValue: EncodingValueSingle[];
 }
 
+export interface EncodingDeepSingle {
+    name: keyof typeof ChannelTypes;
+    description: String;
+    details: ChannelDeep;
+}
+
+export interface EncodingValueSingle {
+    name: keyof typeof ChannelTypes;
+    description: String;
+    details: ChannelValue;
+}
 
 export interface AltTrackPositionDetails {
     trackNumber: number;
@@ -44,9 +57,9 @@ export interface AltTrackAppearanceDetails {
 }
 
 export interface AltTrackDataFields {
-    genomicField: string;
-    valueField: string;
-    categoryField: string;
+    genomicField?: string;
+    valueField?: string;
+    categoryField?: string;
 }
 
 export interface AltTrackDataDetails {

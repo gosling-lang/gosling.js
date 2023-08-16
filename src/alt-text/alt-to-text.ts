@@ -1,6 +1,11 @@
 import { isArray } from 'lodash';
 import type { AltGoslingSpec, AltTrack } from './alt-gosling-schema';
 import { attributeExists, attributeExistsReturn, attributeExistsAndChildHasValue, arrayToString } from './util';
+import {
+    IsChannelValue, IsChannelDeep
+} from '../core/gosling.schema.guards';
+
+
 
 export function addDescriptions(altGoslingSpec: AltGoslingSpec) {
     addTrackPositionDescriptions(altGoslingSpec);
@@ -249,6 +254,39 @@ function trackAppearanceKnownType(altTrack: AltTrack) {
     }
 
     altTrack.description = desc;
+}
+
+
+function trackAppearanceDetails(altTrack: AltTrack) {
+    var desc = '';
+
+    var encodings = altTrack.appearance.details.encodings;
+
+    // start with genomic axis
+    if (encodings.encodingField.x) {
+        desc = desc.concat('The genome is shown on the x-axis.')
+    } else if (encodings.encodingField.y) {
+        if (IsChannelDeep(encodings.encodingField.y)) {
+            if(encodings.encodingField.y.type === 'genomic') {
+                desc = desc.concat('The genome is shown on the y-axis.')
+            }
+        }
+        desc = desc.concat('')
+    }
+
+    // then expression
+
+    // then categories
+    if (encodings.encodingField.color) {
+        if (IsChannelValue(encodings.encodingField.color)) {
+            desc = desc.concat('The color of the ' + altTrack.appearance.details.mark + 's is ' + encodings.encodingField.color.value);
+        } else {
+            desc = desc.concat('The color of the ' + altTrack.appearance.details.mark + 's reflects the categories.');
+        }
+    }
+
+    // then channel values
+    
 }
 
 function trackAppearanceUnknownType(altTrack: AltTrack) {

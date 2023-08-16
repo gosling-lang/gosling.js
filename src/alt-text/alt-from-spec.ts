@@ -1,8 +1,9 @@
-import type { GoslingSpec, SingleTrack, View, PartialTrack, RootSpecWithSingleView, ResponsiveSpecOfSingleView, RootSpecWithMultipleViews, ResponsiveSpecOfMultipleViews, ChannelValue, Encoding, DataDeep, MultivecData, X, Y, Color, Size, Text, Stroke, StrokeWidth, Opacity, Row } from '../core/gosling.schema';
-import type { GoslingSpecFixed, AltTrackDataFields, AltSpecComposition, AltTrackPosition, AltTrackAppearance, AltTrackData, AltTrackDataDetails, AltTrackAppearanceDetails, AltTrackPositionDetails, AltTrack, AltEncodingSeparated, TrackFixed, RootSpecWithSingleViewFixed, AltCounter, AltParentValues, AltGoslingSpec, SingleTrackFixed } from './alt-gosling-schema';
+import type { GoslingSpec, SingleTrack,ChannelTypes, View, PartialTrack, RootSpecWithSingleView, ResponsiveSpecOfSingleView, RootSpecWithMultipleViews, ResponsiveSpecOfMultipleViews, ChannelValue, Encoding, DataDeep, MultivecData, X, Y, Color, Size, Text, Stroke, StrokeWidth, Opacity, Row } from '../core/gosling.schema';
+import type { GoslingSpecFixed, EncodingValue, AltTrackDataFields, AltSpecComposition, AltTrackPosition, AltTrackAppearance, AltTrackData, AltTrackDataDetails, AltTrackAppearanceDetails, AltTrackPositionDetails, AltTrack, AltEncodingSeparated, TrackFixed, RootSpecWithSingleViewFixed, AltCounter, AltParentValues, AltGoslingSpec, SingleTrackFixed, EncodingValueSingle, EncodingDeepSingle } from './alt-gosling-schema';
 import { attributeExists, attributeExistsDefaultString, attributeHasChildValue, attributeExistsAndChildHasValue} from './util';
+import { SUPPORTED_CHANNELS } from './../core/mark/index';
 import { determineSpecialCases } from './special-cases';
-import { IsChannelDeep } from '../core/gosling.schema.guards';
+import { getGenomicChannelFromTrack } from './../core/utils/validate';
 
 import {
     // single tracks
@@ -14,6 +15,7 @@ import {
     IsOverlaidTracks,
     IsStackedTracks,
     // other
+    IsChannelDeep
     IsChannelValue
 } from '../core/gosling.schema.guards';
 
@@ -160,11 +162,11 @@ function altSingleTrack(
     appearanceDetails.layout = altParentValues.layout;
     appearanceDetails.overlaid = false;
     appearanceDetails.mark = track.mark;
-    appearanceDetails.encodings = checkEncodings(track);
+    appearanceDetails.encodings = getSeparatedEncodings(track);
     
     // data
     // add genomic_field, value_field, category_field for data retrieval
-    var dataFields = determineFields(track.data, appearanceDetails.encodings.encodingField);
+    var dataFields = determineFields(track.data, appearanceDetails.encodings);
     var dataDetails: AltTrackDataDetails = {data: track.data, fields: dataFields};
    
     // add temporary empty descriptions
@@ -194,197 +196,300 @@ function altSingleTrack(
 
 function determineFields(
     data: DataDeep,
-    encodingField: Encoding
+    AltEncodingSeparated: AltEncodingSeparated
 ): AltTrackDataFields {
     const fields = {} as AltTrackDataFields;
 
     // retrieve genomicField
-    if (attributeExists(encodingField, 'x')) {
-        fields.genomicField = (encodingField.x as X).field as string; // x is always genomic
-    } else if (attributeExists(encodingField, 'y')) {
-        if ((encodingField.y as Y).type == 'genomic') {
-            fields.genomicField = (encodingField.y as Y).field as string;
+    if (AltEncodingSeparated.encodingDeepGenomic.length > 0) {
+        if (AltEncodingSeparated.encodingDeepGenomic[0].details.field) {
+            fields.genomicField = AltEncodingSeparated.encodingDeepGenomic[0].details.field;
+        } else {
+            fields.genomicField === 'position';
         }
-    } else {
-        fields.genomicField = 'position';
     }
 
     // retrieve valueField
-    if (attributeExists(encodingField, 'y')) {
-        if ((encodingField.y as Y).type == 'quantitative') {
-            fields.valueField = (encodingField.y as Y).field as string;
+    if (AltEncodingSeparated.encodingDeepQuantitative.length > 0) {
+        if (AltEncodingSeparated.encodingDeepQuantitative[0].details.field) {
+            fields.valueField = AltEncodingSeparated.encodingDeepQuantitative[0].details.field;
+        } else {
+            fields.valueField === 'value';
         }
-    } else if (attributeExists(encodingField, 'color')) {
-        if ((encodingField.color as Color).type == 'quantitative') {
-            fields.valueField = (encodingField.color as Color).field as string;
-        }
-    } else if (attributeExists(encodingField, 'size')) {
-        if ((encodingField.size as Size).type == 'quantitative') {
-            fields.valueField = (encodingField.size as Size).field as string;
-        }
-    } else if (attributeExists(encodingField, 'text')) {
-        if ((encodingField.text as Text).type == 'quantitative') {
-            fields.valueField = (encodingField.size as Size).field as string;
-        }
-    } else if (attributeExists(encodingField, 'stroke')) {
-        if ((encodingField.stroke as Stroke).type == 'quantitative') {
-            fields.valueField = (encodingField.stroke as Stroke).field as string;
-        }
-    } else if (attributeExists(encodingField, 'strokeWidth')) {
-        if ((encodingField.strokeWidth as StrokeWidth).type == 'quantitative') {
-            fields.valueField = (encodingField.strokeWidth as StrokeWidth).field as string;
-        }
-    } else if (attributeExists(encodingField, 'opacity')) {
-        if ((encodingField.opacity as Opacity).type == 'quantitative') {
-            fields.valueField = (encodingField.opacity as Opacity).field as string;
-        }
-    } else {
-        fields.valueField = 'value';
     }
 
     // retrieve categoryField
-    if (attributeExists(encodingField, 'row')) {
-        if ((encodingField.row as Row).type == 'nominal') {
-            fields.categoryField = (encodingField.row as Row).field as string;
+    if (AltEncodingSeparated.encodingDeepNominal.length > 0) {
+        if (AltEncodingSeparated.encodingDeepNominal[0].details.field) {
+            fields.categoryField = AltEncodingSeparated.encodingDeepNominal[0].details.field;
+        } else {
+            fields.categoryField === 'sample';
         }
-    } else if (attributeExists(encodingField, 'color')) {
-        if ((encodingField.color as Color).type == 'nominal') {
-            fields.categoryField = (encodingField.color as Color).field as string;
-        }
-    } else if (attributeExists(encodingField, 'y')) {
-        if ((encodingField.y as Y).type == 'nominal') {
-            fields.categoryField = (encodingField.y as Y).field as string;
-        }
-    } else if (attributeExists(encodingField, 'size')) {
-        if ((encodingField.size as Size).type == 'nominal') {
-            fields.categoryField = (encodingField.size as Size).field as string;
-        }
-    } else if (attributeExists(encodingField, 'text')) {
-        if ((encodingField.text as Text).type == 'nominal') {
-            fields.categoryField = (encodingField.size as Size).field as string;
-        }
-    } else if (attributeExists(encodingField, 'stroke')) {
-        if ((encodingField.stroke as Stroke).type == 'nominal') {
-            fields.categoryField = (encodingField.stroke as Stroke).field as string;
-        }
-    } else if (attributeExists(encodingField, 'nominal')) {
-        if ((encodingField.strokeWidth as StrokeWidth).type == 'nominal') {
-            fields.categoryField = (encodingField.strokeWidth as StrokeWidth).field as string;
-        }
-    } else if (attributeExists(encodingField, 'nominal')) {
-        if ((encodingField.opacity as Opacity).type == 'nominal') {
-            fields.categoryField = (encodingField.opacity as Opacity).field as string;
-        }
-    } else {
-       fields.categoryField = ''; 
     }
 
     return fields;
+
+    // // retrieve genomicField
+    // if (attributeExists(encodingField, 'x')) {
+    //     fields.genomicField = (encodingField.x as X).field as string; // x is always genomic
+    // } else if (attributeExists(encodingField, 'y')) {
+    //     if ((encodingField.y as Y).type == 'genomic') {
+    //         fields.genomicField = (encodingField.y as Y).field as string;
+    //     }
+    // } else {
+    //     fields.genomicField = 'position';
+    // }
+
+    // // retrieve valueField
+    // if (attributeExists(encodingField, 'y')) {
+    //     if ((encodingField.y as Y).type == 'quantitative') {
+    //         fields.valueField = (encodingField.y as Y).field as string;
+    //     }
+    // } else if (attributeExists(encodingField, 'color')) {
+    //     if ((encodingField.color as Color).type == 'quantitative') {
+    //         fields.valueField = (encodingField.color as Color).field as string;
+    //     }
+    // } else if (attributeExists(encodingField, 'size')) {
+    //     if ((encodingField.size as Size).type == 'quantitative') {
+    //         fields.valueField = (encodingField.size as Size).field as string;
+    //     }
+    // } else if (attributeExists(encodingField, 'text')) {
+    //     if ((encodingField.text as Text).type == 'quantitative') {
+    //         fields.valueField = (encodingField.size as Size).field as string;
+    //     }
+    // } else if (attributeExists(encodingField, 'stroke')) {
+    //     if ((encodingField.stroke as Stroke).type == 'quantitative') {
+    //         fields.valueField = (encodingField.stroke as Stroke).field as string;
+    //     }
+    // } else if (attributeExists(encodingField, 'strokeWidth')) {
+    //     if ((encodingField.strokeWidth as StrokeWidth).type == 'quantitative') {
+    //         fields.valueField = (encodingField.strokeWidth as StrokeWidth).field as string;
+    //     }
+    // } else if (attributeExists(encodingField, 'opacity')) {
+    //     if ((encodingField.opacity as Opacity).type == 'quantitative') {
+    //         fields.valueField = (encodingField.opacity as Opacity).field as string;
+    //     }
+    // } else {
+    //     fields.valueField = 'value';
+    // }
+
+    // // retrieve categoryField
+    // if (attributeExists(encodingField, 'row')) {
+    //     if ((encodingField.row as Row).type == 'nominal') {
+    //         fields.categoryField = (encodingField.row as Row).field as string;
+    //     }
+    // } else if (attributeExists(encodingField, 'color')) {
+    //     if ((encodingField.color as Color).type == 'nominal') {
+    //         fields.categoryField = (encodingField.color as Color).field as string;
+    //     }
+    // } else if (attributeExists(encodingField, 'y')) {
+    //     if ((encodingField.y as Y).type == 'nominal') {
+    //         fields.categoryField = (encodingField.y as Y).field as string;
+    //     }
+    // } else if (attributeExists(encodingField, 'size')) {
+    //     if ((encodingField.size as Size).type == 'nominal') {
+    //         fields.categoryField = (encodingField.size as Size).field as string;
+    //     }
+    // } else if (attributeExists(encodingField, 'text')) {
+    //     if ((encodingField.text as Text).type == 'nominal') {
+    //         fields.categoryField = (encodingField.size as Size).field as string;
+    //     }
+    // } else if (attributeExists(encodingField, 'stroke')) {
+    //     if ((encodingField.stroke as Stroke).type == 'nominal') {
+    //         fields.categoryField = (encodingField.stroke as Stroke).field as string;
+    //     }
+    // } else if (attributeExists(encodingField, 'nominal')) {
+    //     if ((encodingField.strokeWidth as StrokeWidth).type == 'nominal') {
+    //         fields.categoryField = (encodingField.strokeWidth as StrokeWidth).field as string;
+    //     }
+    // } else if (attributeExists(encodingField, 'nominal')) {
+    //     if ((encodingField.opacity as Opacity).type == 'nominal') {
+    //         fields.categoryField = (encodingField.opacity as Opacity).field as string;
+    //     }
+    // } else {
+    //    fields.categoryField = ''; 
+    // }
+
+    // return fields;
 }
 
-function checkEncodings(
-    track: SingleTrack
-): AltEncodingSeparated {
-
-    var encodingFields = {} as Encoding;
-    var encodingStatics = {} as Encoding;
-
-    // supportedEncodings = ['x', 'y', 'xe', 'ye', 'x1', 'y1', 'x1e', 'y1e', 'row', 'color', 'size', 'text', 'stroke', 'strokeWidth', 'opacity'];
-
-    if (IsChannelDeep(track.x)) {
-        encodingFields.x = track.x;
-    } else if (IsChannelValue(track.x)) {
-        encodingStatics.x = track.x;
-    }
-
-    if (IsChannelDeep(track.y)) {
-        encodingFields.y = track.y;
-    } else if (IsChannelValue(track.y)) {
-        encodingStatics.y = track.y;
-    }
-
-    if (IsChannelDeep(track.xe)) {
-        encodingFields.xe = track.xe;
-    } else if (IsChannelValue(track.xe)) {
-        encodingStatics.xe = track.xe;
-    }
-
-    if (IsChannelDeep(track.ye)) {
-        encodingFields.ye = track.ye;
-    } else if (IsChannelValue(track.ye)) {
-        encodingStatics.ye = track.ye;
-    }
-
-    if (IsChannelDeep(track.x1)) {
-        encodingFields.x1 = track.x1;
-    } else if (IsChannelValue(track.x1)) {
-        encodingStatics.x1 = track.x1;
-    }
-
-    if (IsChannelDeep(track.y1)) {
-        encodingFields.y1 = track.y1;
-    } else if (IsChannelValue(track.y1)) {
-        encodingStatics.y1 = track.y1;
-    }
-
-    if (IsChannelDeep(track.x1e)) {
-        encodingFields.x1e = track.x1e;
-    } else if (IsChannelValue(track.x1e)) {
-        encodingStatics.x1e = track.x1e;
-    }
-
-    if (IsChannelDeep(track.y1e)) {
-        encodingFields.y1e = track.y1e;
-    } else if (IsChannelValue(track.y1e)) {
-        encodingStatics.y1e = track.y1e;
-    }
-
-    if (IsChannelDeep(track.row)) {
-        encodingFields.row = track.row;
-    } else if (IsChannelValue(track.row)) {
-        encodingStatics.row = track.row;
-    }
-
-    if (IsChannelDeep(track.color)) {
-        encodingFields.color = track.color;
-    } else if (IsChannelValue(track.color)) {
-        encodingStatics.color = track.color;
-    }
-
-    if (IsChannelDeep(track.size)) {
-        encodingFields.size = track.size;
-    } else if (IsChannelValue(track.size)) {
-        encodingStatics.size = track.size;
-    }
-
-    if (IsChannelDeep(track.text)) {
-        encodingFields.text = track.text;
-    } else if (IsChannelValue(track.text)) {
-        encodingStatics.text = track.text;
-    }
-
-    if (IsChannelDeep(track.stroke)) {
-        encodingFields.stroke = track.stroke;
-    } else if (IsChannelValue(track.stroke)) {
-        encodingStatics.stroke = track.stroke;
-    }
-
-    if (IsChannelDeep(track.strokeWidth)) {
-        encodingFields.strokeWidth = track.strokeWidth;
-    } else if (IsChannelValue(track.strokeWidth)) {
-        encodingStatics.strokeWidth = track.strokeWidth;
-    }
-
-    if (IsChannelDeep(track.opacity)) {
-        encodingFields.opacity = track.opacity;
-    } else if (IsChannelValue(track.opacity)) {
-        encodingStatics.opacity = track.opacity;
-    }
-
-    // bundle together into one object
-    const encodingSeparated: AltEncodingSeparated = {encodingField: encodingFields, encodingStatic: encodingStatics}
+export function getSeparatedEncodings(track: SingleTrack): AltEncodingSeparated {
+    const encodingDeepGenomic: EncodingDeepSingle[] = [];
+    const encodingDeepQuantitative: EncodingDeepSingle[] = [];
+    const encodingDeepNominal: EncodingDeepSingle[] = [];
+    const encodingValue: EncodingValueSingle[] = [];
+    SUPPORTED_CHANNELS.forEach(k => {
+        const c = track[k];
+        if (IsChannelDeep(c)) {
+            if (c.type === 'genomic') {
+                encodingDeepGenomic.push({name: k, description: '', details: c});
+            } else if (c.type === 'quantitative') {
+                encodingDeepQuantitative.push({name: k, description: '', details: c});
+            } else {
+                encodingDeepNominal.push({name: k, description: '', details: c});
+            }
+        } else if (IsChannelValue(c)) {
+            encodingValue.push({name: k, description: '', details: c});
+        }
+    });
+    // bundle together
+    const encodingSeparated: AltEncodingSeparated = {encodingDeepGenomic: encodingDeepGenomic, encodingDeepQuantitative: encodingDeepQuantitative, encodingDeepNominal: encodingDeepNominal, encodingValue: encodingValue};
     return encodingSeparated;
 }
+
+// function checkEncodings(
+//     track: SingleTrack
+// ): AltEncodingSeparated {
+
+    
+
+//     var encodingDeepGenomic = {} as EncodingDeep;
+//     var encodingDeepQuantitative = {} as EncodingDeep;
+//     var encodingDeepNominal = {} as EncodingDeep;
+//     var encodingValue = {} as EncodingValue;
+
+//     const supportedEncodings = ['x', 'y', 'xe', 'ye', 'x1', 'y1', 'x1e', 'y1e', 'row', 'color', 'size', 'text', 'stroke', 'strokeWidth', 'opacity'];
+    
+    
+
+//     [keyof typeof ChannelTypes, keyof typeof ChannelTypes];
+
+//     if (track.x, 'x') {
+//         var e = track.x;
+//         var name = 'x';
+//         if (IsChannelDeep(e)) {
+//             if (e.type === 'genomic') {
+//                 encodingDeepGenomic[name] = {description: '', details: e};
+//             } else if (e.type === 'quantitative') {
+//                 encodingDeepQuantitative[name] = {description: '', details: e};
+//             } else {
+//                 encodingDeepNominal[name] = {description: '', details: e;
+//             }
+//         } else if (IsChannelValue(e)) {
+//             encodingValue[name] = {description: '', details: e};
+//         }
+//     }
+
+//     if (IsChannelDeep(track.x)) {
+//         // has to be genomic
+//         encodingDeepGenomic['x'] = {description: '', details: track.x};
+//     } else if (IsChannelValue(track.x)) {
+//         encodingValue['x'] = {description: '', details: track.x};
+//     }
+
+//     if (IsChannelDeep(track.y)) {
+//         if (track.y.type === 'genomic') {
+//             encodingDeepGenomic['y'] = {description: '', details: track.y};
+//         } else if (track.y.type === 'quantitative') {
+//             encodingDeepQuantitative['y'] = {description: '', details: track.y};
+//         } else {
+//             encodingDeepNominal['y'] = {description: '', details: track.y};
+//         }
+//     } else if (IsChannelValue(track.y)) {
+//         encodingValue['y'] = {description: '', details: track.y};
+//     }
+
+//     if (IsChannelDeep(track.xe)) {
+//         if (track.xe.type === 'genomic') {
+//             encodingDeepGenomic['xe'] = {description: '', details: track.xe};
+//         } else if (track.xe.type === 'quantitative') {
+//             encodingDeepQuantitative['xe'] = {description: '', details: track.xe};
+//         } else {
+//             encodingDeepNominal['xe'] = {description: '', details: track.xe};
+//         }
+//     } else if (IsChannelValue(track.xe)) {
+//         encodingValue['xe'] = {description: '', details: track.xe};
+//     }
+
+
+//     if (IsChannelDeep(track.y)) {
+//         encodingFields.y = track.y;
+//     } else if (IsChannelValue(track.y)) {
+//         encodingStatics.y = track.y;
+//     }
+
+//     if (IsChannelDeep(track.xe)) {
+//         encodingFields.xe = track.xe;
+//     } else if (IsChannelValue(track.xe)) {
+//         encodingStatics.xe = track.xe;
+//     }
+
+//     if (IsChannelDeep(track.ye)) {
+//         encodingFields.ye = track.ye;
+//     } else if (IsChannelValue(track.ye)) {
+//         encodingStatics.ye = track.ye;
+//     }
+
+//     if (IsChannelDeep(track.x1)) {
+//         encodingFields.x1 = track.x1;
+//     } else if (IsChannelValue(track.x1)) {
+//         encodingStatics.x1 = track.x1;
+//     }
+
+//     if (IsChannelDeep(track.y1)) {
+//         encodingFields.y1 = track.y1;
+//     } else if (IsChannelValue(track.y1)) {
+//         encodingStatics.y1 = track.y1;
+//     }
+
+//     if (IsChannelDeep(track.x1e)) {
+//         encodingFields.x1e = track.x1e;
+//     } else if (IsChannelValue(track.x1e)) {
+//         encodingStatics.x1e = track.x1e;
+//     }
+
+//     if (IsChannelDeep(track.y1e)) {
+//         encodingFields.y1e = track.y1e;
+//     } else if (IsChannelValue(track.y1e)) {
+//         encodingStatics.y1e = track.y1e;
+//     }
+
+//     if (IsChannelDeep(track.row)) {
+//         encodingFields.row = track.row;
+//     } else if (IsChannelValue(track.row)) {
+//         encodingStatics.row = track.row;
+//     }
+
+//     if (IsChannelDeep(track.color)) {
+//         encodingFields.color = track.color;
+//     } else if (IsChannelValue(track.color)) {
+//         encodingStatics.color = track.color;
+//     }
+
+//     if (IsChannelDeep(track.size)) {
+//         encodingFields.size = track.size;
+//     } else if (IsChannelValue(track.size)) {
+//         encodingStatics.size = track.size;
+//     }
+
+//     if (IsChannelDeep(track.text)) {
+//         encodingFields.text = track.text;
+//     } else if (IsChannelValue(track.text)) {
+//         encodingStatics.text = track.text;
+//     }
+
+//     if (IsChannelDeep(track.stroke)) {
+//         encodingFields.stroke = track.stroke;
+//     } else if (IsChannelValue(track.stroke)) {
+//         encodingStatics.stroke = track.stroke;
+//     }
+
+//     if (IsChannelDeep(track.strokeWidth)) {
+//         encodingFields.strokeWidth = track.strokeWidth;
+//     } else if (IsChannelValue(track.strokeWidth)) {
+//         encodingStatics.strokeWidth = track.strokeWidth;
+//     }
+
+//     if (IsChannelDeep(track.opacity)) {
+//         encodingFields.opacity = track.opacity;
+//     } else if (IsChannelValue(track.opacity)) {
+//         encodingStatics.opacity = track.opacity;
+//     }
+
+//     // bundle together into one object
+//     const encodingSeparated: AltEncodingSeparated = {encodingField: encodingFields, encodingStatic: encodingStatics}
+//     return encodingSeparated;
+// }
 
 function altFlatTracks() {
 
