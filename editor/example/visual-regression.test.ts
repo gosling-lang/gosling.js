@@ -1,7 +1,5 @@
 import puppeteer, { Page, Browser } from 'puppeteer';
-import { TEXT, DUMMY_TRACK } from '../example/doc-examples';
-import { type GoslingSpec } from '@gosling.schema';
-import { examples } from '../example';
+import { examples } from '.';
 
 import { beforeAll } from 'vitest';
 
@@ -27,9 +25,9 @@ function generateHTML({ reactVersion = '16', pixijsVersion = '6', higlassVersion
 </html>`;
 }
 
-
 let browser: Browser;
 let page: Page;
+
 beforeAll(async () => {
     browser = await puppeteer.launch({
         headless: false,
@@ -40,8 +38,11 @@ beforeAll(async () => {
     await page.addScriptTag({ path: './dist/gosling.js' });
 });
 
+/**
+ * Loop over all examples and take a screenshot
+ */
 Object.entries(examples)
-    .filter(([name, example]) => name === 'RULE')
+    .filter(([name]) => name === 'doc_vcf_indels') // we only want to see the broken example now
     .forEach(([name, example]) => {
         test('example', async () => {
             let spec = JSON.stringify(example.spec);
@@ -51,11 +52,12 @@ Object.entries(examples)
                 content: `gosling.embed(document.getElementById("vis"), JSON.parse(\`${spec}\`))`
             });
             const component = await page.waitForSelector('.gosling-component');
-            await delay(5000);
-            await component.screenshot({ path: `editor/tests/${name}.png` });
+            await page.waitForNetworkIdle();
+            await delay(2000); // wait 2 seconds for rendering to complete. TODO: see if we can implement javascript API subscription which fires when rendering is done
+            await component!.screenshot({ path: `editor/example/visual-regression-imgs/${name}.png` });
         });
     });
 
-afterAll(async () => {
-    await browser.close();
-});
+// afterAll(async () => {
+//     await browser.close();
+// });
