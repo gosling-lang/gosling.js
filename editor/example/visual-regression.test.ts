@@ -31,7 +31,7 @@ let page: Page;
 beforeAll(async () => {
     browser = await puppeteer.launch({
         headless: false,
-        args: ['--enable-webgl'] // more consistent rendering of transparent elements
+        args: ['--enable-webgl'] // necessary for canvas to not be blank in the screenshot
     });
     page = await browser.newPage();
     await page.setContent(generateHTML(), { waitUntil: 'networkidle0' });
