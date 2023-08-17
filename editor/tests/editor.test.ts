@@ -1,6 +1,9 @@
-import puppeteer from 'puppeteer';
-import { TEXT } from '../example/doc-examples';
-import { GoslingSpec } from '@gosling.schema';
+import puppeteer, { Page, Browser } from 'puppeteer';
+import { TEXT, DUMMY_TRACK } from '../example/doc-examples';
+import { type GoslingSpec } from '@gosling.schema';
+import { examples } from '../example';
+
+import { beforeAll } from 'vitest';
 
 function delay(time: number) {
     return new Promise(resolve => {
@@ -8,7 +11,7 @@ function delay(time: number) {
     });
 }
 
-function generateHTML(spec: string, { reactVersion = '16', pixijsVersion = '6', higlassVersion = '1.11' } = {}) {
+function generateHTML({ reactVersion = '16', pixijsVersion = '6', higlassVersion = '1.11' } = {}) {
     const baseUrl = 'https://unpkg.com';
     return `\
 <!DOCTYPE html>
@@ -24,33 +27,35 @@ function generateHTML(spec: string, { reactVersion = '16', pixijsVersion = '6', 
 </html>`;
 }
 
-/**
- * Takes a screenshot of a particular Gosling spec
- * @param spec
- * @param opts
- */
-async function screenshot(gosSpec: GoslingSpec, opts: { path: string }) {
-    let spec = JSON.stringify(gosSpec);
-    spec = spec.replaceAll('\\', '\\\\');
 
-    const browser = await puppeteer.launch({
-        headless: false
+let browser: Browser;
+let page: Page;
+beforeAll(async () => {
+    browser = await puppeteer.launch({
+        headless: false,
+        args: ['--enable-webgl'] // more consistent rendering of transparent elements
+    });
+    page = await browser.newPage();
+    await page.setContent(generateHTML(), { waitUntil: 'networkidle0' });
+    await page.addScriptTag({ path: './dist/gosling.js' });
+});
+
+Object.entries(examples)
+    .filter(([name, example]) => name === 'RULE')
+    .forEach(([name, example]) => {
+        test('example', async () => {
+            let spec = JSON.stringify(example.spec);
+            spec = spec.replaceAll('\\', '\\\\');
+
+            await page.addScriptTag({
+                content: `gosling.embed(document.getElementById("vis"), JSON.parse(\`${spec}\`))`
+            });
+            const component = await page.waitForSelector('.gosling-component');
+            await delay(5000);
+            await component.screenshot({ path: `editor/tests/${name}.png` });
+        });
     });
 
-    const page = await browser.newPage();
-    await page.setContent(generateHTML(spec), { waitUntil: 'networkidle0' });
-    await page.addScriptTag({ path: './dist/gosling.js' });
-    await page.addScriptTag({ content: `gosling.embed(document.getElementById("vis"), JSON.parse(\`${spec}\`))` });
-    const component = await page.waitForSelector('.gosling-component');
-    await delay(5000);
-    await component.screenshot(opts);
-
+afterAll(async () => {
     await browser.close();
-}
-
-describe('Can take screenshot', () => {
-    it('Can take image', async () => {
-        // screenshot(GFF_DEMO, { path: './screenshot.png' });
-        await screenshot(TEXT, { path: 'editor/tests/browser.png' });
-    }, 100000);
 });
