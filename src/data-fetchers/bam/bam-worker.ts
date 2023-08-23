@@ -2,6 +2,7 @@
 import { expose, Transfer } from 'threads/worker';
 import { BamFile as _BamFile } from '@gmod/bam';
 import QuickLRU from 'quick-lru';
+import type { FilehandleOptions } from 'generic-filehandle';
 
 import type { TilesetInfo } from '@higlass/types';
 import type { BamRecord } from '@gmod/bam';
@@ -127,14 +128,6 @@ function getSubstitutions(segment: Segment, seq: string) {
             } else {
                 // console.log('skipping:', sub.type);
             }
-            // if (referenceConsuming.has(sub.base)) {
-            //   if (queryConsuming.has(sub.base)) {
-            //     substitutions.push(
-            //     {
-            //       pos:
-            //     })
-            //   }
-            // }
         }
 
         const firstSub = cigarSubs[0];
@@ -235,13 +228,15 @@ class BamFile extends _BamFile {
         super(...args);
         this.headerPromise = this.getHeader();
     }
-    static fromUrl(url: string, indexUrl: string) {
+    static fromUrl(
+        url: string,
+        indexUrl: string,
+        urlFetchOptions?: FilehandleOptions,
+        indexFetchOptions?: FilehandleOptions
+    ) {
         return new BamFile({
-            bamFilehandle: new RemoteFile(url),
-            baiFilehandle: new RemoteFile(indexUrl)
-            // fetchSizeLimit: 500000000,
-            // chunkSizeLimit: 100000000,
-            // yieldThreadTime: 1000,
+            bamFilehandle: new RemoteFile(url, urlFetchOptions),
+            baiFilehandle: new RemoteFile(indexUrl, indexFetchOptions)
         });
     }
     getChromNames() {
@@ -254,6 +249,7 @@ interface BamFileOptions {
     maxInsertSize: number;
     extractJunction: boolean;
     junctionMinCoverage: number;
+    urlToFetchOptions?: Record<string, FilehandleOptions>;
 }
 
 // indexed by dataset uuid
@@ -270,7 +266,9 @@ const init = async (
     options: Partial<BamFileOptions> = {}
 ) => {
     if (!bamFileCache.has(bam.url)) {
-        const bamFile = BamFile.fromUrl(bam.url, bam.indexUrl);
+        const urlFetchOptions = options.urlToFetchOptions?.[bam.url] || {};
+        const indexFetchOptions = options.urlToFetchOptions?.[bam.indexUrl] || {};
+        const bamFile = BamFile.fromUrl(bam.url, bam.indexUrl, urlFetchOptions, indexFetchOptions);
         await bamFile.getHeader(); // reads bam/bai headers
 
         // Infer the correct chromosome names between 'chr1' and '1'

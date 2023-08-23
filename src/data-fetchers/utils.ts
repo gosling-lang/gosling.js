@@ -1,5 +1,5 @@
 import { bisector } from 'd3-array';
-import { RemoteFile as _RemoteFile } from 'generic-filehandle';
+import { RemoteFile as _RemoteFile, type FilehandleOptions } from 'generic-filehandle';
 
 import type * as HiGlass from '@higlass/types';
 import type { Assembly, ChromSizes, Datum } from '@gosling-lang/gosling-schema';
@@ -10,6 +10,7 @@ export type CommonDataConfig = {
     xe?: string;
     x1?: string;
     x1e?: string;
+    urlToFetchOptions?: { [url: string]: FilehandleOptions };
 };
 
 export class DataSource<File, Options> {

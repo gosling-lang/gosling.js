@@ -131,7 +131,8 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
                 {
                     containerSize: wrapperSize.current,
                     containerParentSize: wrapperParentSize.current
-                }
+                },
+                { test: { headers: { auth: 'token' } } }
             );
         }
     }, [props.spec, theme]);

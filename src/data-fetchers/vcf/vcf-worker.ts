@@ -4,6 +4,7 @@
  */
 import { TabixIndexedFile } from '@gmod/tabix';
 import VCF from '@gmod/vcf';
+import type { FilehandleOptions } from 'generic-filehandle';
 import { expose, Transfer } from 'threads/worker';
 import { sampleSize } from 'lodash-es';
 
@@ -19,6 +20,7 @@ const vcfFiles: Map<string, VcfFile> = new Map();
 
 type VcfFileOptions = {
     sampleLength: number;
+    urlToFetchOptions?: { [url: string]: FilehandleOptions };
 };
 
 /**
@@ -33,14 +35,22 @@ class VcfFile {
     /**
      * Function to create an instance of VcfFile from URLs
      * @param url A string which is the URL of the bed file
-     * @param indexUrl A string which is the URL of the bed  index file
+     * @param indexUrl A string which is the URL of the bed index file
      * @param uid A unique identifier for the worker
+     * @param urlFetchOptions
+     * @param indexFetchOptions
      * @returns an instance of VcfFile
      */
-    static fromUrl(url: string, indexUrl: string, uid: string) {
+    static fromUrl(
+        url: string,
+        indexUrl: string,
+        uid: string,
+        indexFetchOptions: FilehandleOptions,
+        urlFetchOptions: FilehandleOptions
+    ) {
         const tbi = new TabixIndexedFile({
-            filehandle: new RemoteFile(url),
-            tbiFilehandle: new RemoteFile(indexUrl)
+            filehandle: new RemoteFile(url, indexFetchOptions),
+            tbiFilehandle: new RemoteFile(indexUrl, urlFetchOptions)
         });
         return new VcfFile(tbi, uid);
     }
@@ -132,7 +142,10 @@ function init(
 ) {
     let vcfFile = vcfFiles.get(vcf.url);
     if (!vcfFile) {
-        vcfFile = VcfFile.fromUrl(vcf.url, vcf.indexUrl, uid);
+        const urlFetchOptions = options.urlToFetchOptions?.[vcf.url] || {};
+        const indexFetchOptions = options.urlToFetchOptions?.[vcf.indexUrl] || {};
+
+        vcfFile = VcfFile.fromUrl(vcf.url, vcf.indexUrl, uid, urlFetchOptions, indexFetchOptions);
     }
     const dataSource = new DataSource(vcfFile, chromSizes, {
         sampleLength: 1000,

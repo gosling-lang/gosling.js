@@ -2,6 +2,7 @@
 // https://github.com/higlass/higlass/blob/develop/app/schema.json (2ced037)
 
 import type { Assembly, FilterTransform } from '@gosling-lang/gosling-schema';
+import type { FilehandleOptions } from 'generic-filehandle';
 
 // The json schema is converted to TypeScript codes using:
 // https://github.com/quicktype/quicktype
@@ -100,6 +101,11 @@ export interface EnumTrack {
     y?: number;
     options?: any;
 }
+
+export interface UrlToFetchOptions {
+    [url: string]: FilehandleOptions;
+};
+
 export interface Data {
     type?: string; // TODO: What kinds of types exist?
     children?: any[];
@@ -109,11 +115,7 @@ export interface Data {
 
     // Options Gosling internally use
     assembly?: Assembly;
-    fetchOptions?: {
-        headers: {
-            header: string;
-        }
-    }
+    urlToFetchOptions?: UrlToFetchOptions;
 
     // Option to filter datasets
     // This has been added to filter data properly during fetching tiles
