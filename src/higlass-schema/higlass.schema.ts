@@ -109,6 +109,11 @@ export interface Data {
 
     // Options Gosling internally use
     assembly?: Assembly;
+    fetchOptions?: {
+        headers: {
+            header: string;
+        }
+    }
 
     // Option to filter datasets
     // This has been added to filter data properly during fetching tiles

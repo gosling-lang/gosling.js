@@ -17,11 +17,9 @@ export type CompileCallback = (
     idTable: IdTable
 ) => void;
 
-interface CompileOptions {
-    fetchOptions: {
-        headers: {
-            header: string;
-        };
+export interface FetchOptions {
+    headers: {
+        header: string;
     };
 }
 
@@ -34,7 +32,7 @@ export function compile(
         containerSize?: { width: number; height: number };
         containerParentSize?: { width: number; height: number };
     },
-    options: CompileOptions
+    fetchOptions: FetchOptions
 ) {
     // Make sure to keep the original spec as-is
     const specCopy = JSON.parse(JSON.stringify(spec));
@@ -77,5 +75,5 @@ export function compile(
     }
 
     // Make HiGlass models for individual tracks
-    createHiGlassModels(specCopy, trackInfos, callback, theme);
+    createHiGlassModels(specCopy, trackInfos, callback, theme, fetchOptions);
 }

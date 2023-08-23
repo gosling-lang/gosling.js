@@ -20,6 +20,7 @@ import { DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM } from './defaults';
 import type { CompleteThemeDeep } from '../core/utils/theme';
 import { DEFAULT_TEXT_STYLE } from '../core/utils/text-style';
 import type { GoslingToHiGlassIdMapper } from '../api/track-and-view-ids';
+import type { FetchOptions } from './compile';
 
 /**
  * Convert a gosling track into a HiGlass view and add it into a higlass model.
@@ -30,7 +31,8 @@ export function goslingToHiGlass(
     bb: BoundingBox,
     layout: RelativePosition,
     theme: Required<CompleteThemeDeep>,
-    idMapper: GoslingToHiGlassIdMapper
+    idMapper: GoslingToHiGlassIdMapper,
+    fetchOptions: FetchOptions
 ): HiGlassModel {
     // TODO: check whether there are multiple track.data across superposed tracks
     // ...
@@ -156,6 +158,7 @@ export function goslingToHiGlass(
             hgTrack.data = {
                 ...firstResolvedSpec.data,
                 ...xFields,
+                fetchOptions, // Gives all datafetchers access to the fetch options
                 // Additionally, add assembly, otherwise, a default genome build is used
                 assembly
                 // TODO: should look all sub tracks' `dataTransform` and apply OR operation.
