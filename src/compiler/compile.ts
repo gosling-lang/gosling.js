@@ -17,6 +17,14 @@ export type CompileCallback = (
     idTable: IdTable
 ) => void;
 
+interface CompileOptions {
+    fetchOptions: {
+        headers: {
+            header: string;
+        };
+    };
+}
+
 export function compile(
     spec: GoslingSpec,
     callback: CompileCallback,
@@ -25,7 +33,8 @@ export function compile(
     containerStatus: {
         containerSize?: { width: number; height: number };
         containerParentSize?: { width: number; height: number };
-    }
+    },
+    options: CompileOptions
 ) {
     // Make sure to keep the original spec as-is
     const specCopy = JSON.parse(JSON.stringify(spec));

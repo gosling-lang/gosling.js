@@ -20,6 +20,11 @@ export type GoslingEmbedOptions = Omit<HiGlassComponentWrapperProps['options'], 
     id?: string;
     className?: string;
     theme?: Theme;
+    fetchOptions?: {
+        headers: {
+            header: string;
+        };
+    };
 };
 
 const MAX_TRIES = 20;
@@ -63,6 +68,9 @@ const launchHiglass = (
     });
 };
 
+function fetcher(url: string) {
+    console.warn('fetcher', url);
+}
 /**
  * Embed a Gosling component to a given HTMLElement.
  * @param element
