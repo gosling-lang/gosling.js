@@ -1,6 +1,7 @@
 // Adopted from https://github.com/higlass/higlass-pileup/blob/master/src/bam-fetcher-worker.js
 import { expose, Transfer } from 'threads/worker';
-import { BamFile as _BamFile, type BamRecord } from '@gmod/bam';
+import { BamFile as _BamFile } from '@gmod/bam';
+import type { BamRecord } from '@gmod/bam';
 import QuickLRU from 'quick-lru';
 import type { TilesetInfo } from '@higlass/types';
 
