@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import type { GoslingSpec } from '@gosling-lang/gosling-schema';
-import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
+import type { HiGlassSpec, UrlToFetchOptions } from '@gosling-lang/higlass-schema';
 
 import { validateGoslingSpec } from '@gosling-lang/gosling-schema';
 import { compile } from '../compiler/compile';
@@ -20,11 +20,7 @@ export type GoslingEmbedOptions = Omit<HiGlassComponentWrapperProps['options'], 
     id?: string;
     className?: string;
     theme?: Theme;
-    fetchOptions?: {
-        headers: {
-            header: string;
-        };
-    };
+    urlToFetchOptions?: UrlToFetchOptions;
 };
 
 const MAX_TRIES = 20;
@@ -68,9 +64,6 @@ const launchHiglass = (
     });
 };
 
-function fetcher(url: string) {
-    console.warn('fetcher', url);
-}
 /**
  * Embed a Gosling component to a given HTMLElement.
  * @param element
@@ -100,7 +93,8 @@ export function embed(element: HTMLElement, spec: GoslingSpec, opts: GoslingEmbe
             },
             [...GoslingTemplates],
             theme,
-            {} // TODO: properly specify this
+            {}, // TODO: properly specify this
+            opts.urlToFetchOptions
         );
     });
 }
