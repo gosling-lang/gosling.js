@@ -7,12 +7,12 @@ import type { TilesetInfo } from '@higlass/types';
 import type { ChromSizes } from '@gosling-lang/gosling-schema';
 import { DataSource, RemoteFile } from '../utils';
 import { isGFF3Feature, makeRandomSortedArray } from './utils';
-import type { UrlToFetchOptions } from '@gosling-lang/higlass-schema';
 
 export type GffFileOptions = {
     sampleLength: number;
     attributesToFields?: { attribute: string; defaultValue: string }[];
-    urlToFetchOptions?: UrlToFetchOptions;
+    urlFetchOptions?: RequestInit;
+    indexUrlFetchOptions?: RequestInit;
 };
 
 export interface GffTile extends GFF3FeatureLineWithRefs {
@@ -41,19 +41,19 @@ export class GffFile {
      * @param indexUrl A string which is the URL of the bed  index file
      * @param uid A unique identifier for the worker
      * @param urlFetchOptions When the url is fetched, these options will be used
-     * @param indexFetchOptions When the index URL is fetched, these options will be used
+     * @param indexUrlFetchOptions When the index URL is fetched, these options will be used
      * @returns an instance of BedFile
      */
     static fromUrl(
         url: string,
         indexUrl: string,
         uid: string,
-        urlFetchOptions: RequestInit,
-        indexFetchOptions: RequestInit
+        urlFetchOptions?: RequestInit,
+        indexUrlFetchOptions?: RequestInit
     ): GffFile {
         const tbi = new TabixIndexedFile({
-            filehandle: new RemoteFile(url, { fetch, overrides: urlFetchOptions }),
-            tbiFilehandle: new RemoteFile(indexUrl, { fetch, overrides: indexFetchOptions })
+            filehandle: new RemoteFile(url, { overrides: urlFetchOptions }),
+            tbiFilehandle: new RemoteFile(indexUrl, { overrides: indexUrlFetchOptions })
         });
         return new GffFile(tbi, uid);
     }
@@ -262,10 +262,7 @@ function init(
 ) {
     let gffFile = gffFiles.get(bed.url);
     if (!gffFile) {
-        const urlFetchOptions = options.urlToFetchOptions?.[bed.url] || {};
-        const indexFetchOptions = options.urlToFetchOptions?.[bed.indexUrl] || {};
-
-        gffFile = GffFile.fromUrl(bed.url, bed.indexUrl, uid, urlFetchOptions, indexFetchOptions);
+        gffFile = GffFile.fromUrl(bed.url, bed.indexUrl, uid, options.urlFetchOptions, options.indexUrlFetchOptions);
     }
     const dataSource = new DataSource(gffFile, chromSizes, {
         sampleLength: 1000, // default sampleLength

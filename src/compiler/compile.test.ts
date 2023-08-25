@@ -242,3 +242,50 @@ describe('Dummy track', () => {
         );
     });
 });
+
+describe('Compiler with UrlToFetchOptions', () => {
+    it('passes UrlToFetchOptions to the data fetcher', () => {
+        const urlToFetchOptions = { 'https://my-csv-url.com': { headers: { Authentication: 'Bearer 1234' } } };
+        const spec: GoslingSpec = {
+            tracks: [
+                {
+                    id: 'track-id',
+                    data: {
+                        type: 'csv',
+                        url: 'https://my-csv-url.com'
+                    },
+                    mark: 'rect',
+                    width: 100,
+                    height: 100
+                }
+            ]
+        };
+        compile(
+            spec,
+            hgSpec => {
+                // @ts-ignore
+                expect(hgSpec.views[0].tracks.center[0].contents[0].data).toMatchInlineSnapshot(`
+                  {
+                    "assembly": "hg38",
+                    "indexUrlFetchOptions": {},
+                    "type": "csv",
+                    "url": "https://my-csv-url.com",
+                    "urlFetchOptions": {
+                      "headers": {
+                        "Authentication": "Bearer 1234",
+                      },
+                    },
+                    "x": undefined,
+                    "x1": undefined,
+                    "x1e": undefined,
+                    "xe": undefined,
+                  }
+                `);
+            },
+            [],
+            getTheme(),
+            {},
+            urlToFetchOptions
+        );
+    });
+});

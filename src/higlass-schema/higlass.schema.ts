@@ -101,21 +101,19 @@ export interface EnumTrack {
     options?: any;
 }
 
-export interface UrlToFetchOptions {
-    [url: string]: RequestInit;
-};
-
 export interface Data {
-    type?: string; // TODO: What kinds of types exist?
+    type?: string;
     children?: any[];
     tiles?: any;
     tilesetInfo?: any;
     url?: string;
 
     // Options Gosling internally use
-    assembly?: Assembly;
-    urlToFetchOptions?: UrlToFetchOptions;
 
+    assembly?: Assembly;
+    urlFetchOptions?: RequestInit; // Options used when URL is fetched
+    indexUrl?: string; // For datatypes that have indexes
+    indexUrlFetchOptions?: RequestInit; // Options used when index URL is fetched
     // Option to filter datasets
     // This has been added to filter data properly during fetching tiles
     filter?: FilterTransform[];

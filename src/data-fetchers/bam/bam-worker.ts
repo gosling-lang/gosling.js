@@ -5,7 +5,6 @@ import QuickLRU from 'quick-lru';
 import type { TilesetInfo } from '@higlass/types';
 
 import type { ChromSizes } from '@gosling-lang/gosling-schema';
-import type { UrlToFetchOptions } from '@gosling-lang/higlass-schema';
 
 import { DataSource, RemoteFile } from '../utils';
 
@@ -14,7 +13,8 @@ interface BamFileOptions {
     maxInsertSize: number;
     extractJunction: boolean;
     junctionMinCoverage: number;
-    urlToFetchOptions?: UrlToFetchOptions;
+    urlFetchOptions?: RequestInit;
+    indexUrlFetchOptions?: RequestInit;
 }
 
 function parseMD(mdString: string, useCounts: true): { type: string; length: number }[];
@@ -235,10 +235,10 @@ class BamFile extends _BamFile {
         super(...args);
         this.headerPromise = this.getHeader();
     }
-    static fromUrl(url: string, indexUrl: string, urlFetchOptions?: RequestInit, indexFetchOptions?: RequestInit) {
+    static fromUrl(url: string, indexUrl: string, urlFetchOptions?: RequestInit, indexUrlFetchOptions?: RequestInit) {
         return new BamFile({
-            bamFilehandle: new RemoteFile(url, { fetch, overrides: urlFetchOptions }),
-            baiFilehandle: new RemoteFile(indexUrl, { fetch, overrides: indexFetchOptions })
+            bamFilehandle: new RemoteFile(url, { overrides: urlFetchOptions }),
+            baiFilehandle: new RemoteFile(indexUrl, { overrides: indexUrlFetchOptions })
         });
     }
     getChromNames() {
@@ -260,9 +260,7 @@ const init = async (
     options: Partial<BamFileOptions> = {}
 ) => {
     if (!bamFileCache.has(bam.url)) {
-        const urlFetchOptions = options.urlToFetchOptions?.[bam.url] || {};
-        const indexFetchOptions = options.urlToFetchOptions?.[bam.indexUrl] || {};
-        const bamFile = BamFile.fromUrl(bam.url, bam.indexUrl, urlFetchOptions, indexFetchOptions);
+        const bamFile = BamFile.fromUrl(bam.url, bam.indexUrl, options.urlFetchOptions, options.indexUrlFetchOptions);
         await bamFile.getHeader(); // reads bam/bai headers
 
         // Infer the correct chromosome names between 'chr1' and '1'

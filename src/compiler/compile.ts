@@ -1,5 +1,5 @@
 import type { GoslingSpec, TemplateTrackDef, VisUnitApiData } from '@gosling-lang/gosling-schema';
-import type { HiGlassSpec, UrlToFetchOptions } from '@gosling-lang/higlass-schema';
+import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
 import { traverseToFixSpecDownstream, overrideDataTemplates } from './spec-preprocess';
 import { replaceTrackTemplates } from '../core/utils/template';
 import { getRelativeTrackInfo, type Size } from './bounding-box';
@@ -16,6 +16,11 @@ export type CompileCallback = (
     tracksAndViews: VisUnitApiData[],
     idTable: IdTable
 ) => void;
+
+/** Matches URLs to specific fetch options so that datafetchers have access URL specific fetch options */
+export interface UrlToFetchOptions {
+    [url: string]: RequestInit;
+}
 
 export function compile(
     spec: GoslingSpec,

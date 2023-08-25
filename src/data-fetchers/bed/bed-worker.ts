@@ -9,7 +9,6 @@ import { expose, Transfer } from 'threads/worker';
 import type { TilesetInfo } from '@higlass/types';
 
 import type { ChromSizes } from '@gosling-lang/gosling-schema';
-import type { UrlToFetchOptions } from '@gosling-lang/higlass-schema';
 
 import { DataSource, RemoteFile } from '../utils';
 import BedParser from './bed-parser';
@@ -17,7 +16,8 @@ import BedParser from './bed-parser';
 export type BedFileOptions = {
     sampleLength: number;
     customFields?: string[];
-    urlToFetchOptions?: UrlToFetchOptions;
+    urlFetchOptions?: RequestInit;
+    indexUrlFetchOptions?: RequestInit;
 };
 
 /**
@@ -60,19 +60,19 @@ export class BedFile {
      * @param indexUrl A string which is the URL of the bed  index file
      * @param uid A unique identifier for the worker
      * @param urlFetchOptions When the url is fetched, these options will be used
-     * @param indexFetchOptions When the index URL is fetched, these options will be used
+     * @param indexUrlFetchOptions When the index URL is fetched, these options will be used
      * @returns an instance of BedFile
      */
     static fromUrl(
         url: string,
         indexUrl: string,
         uid: string,
-        urlFetchOptions: RequestInit,
-        indexFetchOptions: RequestInit
+        urlFetchOptions?: RequestInit,
+        indexUrlFetchOptions?: RequestInit
     ) {
         const tbi = new TabixIndexedFile({
-            filehandle: new RemoteFile(url, { fetch, overrides: urlFetchOptions }),
-            tbiFilehandle: new RemoteFile(indexUrl, { fetch, overrides: indexFetchOptions })
+            filehandle: new RemoteFile(url, { overrides: urlFetchOptions }),
+            tbiFilehandle: new RemoteFile(indexUrl, { overrides: indexUrlFetchOptions })
         });
         return new BedFile(tbi, uid);
     }
@@ -196,9 +196,7 @@ function init(
 ) {
     let bedFile = bedFiles.get(bed.url);
     if (!bedFile) {
-        const urlFetchOptions = options.urlToFetchOptions?.[bed.url] || {};
-        const indexFetchOptions = options.urlToFetchOptions?.[bed.indexUrl] || {};
-        bedFile = BedFile.fromUrl(bed.url, bed.indexUrl, uid, urlFetchOptions, indexFetchOptions);
+        bedFile = BedFile.fromUrl(bed.url, bed.indexUrl, uid, options.urlFetchOptions, options.indexUrlFetchOptions);
         if (options.customFields) bedFile.customFields = options.customFields;
     }
     const dataSource = new DataSource(bedFile, chromSizes, {

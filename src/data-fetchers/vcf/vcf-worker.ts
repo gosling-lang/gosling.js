@@ -8,7 +8,6 @@ import { expose, Transfer } from 'threads/worker';
 import { sampleSize } from 'lodash-es';
 
 import { DataSource, RemoteFile } from '../utils';
-import type { UrlToFetchOptions } from '@gosling-lang/higlass-schema';
 
 import type { TilesetInfo } from '@higlass/types';
 import type { ChromSizes } from '@gosling-lang/gosling-schema';
@@ -20,7 +19,8 @@ const vcfFiles: Map<string, VcfFile> = new Map();
 
 type VcfFileOptions = {
     sampleLength: number;
-    urlToFetchOptions?: UrlToFetchOptions;
+    urlFetchOptions?: RequestInit;
+    indexUrlFetchOptions?: RequestInit;
 };
 
 /**
@@ -38,19 +38,19 @@ class VcfFile {
      * @param indexUrl A string which is the URL of the bed index file
      * @param uid A unique identifier for the worker
      * @param urlFetchOptions
-     * @param indexFetchOptions
+     * @param indexUrlFetchOptions
      * @returns an instance of VcfFile
      */
     static fromUrl(
         url: string,
         indexUrl: string,
         uid: string,
-        urlFetchOptions: RequestInit,
-        indexFetchOptions: RequestInit
+        urlFetchOptions?: RequestInit,
+        indexUrlFetchOptions?: RequestInit
     ) {
         const tbi = new TabixIndexedFile({
-            filehandle: new RemoteFile(url, { fetch, overrides: urlFetchOptions }),
-            tbiFilehandle: new RemoteFile(indexUrl, { fetch, overrides: indexFetchOptions })
+            filehandle: new RemoteFile(url, { overrides: urlFetchOptions }),
+            tbiFilehandle: new RemoteFile(indexUrl, { overrides: indexUrlFetchOptions })
         });
         return new VcfFile(tbi, uid);
     }
@@ -142,10 +142,7 @@ function init(
 ) {
     let vcfFile = vcfFiles.get(vcf.url);
     if (!vcfFile) {
-        const urlFetchOptions = options.urlToFetchOptions?.[vcf.url] || {};
-        const indexFetchOptions = options.urlToFetchOptions?.[vcf.indexUrl] || {};
-
-        vcfFile = VcfFile.fromUrl(vcf.url, vcf.indexUrl, uid, urlFetchOptions, indexFetchOptions);
+        vcfFile = VcfFile.fromUrl(vcf.url, vcf.indexUrl, uid, options.urlFetchOptions, options.indexUrlFetchOptions);
     }
     const dataSource = new DataSource(vcfFile, chromSizes, {
         sampleLength: 1000,

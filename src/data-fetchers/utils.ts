@@ -3,7 +3,6 @@ import { RemoteFile as _RemoteFile } from 'generic-filehandle';
 
 import type * as HiGlass from '@higlass/types';
 import type { Assembly, ChromSizes, Datum } from '@gosling-lang/gosling-schema';
-import type { UrlToFetchOptions } from '@gosling-lang/higlass-schema';
 
 export type CommonDataConfig = {
     assembly: Assembly;
@@ -11,7 +10,7 @@ export type CommonDataConfig = {
     xe?: string;
     x1?: string;
     x1e?: string;
-    urlToFetchOptions?: UrlToFetchOptions;
+    urlFetchOptions?: RequestInit;
 };
 
 export class DataSource<File, Options> {
