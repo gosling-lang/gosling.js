@@ -155,10 +155,6 @@ export function goslingToHiGlass(
                 x1e: getFieldName('x1e')
             } as const;
 
-            if ('url' in firstResolvedSpec.data && urlToFetchOptions) {
-                urlToFetchOptions[firstResolvedSpec.data.url];
-            }
-
             // Check whether there are any URL specific fetch options
             const urlFetchOptions =
                 ('url' in firstResolvedSpec.data && urlToFetchOptions?.[firstResolvedSpec.data.url]) || {};
