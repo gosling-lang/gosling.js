@@ -75,3 +75,36 @@ describe('CSV data fetcher', () => {
             );
         }));
 });
+
+test('CSV data fetcher can take fetch options', () => {
+    const spy = vi.spyOn(globalThis, 'fetch');
+    const overrides = {
+        headers: {
+            Authorization: 'Bearer 1234'
+        },
+        method: 'GET',
+        mode: 'cors',
+        redirect: 'follow',
+        signal: undefined
+    };
+    new (CsvDataFetcher as any)(
+        {},
+        {
+            url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/cytogenetic_band.csv',
+            type: 'csv',
+            chromosomeField: 'Chr.',
+            genomicFields: ['ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop'],
+            urlToFetchOptions: {
+                'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/cytogenetic_band.csv': {
+                    ...overrides
+                }
+            }
+        },
+        {}
+    ) as CsvDataFetcherClass;
+
+    expect(spy).toHaveBeenCalledWith(
+        'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/cytogenetic_band.csv',
+        overrides
+    );
+});
