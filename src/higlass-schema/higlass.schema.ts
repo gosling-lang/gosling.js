@@ -120,8 +120,15 @@ export interface Data {
 }
 
 // When using the built-in RequestInit type, `yarn schema` doesn't work. So we are using our own RequestInit.
-interface RequestInit {
-    headers: any;
+export interface RequestInit {
+    headers?: Record<string, any>;
+    body?: any;
+    method?: string;
+    mode?: string;
+    credentials?: string;
+    cache?: string;
+    referrer?: string;
+    referrerPolicy?: string;
     [key: string]: any;
 }
 
