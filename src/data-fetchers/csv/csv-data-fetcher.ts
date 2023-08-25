@@ -67,7 +67,8 @@ export class CsvDataFetcherClass {
 
         // Use any headers for this particular URL
         const { urlToFetchOptions, url } = dataConfig;
-        this.#file = new RemoteFile(url, urlToFetchOptions?.[url] || {});
+        const fetchOptions = { fetch, overrides: { ...(urlToFetchOptions?.[url] || {}) } };
+        this.#file = new RemoteFile(url, fetchOptions);
 
         this.#chromSizes = this.#generateChomSizeInfo();
         this.#dataPromise = this.#fetchCsv();

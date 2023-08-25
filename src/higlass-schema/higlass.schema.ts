@@ -2,7 +2,6 @@
 // https://github.com/higlass/higlass/blob/develop/app/schema.json (2ced037)
 
 import type { Assembly, FilterTransform } from '@gosling-lang/gosling-schema';
-import type { FilehandleOptions } from 'generic-filehandle';
 
 // The json schema is converted to TypeScript codes using:
 // https://github.com/quicktype/quicktype
@@ -103,7 +102,7 @@ export interface EnumTrack {
 }
 
 export interface UrlToFetchOptions {
-    [url: string]: FilehandleOptions;
+    [url: string]: RequestInit;
 };
 
 export interface Data {

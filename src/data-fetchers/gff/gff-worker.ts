@@ -1,18 +1,18 @@
 import { TabixIndexedFile } from '@gmod/tabix';
 import GFF from '@gmod/gff';
 import type { GFF3FeatureLineWithRefs, GFF3Feature, GFF3Sequence } from '@gmod/gff';
-import type { FilehandleOptions } from 'generic-filehandle';
 import { expose, Transfer } from 'threads/worker';
 import { sampleSize } from 'lodash-es';
 import type { TilesetInfo } from '@higlass/types';
 import type { ChromSizes } from '@gosling-lang/gosling-schema';
 import { DataSource, RemoteFile } from '../utils';
 import { isGFF3Feature, makeRandomSortedArray } from './utils';
+import type { UrlToFetchOptions } from '@gosling-lang/higlass-schema';
 
 export type GffFileOptions = {
     sampleLength: number;
     attributesToFields?: { attribute: string; defaultValue: string }[];
-    urlToFetchOptions?: { [url: string]: FilehandleOptions };
+    urlToFetchOptions?: UrlToFetchOptions;
 };
 
 export interface GffTile extends GFF3FeatureLineWithRefs {
@@ -48,12 +48,12 @@ export class GffFile {
         url: string,
         indexUrl: string,
         uid: string,
-        urlFetchOptions: FilehandleOptions,
-        indexFetchOptions: FilehandleOptions
+        urlFetchOptions: RequestInit,
+        indexFetchOptions: RequestInit
     ): GffFile {
         const tbi = new TabixIndexedFile({
-            filehandle: new RemoteFile(url, urlFetchOptions),
-            tbiFilehandle: new RemoteFile(indexUrl, indexFetchOptions)
+            filehandle: new RemoteFile(url, { fetch, overrides: urlFetchOptions }),
+            tbiFilehandle: new RemoteFile(indexUrl, { fetch, overrides: indexFetchOptions })
         });
         return new GffFile(tbi, uid);
     }

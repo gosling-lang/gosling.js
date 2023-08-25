@@ -1,14 +1,21 @@
 // Adopted from https://github.com/higlass/higlass-pileup/blob/master/src/bam-fetcher-worker.js
 import { expose, Transfer } from 'threads/worker';
-import { BamFile as _BamFile } from '@gmod/bam';
+import { BamFile as _BamFile, type BamRecord } from '@gmod/bam';
 import QuickLRU from 'quick-lru';
-import type { FilehandleOptions } from 'generic-filehandle';
-
 import type { TilesetInfo } from '@higlass/types';
-import type { BamRecord } from '@gmod/bam';
+
+import type { ChromSizes } from '@gosling-lang/gosling-schema';
+import type { UrlToFetchOptions } from '@gosling-lang/higlass-schema';
 
 import { DataSource, RemoteFile } from '../utils';
-import type { ChromSizes } from '@gosling-lang/gosling-schema';
+
+interface BamFileOptions {
+    loadMates: boolean;
+    maxInsertSize: number;
+    extractJunction: boolean;
+    junctionMinCoverage: number;
+    urlToFetchOptions?: UrlToFetchOptions;
+}
 
 function parseMD(mdString: string, useCounts: true): { type: string; length: number }[];
 function parseMD(mdString: string, useCounts: false): { pos: number; base: string; length: 1; bamSeqShift: number }[];
@@ -228,28 +235,15 @@ class BamFile extends _BamFile {
         super(...args);
         this.headerPromise = this.getHeader();
     }
-    static fromUrl(
-        url: string,
-        indexUrl: string,
-        urlFetchOptions?: FilehandleOptions,
-        indexFetchOptions?: FilehandleOptions
-    ) {
+    static fromUrl(url: string, indexUrl: string, urlFetchOptions?: RequestInit, indexFetchOptions?: RequestInit) {
         return new BamFile({
-            bamFilehandle: new RemoteFile(url, urlFetchOptions),
-            baiFilehandle: new RemoteFile(indexUrl, indexFetchOptions)
+            bamFilehandle: new RemoteFile(url, { fetch, overrides: urlFetchOptions }),
+            baiFilehandle: new RemoteFile(indexUrl, { fetch, overrides: indexFetchOptions })
         });
     }
     getChromNames() {
         return this.indexToChr.map((v: { refName: string; length: number }) => v.refName);
     }
-}
-
-interface BamFileOptions {
-    loadMates: boolean;
-    maxInsertSize: number;
-    extractJunction: boolean;
-    junctionMinCoverage: number;
-    urlToFetchOptions?: Record<string, FilehandleOptions>;
 }
 
 // indexed by dataset uuid

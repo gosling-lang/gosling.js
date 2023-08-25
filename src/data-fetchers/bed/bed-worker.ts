@@ -4,18 +4,20 @@
  */
 
 import { TabixIndexedFile } from '@gmod/tabix';
-import { expose, Transfer } from 'threads/worker';
 import { sampleSize } from 'lodash-es';
+import { expose, Transfer } from 'threads/worker';
 import type { TilesetInfo } from '@higlass/types';
+
 import type { ChromSizes } from '@gosling-lang/gosling-schema';
+import type { UrlToFetchOptions } from '@gosling-lang/higlass-schema';
+
 import { DataSource, RemoteFile } from '../utils';
-import type { FilehandleOptions } from 'generic-filehandle';
 import BedParser from './bed-parser';
 
 export type BedFileOptions = {
     sampleLength: number;
     customFields?: string[];
-    urlToFetchOptions?: Record<string, FilehandleOptions>;
+    urlToFetchOptions?: UrlToFetchOptions;
 };
 
 /**
@@ -65,12 +67,12 @@ export class BedFile {
         url: string,
         indexUrl: string,
         uid: string,
-        urlFetchOptions: FilehandleOptions,
-        indexFetchOptions: FilehandleOptions
+        urlFetchOptions: RequestInit,
+        indexFetchOptions: RequestInit
     ) {
         const tbi = new TabixIndexedFile({
-            filehandle: new RemoteFile(url, urlFetchOptions),
-            tbiFilehandle: new RemoteFile(indexUrl, indexFetchOptions)
+            filehandle: new RemoteFile(url, { fetch, overrides: urlFetchOptions }),
+            tbiFilehandle: new RemoteFile(indexUrl, { fetch, overrides: indexFetchOptions })
         });
         return new BedFile(tbi, uid);
     }

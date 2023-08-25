@@ -4,11 +4,11 @@
  */
 import { TabixIndexedFile } from '@gmod/tabix';
 import VCF from '@gmod/vcf';
-import type { FilehandleOptions } from 'generic-filehandle';
 import { expose, Transfer } from 'threads/worker';
 import { sampleSize } from 'lodash-es';
 
 import { DataSource, RemoteFile } from '../utils';
+import type { UrlToFetchOptions } from '@gosling-lang/higlass-schema';
 
 import type { TilesetInfo } from '@higlass/types';
 import type { ChromSizes } from '@gosling-lang/gosling-schema';
@@ -20,7 +20,7 @@ const vcfFiles: Map<string, VcfFile> = new Map();
 
 type VcfFileOptions = {
     sampleLength: number;
-    urlToFetchOptions?: { [url: string]: FilehandleOptions };
+    urlToFetchOptions?: UrlToFetchOptions;
 };
 
 /**
@@ -45,12 +45,12 @@ class VcfFile {
         url: string,
         indexUrl: string,
         uid: string,
-        indexFetchOptions: FilehandleOptions,
-        urlFetchOptions: FilehandleOptions
+        urlFetchOptions: RequestInit,
+        indexFetchOptions: RequestInit
     ) {
         const tbi = new TabixIndexedFile({
-            filehandle: new RemoteFile(url, indexFetchOptions),
-            tbiFilehandle: new RemoteFile(indexUrl, urlFetchOptions)
+            filehandle: new RemoteFile(url, { fetch, overrides: urlFetchOptions }),
+            tbiFilehandle: new RemoteFile(indexUrl, { fetch, overrides: indexFetchOptions })
         });
         return new VcfFile(tbi, uid);
     }

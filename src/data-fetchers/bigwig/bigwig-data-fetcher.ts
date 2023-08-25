@@ -90,7 +90,7 @@ function BigWigDataFetcher(HGC: import('@higlass/types').HGC, dataConfig: BigWig
             if (dataConfig.url) {
                 const urlFetchOptions = this.dataConfig.urlToFetchOptions?.[dataConfig.url] || {};
                 this.bwFile = new BigWig({
-                    filehandle: new RemoteFile(dataConfig.url, urlFetchOptions)
+                    filehandle: new RemoteFile(dataConfig.url, { fetch, overrides: urlFetchOptions })
                 });
                 return this.bwFile.getHeader().then((h: BigWigHeader) => {
                     this.bwFileHeader = h;

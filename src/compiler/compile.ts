@@ -1,5 +1,5 @@
 import type { GoslingSpec, TemplateTrackDef, VisUnitApiData } from '@gosling-lang/gosling-schema';
-import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
+import type { HiGlassSpec, UrlToFetchOptions } from '@gosling-lang/higlass-schema';
 import { traverseToFixSpecDownstream, overrideDataTemplates } from './spec-preprocess';
 import { replaceTrackTemplates } from '../core/utils/template';
 import { getRelativeTrackInfo, type Size } from './bounding-box';
@@ -7,7 +7,6 @@ import type { CompleteThemeDeep } from '../core/utils/theme';
 import { renderHiGlass as createHiGlassModels } from './create-higlass-models';
 import { manageResponsiveSpecs } from './responsive';
 import type { IdTable } from '../api/track-and-view-ids';
-import type { FilehandleOptions } from 'generic-filehandle';
 
 /** The callback function called everytime after the spec has been compiled */
 export type CompileCallback = (
@@ -18,9 +17,6 @@ export type CompileCallback = (
     idTable: IdTable
 ) => void;
 
-export interface UrlToFetchOptions {
-    [url: string]: FilehandleOptions;
-}
 export function compile(
     spec: GoslingSpec,
     callback: CompileCallback,

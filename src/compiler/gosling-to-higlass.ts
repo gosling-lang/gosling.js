@@ -20,7 +20,7 @@ import { DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM } from './defaults';
 import type { CompleteThemeDeep } from '../core/utils/theme';
 import { DEFAULT_TEXT_STYLE } from '../core/utils/text-style';
 import type { GoslingToHiGlassIdMapper } from '../api/track-and-view-ids';
-import type { UrlToFetchOptions } from './compile';
+import type { UrlToFetchOptions } from '@gosling-lang/higlass-schema';
 
 /**
  * Convert a gosling track into a HiGlass view and add it into a higlass model.
