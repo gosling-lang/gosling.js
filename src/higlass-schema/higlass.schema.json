@@ -107,6 +107,18 @@
           },
           "type": "array"
         },
+        "indexUrl": {
+          "type": "string"
+        },
+        "indexUrlFetchOptions": {
+          "properties": {
+            "headers": {}
+          },
+          "required": [
+            "headers"
+          ],
+          "type": "object"
+        },
         "tiles": {},
         "tilesetInfo": {},
         "type": {
@@ -114,6 +126,15 @@
         },
         "url": {
           "type": "string"
+        },
+        "urlFetchOptions": {
+          "properties": {
+            "headers": {}
+          },
+          "required": [
+            "headers"
+          ],
+          "type": "object"
         }
       },
       "type": "object"

@@ -119,6 +119,12 @@ export interface Data {
     filter?: FilterTransform[];
 }
 
+// When using the built-in RequestInit type, `yarn schema` doesn't work. So we are using our own RequestInit.
+interface RequestInit {
+    headers: any;
+    [key: string]: any;
+}
+
 export interface Overlay {
     uid?: string;
     type?: string; // TODO: What kinds of types exist?
