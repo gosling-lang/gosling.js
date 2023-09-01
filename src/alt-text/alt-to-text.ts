@@ -4,7 +4,7 @@ import { attributeExists, attributeExistsReturn, attributeExistsAndChildHasValue
 import {
     IsChannelValue, IsChannelDeep
 } from '../core/gosling.schema.guards';
-
+import { SUPPORTED_CHANNELS } from './../core/mark/index';
 
 
 export function addDescriptions(altGoslingSpec: AltGoslingSpec) {
@@ -184,6 +184,67 @@ function addTrackAppearanceDescriptions(altGoslingSpec: AltGoslingSpec) {
         addTrackAppearanceDescription(track);
     }
     
+}
+
+
+function addEncodingDescriptions(track: AltTrack) {
+    const mark = track.appearance.details.mark as String;
+    const markToText = {'point': 'points', 'line': 'line', 'rect': 'rectangles', 'area': 'area displayed', 'withinLink': 'connections', 'betweenLink': 'connections', 'triangleLeft': 'triangles', 'triangleRight': 'triangles', 'triangleBottom': 'triangles'};
+    const channelToText = {'y': 'height', 'color': 'color', 'strokeWidth': 'stroke width', 'opacity': 'opacity', 'text': 'text'};
+
+    for (let i = 0; i < track.appearance.details.encodings.encodingDeepGenomic.length; i++) {
+        const e = track.appearance.details.encodings.encodingDeepGenomic[i];
+        var desc = ''
+        if (e.name === 'x' || e.name === 'y') {
+            desc = desc.concat('The ' + e.name + '-axis shows the genome.');
+        } else if (e.name === 'xe' || e.name === 'ye') {
+            desc = desc.concat('');
+        } else if (e.name === 'x1' || e.name === 'x1e' || e.name === 'y1' || e.name === 'y1e') {
+            desc = desc.concat('');
+        }
+        
+        track.appearance.details.encodings.encodingDeepGenomic[i].description = desc;
+    }
+
+    for (let i = 0; i < track.appearance.details.encodings.encodingDeepQuantitative.length; i++) {
+        const e = track.appearance.details.encodings.encodingDeepQuantitative[i].name;
+        
+        track.appearance.details.encodings.encodingDeepQuantitative[i].description = '';
+    }
+
+
+    for (let i = 0; i < track.appearance.details.encodings.encodingDeepNominal.length; i++) {
+        const e = track.appearance.details.encodings.encodingDeepNominal[i];
+        var desc = '';
+        if (e.name === 'row') {
+            desc = desc.concat('The chart is stratified by rows for the individual categories.');
+        } else if (e.name === 'xe' || e.name === 'ye') {
+            desc = desc.concat('The end of the ' + markToText[mark] + ' is stratified by rows for the individual categories.');
+        }
+        if (e.name === 'xe' || e.name === 'ye') {
+            desc = desc.concat('');
+        }
+        if (e.name === 'x1' || e.name === 'x1e' || e.name === 'y1' || e.name === 'y1e') {
+            desc = desc.concat('');
+        }
+        
+        track.appearance.details.encodings.encodingDeepNominal[i].description = desc;
+    }
+    // SUPPORTED_CHANNELS.forEach(k => {
+    //     // const c = track.appearance.details.encodings.encodingDeepGenomic[k];
+    //     if (IsChannelDeep(c)) {
+    //         if (c.type === 'genomic') {
+    //             encodingDeepGenomic.push({name: k, description: '', details: c});
+    //         } else if (c.type === 'quantitative') {
+    //             encodingDeepQuantitative.push({name: k, description: '', details: c});
+    //         } else {
+    //             encodingDeepNominal.push({name: k, description: '', details: c});
+    //         }
+    //     } else if (IsChannelValue(c)) {
+    //         encodingValue.push({name: k, description: '', details: c});
+    //     }
+    // });
+
 }
 
 

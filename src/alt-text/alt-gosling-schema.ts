@@ -50,7 +50,7 @@ export interface AltTrackPositionDetails {
 export interface AltTrackAppearanceDetails {
     layout: Layout;
     overlaid: boolean;
-    mark: Mark | Mark[];
+    mark: Mark;
     encodings: AltEncodingSeparated;
     orientation?: Orientation;
     assembly?: Assembly;
