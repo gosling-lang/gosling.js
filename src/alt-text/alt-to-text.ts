@@ -144,12 +144,12 @@ function addTrackPositionDescriptionsMulti(altGoslingSpec: AltGoslingSpec) {
 
         // indication of row is only useful if there is more than 1 row
         if (altGoslingSpec.composition.counter.totalRows > 1) {
-            if (trackPosition.rowNumber === 1) {
+            if (trackPosition.rowNumber === 0) {
                 descTrack = descTrack.concat('top row');
             } else if (trackPosition.rowNumber === counter.totalRows - 1) {
                 descTrack = descTrack.concat('bottom row');
             } else if (trackPosition.rowNumber < 10) {
-                descTrack = descTrack.concat(positionWords[trackPosition.rowNumber] + 'row');
+                descTrack = descTrack.concat(positionWords[trackPosition.rowNumber] + ' row');
             } else {
                 descTrack = descTrack.concat('row ' + trackPosition.rowNumber + 1);
             }
@@ -181,9 +181,18 @@ function addTrackPositionDescriptionsMulti(altGoslingSpec: AltGoslingSpec) {
 function addTrackAppearanceDescriptions(altGoslingSpec: AltGoslingSpec) {
     for (const i in altGoslingSpec.tracks) {
         const track = altGoslingSpec.tracks[i];
-        addTrackAppearanceDescription(track);
-    }
-    
+
+        addEncodingDescriptions(track);
+        
+        // const appearanceDet = track.appearance.details;
+        // var desc = ''
+
+        // if (track.type !== 'unknown') {
+        //     trackAppearanceKnownType(track);
+        // } else {
+        //     trackAppearanceUnknownType(track);
+        // }
+    }   
 }
 
 
@@ -192,44 +201,50 @@ function addEncodingDescriptions(track: AltTrack) {
     const markToText = {'point': 'points', 'line': 'line', 'rect': 'rectangles', 'area': 'area displayed', 'withinLink': 'connections', 'betweenLink': 'connections', 'triangleLeft': 'triangles', 'triangleRight': 'triangles', 'triangleBottom': 'triangles'};
     const channelToText = {'y': 'height', 'color': 'color', 'strokeWidth': 'stroke width', 'opacity': 'opacity', 'text': 'text'};
 
-    for (let i = 0; i < track.appearance.details.encodings.encodingDeepGenomic.length; i++) {
-        const e = track.appearance.details.encodings.encodingDeepGenomic[i];
-        var desc = ''
-        if (e.name === 'x' || e.name === 'y') {
-            desc = desc.concat('The ' + e.name + '-axis shows the genome.');
-        } else if (e.name === 'xe' || e.name === 'ye') {
-            desc = desc.concat('');
-        } else if (e.name === 'x1' || e.name === 'x1e' || e.name === 'y1' || e.name === 'y1e') {
-            desc = desc.concat('');
-        }
+    let genomicEncodingsI = track.appearance.details.encodings.encodingDeepGenomic.map(o => o.name);
+    if (genomicEncodingsI.includes('x') && genomicEncodingsI.includes('y')) {
         
-        track.appearance.details.encodings.encodingDeepGenomic[i].description = desc;
     }
 
-    for (let i = 0; i < track.appearance.details.encodings.encodingDeepQuantitative.length; i++) {
-        const e = track.appearance.details.encodings.encodingDeepQuantitative[i].name;
+    // for (let i = 0; i < track.appearance.details.encodings.encodingDeepGenomic.length; i++) {
+    //     const e = track.appearance.details.encodings.encodingDeepGenomic[i];
+    //     var desc = ''
+    //     if (e.name === 'x' || e.name === 'y') {
+    //         desc = desc.concat('The ' + e.name + '-axis shows the genome.');
+    //     } else if (e.name === 'xe' || e.name === 'ye') {
+    //         desc = desc.concat('');
+    //     } else if (e.name === 'x1' || e.name === 'x1e' || e.name === 'y1' || e.name === 'y1e') {
+    //         desc = desc.concat('');
+    //     }
         
-        track.appearance.details.encodings.encodingDeepQuantitative[i].description = '';
-    }
+    //     track.appearance.details.encodings.encodingDeepGenomic[i].description = desc;
+    // }
+
+    // for (let i = 0; i < track.appearance.details.encodings.encodingDeepQuantitative.length; i++) {
+    //     const e = track.appearance.details.encodings.encodingDeepQuantitative[i].name;
+        
+    //     track.appearance.details.encodings.encodingDeepQuantitative[i].description = '';
+    // }
 
 
-    for (let i = 0; i < track.appearance.details.encodings.encodingDeepNominal.length; i++) {
-        const e = track.appearance.details.encodings.encodingDeepNominal[i];
-        var desc = '';
-        if (e.name === 'row') {
-            desc = desc.concat('The chart is stratified by rows for the individual categories.');
-        } else if (e.name === 'xe' || e.name === 'ye') {
-            desc = desc.concat('The end of the ' + markToText[mark] + ' is stratified by rows for the individual categories.');
-        }
-        if (e.name === 'xe' || e.name === 'ye') {
-            desc = desc.concat('');
-        }
-        if (e.name === 'x1' || e.name === 'x1e' || e.name === 'y1' || e.name === 'y1e') {
-            desc = desc.concat('');
-        }
+    // for (let i = 0; i < track.appearance.details.encodings.encodingDeepNominal.length; i++) {
+    //     const e = track.appearance.details.encodings.encodingDeepNominal[i];
+    //     var desc = '';
+    //     if (e.name === 'row') {
+    //         desc = desc.concat('The chart is stratified by rows for the individual categories.');
+    //     } else if (e.name === 'xe' || e.name === 'ye') {
+    //         desc = desc.concat('The end of the ' + markToText[mark] + ' is stratified by rows for the individual categories.');
+    //     }
+    //     if (e.name === 'xe' || e.name === 'ye') {
+    //         desc = desc.concat('');
+    //     }
+    //     if (e.name === 'x1' || e.name === 'x1e' || e.name === 'y1' || e.name === 'y1e') {
+    //         desc = desc.concat('');
+    //     }
         
-        track.appearance.details.encodings.encodingDeepNominal[i].description = desc;
-    }
+    //     track.appearance.details.encodings.encodingDeepNominal[i].description = desc;
+    // }
+
     // SUPPORTED_CHANNELS.forEach(k => {
     //     // const c = track.appearance.details.encodings.encodingDeepGenomic[k];
     //     if (IsChannelDeep(c)) {
@@ -247,23 +262,6 @@ function addEncodingDescriptions(track: AltTrack) {
 
 }
 
-
-function addTrackAppearanceDescription(altTrack: AltTrack) {
-    //altTrack.description = 'Nu echt iets.'
-    const appearanceDet = altTrack.appearance.details;
-    var desc = ''
-
-
-    if (altTrack.type !== 'unknown') {
-        trackAppearanceKnownType(altTrack);
-    } else {
-        trackAppearanceUnknownType(altTrack);
-    }
-
-
-
-    
-}
 
 
 function trackAppearanceKnownType(altTrack: AltTrack) {

@@ -182,7 +182,7 @@ function altSingleTrack(
     altTrack.data = data;
     
     // determine type if possible
-    altTrack.type = determineSpecialCases(altTrack);
+    // altTrack.type = determineSpecialCases(altTrack);
 
     // empty description, to be filled in.
     altTrack.description = '';

@@ -100,7 +100,7 @@ function createTreeTrackMUI(t: AltTrack) {
                     {createTreeItemLeaf('T-'+t.uid+'-details-app-desc', 'Description', t.appearance.description)}
                     <TreeItem key={'T-'+t.uid+'-details-app-details'} nodeId={'T-'+t.uid+'-details-app-details'} label={'Details'}>
                         {createTreeItemLeaf('T-'+t.uid+'-details-pos-details-mark', 'Mark', t.appearance.details.mark)} 
-                            <TreeItem key={'T-'+t.uid+'-details-app-details-encodings'} nodeId={'T-'+t.uid+'-details-app-encodings'} label={'Encodings'}>
+                            {/* <TreeItem key={'T-'+t.uid+'-details-app-details-encodings'} nodeId={'T-'+t.uid+'-details-app-encodings'} label={'Encodings'}>
                                 <TreeItem key={'T-'+t.uid+'-details-app-details-encodings-field'} nodeId={'T-'+t.uid+'-details-app-encodings-field'} label={'Encodings dependent on data fields'}>
                                     {Object.keys(t.appearance.details.encodings.encodingField).map(e => (
                                         <TreeItem key={'T-'+t.uid+'-details-app-details-encodings-field-'+e} nodeId={'T-'+t.uid+'-details-app-encodings-field-'+e} label={e}>
@@ -119,7 +119,7 @@ function createTreeTrackMUI(t: AltTrack) {
                                         </TreeItem>
                                     ))}
                                 </TreeItem>
-                            </TreeItem>
+                            </TreeItem> */}
                         {createTreeItemLeaf('T-'+t.uid+'-details-pos-details-layout', 'Layout (linear or circular)', t.appearance.details.layout)} 
                         {createTreeItemLeaf('T-'+t.uid+'-details-pos-details-overlaid', 'Overlaid', t.appearance.details.overlaid)}   
                     </TreeItem>

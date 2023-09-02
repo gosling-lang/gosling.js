@@ -4,7 +4,7 @@ import { getAltSpec } from './alt-from-spec';
 import { addDescriptions } from './alt-to-text';
 import { altUpdateSpecWithData } from './alt-from-data';
 
-
+// this function is only called once every time a spec is compiled
 export function getAlt(
     specTraversed: GoslingSpec,
     specOriginal: GoslingSpec
@@ -22,6 +22,7 @@ export function getAlt(
     return altSpec;
 }
 
+// this function is called every time the data is updated
 export function updateAlt(
     altGoslingSpec: AltGoslingSpec, 
     id: string, 
