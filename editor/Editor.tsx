@@ -1434,7 +1434,7 @@ function Editor(props: RouteComponentProps) {
                                         
                                         <div className={`tabContent ${additionalInfoTab == 'altText' ? 'show' : 'hide'}`}>
                                             <div className="editor-alt-text-panel">
-                                                <button
+                                                {/* <button
                                                     title="Refresh text description"
                                                     className="alt-text-refresh-button"
                                                     onClick={() => setRefreshAlt(!refreshAlt)}
@@ -1442,7 +1442,7 @@ function Editor(props: RouteComponentProps) {
                                                     {getIconSVG(ICONS.REFRESH, 23, 23)}
                                                     <br />
                                                     {'REFRESH TEXT DESCRIPTIONS'}
-                                                </button>
+                                                </button> */}
                                                                                         
                                                 {previewAlt.current.length > selectedPreviewAlt &&
                                                 previewAlt.current[selectedPreviewAlt] &&
