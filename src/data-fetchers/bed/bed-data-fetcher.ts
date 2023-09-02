@@ -8,7 +8,7 @@ import Worker from './bed-worker.ts?worker&inline';
 import { computeChromSizes } from '../../core/utils/assembly';
 
 import type { ModuleThread } from 'threads';
-import type { Assembly, BedData } from '../../core/gosling.schema';
+import type { Assembly, BedData } from '@gosling-lang/gosling-schema';
 import type { WorkerApi, TilesetInfo } from './bed-worker';
 import type { BedTile, EmptyTile } from './bed-worker';
 import type { TabularDataFetcher } from '../utils';

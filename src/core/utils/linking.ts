@@ -1,5 +1,5 @@
-import { IsChannelDeep } from '../gosling.schema.guards';
-import type { HiGlassModel } from '../higlass-model';
+import { IsChannelDeep } from '@gosling-lang/gosling-schema';
+import type { HiGlassModel } from '../../compiler/higlass-model';
 import { SUPPORTED_CHANNELS } from '../mark';
 import { resolveSuperposedTracks } from './overlay';
 
@@ -9,14 +9,14 @@ import { resolveSuperposedTracks } from './overlay';
 export function getLinkingInfo(hgModel: HiGlassModel) {
     const linkingInfo: {
         layout: 'circular' | 'linear';
-        viewId: string;
+        hgViewId: string;
         linkId: string;
         isBrush: boolean;
         style: any;
     }[] = [];
 
     hgModel.spec().views.forEach(v => {
-        const viewId = v.uid;
+        const hgViewId = v.uid;
 
         // TODO: Better way to get view specifications?
         // Get spec of a view
@@ -31,7 +31,7 @@ export function getLinkingInfo(hgModel: HiGlassModel) {
             }
         }
 
-        if (!viewId || !spec) return;
+        if (!hgViewId || !spec) return;
 
         const resolved = resolveSuperposedTracks(spec);
 
@@ -42,7 +42,7 @@ export function getLinkingInfo(hgModel: HiGlassModel) {
                 if (IsChannelDeep(channel) && 'linkingId' in channel && channel.linkingId) {
                     linkingInfo.push({
                         layout: spec.layout === 'circular' ? 'circular' : 'linear',
-                        viewId,
+                        hgViewId,
                         linkId: channel.linkingId,
                         isBrush: spec.mark === 'brush',
                         style: {

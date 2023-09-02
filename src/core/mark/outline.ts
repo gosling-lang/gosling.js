@@ -1,5 +1,5 @@
-import type { GoslingTrackModel } from '../gosling-track-model';
-import { IsChannelDeep } from '../gosling.schema.guards';
+import type { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
+import { IsChannelDeep } from '@gosling-lang/gosling-schema';
 import colorToHex from '../utils/color-to-hex';
 import type { CompleteThemeDeep } from '../utils/theme';
 

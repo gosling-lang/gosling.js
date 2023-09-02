@@ -1,4 +1,4 @@
-import type { Assembly, ChromSizes, GenomicPosition } from '@gosling.schema';
+import type { Assembly, ChromSizes, GenomicPosition } from '@gosling-lang/gosling-schema';
 import {
     CHROM_SIZE_HG16,
     CHROM_SIZE_HG17,
@@ -18,19 +18,48 @@ export interface ChromSize {
 
 /**
  * Get relative chromosome position (e.g., `100` => `{ chromosome: 'chr1', position: 100 }`)
+ * @param absPos number which is the absolute chromosome position
+ * @param assembly the assembly used to calculate which chromosome position
+ * @param returnWithinAssembly If true, then if the absolute position is before the first chromosome, it returns the
+ * first position of the first chromosome. If the absolute position is after the last chromosome, it returns the last
+ * position of the last chromosome
+ * @returns the genomic position of the absPos
  */
-export function getRelativeGenomicPosition(absPos: number, assembly?: Assembly): GenomicPosition {
-    const [chromosome, absInterval] = Object.entries(computeChromSizes(assembly).interval).find(d => {
-        const [start, end] = d[1];
-        return start <= absPos && absPos < end;
-    }) ?? [null, null];
-
-    if (!chromosome || !absInterval) {
-        // The number is out of range
+export function getRelativeGenomicPosition(
+    absPos: number,
+    assembly?: Assembly,
+    returnWithinAssembly = false
+): GenomicPosition {
+    const chrSizes = Object.entries(computeChromSizes(assembly).interval);
+    const minPosChr = { chromosome: 'unknown', position: Infinity } as GenomicPosition;
+    const maxPosChr = { chromosome: 'unknown', position: 0 } as GenomicPosition;
+    for (const chrSize of chrSizes) {
+        const [chromosome, absInterval] = chrSize;
+        const [start, end] = absInterval;
+        // absPos was found within this chromosome
+        if (start <= absPos && absPos < end) {
+            return { chromosome, position: absPos - start } as GenomicPosition;
+        }
+        // Update the min and max chromosomes found
+        if (start < minPosChr.position) {
+            minPosChr.chromosome = chromosome;
+            minPosChr.position = start;
+        }
+        if (end > maxPosChr.position) {
+            maxPosChr.chromosome = chromosome;
+            maxPosChr.position = end;
+        }
+    }
+    if (returnWithinAssembly) {
+        // Return either the min or max chromosome position
+        if (absPos < minPosChr.position) {
+            return minPosChr;
+        } else {
+            return maxPosChr;
+        }
+    } else {
         return { chromosome: 'unknown', position: absPos };
     }
-
-    return { chromosome, position: absPos - absInterval[0] };
 }
 
 /**

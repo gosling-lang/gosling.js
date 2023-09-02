@@ -5,7 +5,7 @@
 import { spawn } from 'threads';
 import Worker from './bam-worker.ts?worker&inline';
 
-import type { BamData, Assembly } from '@gosling.schema';
+import type { BamData, Assembly } from '@gosling-lang/gosling-schema';
 import type { ModuleThread } from 'threads';
 import type { WorkerApi, TilesetInfo, Tiles, Segment, Junction, SegmentWithMate } from './bam-worker';
 import { computeChromSizes } from '../../core/utils/assembly';

@@ -1,4 +1,4 @@
-import type { GoslingSpec, SingleTrack } from '@gosling.schema';
+import type { GoslingSpec, SingleTrack } from '@gosling-lang/gosling-schema';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 import { CytoBands } from './ideograms';
 

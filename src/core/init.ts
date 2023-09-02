@@ -2,9 +2,10 @@
 import higlassRegister from 'higlass-register';
 // @ts-ignore
 import { TextTrack } from 'higlass-text';
-import { AxisTrack } from '@gosling-genomic-axis';
-import { BrushTrack } from '@gosling-brush';
-import { GoslingTrack } from '@gosling-track';
+import { AxisTrack } from '@gosling-lang/gosling-genomic-axis';
+import { BrushTrack } from '@gosling-lang/gosling-brush';
+import { GoslingTrack } from '@gosling-lang/gosling-track';
+import { DummyTrack } from '@gosling-lang/dummy-track';
 import * as dataFetchers from '@data-fetchers';
 
 let once = false;
@@ -62,6 +63,15 @@ export function init() {
         name: 'BrushTrack',
         track: BrushTrack,
         config: BrushTrack.config
+    });
+
+    /**
+     * Register a dummy plugin track to HiGlassComponent
+     */
+    higlassRegister({
+        name: 'DummyTrack',
+        track: DummyTrack,
+        config: DummyTrack.config
     });
 
     /**

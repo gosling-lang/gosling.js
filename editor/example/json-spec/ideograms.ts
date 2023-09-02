@@ -1,4 +1,4 @@
-import type { GoslingSpec, OverlaidTracks, Track } from '@gosling.schema';
+import type { GoslingSpec, OverlaidTracks, Track } from '@gosling-lang/gosling-schema';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 export const CytoBands: OverlaidTracks = {

@@ -1,12 +1,12 @@
-import type { AxisPosition, SingleTrack, OverlaidTrack, Track, ChannelDeep, DataDeep } from '../gosling.schema';
-import { IsChannelDeep, IsDataTrack, IsOverlaidTrack, IsSingleTrack } from '../gosling.schema.guards';
+import type { AxisPosition, SingleTrack, OverlaidTrack, Track, ChannelDeep, DataDeep } from '@gosling-lang/gosling-schema';
+import { IsChannelDeep, IsDataTrack, IsOverlaidTrack, IsSingleTrack, IsDummyTrack } from '@gosling-lang/gosling-schema';
 
 /**
  * Resolve superposed tracks into multiple track specifications.
  * Some options are corrected to ensure the resolved tracks use consistent visual properties, such as the existence of the axis for genomic coordinates.
  */
 export function resolveSuperposedTracks(track: Track): SingleTrack[] {
-    if (IsDataTrack(track)) {
+    if (IsDataTrack(track) || IsDummyTrack(track)) {
         // no BasicSingleTrack to return
         return [];
     }
@@ -77,9 +77,7 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
                 return [t];
             }
 
-            const base: SingleTrack = JSON.parse(JSON.stringify(t));
-            delete (base as Partial<OverlaidTrack>).overlay; // remove `overlay` from the base spec
-
+            const base: Partial<OverlaidTrack> = {...t, id: undefined, overlay: undefined };
             const spread: Track[] = [];
             const original: OverlaidTrack = JSON.parse(JSON.stringify(base));
             original.overlay = [];

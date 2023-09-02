@@ -1,4 +1,4 @@
-import type { Assembly } from '@gosling.schema';
+import type { Assembly } from '@gosling-lang/gosling-schema';
 import {
     getChromInterval,
     getChromTotalSize,
@@ -41,6 +41,18 @@ describe('Assembly', () => {
             chromosome: 'unknown',
             position: outOfPos
         });
+        expect(getRelativeGenomicPosition(outOfPos, 'hg38', true)).toMatchInlineSnapshot(`
+          {
+            "chromosome": "chrY",
+            "position": 3088269832,
+          }
+        `);
+        expect(getRelativeGenomicPosition(-1, 'hg38', true)).toMatchInlineSnapshot(`
+          {
+            "chromosome": "chr1",
+            "position": 0,
+          }
+        `);
     });
     it('Parse string to genomic positions', () => {
         const customChromSizes: Assembly = [

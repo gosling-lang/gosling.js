@@ -7,9 +7,9 @@ import type {
     TemplateTrackDef,
     TemplateTrackMappingDef,
     Track
-} from '../gosling.schema';
-import { IsTemplateTrack } from '../gosling.schema.guards';
-import { traverseTracks } from './spec-preprocess';
+} from '@gosling-lang/gosling-schema';
+import { IsTemplateTrack } from '@gosling-lang/gosling-schema';
+import { traverseTracks } from '../../compiler/spec-preprocess';
 
 /**
  * Track templates officially supported by Gosling.js.

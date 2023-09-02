@@ -8,7 +8,7 @@ import Worker from './vcf-worker.ts?worker&inline';
 import { computeChromSizes } from '../../core/utils/assembly';
 
 import type { ModuleThread } from 'threads';
-import type { Assembly, VcfData } from '@gosling.schema';
+import type { Assembly, VcfData } from '@gosling-lang/gosling-schema';
 import type { WorkerApi, TilesetInfo } from './vcf-worker';
 import type { TabularDataFetcher } from '../utils';
 import { getSubstitutionType, getMutationType } from './utils';

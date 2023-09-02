@@ -1,4 +1,4 @@
-import type { GoslingSpec } from '@gosling.schema';
+import type { GoslingSpec } from '@gosling-lang/gosling-schema';
 
 export const EX_SPEC_SASHIMI: GoslingSpec = {
     title: 'Sashimi Plot',

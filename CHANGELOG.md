@@ -1,3 +1,52 @@
+## [0.10.1](https://github.com/gosling-lang/gosling.js/compare/v0.10.0...v0.10.1) (2023-08-02)
+
+
+### Bug Fixes
+
+* **data-fetcher:** gmod/gff stream issue ([#957](https://github.com/gosling-lang/gosling.js/issues/957)) ([c698785](https://github.com/gosling-lang/gosling.js/commit/c6987855c73e82a44a0ea10d7f822f121d480943))
+
+
+
+# [0.10.0](https://github.com/gosling-lang/gosling.js/compare/v0.9.33...v0.10.0) (2023-08-01)
+
+
+### Bug Fixes
+
+* **core:** do not override ID in tracks from views ([#954](https://github.com/gosling-lang/gosling.js/issues/954)) ([6654e0d](https://github.com/gosling-lang/gosling.js/commit/6654e0d315a40978ce26d97fdcf38168472a088b))
+* **data-fetcher:** correctly calculate the distance to previous mutation in VCF (`DISTPREV`) ([#949](https://github.com/gosling-lang/gosling.js/issues/949)) ([ef5f58f](https://github.com/gosling-lang/gosling.js/commit/ef5f58f43ee33ca2de068a547f21ed1767426437))
+* **track:** remove private properties from draw() ([#952](https://github.com/gosling-lang/gosling.js/issues/952)) ([529e9a3](https://github.com/gosling-lang/gosling.js/commit/529e9a38484fe81b624292a582870ae0cc144d28))
+
+
+### Features
+
+* **api:** consistent track/view IDs for JS API ([#944](https://github.com/gosling-lang/gosling.js/issues/944)) ([1c2b766](https://github.com/gosling-lang/gosling.js/commit/1c2b7669660856cae98f88ba38d9326b788c75e1))
+* **api:** onNewTrack, onNewView ([#943](https://github.com/gosling-lang/gosling.js/issues/943)) ([a98ee69](https://github.com/gosling-lang/gosling.js/commit/a98ee69367273943becbeae8696b1511b35f04e4))
+* **api:** subscription for genomic axis changes ([#935](https://github.com/gosling-lang/gosling.js/issues/935)) ([a2c36f5](https://github.com/gosling-lang/gosling.js/commit/a2c36f500f0d8e1181c9c72a970eb385af4fe3b5))
+* **core, api, editor:** support using  view IDs ([#939](https://github.com/gosling-lang/gosling.js/issues/939)) ([cd8d300](https://github.com/gosling-lang/gosling.js/commit/cd8d3000f7e1e86422ec89f765585f6056d64a9f))
+* **data-fetcher:** GFF3 with tabix ([#923](https://github.com/gosling-lang/gosling.js/issues/923)) ([526882f](https://github.com/gosling-lang/gosling.js/commit/526882fb82463ad4262568d9569840431c709fc9))
+* **track:** dummy-track ([#946](https://github.com/gosling-lang/gosling.js/issues/946)) ([ee02d38](https://github.com/gosling-lang/gosling.js/commit/ee02d38312ae7431ccd460a6d5e1904013488427))
+
+
+
+## [0.9.33](https://github.com/gosling-lang/gosling.js/compare/v0.9.32...v0.9.33) (2023-07-11)
+
+
+### Bug Fixes
+
+* **data-fetcher:** Bump tabix-js version to fix errors when loading BED files ([#938](https://github.com/gosling-lang/gosling.js/issues/938)) ([d901232](https://github.com/gosling-lang/gosling.js/commit/d9012326f4eadbf0c50f3c70424951c4735dcb69))
+* **data-fetcher:** support genomicFieldsToConvert ([#932](https://github.com/gosling-lang/gosling.js/issues/932)) ([c94ecae](https://github.com/gosling-lang/gosling.js/commit/c94ecaea5ac010e17603816c6bf01c2d2b2a086c))
+
+
+
+## [0.9.32](https://github.com/gosling-lang/gosling.js/compare/v0.9.31...v0.9.32) (2023-07-05)
+
+
+### Bug Fixes
+
+* fix duplicated data and odd tile load timing in the bam data fetcher ([#927](https://github.com/gosling-lang/gosling.js/issues/927)) ([4e52907](https://github.com/gosling-lang/gosling.js/commit/4e52907b8ed79cc08d8c9ce1b823b72f026a4004))
+
+
+
 ## [0.9.31](https://github.com/gosling-lang/gosling.js/compare/v0.9.30...v0.9.31) (2023-05-31)
 
 

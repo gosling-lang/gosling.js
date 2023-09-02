@@ -1,4 +1,4 @@
-import { DEFAULT_BACKUP_COLOR } from '../defaults';
+import { DEFAULT_BACKUP_COLOR } from '../../compiler/defaults';
 import colorToHex from './color-to-hex';
 
 describe('Color-To-Hex', () => {

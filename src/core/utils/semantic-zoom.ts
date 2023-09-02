@@ -1,4 +1,4 @@
-import type { LogicalOperation } from '../gosling.schema';
+import type { LogicalOperation } from '@gosling-lang/gosling-schema';
 
 export function getMaxZoomLevel() {
     // TODO: How to correctly calculate maxZoomLevel?

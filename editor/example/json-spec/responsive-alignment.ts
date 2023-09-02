@@ -1,4 +1,4 @@
-import type { OverlaidTracks, SingleTrack, SingleView } from '@gosling.schema';
+import type { OverlaidTracks, SingleTrack, SingleView } from '@gosling-lang/gosling-schema';
 import type { GoslingSpec } from 'gosling.js';
 import { CHANNEL_DEFAULTS } from '../../../src/core/channel';
 

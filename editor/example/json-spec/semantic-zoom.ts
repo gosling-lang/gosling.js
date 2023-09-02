@@ -1,4 +1,4 @@
-import type { GoslingSpec, OverlaidTracks } from '@gosling.schema';
+import type { GoslingSpec, OverlaidTracks } from '@gosling-lang/gosling-schema';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 import { EX_SPEC_PATHOGENIC } from './pathogenic';
 

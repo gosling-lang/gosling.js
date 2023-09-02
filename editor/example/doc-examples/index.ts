@@ -1,5 +1,6 @@
 export { AREA, LINE, POINT, BAR } from './single-mark';
 export { BRUSH } from './brush';
+export { DUMMY_TRACK } from './dummy-track';
 export { LINK } from './link';
 export { LINKING_TRACKS } from './linking-tracks';
 export { OVERLAY_TRACKS_BAR_POINT } from './overlay-tracks-bar-point';
@@ -14,3 +15,4 @@ export { TRIANGLE } from './triangle';
 export { VCF_INDELS } from './vcf-indels';
 export { VCF_POINT_MUTATIONS } from './vcf-point-mutations';
 export { BED_DEMO } from './bed-demo';
+export { GFF_DEMO } from './gff-demo';

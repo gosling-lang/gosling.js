@@ -1,7 +1,7 @@
-import type { Tile } from '@gosling-track';
-import type { Channel } from '@gosling.schema';
-import type { GoslingTrackModel } from '../gosling-track-model';
-import { getValueUsingChannel } from '../gosling.schema.guards';
+import type { Tile } from '@gosling-lang/gosling-track';
+import type { Channel } from '@gosling-lang/gosling-schema';
+import type { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
+import { getValueUsingChannel } from '@gosling-lang/gosling-schema';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
 
@@ -142,7 +142,7 @@ export function drawRule(HGC: import('@higlass/types').HGC, trackInfo: any, tile
                         0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
                     );
 
-                    const midR = trackOuterRadius - ((rowPosition + y) / trackHeight) * trackRingSize;
+                    const midR = trackOuterRadius - ((rowPosition + rowHeight - y) / trackHeight) * trackRingSize;
                     const farR = midR + strokeWidth / 2.0;
                     const nearR = midR - strokeWidth / 2.0;
 

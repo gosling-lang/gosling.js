@@ -55,15 +55,16 @@ export default function() {
 
 const alias = {
     'gosling.js': path.resolve(__dirname, './src/index.ts'),
-    '@gosling.schema': path.resolve(__dirname, './src/core/gosling.schema'),
-    '@higlass.schema': path.resolve(__dirname, './src/core/higlass.schema'),
-    "@gosling-track": path.resolve(__dirname, "./src/gosling-track/index.ts"),
-    "@gosling-mouse-event": path.resolve(__dirname, "./src/gosling-mouse-event/index.ts"),
-    "@gosling-genomic-axis": path.resolve(__dirname, "./src/gosling-genomic-axis/index.ts"),
-    "@gosling-brush": path.resolve(__dirname, "./src/gosling-brush/index.ts"),
+    '@gosling-lang/gosling-schema': path.resolve(__dirname, './src/gosling-schema/index.ts'),
+    '@gosling-lang/higlass-schema': path.resolve(__dirname, './src/higlass-schema/index.ts'),
+    "@gosling-lang/gosling-track": path.resolve(__dirname, "./src/tracks/gosling-track/index.ts"),
+    "@gosling-lang/gosling-genomic-axis": path.resolve(__dirname, "./src/tracks/gosling-genomic-axis/index.ts"),
+    "@gosling-lang/gosling-brush": path.resolve(__dirname, "./src/tracks/gosling-brush/index.ts"),
+    "@gosling-lang/dummy-track": path.resolve(__dirname, "./src/tracks/dummy-track/index.ts"),
     "@data-fetchers": path.resolve(__dirname, "./src/data-fetchers/index.ts"),
     zlib: path.resolve(__dirname, './src/alias/zlib.ts'),
-    uuid: path.resolve(__dirname, './node_modules/uuid/dist/esm-browser/index.js')
+    uuid: path.resolve(__dirname, './node_modules/uuid/dist/esm-browser/index.js'),
+    stream: path.resolve(__dirname, './node_modules/stream-browserify')
 };
 
 const skipExt = new Set(['@gmod/bbi', 'uuid']);

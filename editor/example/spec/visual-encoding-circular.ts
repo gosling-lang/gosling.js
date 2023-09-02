@@ -1,4 +1,4 @@
-import type { GoslingSpec, View, MultivecData, Tooltip } from '@gosling.schema';
+import type { GoslingSpec, View, MultivecData, Tooltip } from '@gosling-lang/gosling-schema';
 
 const size = { width: 350, height: 130 };
 const data: MultivecData = {
