@@ -5,7 +5,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import TreeItem from '@mui/lab/TreeItem';
 
 import type { AltGoslingSpec, AltTrack } from 'src/alt-text/alt-gosling-schema';
-import type { Datum } from 'src/core/gosling.schema';
+import type { Datum } from '@gosling-lang/gosling-schema';
 
 
 function createTreeItemLeaf(id: string, label: string, item: string | number | boolean) {

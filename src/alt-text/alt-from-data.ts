@@ -1,6 +1,6 @@
 //const _spec = models[0]?.spec(); _spec?.id
 import type { AltGoslingSpec, AltTrackDataFields, AltDataStatistics } from './alt-gosling-schema';
-import type { Datum } from '../core/gosling.schema';
+import type { Datum } from '@gosling-lang/gosling-schema';
 
 export function altRetrieveDataStatistics(id: string, flatTileData: Datum[], dataFields: AltTrackDataFields): AltDataStatistics {
 
