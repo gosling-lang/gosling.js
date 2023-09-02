@@ -3,7 +3,7 @@ import type { AltGoslingSpec, AltTrack } from './alt-gosling-schema';
 import { attributeExists, attributeExistsReturn, attributeExistsAndChildHasValue, arrayToString } from './util';
 import {
     IsChannelValue, IsChannelDeep
-} from '../core/gosling.schema.guards';
+} from '@gosling-lang/gosling-schema';
 import { SUPPORTED_CHANNELS } from './../core/mark/index';
 
 

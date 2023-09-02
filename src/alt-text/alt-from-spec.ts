@@ -1,9 +1,9 @@
-import type { GoslingSpec, SingleTrack,ChannelTypes, View, PartialTrack, RootSpecWithSingleView, ResponsiveSpecOfSingleView, RootSpecWithMultipleViews, ResponsiveSpecOfMultipleViews, ChannelValue, Encoding, DataDeep, MultivecData, X, Y, Color, Size, Text, Stroke, StrokeWidth, Opacity, Row } from '../core/gosling.schema';
-import type { GoslingSpecFixed, AltTrackDataFields, AltSpecComposition, AltTrackPosition, AltTrackAppearance, AltTrackData, AltTrackDataDetails, AltTrackAppearanceDetails, AltTrackPositionDetails, AltTrack, AltEncodingSeparated, TrackFixed, RootSpecWithSingleViewFixed, AltCounter, AltParentValues, AltGoslingSpec, SingleTrackFixed, EncodingValueSingle, EncodingDeepSingle } from './alt-gosling-schema';
+import type { GoslingSpec, SingleTrack, ChannelTypes, View, PartialTrack, RootSpecWithSingleView, ResponsiveSpecOfSingleView, RootSpecWithMultipleViews, ResponsiveSpecOfMultipleViews, ChannelValue, Encoding, DataDeep, MultivecData, X, Y, Color, Size, Text, Stroke, StrokeWidth, Opacity, Row } from '@gosling-lang/gosling-schema';
+import type { AltTrackDataFields, AltSpecComposition, AltTrackPosition, AltTrackAppearance, AltTrackData, AltTrackDataDetails, AltTrackAppearanceDetails, AltTrackPositionDetails, AltTrack, AltEncodingSeparated, AltCounter, AltParentValues, AltGoslingSpec, EncodingValueSingle, EncodingDeepSingle } from './alt-gosling-schema';
 import { attributeExists, attributeExistsDefaultString, attributeHasChildValue, attributeExistsAndChildHasValue} from './util';
 import { SUPPORTED_CHANNELS } from './../core/mark/index';
 import { determineSpecialCases } from './special-cases';
-import { getGenomicChannelFromTrack } from './../core/utils/validate';
+import { getGenomicChannelFromTrack } from './../gosling-schema/validate';
 
 import {
     // single tracks
@@ -17,7 +17,7 @@ import {
     // other
     IsChannelDeep,
     IsChannelValue
-} from '../core/gosling.schema.guards';
+} from '@gosling-lang/gosling-schema';
 
 
 

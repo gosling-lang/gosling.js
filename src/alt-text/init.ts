@@ -1,4 +1,4 @@
-import type { GoslingSpec, Datum } from '../core/gosling.schema';
+import type { GoslingSpec, Datum } from '@gosling-lang/gosling-schema';
 import type {  AltGoslingSpec, AltTrack } from './alt-gosling-schema';
 import { getAltSpec } from './alt-from-spec';
 import { addDescriptions } from './alt-to-text';
