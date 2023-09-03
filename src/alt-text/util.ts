@@ -23,5 +23,12 @@ export function attributeExistsAndChildHasValue(object: any, attribute: any, att
 };
 
 export function arrayToString(arr: string[] | number[]) {
-    return arr.slice(0, -1).join(', ') + ' and ' + arr.slice(-1);
+    if (arr.length === 1) {
+        return arr;
+    } else {
+        return arr.slice(0, -1).join(', ') + ' and ' + arr.slice(-1);
+    } 
 }
+
+export const markToText = new Map([['point', 'points'], ['line', 'lines'], ['bar', 'bars'], ['rect', 'rectangles'], ['area', 'area displayed'], ['withinLink', 'connections'], ['betweenLink', 'connections'], ['triangleLeft', 'triangles'], ['triangleRight', 'triangles'], ['triangleBottom', 'triangles']]);
+export const channelToText = new Map([['y', 'height'], ['color', 'color'], ['strokeWidth', 'stroke width'], ['opacity', 'opacity'], ['text', 'text']]);

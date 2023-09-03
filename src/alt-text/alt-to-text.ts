@@ -1,10 +1,7 @@
-import { isArray } from 'lodash';
 import type { AltGoslingSpec, AltTrack } from './alt-gosling-schema';
-import { attributeExists, attributeExistsReturn, attributeExistsAndChildHasValue, arrayToString } from './util';
-import {
-    IsChannelValue, IsChannelDeep
-} from '@gosling-lang/gosling-schema';
-import { SUPPORTED_CHANNELS } from './../core/mark/index';
+import { attributeExists, attributeExistsReturn, attributeExistsAndChildHasValue, arrayToString, markToText, channelToText } from './util';
+import { IsChannelValue, IsChannelDeep } from '@gosling-lang/gosling-schema';
+// import { SUPPORTED_CHANNELS } from './../core/mark/index';
 
 
 export function addDescriptions(altGoslingSpec: AltGoslingSpec) {
@@ -197,206 +194,102 @@ function addTrackAppearanceDescriptions(altGoslingSpec: AltGoslingSpec) {
 
 
 function addEncodingDescriptions(track: AltTrack) {
-    const mark = track.appearance.details.mark as String;
-    const markToText = {'point': 'points', 'line': 'line', 'rect': 'rectangles', 'area': 'area displayed', 'withinLink': 'connections', 'betweenLink': 'connections', 'triangleLeft': 'triangles', 'triangleRight': 'triangles', 'triangleBottom': 'triangles'};
-    const channelToText = {'y': 'height', 'color': 'color', 'strokeWidth': 'stroke width', 'opacity': 'opacity', 'text': 'text'};
+    const mark = track.appearance.details.mark as string;
+    
+    var descGenomic = '';
+    var descQuantitative = '';
+    var descNominal = '';
+    var descValue = '';
 
+    // genomic encodings
     let genomicEncodingsI = track.appearance.details.encodings.encodingDeepGenomic.map(o => o.name);
     if (genomicEncodingsI.includes('x') && genomicEncodingsI.includes('y')) {
-        
-    }
-
-    // for (let i = 0; i < track.appearance.details.encodings.encodingDeepGenomic.length; i++) {
-    //     const e = track.appearance.details.encodings.encodingDeepGenomic[i];
-    //     var desc = ''
-    //     if (e.name === 'x' || e.name === 'y') {
-    //         desc = desc.concat('The ' + e.name + '-axis shows the genome.');
-    //     } else if (e.name === 'xe' || e.name === 'ye') {
-    //         desc = desc.concat('');
-    //     } else if (e.name === 'x1' || e.name === 'x1e' || e.name === 'y1' || e.name === 'y1e') {
-    //         desc = desc.concat('');
-    //     }
-        
-    //     track.appearance.details.encodings.encodingDeepGenomic[i].description = desc;
-    // }
-
-    // for (let i = 0; i < track.appearance.details.encodings.encodingDeepQuantitative.length; i++) {
-    //     const e = track.appearance.details.encodings.encodingDeepQuantitative[i].name;
-        
-    //     track.appearance.details.encodings.encodingDeepQuantitative[i].description = '';
-    // }
-
-
-    // for (let i = 0; i < track.appearance.details.encodings.encodingDeepNominal.length; i++) {
-    //     const e = track.appearance.details.encodings.encodingDeepNominal[i];
-    //     var desc = '';
-    //     if (e.name === 'row') {
-    //         desc = desc.concat('The chart is stratified by rows for the individual categories.');
-    //     } else if (e.name === 'xe' || e.name === 'ye') {
-    //         desc = desc.concat('The end of the ' + markToText[mark] + ' is stratified by rows for the individual categories.');
-    //     }
-    //     if (e.name === 'xe' || e.name === 'ye') {
-    //         desc = desc.concat('');
-    //     }
-    //     if (e.name === 'x1' || e.name === 'x1e' || e.name === 'y1' || e.name === 'y1e') {
-    //         desc = desc.concat('');
-    //     }
-        
-    //     track.appearance.details.encodings.encodingDeepNominal[i].description = desc;
-    // }
-
-    // SUPPORTED_CHANNELS.forEach(k => {
-    //     // const c = track.appearance.details.encodings.encodingDeepGenomic[k];
-    //     if (IsChannelDeep(c)) {
-    //         if (c.type === 'genomic') {
-    //             encodingDeepGenomic.push({name: k, description: '', details: c});
-    //         } else if (c.type === 'quantitative') {
-    //             encodingDeepQuantitative.push({name: k, description: '', details: c});
-    //         } else {
-    //             encodingDeepNominal.push({name: k, description: '', details: c});
-    //         }
-    //     } else if (IsChannelValue(c)) {
-    //         encodingValue.push({name: k, description: '', details: c});
-    //     }
-    // });
-
-}
-
-
-
-function trackAppearanceKnownType(altTrack: AltTrack) {
-    var desc = ''
-
-    switch(altTrack.type) {
-        case 'bar chart': {
-    
-            var binSize = 1;
-            if (attributeExists(altTrack.appearance.details.encodings.encodingStatic, 'size')) {
-                var size = attributeExistsReturn(altTrack.appearance.details.encodings.encodingStatic, 'size');
-                binSize = size.value;
-            } else {
-                binSize = 1
-            }
-            desc = desc.concat('Bar chart.') 
-
-            if (altTrack.appearance.details.layout == 'linear') {
-                desc = desc.concat(' On the x-axis, the genome is shown. There are vertical bars, with a width of ', (binSize * 256).toString(), ' bp, which height corresponds to the expression on that section of the genome. ')
-            } else {
-                desc = desc.concat(' On the circular x-axis, the genome is shown. The height of the bars (pointing outwards of the circel), correspond to the expression on that section of the genome. The width of the bars is ', (binSize * 256).toString(), ' bp. ')
-            }
-
-            // // altTrack.appearance.details.encodings.encodingField // nominal field? 
-            // for {let i in Object.keys(altTrack.appearance.details.encodings.encodingField)} {
-            // }
-
-            if (altTrack.data.details.dataStatistics?.categories) {
-                desc = desc.concat(' There are ' + altTrack.data.details.dataStatistics?.categories.length + ' categories visible, spread ')
-            }
-            //categories
-            //if ()
-
-            break;
-        }
-
-        case 'line chart': {
-            break;
-        }
-
-        case 'heat map': {
-            break;
-        }
-
-        default: {
-            // move unknowntype here?
-        }
-
-    }
-
-    altTrack.description = desc;
-}
-
-
-function trackAppearanceDetails(altTrack: AltTrack) {
-    var desc = '';
-
-    var encodings = altTrack.appearance.details.encodings;
-
-    // start with genomic axis
-    if (encodings.encodingField.x) {
-        desc = desc.concat('The genome is shown on the x-axis.')
-    } else if (encodings.encodingField.y) {
-        if (IsChannelDeep(encodings.encodingField.y)) {
-            if(encodings.encodingField.y.type === 'genomic') {
-                desc = desc.concat('The genome is shown on the y-axis.')
-            }
-        }
-        desc = desc.concat('')
-    }
-
-    // then expression
-
-    // then categories
-    if (encodings.encodingField.color) {
-        if (IsChannelValue(encodings.encodingField.color)) {
-            desc = desc.concat('The color of the ' + altTrack.appearance.details.mark + 's is ' + encodings.encodingField.color.value);
+        descGenomic = descGenomic.concat('The genome is shown on both the x- and y-axes.')
+        if (genomicEncodingsI.includes('xe') && genomicEncodingsI.includes('ye')) {
+            descGenomic = descGenomic.concat(' Each displays genomic intervals.')
+        } else if (genomicEncodingsI.includes('xe')) {
+            descGenomic = descGenomic.concat(' The genome on the x-axis displays genomic intervals.')
+        } else if (genomicEncodingsI.includes('ye')) {
+            descGenomic = descGenomic.concat(' The genome on the y-axis displays genomic intervals.')
         } else {
-            desc = desc.concat('The color of the ' + altTrack.appearance.details.mark + 's reflects the categories.');
         }
-    }
-
-    // then channel values
-    
-}
-
-function trackAppearanceUnknownType(altTrack: AltTrack) {
-    var desc = ''
-
-    desc = desc.concat('Visualization.')
-
-    if (altTrack.title !== 'unknown') {
-        //desc = desc.concat(' titled: ' + altTrack.title + '.');
-    }
-
-    var appearanceDet = altTrack.appearance.details;
-   
-    const encodingImportant = ['x', 'y', 'row', 'color']
-    let _first = true;
-    for (let encoding of encodingImportant) {
-        if (attributeExists(appearanceDet.encodings.encodingField, encoding)) {
-            let encodingObj = appearanceDet.encodings.encodingField[encoding];
-            if (_first) {
-                desc = desc.concat(' with ')
-                _first = false;
-            } else {
-                desc = desc.concat(', ')
+    } else {
+        if (genomicEncodingsI.includes('x')) {
+            let add = ''
+            if (genomicEncodingsI.includes('xe')) {
+                add = 'in intervals'
             }
-            desc = desc.concat(encodingObj.type + ' ' + encoding + '-axis')
+            descGenomic = descGenomic.concat('The genome is shown ' + add + ' on the x-axis.')
+        }
+
+        if (genomicEncodingsI.includes('y')) {
+            let add = ''
+            if (genomicEncodingsI.includes('ye')) {
+                add = 'in intervals'
+            }
+            descGenomic = descGenomic.concat('The genome is shown ' + add + ' on the y-axis.')
+        }
+    }
+    if (attributeExists(track.data.details.data, 'binSize')) {
+        let bin = attributeExistsReturn(track.data.details.data, 'binSize') * 256;
+        if (typeof bin === 'number') {
+            descGenomic = descGenomic.concat(' Data is binned in intervals of ' +  + ' basepairs.');
         }
     }
 
-    if (attributeExistsAndChildHasValue(appearanceDet.encodings.encodingField, 'x', 'type', 'genomic') || (attributeExistsAndChildHasValue(appearanceDet.encodings.encodingField, 'y', 'type', 'genomic'))) {
-        desc = desc.concat(',  with ' + appearanceDet.layout + ' genome,')
-    }
-        
+    // expression encodings
+    let quantitativeEncodingsI = track.appearance.details.encodings.encodingDeepQuantitative.map(o => o.name);
 
-    if (attributeExists(altTrack.data.details.data, 'binSize')) {
-        desc = desc.concat(' Data is binned in intervals of ' + altTrack.data.details.data.binSize * 256 + ' bp.');
-    }
-
-    
-    if (attributeExists(altTrack.data.details.data, 'categories')) {
-        if (altTrack.data.details.data.categories.length === 1) {
-            //desc = desc.concat(' The only category shown is ' + altTrack.data.details.data.categories[0] + '.');
-        } else {
-            desc = desc.concat(' The ' + altTrack.data.details.data.categories.length + ' different categories shown are: ' + altTrack.data.details.data.categories.slice(0, -1).join(', ') + ' and ' + altTrack.data.details.data.categories.slice(-1) + '.');
+    if (quantitativeEncodingsI.length > 1) {
+        descQuantitative = descQuantitative.concat('The expression values are shown with ' + markToText.get(mark) + ' on the ' + arrayToString(quantitativeEncodingsI) + '-axes.');
+    } else {
+        if (quantitativeEncodingsI.includes('y')) {
+            descQuantitative = descQuantitative.concat('The expression is shown on the y-axis with ' + markToText.get(mark) + '.');
+        }
+        else if (quantitativeEncodingsI.includes('color')) {
+            descQuantitative = descQuantitative.concat('The height of the expression values is shown with color.');
+        }
+        else {
+            descQuantitative = descQuantitative.concat('The height of the expression values is shown with the ' + quantitativeEncodingsI[0] + '-axis.');
         }
     }
 
-    desc = desc.charAt(0).toUpperCase() + desc.slice(1);
-        
-    return desc;
+    // nominal encodings
+    let nominalEncodingsI = track.appearance.details.encodings.encodingDeepNominal.map(o => o.name);
 
+    if (nominalEncodingsI.length > 1) {
+        if (nominalEncodingsI.includes('row')) {
+            descNominal = descNominal.concat('The chart is stratified by rows for the categories.');
+            let nominalEncodingsINames = nominalEncodingsI.filter(e => e !== 'row').map(e => channelToText.get(e)) as string[];
+            descNominal = descNominal.concat(' The categories are also shown with the ' + arrayToString(nominalEncodingsINames) + ' of the ' + markToText.get(mark) + '.');
+        }
+        else {
+            let nominalEncodingsINames = nominalEncodingsI.map(e => channelToText.get(e)) as string[];
+            descNominal = descNominal.concat('The categories are shown with the ' + arrayToString(nominalEncodingsINames) + ' of the ' + markToText.get(mark) + '.');
+        }
+    }
+    else {
+        if (nominalEncodingsI.includes('row')) {
+            descNominal = descNominal.concat('The chart is stratified by rows for the categories.');
+        }
+        else {
+            descNominal = descNominal.concat('The ' + channelToText.get(nominalEncodingsI[0]) + ' of the ' + markToText.get(mark) + ' indicates the different categories.');
+        }
+    }
+
+    // value encodings
+    for (let i = 0; i < track.appearance.details.encodings.encodingValue.length; i++) {
+        const e = track.appearance.details.encodings.encodingValue[i];
+        if (e.name === 'color') {
+            descValue = descValue.concat('The color of the ' + markToText.get(mark) + ' is ' + e.details.value);
+        }
+    }
+
+    const desc = ''.concat(descGenomic + ' ' + descQuantitative + ' ' + descNominal + ' ' + descValue);
+
+    track.appearance.description = desc;
 }
+
 
 // used in addTrackDataDescriptions
 function addMinMaxDescription(values: number[], key: 'minimum' | 'maximum') {
@@ -418,35 +311,38 @@ function addTrackDataDescriptions(altGoslingSpec: AltGoslingSpec) {
             var desc = '';
 
             // genomic and expression ranges
-            desc = desc.concat('The genomic range shown is from ' + track.data.details.dataStatistics?.genomicMin + ' to ' + track.data.details.dataStatistics?.genomicMax + ' basepairs.');
-            desc = desc.concat(' The expression values range from ' + track.data.details.dataStatistics?.valueMin + ' to ' + track.data.details.dataStatistics?.valueMax + '.');
+            if (track.data.details.dataStatistics?.genomicMin && track.data.details.dataStatistics?.genomicMax) {
+                desc = desc.concat('The genomic range shown is from ' + track.data.details.dataStatistics?.genomicMin + ' to ' + track.data.details.dataStatistics?.genomicMax + ' basepairs.');
+            }
+            if (track.data.details.dataStatistics?.valueMin && track.data.details.dataStatistics?.valueMax) {
+                desc = desc.concat(' The expression values range from ' + track.data.details.dataStatistics?.valueMin + ' to ' + track.data.details.dataStatistics?.valueMax + '.');
+            }
             
             // where on the genome are the minimum and maximum expression
-            desc = desc.concat(addMinMaxDescription(track.data.details.dataStatistics?.valueMaxGenomic, 'maximum'));
-            desc = desc.concat(addMinMaxDescription(track.data.details.dataStatistics?.valueMinGenomic, 'minimum'));
-            
+            if (track.data.details.dataStatistics?.valueMaxGenomic && track.data.details.dataStatistics?.valueMinGenomic) {
+                desc = desc.concat(addMinMaxDescription(track.data.details.dataStatistics?.valueMaxGenomic, 'maximum'));
+                desc = desc.concat(addMinMaxDescription(track.data.details.dataStatistics?.valueMinGenomic, 'minimum'));
+            }
+           
             // add category data information
             if (track.data.details.dataStatistics?.categories) {
 
                 // number of categories
-                desc = desc.concat(' There are ' + track.data.details.dataStatistics?.categories.length + ' samples.');
+                desc = desc.concat(' There are ' + track.data.details.dataStatistics?.categories.length + ' categories.');
 
                 // which category has the highest expression peak
-                if (track.data.details.dataStatistics?.highestCategory.length === 1) {
-                    desc = desc.concat(' The highest value is observed in sample ' + track.data.details.dataStatistics?.highestCategory[0] + '.');
-                } else {
-                    desc = desc.concat(' The highest value is observed in samples ' + arrayToString(track.data.details.dataStatistics?.highestCategory) + '.');
-                }
-                     
-                // Are genomic positions are the same for the min and max values of each category
-                // todo
-
+                if (track.data.details.dataStatistics?.highestCategory) {
+                    if (track.data.details.dataStatistics?.highestCategory.length === 1) {
+                        desc = desc.concat(' The highest value is observed in sample ' + track.data.details.dataStatistics?.highestCategory[0] + '.');
+                    } else {
+                        desc = desc.concat(' The highest value is observed in samples ' + arrayToString(track.data.details.dataStatistics?.highestCategory) + '.');
+                    }
+                }    
+                // See if genomic positions are the same for the min and max values of each category
             }
             altGoslingSpec.tracks[i].data.description = desc;
         }
     }
-
-    // retrieve global information somehow
 }
 
 
