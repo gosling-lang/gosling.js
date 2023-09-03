@@ -86,8 +86,8 @@ export interface AltTrack {
     uid: string;
     description: string;
 
-    type: string | unknown;
-    title: string | unknown;
+    charttype?: string;
+    title?: string;
     
     position: AltTrackPosition;
     appearance: AltTrackAppearance;
