@@ -228,6 +228,8 @@ function Editor(props: RouteComponentProps) {
     const urlSpec = urlParams.has('spec') ? JSONCrush.uncrush(urlParams.get('spec')!) : null;
     const urlGist = urlParams.get('gist');
     const urlExampleId = urlParams.get('example') ?? '';
+    const urlShowAlt = urlParams.get('alt');
+    console.log('url show alt', urlShowAlt)
 
     // Spec stored in the tab session
     const sessionSpec = useMemo(() => {
@@ -244,7 +246,7 @@ function Editor(props: RouteComponentProps) {
     const previewData = useRef<PreviewData[]>([]);
     const previewAlt = useRef<PreviewAlt[]>([]);
     const [refreshData, setRefreshData] = useState<boolean>(false);
-    const [refreshAlt, setRefreshAlt] = useState<boolean>(false);
+    // const [refreshAlt, setRefreshAlt] = useState<boolean>(false);
     const [additionalInfoTab, setAdditionalInfoTab] = useState('dataPreview');
     const [language, changeLanguage] = useState<EditorLangauge>('json');
 
@@ -658,7 +660,6 @@ function Editor(props: RouteComponentProps) {
     useEffect(() => {
         // Every time the raw data refreshes, we want update the AltGoslingSpec with the new data.
         const token = PubSub.subscribe('rawData', (_: string, data: {id: string, data: Datum[]}) => {
-            // console.log(data.id);
             console.log('Updated data was seen for', data.id);
 
             // get latest AltGoslingSpec
@@ -668,7 +669,6 @@ function Editor(props: RouteComponentProps) {
            
             const newPreviewAlt = previewAlt.current.filter(d => d.id !== id);       
             previewAlt.current = [...newPreviewAlt, { ...updatedPreviewAlt, id }];
-            console.log('length', previewAlt.current.length)
 
             setSelectedPreviewAlt(previewAlt.current.length - 1);
 
@@ -1345,22 +1345,25 @@ function Editor(props: RouteComponentProps) {
                                                     </span>
                                                 </span>
                                             </button>
-                                            <button
-                                                className={`tablinks ${additionalInfoTab == 'altText' && 'active'}`}
-                                                style={{ cursor: 'pointer' }}
-                                                onClick={() => {
-                                                    setAdditionalInfoTab('altText');
-                                                    setLog({ message: '', state: 'success' });
-                                                }}
-                                            >
-                                                Automatic Text Description{` `}
-                                                <span className="tooltip">
-                                                    {getIconSVG(ICONS.INFO_CIRCLE, 10, 10)}
-                                                    <span className="tooltiptext">
-                                                        View the automatically generated description of this visualization.
+
+                                            {urlShowAlt && urlShowAlt.toUpperCase() === 'TRUE' ? (
+                                                <button
+                                                    className={`tablinks ${additionalInfoTab == 'altText' && 'active'}`}
+                                                    style={{ cursor: 'pointer' }}
+                                                    onClick={() => {
+                                                        setAdditionalInfoTab('altText');
+                                                        setLog({ message: '', state: 'success' });
+                                                    }}
+                                                >
+                                                    Automatic Text Description{` `}
+                                                    <span className="tooltip">
+                                                        {getIconSVG(ICONS.INFO_CIRCLE, 10, 10)}
+                                                        <span className="tooltiptext">
+                                                            View the automatically generated description of this visualization.
+                                                        </span>
                                                     </span>
-                                                </span>
-                                            </button>
+                                                </button>
+                                            ): null}
                                         </div>
 
                                         <div className={`tabContent ${additionalInfoTab == 'dataPreview' ? 'show' : 'hide'}`}>
@@ -1432,41 +1435,40 @@ function Editor(props: RouteComponentProps) {
                                             </div>
                                         </div>
                                         
-                                        <div className={`tabContent ${additionalInfoTab == 'altText' ? 'show' : 'hide'}`}>
-                                            <div className="editor-alt-text-panel">
-                                                {/* <button
-                                                    title="Refresh text description"
-                                                    className="alt-text-refresh-button"
-                                                    onClick={() => setRefreshAlt(!refreshAlt)}
-                                                >
-                                                    {getIconSVG(ICONS.REFRESH, 23, 23)}
-                                                    <br />
-                                                    {'REFRESH TEXT DESCRIPTIONS'}
-                                                </button> */}
-                                                                                        
-                                                {previewAlt.current.length > selectedPreviewAlt &&
-                                                previewAlt.current[selectedPreviewAlt] &&
-                                                Object.keys(previewAlt.current[selectedPreviewAlt].data).length > 0 ? (
-                            
-                                                    <>
-                                                        <div className="editor-alt-text-body">
-                                                            <div>
-                                                                {/* {selectedPreviewAlt}
-                                                                {previewAlt.current.length}
-                                                                {JSON.stringify(previewAlt.current[selectedPreviewAlt].data)} */}
-                                                     
-                                                                {/* {createTree(previewAlt.current[selectedPreviewAlt].data)} */}
-                                                                {createTreeMUI(previewAlt.current[selectedPreviewAlt].data)}
+                                        {urlShowAlt && urlShowAlt.toUpperCase() === 'TRUE' ? (
+                                            
+                                            <div className={`tabContent ${additionalInfoTab == 'altText' ? 'show' : 'hide'}`}>
+                                                <div className="editor-alt-text-panel">
+                                                    {/* <button
+                                                        title="Refresh text description"
+                                                        className="alt-text-refresh-button"
+                                                        onClick={() => setRefreshAlt(!refreshAlt)}
+                                                    >
+                                                        {getIconSVG(ICONS.REFRESH, 23, 23)}
+                                                        <br />
+                                                        {'REFRESH TEXT DESCRIPTIONS'}
+                                                    </button> */}
+                                                                                            
+                                                    {previewAlt.current.length > selectedPreviewAlt &&
+                                                    previewAlt.current[selectedPreviewAlt] &&
+                                                    Object.keys(previewAlt.current[selectedPreviewAlt].data).length > 0 ? (
+                                
+                                                        <>
+                                                            <div className="editor-alt-text-body">
+                                                                <div>
+                                                                    {/* {selectedPreviewAlt}
+                                                                    {previewAlt.current.length}
+                                                                    {JSON.stringify(previewAlt.current[selectedPreviewAlt].data)} */}
+                                                        
+                                                                    {/* {createTree(previewAlt.current[selectedPreviewAlt].data)} */}
+                                                                    {createTreeMUI(previewAlt.current[selectedPreviewAlt].data)}
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </>
-                                                ) : null}
-
-
-
-
+                                                        </>
+                                                    ) : null}
+                                                </div>
                                             </div>
-                                        </div>
+                                        ): null }
                                     </div>
                                 </Allotment.Pane>
                             </Allotment>
