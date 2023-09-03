@@ -28,34 +28,36 @@ export function createTreeMUI(data: AltGoslingSpec) {
         >
             <TreeItem key='tree' nodeId='tree' label='Automatic description'>
 
-                {createTreeItemLeaf('alt', 'Short description (alt-text)', data.alt)}
+                <TreeItem key={'alt'} nodeId={'alt'} label={'Alt-text'}>
+                    <TreeItem key={'alt-desc'} nodeId={'alt-desc'} label={data.alt}></TreeItem>
+                </TreeItem>
 
-                {createTreeItemLeaf('desc', 'Full description', data.longDescription)}
+                <TreeItem key={'long'} nodeId={'long'} label={'Description'}>
+                    <TreeItem key={'long-desc'} nodeId={'long-desc'} label={data.longDescription}></TreeItem>
+                </TreeItem>
                 
                 <TreeItem key={'global-details'} nodeId={'global-details'} label={'Details'}>
-                    
+        
                     {data.title ? (
-                        createTreeItemLeaf('title', 'Title', data.title)
+                        <TreeItem key={'title'} nodeId={'title'} label={'Title'}>
+                            <TreeItem key={'title-desc'} nodeId={'title-desc'} label={data.title}></TreeItem>
+                        </TreeItem>
                     ): null}
 
                     {data.subtitle ? (
-                        createTreeItemLeaf('subtitle', 'Subtitle', data.subtitle)
-                    ): null}    
-
-                    <TreeItem key={'composition'} nodeId={'composition'} label={'Composition'}>
-                        {createTreeItemLeaf('composition-desc', 'Description', data.composition.description)}
-                        <TreeItem key={'composition-details'} nodeId={'composition-details'} label={'Details'}>
+                        <TreeItem key={'subtitle'} nodeId={'titsubtitlele'} label={'Subtitle'}>
+                            <TreeItem key={'subtitle-desc'} nodeId={'subtitle-desc'} label={data.subtitle}></TreeItem>
                         </TreeItem>
-                        {createTreeItemLeaf('composition-details-nTracks', 'Number of tracks', data.composition.nTracks)}
+                    ): null}
                     
-
+                    <TreeItem key={'composition'} nodeId={'composition'} label={'Composition'}>
+                        <TreeItem key={'composition-desc'} nodeId={'composition-desc'} label={data.composition.description}></TreeItem>
                     </TreeItem>
 
                     <TreeItem key='tracks' nodeId='tracks' label={'Tracks'}>
                         {Object.keys(data.tracks).map(t => (createTreeTrackMUI(data.tracks[t as any])))}
                     </TreeItem>
                     
-
                 </TreeItem>
             
             </TreeItem>
@@ -82,8 +84,8 @@ function createTreeTrackMUI(t: AltTrack) {
                     <TreeItem key={'T-'+t.uid+'details-title'} nodeId={'T-'+t.uid+'details-title'} label={'Title: '+t.title}></TreeItem>
                 ): null}   
 
-                {t.type ? (
-                    <TreeItem key={'T-'+t.uid+'details-type'} nodeId={'T-'+t.uid+'details-type'} label={'Type: '+t.type}></TreeItem>
+                {t.charttype ? (
+                    <TreeItem key={'T-'+t.uid+'details-type'} nodeId={'T-'+t.uid+'details-type'} label={'Type: '+t.charttype}></TreeItem>
                 ): null}
 
                 <TreeItem key={'T-'+t.uid+'-details-pos'} nodeId={'T-'+t.uid+'-details-pos'} label={'Position'}>

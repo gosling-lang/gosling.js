@@ -1,5 +1,5 @@
 import type { AltGoslingSpec, AltTrack } from './alt-gosling-schema';
-import { attributeExists, attributeExistsReturn, attributeExistsAndChildHasValue, arrayToString, markToText, channelToText, capitalizeDesc } from './util';
+import { attributeExists, attributeExistsReturn, attributeExistsAndChildHasValue, arrayToString, markToText, channelToText, capDesc } from './util';
 import { IsChannelValue, IsChannelDeep } from '@gosling-lang/gosling-schema';
 // import { SUPPORTED_CHANNELS } from './../core/mark/index';
 
@@ -182,7 +182,7 @@ function addTrackAppearanceDescriptions(altGoslingSpec: AltGoslingSpec) {
         var desc = ''
 
         if (track.charttype) {
-            desc = desc.concat(capitalizeDesc(track.charttype));
+            desc = desc.concat(capDesc(track.charttype));
         } else {
             desc = desc.concat('Chart with ' + markToText.get(track.appearance.details.mark));
         }

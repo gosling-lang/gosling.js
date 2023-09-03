@@ -22,12 +22,16 @@ export function attributeExistsAndChildHasValue(object: any, attribute: any, att
     return(attributeExists(object, attribute) && attributeHasChildValue(object, attribute, attributeChild, value));
 };
 
-export function arrayToString(arr: string[] | number[]) {
+export function arrayToString(arr: string[] | number[]): string {
     if (arr.length === 1) {
-        return arr;
+        return arr[0] as string;
     } else {
         return arr.slice(0, -1).join(', ') + ' and ' + arr.slice(-1);
     } 
+}
+
+export function capDesc(desc: string): string {
+    return desc[0].toUpperCase() + desc.slice(1);
 }
 
 export const markToText = new Map([['point', 'points'], ['line', 'lines'], ['bar', 'bars'], ['rect', 'rectangles'], ['area', 'area displayed'], ['withinLink', 'connections'], ['betweenLink', 'connections'], ['triangleLeft', 'triangles'], ['triangleRight', 'triangles'], ['triangleBottom', 'triangles']]);
