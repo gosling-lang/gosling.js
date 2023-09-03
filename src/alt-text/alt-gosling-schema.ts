@@ -97,12 +97,12 @@ export interface AltTrack {
 export interface AltDataStatistics {
     id: string;
     flatTileData: Datum[];
-    genomicMin: number;
-    genomicMax: number;
-    valueMin: number;
-    valueMax: number;
-    valueMinGenomic: number[];
-    valueMaxGenomic: number[];
+    genomicMin?: number;
+    genomicMax?: number;
+    valueMin?: number;
+    valueMax?: number;
+    valueMinGenomic?: number[];
+    valueMaxGenomic?: number[];
     categories?: string[];
     categoryMinMaxWG?: { [key: string]: (number | number[])[] };
     highestCategory?: string[];

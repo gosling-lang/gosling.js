@@ -4,58 +4,69 @@ import type { Datum } from '@gosling-lang/gosling-schema';
 
 export function altRetrieveDataStatistics(id: string, flatTileData: Datum[], dataFields: AltTrackDataFields): AltDataStatistics {
 
-    const genomicValues = (flatTileData.map(d => d[dataFields.genomicField]) as unknown as number[]).filter(d => !isNaN(d));
-    const genomicMin = Math.min(...genomicValues);
-    const genomicMax = Math.max(...genomicValues);
+    var altDataStatistics: AltDataStatistics = { id: id, flatTileData: flatTileData}
 
-    const valueValues = (flatTileData.map(d => d[dataFields.valueField]) as unknown as number[]).filter(d => !isNaN(d));
-    const valueMin = Math.min(...valueValues);
-    const valueMax = Math.max(...valueValues);
-
-    const valueMinGenomic = (flatTileData.filter(d => d[dataFields.valueField] == valueMin).map(d => d[dataFields.genomicField]) as unknown as number[]);
-    const valueMaxGenomic = (flatTileData.filter(d => d[dataFields.valueField] == valueMax).map(d => d[dataFields.genomicField]) as unknown as number[]);
-
-    const altDataStatistics: AltDataStatistics = {
-        id: id,
-        flatTileData: flatTileData,
-        genomicMin: genomicMin,
-        genomicMax: genomicMax,
-        valueMin: valueMin,
-        valueMax: valueMax,
-        valueMinGenomic: valueMinGenomic,
-        valueMaxGenomic: valueMaxGenomic
+    if (dataFields.genomicField !== undefined) {
+        const genomicField = dataFields.genomicField as string;
+        try {
+            const genomicValues = (flatTileData.map(d => d[genomicField]) as unknown as number[]).filter(d => !isNaN(d));
+            altDataStatistics.genomicMin  = Math.min(...genomicValues);
+            altDataStatistics.genomicMax = Math.max(...genomicValues);
+        } catch {}
     }
 
-    if (dataFields.categoryField !== 'unknown' && dataFields.categoryField !== '' && dataFields.categoryField !== undefined) {
-        var categoryValues = flatTileData.map(d => d[dataFields.categoryField]);
-        const categories = [... new Set(categoryValues)] as unknown as string[]
-        //const categoryMinMax: { [key: string]: number[] } = {};
-        const categoryMinMaxWG: { [key: string]: (number | number[])[] } = {};
+    if (dataFields.valueField !== undefined) {
+        const valueField = dataFields.valueField as string;
+        try {
+            const valueValues = (flatTileData.map(d => d[valueField]) as unknown as number[]).filter(d => !isNaN(d));
+            altDataStatistics.valueMin = Math.min(...valueValues);
+            altDataStatistics.valueMax = Math.max(...valueValues);
+        } catch {}
+    }
 
-        var highestCategory = {} as string[];
+    if (dataFields.genomicField !== undefined && dataFields.valueField !== undefined) {
+        const genomicField = dataFields.genomicField as string;
+        const valueField = dataFields.valueField as string;
+        try {
+            altDataStatistics.valueMinGenomic = (flatTileData.filter(d => d[valueField] == altDataStatistics.valueMin).map(d => d[genomicField]) as unknown as number[]);
+            altDataStatistics.valueMaxGenomic = (flatTileData.filter(d => d[valueField] == altDataStatistics.valueMax).map(d => d[genomicField]) as unknown as number[]);
+        } catch {}
+    }
+   
+    if (dataFields.categoryField !== undefined) {
+        const genomicField = dataFields.genomicField as string;
+        const valueField = dataFields.valueField as string;
+        const categoryField = dataFields.categoryField as string;
 
-        for (let category of categories) {
-            let dataCat = flatTileData.filter(d => d[dataFields.categoryField] === category);
-            let valueValuesCat = (dataCat.map(d => d[dataFields.valueField]) as unknown as number[]).filter(d => !isNaN(d));
-            let valueMinCat = Math.min(...valueValuesCat);
-            let valueMaxCat = Math.max(...valueValuesCat);
+        try {
+            var categoryValues = flatTileData.map(d => d[categoryField]);
+            const categories = [... new Set(categoryValues)] as unknown as string[]
 
-            let valueMinCatGenomic = (dataCat.filter(d => d[dataFields.valueField] == valueMinCat).map(d => d[dataFields.genomicField]) as unknown as number[])
-            let valueMaxCatGenomic = (dataCat.filter(d => d[dataFields.valueField] == valueMaxCat).map(d => d[dataFields.genomicField]) as unknown as number[])
+            const categoryMinMaxWG: { [key: string]: (number | number[])[] } = {};
 
-            //categoryMinMax[category] = [valueMinCat, valueMaxCat];
-            categoryMinMaxWG[category] = [valueMinCat, valueMinCatGenomic, valueMaxCat, valueMaxCatGenomic];
+            var highestCategory = [] as string[];
 
-            if (valueMaxCat === valueMax) {
-                highestCategory = [...highestCategory, category]
+            for (let category of categories) {
+                let dataCat = flatTileData.filter(d => d[categoryField] === category);
+                let valueValuesCat = (dataCat.map(d => d[valueField]) as unknown as number[]).filter(d => !isNaN(d));
+                let valueMinCat = Math.min(...valueValuesCat);
+                let valueMaxCat = Math.max(...valueValuesCat);
+
+                let valueMinCatGenomic = (dataCat.filter(d => d[valueField] == valueMinCat).map(d => d[genomicField]) as unknown as number[])
+                let valueMaxCatGenomic = (dataCat.filter(d => d[valueField] == valueMaxCat).map(d => d[genomicField]) as unknown as number[])
+
+                categoryMinMaxWG[category] = [valueMinCat, valueMinCatGenomic, valueMaxCat, valueMaxCatGenomic];
+
+                if (valueMaxCat === altDataStatistics.valueMax) {
+                    highestCategory.push(category);
+                }
             }
-        }
-
-        altDataStatistics.categories = categories;
-        altDataStatistics.categoryMinMaxWG = categoryMinMaxWG;
-        altDataStatistics.highestCategory = highestCategory;
+            altDataStatistics.categories = categories;
+            altDataStatistics.categoryMinMaxWG = categoryMinMaxWG;
+            altDataStatistics.highestCategory = highestCategory;
+        } catch {}
     }
-
+    
     return(altDataStatistics);
 }
 
@@ -65,21 +76,29 @@ export function altUpdateSpecWithData(
     id: string, 
     flatTileData: Datum[]
 ): AltGoslingSpec {
-    // get correct track
-    //const track = altGoslingSpec.tracks.filter(t => t.uid = id)[0];
 
-    // assume only 1 track
-    const trackIndex = 0;
+    // get correct track index
+    for (let i = 0; i < Object.keys(altGoslingSpec.tracks).length; i++) {
 
-    // get genomic field headers for that track, call
-    const fields = altGoslingSpec.tracks[trackIndex].data.details.fields;
-    const altDataStatistics = altRetrieveDataStatistics(id, flatTileData, fields);
+        if(i === 3) {
+            continue
+        }
 
-    // fill in data
-    altGoslingSpec.tracks[trackIndex].data.details.dataStatistics = altDataStatistics;
+        if (altGoslingSpec.tracks[i].uid === id) {
 
-    // update description
+            // get genomic field headers for that track
+            const fields = altGoslingSpec.tracks[i].data.details.fields;
 
+            // retrieve data statistics
+            const altDataStatistics = altRetrieveDataStatistics(id, flatTileData, fields);
+
+            // fill in data
+            altGoslingSpec.tracks[i].data.details.dataStatistics = altDataStatistics;
+
+            // update description            
+
+        }
+    }
 
     return(altGoslingSpec);
 }
