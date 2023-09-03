@@ -1,5 +1,5 @@
 import type { AltGoslingSpec, AltTrack } from './alt-gosling-schema';
-import { attributeExists, attributeExistsReturn, attributeExistsAndChildHasValue, arrayToString, markToText, channelToText } from './util';
+import { attributeExists, attributeExistsReturn, attributeExistsAndChildHasValue, arrayToString, markToText, channelToText, capitalizeDesc } from './util';
 import { IsChannelValue, IsChannelDeep } from '@gosling-lang/gosling-schema';
 // import { SUPPORTED_CHANNELS } from './../core/mark/index';
 
@@ -179,16 +179,17 @@ function addTrackAppearanceDescriptions(altGoslingSpec: AltGoslingSpec) {
     for (const i in altGoslingSpec.tracks) {
         const track = altGoslingSpec.tracks[i];
 
-        addEncodingDescriptions(track);
-        
-        // const appearanceDet = track.appearance.details;
-        // var desc = ''
+        var desc = ''
 
-        // if (track.type !== 'unknown') {
-        //     trackAppearanceKnownType(track);
-        // } else {
-        //     trackAppearanceUnknownType(track);
-        // }
+        if (track.charttype) {
+            desc = desc.concat(capitalizeDesc(track.charttype));
+        } else {
+            desc = desc.concat('Chart with ' + markToText.get(track.appearance.details.mark));
+        }
+
+        desc = desc.concat(' ' + addEncodingDescriptions(track));
+    
+        track.appearance.description = desc;
     }   
 }
 
@@ -287,7 +288,7 @@ function addEncodingDescriptions(track: AltTrack) {
 
     const desc = ''.concat(descGenomic + ' ' + descQuantitative + ' ' + descNominal + ' ' + descValue);
 
-    track.appearance.description = desc;
+    return desc;
 }
 
 
@@ -347,61 +348,18 @@ function addTrackDataDescriptions(altGoslingSpec: AltGoslingSpec) {
 
 
 function addGlobalDescription(altGoslingSpec: AltGoslingSpec) {
+    altGoslingSpec.alt = 'Gosling visualization.';
 
-    if (altGoslingSpec.composition.nTracks == 1) {
+    if (altGoslingSpec.composition.nTracks === 1) {
         altGoslingSpec.longDescription = altGoslingSpec.tracks[0].description;
+    } else if (altGoslingSpec.composition.nTracks === 2) {
+        var desc = '';
+        desc = desc.concat('Figure with two charts.');
+        altGoslingSpec.longDescription = desc;
+    } else {
+        var desc = '';
+        desc = desc.concat('Figure with ' + altGoslingSpec.composition.nTracks + ' individual charts.');
+        altGoslingSpec.longDescription = desc;
     }
     
 }
-
-
-// export function altSingleView(altSpec: GoslingSpecAlt) {
-    
-//     var altText = '';
-    
-//     var trackSingle = altSpec.structure[0];
-//     if (attributeExists(trackSingle, 'specialDesc')) {
-//         altText = altText.concat(trackSingle.specialDesc)
-//     } else {
-//         altText = altText.concat('Visualization')
-//     }
-//     const encodingImportant = ['x', 'y', 'row', 'color']
-//     let _first = true;
-//     for (let encoding of encodingImportant) {
-//         if (attributeExists(trackSingle.encodingSeparated.encodingField, encoding)) {
-//             let encodingObj = trackSingle.encodingSeparated.encodingField[encoding];
-//             if (_first) {
-//                 altText = altText.concat(' with ')
-//                 _first = false;
-//             } else {
-//                 altText = altText.concat(', ')
-//             }
-//             altText = altText.concat(encodingObj.type + ' ' + encoding + '-axis')
-//         }
-//     }
-
-//     if (attributeExistsAndChildHasValue(trackSingle.encodingSeparated.encodingField, 'x', 'type', 'genomic') || (attributeExistsAndChildHasValue(trackSingle.encodingSeparated.encodingField, 'y', 'type', 'genomic'))) {
-//         altText = altText.concat(',  with ' + trackSingle.layout + ' genome,')
-//     }
-      
-
-//     altText = altText.concat(' titled: ' + altSpec.title + '.');
-
-//     if (attributeExists(trackSingle.data, 'binSize')) {
-//         altText = altText.concat(' Data is binned in intervals of ' + trackSingle.data.binSize * 256 + ' bp.');
-//     }
-
-    
-//     if (attributeExists(trackSingle.data, 'categories')) {
-//         if (trackSingle.data.categories.length === 1) {
-//             altText = altText.concat(' The only category shown is ' + trackSingle.data.categories[0] + '.');
-//         } else {
-//             altText = altText.concat(' The ' + trackSingle.data.categories.length + ' different categories shown are: ' + trackSingle.data.categories.slice(0, -1).join(', ') + ' and ' + trackSingle.data.categories.slice(-1) + '.');
-//         }
-//     }
-
-//     altText = altText.charAt(0).toUpperCase() + altText.slice(1);
-        
-//     return altText;
-
-// }

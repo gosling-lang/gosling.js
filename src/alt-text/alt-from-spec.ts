@@ -1,8 +1,8 @@
-import type { GoslingSpec, SingleTrack, ChannelTypes, View, PartialTrack, RootSpecWithSingleView, ResponsiveSpecOfSingleView, RootSpecWithMultipleViews, ResponsiveSpecOfMultipleViews, ChannelValue, Encoding, DataDeep, MultivecData, X, Y, Color, Size, Text, Stroke, StrokeWidth, Opacity, Row } from '@gosling-lang/gosling-schema';
+import type { GoslingSpec, SingleTrack, ChannelTypes, View, PartialTrack, RootSpecWithSingleView, ResponsiveSpecOfSingleView, RootSpecWithMultipleViews, ResponsiveSpecOfMultipleViews, ChannelValue, Encoding, DataDeep, MultivecData, X, Y, Color, Size, Text, Stroke, StrokeWidth, Opacity, Row, OverlaidTrack, OverlaidTracks } from '@gosling-lang/gosling-schema';
 import type { AltTrackDataFields, AltSpecComposition, AltTrackPosition, AltTrackAppearance, AltTrackData, AltTrackDataDetails, AltTrackAppearanceDetails, AltTrackPositionDetails, AltTrack, AltEncodingSeparated, AltCounter, AltParentValues, AltGoslingSpec, EncodingValueSingle, EncodingDeepSingle } from './alt-gosling-schema';
 import { attributeExists, attributeExistsDefaultString, attributeHasChildValue, attributeExistsAndChildHasValue} from './util';
 import { SUPPORTED_CHANNELS } from './../core/mark/index';
-import { determineSpecialCases } from './special-cases';
+import { determineSpecialCases } from './chart-types';
 import { getGenomicChannelFromTrack } from './../gosling-schema/validate';
 
 import {
@@ -65,7 +65,9 @@ function determineStructure(
 
             // check if overlaid or stacked
             if (IsOverlaidTracks(specPart)) {
-                altOverlaidTracks(specPart, altParentValuesCopy, counter);
+                const track =  specPart as OverlaidTracks;
+                altOverlaidTracks(track, altParentValuesCopy, counter);
+                //altSpec.tracks[counter.nTracks] = altOverlaidTracks(track, altParentValuesCopy, counter);
                 if (counter.nTracks > 0) {
                     counter.allPositions = [...counter.allPositions, [counter.rowViews, counter.colViews]]
                 }
@@ -143,6 +145,11 @@ function altSingleTrack(
 ): AltTrack {
     var altTrack = {} as AltTrack;
 
+    //console.log(track.id);
+
+
+
+    //const trackId = firstResolvedSpec.id ?? uuid.v4();
     // uid
     if (track.id !== 'unknown') {
         var uid = track.id as string;
@@ -163,7 +170,7 @@ function altSingleTrack(
     appearanceDetails.overlaid = false;
     appearanceDetails.mark = track.mark;
     appearanceDetails.encodings = getSeparatedEncodings(track);
-    
+
     // data
     // add genomic_field, value_field, category_field for data retrieval
     var dataFields = determineFields(track.data, appearanceDetails.encodings);
@@ -182,7 +189,7 @@ function altSingleTrack(
     altTrack.data = data;
     
     // determine type if possible
-    // altTrack.type = determineSpecialCases(altTrack);
+    altTrack.charttype = determineSpecialCases(altTrack);
 
     // empty description, to be filled in.
     altTrack.description = '';
