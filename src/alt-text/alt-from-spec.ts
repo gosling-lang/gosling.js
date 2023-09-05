@@ -1,9 +1,11 @@
-import type { GoslingSpec, SingleTrack, ChannelTypes, View, PartialTrack, RootSpecWithSingleView, ResponsiveSpecOfSingleView, RootSpecWithMultipleViews, ResponsiveSpecOfMultipleViews, ChannelValue, Encoding, DataDeep, MultivecData, X, Y, Color, Size, Text, Stroke, StrokeWidth, Opacity, Row, OverlaidTrack, OverlaidTracks } from '@gosling-lang/gosling-schema';
+import type { GoslingSpec, Track, SingleTrack, ChannelTypes, View, PartialTrack, RootSpecWithSingleView, ResponsiveSpecOfSingleView, RootSpecWithMultipleViews, ResponsiveSpecOfMultipleViews, ChannelValue, Encoding, DataDeep, MultivecData, X, Y, Color, Size, Text, Stroke, StrokeWidth, Opacity, Row, OverlaidTrack, OverlaidTracks } from '@gosling-lang/gosling-schema';
 import type { AltTrackDataFields, AltSpecComposition, AltTrackPosition, AltTrackAppearance, AltTrackData, AltTrackDataDetails, AltTrackAppearanceDetails, AltTrackPositionDetails, AltTrack, AltEncodingSeparated, AltCounter, AltParentValues, AltGoslingSpec, EncodingValueSingle, EncodingDeepSingle } from './alt-gosling-schema';
 import { attributeExists, attributeExistsDefaultString, attributeHasChildValue, attributeExistsAndChildHasValue} from './util';
 import { SUPPORTED_CHANNELS } from './../core/mark/index';
 import { determineSpecialCases } from './chart-types';
 import { getGenomicChannelFromTrack } from './../gosling-schema/validate';
+import { convertToFlatTracks } from './../compiler/spec-preprocess';
+import { spreadTracksByData } from './../core/utils/overlay';
 
 import {
     // single tracks
@@ -498,27 +500,59 @@ export function getSeparatedEncodings(track: SingleTrack): AltEncodingSeparated 
 //     return encodingSeparated;
 // }
 
-function altFlatTracks() {
+// function altFlatTracks() {
 
-}
+// }
 
-function altStackedTracks(
-    specPart: any,
-    altParentValues: AltParentValues, 
-    counter: AltCounter
-) {
+// function altStackedTracks(
+//     specPart: any,
+//     altParentValues: AltParentValues, 
+//     counter: AltCounter
+// ) {
     
-}
+// }
 
 function altOverlaidTracks(
-    specPart: any,
+    specPart: OverlaidTracks,
     altParentValues: AltParentValues, 
     counter: AltCounter
+) {
+    let tracks: Track[] = convertToFlatTracks(specPart);
+    console.log('before spreading', tracks)
+    tracks = spreadTracksByData(tracks);
+    console.log('after spreading', tracks)
+    if (tracks.length > 1) {
+
+    } else {
+
+    }
+    // test if different data source or not
+    // if different data source, get new track for each, and do that
+}
+
+function altOverlaidDifferentData(
+
 ) {
 
 }
 
+function altOverlaidSameData(
 
+) {
+
+}
+
+function altOverlaidSameDataMultipleMarks(
+
+) {
+
+}
+
+function altOverlaidSameDataOther(
+
+    ) {
+        
+    }
 
 
 function getPositionMatrix(counter: AltCounter) {
