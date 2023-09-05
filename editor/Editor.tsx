@@ -29,10 +29,9 @@ import EditorExamples from './EditorExamples';
 import './Editor.css';
 import { v4 } from 'uuid';
 
-import type { AltGoslingSpec, AltTrack } from '../../gosling.js/src/alt-text/alt-gosling-schema';
+import type { AltGoslingSpec } from '../../gosling.js/src/alt-text/alt-gosling-schema';
 import { altUpdateSpecWithData } from '../../gosling.js/src/alt-text/alt-from-data';
-import { createTree } from '../../gosling.js/src/alt-text/alt-tree';
-import { createTreeMUI } from '../../gosling.js/src/alt-text/alt-tree-mui';
+import { createAltTree } from '../../gosling.js/src/alt-text/alt-tree-mui';
 import '../../gosling.js/src/alt-text/alt-tree.css';
 
 function json2js(jsonCode: string) {
@@ -229,7 +228,6 @@ function Editor(props: RouteComponentProps) {
     const urlGist = urlParams.get('gist');
     const urlExampleId = urlParams.get('example') ?? '';
     const urlShowAlt = urlParams.get('alt');
-    console.log('url show alt', urlShowAlt)
 
     // Spec stored in the tab session
     const sessionSpec = useMemo(() => {
@@ -1461,7 +1459,7 @@ function Editor(props: RouteComponentProps) {
                                                                     {JSON.stringify(previewAlt.current[selectedPreviewAlt].data)} */}
                                                         
                                                                     {/* {createTree(previewAlt.current[selectedPreviewAlt].data)} */}
-                                                                    {createTreeMUI(previewAlt.current[selectedPreviewAlt].data)}
+                                                                    {createAltTree(previewAlt.current[selectedPreviewAlt].data)}
                                                                 </div>
                                                             </div>
                                                         </>

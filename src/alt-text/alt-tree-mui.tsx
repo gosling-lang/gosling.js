@@ -16,8 +16,7 @@ function createTreeItemLeaf(id: string, label: string, item: string | number | b
 }
 
 
-
-export function createTreeMUI(data: AltGoslingSpec) {
+function createTreeMUI(data: AltGoslingSpec) {
     return (
         <TreeView
             className = 'tree-view'
@@ -182,6 +181,16 @@ function createTreeTrackMUI(t: AltTrack) {
             </TreeItem>
         </TreeItem>
     );
+}
+
+
+export function createAltTree(data: AltGoslingSpec) {
+    return createTreeMUI(data)
+    // try {
+    //     createTreeMUI(data)
+    // } catch {
+    //     return <></>
+    // }
 }
 
 
