@@ -1,7 +1,12 @@
-import type { AltTrack } from './alt-gosling-schema';
+import type { AltTrackSingle, AltTrackOverlaidByMark, AltTrackOverlaidByDataInd } from './alt-gosling-schema';
 
-export function determineSpecialCases(altTrack: AltTrack): string | undefined {
-    let _mark = altTrack.appearance.details.mark;
+export function determineSpecialCases(altTrack: AltTrackSingle | AltTrackOverlaidByMark | AltTrackOverlaidByDataInd, markIndex?: number): string | undefined {
+    let _mark;
+    if (Array.isArray(altTrack.appearance.details.mark)) {
+        _mark = altTrack.appearance.details.mark[markIndex as number];
+    } else {
+        _mark = altTrack.appearance.details.mark;
+    }
     let _genomicEncodings = altTrack.appearance.details.encodings.encodingDeepGenomic.map(o => o.name);
     let _quantitativeEncodings = altTrack.appearance.details.encodings.encodingDeepQuantitative.map(o => o.name);
     let _nominalEncodings = altTrack.appearance.details.encodings.encodingDeepNominal.map(o => o.name);

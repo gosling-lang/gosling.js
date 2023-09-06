@@ -1,7 +1,7 @@
 import type { GoslingSpec, Track, PartialTrack,ChannelDeep, ChannelValue, ChannelTypes, DataDeep, DataTransform, Mark, Encoding, Assembly, Layout, Orientation, DomainInterval, DomainChrInterval, DomainChr, ZoomLimits, AxisPosition, Style, Datum, X, Y, Row, Color, Size, Stroke, StrokeWidth, Opacity } from '@gosling-lang/gosling-schema';
 
 
-export interface AltCounter {
+export type AltCounter = {
     nTracks: number;
     rowViews: number;
     colViews: number;
@@ -11,45 +11,54 @@ export interface AltCounter {
     matrix: number[][];
 }
 
-export interface AltParentValues {
+export type AltParentValues = {
     layout: 'linear' | 'circular';
     arrangement: 'parallel' | 'serial' | 'horizontal' | 'vertical';
     alignment: 'singular' | 'stack' | 'overlay';
     data?: DataDeep;
     mark?: Mark;
-    //encodings for stacked?
 }
 
-export interface AltEncodingSeparated {
+export type AltEncodingSeparated = {
     encodingDeepGenomic: EncodingDeepSingle[];
     encodingDeepQuantitative: EncodingDeepSingle[];
     encodingDeepNominal: EncodingDeepSingle[];
     encodingValue: EncodingValueSingle[];
 }
 
-export interface EncodingDeepSingle {
+export type EncodingDeepSingle = {
     name: keyof typeof ChannelTypes;
     description: String;
     details: ChannelDeep;
 }
 
-export interface EncodingValueSingle {
+export type EncodingValueSingle = {
     name: keyof typeof ChannelTypes;
     description: String;
     details: ChannelValue;
 }
 
-export interface AltTrackPositionDetails {
+export type AltTrackPositionDetails = {
     trackNumber: number;
     rowNumber: number;
     colNumber: number;
 }
 
-export interface AltTrackAppearanceDetails {
+export type AltTrackAppearanceDetails = {
+    overlaid: false;
     layout: Layout;
-    overlaid: boolean;
     mark: Mark;
     encodings: AltEncodingSeparated;
+    orientation?: Orientation;
+    assembly?: Assembly;
+}
+
+export type AltTrackAppearanceDetailsOverlaid = {
+    overlaid: true;
+    layout: Layout;
+    mark: Mark[];
+    encodings: AltEncodingSeparated;
+    encodingsByMark: AltEncodingSeparated[];
     orientation?: Orientation;
     assembly?: Assembly;
 }
@@ -61,8 +70,6 @@ export interface AltTrackDataFields {
 }
 
 export interface AltTrackDataDetails {
-    // xDomain?: DomainInterval | DomainChrInterval | DomainChr;
-    // yDomain?: DomainInterval | DomainChrInterval | DomainChr;
     data: DataDeep;
     fields: AltTrackDataFields;
     dataStatistics?: AltDataStatistics;
@@ -72,9 +79,15 @@ export interface AltTrackPosition {
     description: string;
     details: AltTrackPositionDetails;
 }
+
 export interface AltTrackAppearance {
     description: string;
     details: AltTrackAppearanceDetails;
+}
+
+export interface AltTrackAppearanceOverlaid {
+    description: string;
+    details: AltTrackAppearanceDetailsOverlaid;
 }
 
 export interface AltTrackData {
@@ -82,17 +95,46 @@ export interface AltTrackData {
     details: AltTrackDataDetails;
 }
 
-export interface AltTrack {
-    uid: string;
+export interface AltTrackOverlaidByDataInd {
     description: string;
-
     charttype?: string;
-    title?: string;
-    
-    position: AltTrackPosition;
     appearance: AltTrackAppearance;
     data: AltTrackData; 
 }
+
+export interface AltTrackBase {
+    type: 'single' | 'ov-mark' | 'ov-data';
+    description: string;
+    title?: string;
+    position: AltTrackPosition;
+}
+
+
+export interface AltTrackSingle extends AltTrackBase {
+    type: 'single';
+    uid: string;
+    charttype?: string;
+    appearance: AltTrackAppearance;
+    data: AltTrackData; 
+}
+
+export interface AltTrackOverlaidByMark extends AltTrackBase {
+    type: 'ov-mark';
+    uid: string;
+    charttype?: string[];
+    appearance: AltTrackAppearanceOverlaid;
+    data: AltTrackData; 
+}
+
+export interface AltTrackOverlaidByData extends AltTrackBase {
+    type: 'ov-data';
+    uids: string[];
+    tracks: AltTrackOverlaidByDataInd[];
+}
+
+export type AltTrackOverlaid = AltTrackOverlaidByMark | AltTrackOverlaidByData;
+
+export type AltTrack = AltTrackSingle | AltTrackOverlaid;
 
 export interface AltDataStatistics {
     id: string;
@@ -108,7 +150,7 @@ export interface AltDataStatistics {
     highestCategory?: string[];
 }
 
-export interface compositionTracker {
+export type compositionTracker = {
     nRows: number;
     nCols: number;
     allVertical: boolean;
@@ -117,20 +159,20 @@ export interface compositionTracker {
     RowsCols: number[]
 }
 
-export interface AltSpecComposition {
+export type AltSpecComposition = {
     description: string;
     nTracks: number;
     parentValues: AltParentValues;
     counter: AltCounter;
 }
 
-export interface AltGoslingSpec {
+export type AltGoslingSpec = {
     title?: string;
     subtitle?: string;
     alt: string;
     longDescription: string;
     composition: AltSpecComposition;
-    tracks: Array<AltTrack> // TrackSingleAlt | TrackOverlaidAlt | TrackMultipleAlt>;
+    tracks: Array<AltTrack>
 }
 
 

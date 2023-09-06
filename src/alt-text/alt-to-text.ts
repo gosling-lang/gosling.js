@@ -1,4 +1,4 @@
-import type { AltGoslingSpec, AltTrack } from './alt-gosling-schema';
+import type { AltGoslingSpec, AltTrackSingle, AltTrackOverlaid, AltTrackOverlaidByMark, AltTrackOverlaidByData } from './alt-gosling-schema';
 import { attributeExists, attributeExistsReturn, attributeExistsAndChildHasValue, arrayToString, markToText, channelToText, capDesc } from './util';
 import { IsChannelValue, IsChannelDeep } from '@gosling-lang/gosling-schema';
 // import { SUPPORTED_CHANNELS } from './../core/mark/index';

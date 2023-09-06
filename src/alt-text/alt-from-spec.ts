@@ -1,5 +1,5 @@
-import type { GoslingSpec, Track, SingleTrack, ChannelTypes, View, PartialTrack, RootSpecWithSingleView, ResponsiveSpecOfSingleView, RootSpecWithMultipleViews, ResponsiveSpecOfMultipleViews, ChannelValue, Encoding, DataDeep, MultivecData, X, Y, Color, Size, Text, Stroke, StrokeWidth, Opacity, Row, OverlaidTrack, OverlaidTracks } from '@gosling-lang/gosling-schema';
-import type { AltTrackDataFields, AltSpecComposition, AltTrackPosition, AltTrackAppearance, AltTrackData, AltTrackDataDetails, AltTrackAppearanceDetails, AltTrackPositionDetails, AltTrack, AltEncodingSeparated, AltCounter, AltParentValues, AltGoslingSpec, EncodingValueSingle, EncodingDeepSingle } from './alt-gosling-schema';
+import type { GoslingSpec, Mark, Track, SingleTrack, ChannelTypes, View, PartialTrack, RootSpecWithSingleView, ResponsiveSpecOfSingleView, RootSpecWithMultipleViews, ResponsiveSpecOfMultipleViews, ChannelValue, Encoding, DataDeep, MultivecData, X, Y, Color, Size, Text, Stroke, StrokeWidth, Opacity, Row, OverlaidTrack, OverlaidTracks } from '@gosling-lang/gosling-schema';
+import type { AltTrackDataFields,AltTrackOverlaidByDataInd,  AltTrackOverlaidByMark, AltTrackOverlaidByData, AltTrackAppearanceDetailsOverlaid, AltTrackAppearanceOverlaid, AltSpecComposition, AltTrackPosition, AltTrackAppearance, AltTrackData, AltTrackDataDetails, AltTrackAppearanceDetails, AltTrackPositionDetails, AltTrackSingle, AltTrackOverlaid, AltEncodingSeparated, AltCounter, AltParentValues, AltGoslingSpec, EncodingValueSingle, EncodingDeepSingle } from './alt-gosling-schema';
 import { attributeExists, attributeExistsDefaultString, attributeHasChildValue, attributeExistsAndChildHasValue} from './util';
 import { SUPPORTED_CHANNELS } from './../core/mark/index';
 import { determineSpecialCases } from './chart-types';
@@ -27,7 +27,7 @@ export function getAltSpec(
     spec: GoslingSpec
 ): AltGoslingSpec {
     var altSpec = {} as AltGoslingSpec;
-    altSpec.tracks = {} as AltTrack[];
+    altSpec.tracks = {} as (AltTrackSingle | AltTrackOverlaid)[];
 
     altSpec.title =  spec.title;
     altSpec.subtitle =  spec.subtitle;
@@ -65,19 +65,16 @@ function determineStructure(
         // multiple tracks
         if (specPart.tracks.length > 1) {
 
-            // check if overlaid or stacked
+            // check if overlaid
             if (IsOverlaidTracks(specPart)) {
                 const track =  specPart as OverlaidTracks;
                 altOverlaidTracks(track, altParentValuesCopy, counter);
-                //altSpec.tracks[counter.nTracks] = altOverlaidTracks(track, altParentValuesCopy, counter);
+                // altSpec.tracks[counter.nTracks] = altOverlaidTracks(track, altParentValuesCopy, counter);
                 if (counter.nTracks > 0) {
                     counter.allPositions = [...counter.allPositions, [counter.rowViews, counter.colViews]]
                 }
                 counter.nTracks ++;
-               
-            // } else if (IsStackedTracks(specPart)) {
-            //     altStackedTracks(specPart, altParentValuesCopy, counter);
-            //     counter.nTracks ++;
+
             } else {
                 // otherwise treat every track as a single track
                 for (const i in specPart.tracks) {
@@ -140,18 +137,26 @@ function altUpdateParentValues(
     return altParentValuesCopy;
 }
 
+// function altTrackBase(
+//     track: SingleTrack | OverlaidTracks,
+//     altParentValues: AltParentValues, 
+//     counter: AltCounter
+// ) {
+
+//     // position
+//     var positionDetails: AltTrackPositionDetails = {trackNumber: counter.nTracks, rowNumber: counter.rowViews, colNumber: counter.colViews}
+
+
+
+// }
+
 function altSingleTrack(
     track: SingleTrack,
     altParentValues: AltParentValues, 
     counter: AltCounter
-): AltTrack {
-    var altTrack = {} as AltTrack;
+): AltTrackSingle {
+    var altTrack = {} as AltTrackSingle;
 
-    //console.log(track.id);
-
-
-
-    //const trackId = firstResolvedSpec.id ?? uuid.v4();
     // uid
     if (track.id !== 'unknown') {
         var uid = track.id as string;
@@ -167,7 +172,7 @@ function altSingleTrack(
     // appearance (anything from mark to layout to encodings)
     var appearanceDetails = {} as AltTrackAppearanceDetails;
 
-    // appearanceDetails.assembly = track.assembly;
+    appearanceDetails.assembly = track.assembly;
     appearanceDetails.layout = altParentValues.layout;
     appearanceDetails.overlaid = false;
     appearanceDetails.mark = track.mark;
@@ -196,11 +201,183 @@ function altSingleTrack(
     // empty description, to be filled in.
     altTrack.description = '';
 
-    //console.log(altTrack)
-
     return altTrack;
     
 }
+
+
+function altOverlaidTracks(
+    specPart: OverlaidTracks,
+    altParentValues: AltParentValues, 
+    counter: AltCounter
+): AltTrackOverlaid {
+    let tracks: Track[] = convertToFlatTracks(specPart);
+    tracks = spreadTracksByData(tracks);
+
+    // test if overlaid track has multiple data sources
+    if (tracks.length > 1) {
+        return altOverlaidByData(specPart, tracks, altParentValues, counter);
+    } else {
+        // if (IsOverlaidTrack(specPart)) {}
+        return altOverlaidByMark(specPart, altParentValues, counter);
+    }
+}
+
+function altOverlaidByMark(
+    track: OverlaidTracks,
+    altParentValues: AltParentValues, 
+    counter: AltCounter
+): AltTrackOverlaidByMark {
+    var altTrack = {} as AltTrackOverlaidByMark;
+
+    // uid
+    if (track.id !== 'unknown') {
+        var uid = track.id as string;
+    } else {
+        // figure out how to get the uid.
+        var uid = '';
+    }
+
+    // position
+    var positionDetails: AltTrackPositionDetails = {trackNumber: counter.nTracks, rowNumber: counter.rowViews, colNumber: counter.colViews}
+
+    // appearance (anything from mark to layout to encodings)
+    var appearanceDetails = {} as AltTrackAppearanceDetailsOverlaid;
+    
+    appearanceDetails.assembly = track.assembly;
+    appearanceDetails.layout = altParentValues.layout;
+    appearanceDetails.overlaid = true;
+    appearanceDetails.encodings = getSeparatedEncodings(track);
+    
+    var marks = [] as Mark[];
+    var encodingsByMark = [] as AltEncodingSeparated[];
+    if (track.mark) {
+        marks.push(track.mark);
+    } 
+    for (let o of track.tracks) {
+        let partialOverlaidTrack = o as Partial<OverlaidTrack>;
+        if (partialOverlaidTrack.mark) {
+            marks.push(partialOverlaidTrack.mark);
+        }
+        encodingsByMark.push(getSeparatedEncodings(partialOverlaidTrack));
+        
+    }
+    appearanceDetails.mark = marks;
+    appearanceDetails.encodingsByMark = encodingsByMark;
+    
+    // data
+    if (track.data) {
+        var dataFields = determineFields(track.data, appearanceDetails.encodings);
+        var dataDetails: AltTrackDataDetails = {data: track.data, fields: dataFields};
+        var data: AltTrackData = {description: '', details: dataDetails};
+        altTrack.data = data;
+    }
+
+    // add temporary empty descriptions
+    var position: AltTrackPosition = {description: '', details: positionDetails}
+    var appearance: AltTrackAppearanceOverlaid = {description: '', details: appearanceDetails};
+   
+    // add to altTrack
+    altTrack.uid = uid;
+    altTrack.position = position;
+    altTrack.appearance = appearance;
+    altTrack.title = track.title;
+   
+    
+    // determine type if possible
+    var charttypes = [] as string[];
+    for (let i = 0; i < marks.length; i++) {
+        let charttype = determineSpecialCases(altTrack, i);
+        if (charttype) {
+            charttypes.push(charttype);
+        }
+    }
+    altTrack.charttype = charttypes
+
+    // empty description, to be filled in.
+    altTrack.description = '';
+
+    return altTrack;
+}
+
+function altOverlaidByData(
+    specPart: OverlaidTracks,
+    tracks: Track[],
+    altParentValues: AltParentValues, 
+    counter: AltCounter
+): AltTrackOverlaidByData {
+    var altTrack = {} as AltTrackOverlaidByData;
+
+    // position
+    var positionDetails: AltTrackPositionDetails = {trackNumber: counter.nTracks, rowNumber: counter.rowViews, colNumber: counter.colViews}
+
+    var uids = [] as string[]
+    var altTrackInd = [] as AltTrackOverlaidByDataInd[];
+    for (var t of tracks) {
+        let track = t as SingleTrack;
+        // uid
+        if (track.id !== 'unknown') {
+            var uid = track.id as string;
+        } else {
+            // figure out how to get the uid.
+            var uid = '';
+        }
+        uids.push(uid);
+        altTrackInd.push(altOverlaidByDataSingleTrack(track, altParentValues, counter));
+    }
+
+    var position: AltTrackPosition = {description: '', details: positionDetails};
+    altTrack.position = position;
+    
+    altTrack.title = specPart.title;
+
+    altTrack.tracks = altTrackInd;
+    altTrack.uids = uids;
+    altTrack.description = '';
+
+    return altTrack;
+}
+
+
+
+function altOverlaidByDataSingleTrack(
+    track: SingleTrack,
+    altParentValues: AltParentValues, 
+    counter: AltCounter
+): AltTrackOverlaidByDataInd {
+    var altTrack = {} as AltTrackOverlaidByDataInd;
+
+    // appearance (anything from mark to layout to encodings)
+    var appearanceDetails = {} as AltTrackAppearanceDetails;
+
+    appearanceDetails.assembly = track.assembly;
+    appearanceDetails.layout = altParentValues.layout;
+    appearanceDetails.overlaid = false;
+    appearanceDetails.mark = track.mark;
+    appearanceDetails.encodings = getSeparatedEncodings(track);
+
+    // data
+    // add genomic_field, value_field, category_field for data retrieval
+    var dataFields = determineFields(track.data, appearanceDetails.encodings);
+    var dataDetails: AltTrackDataDetails = {data: track.data, fields: dataFields};
+   
+    // add temporary empty descriptions
+    var appearance: AltTrackAppearance = {description: '', details: appearanceDetails};
+    var data: AltTrackData = {description: '', details: dataDetails};
+    
+    // add to altTrack
+    altTrack.appearance = appearance;
+    altTrack.data = data;
+    
+    // determine type if possible
+    altTrack.charttype = determineSpecialCases(altTrack);
+
+    // empty description, to be filled in.
+    altTrack.description = '';
+
+    return altTrack;
+}
+
 
 
 function determineFields(
@@ -237,92 +414,9 @@ function determineFields(
     }
 
     return fields;
-
-    // // retrieve genomicField
-    // if (attributeExists(encodingField, 'x')) {
-    //     fields.genomicField = (encodingField.x as X).field as string; // x is always genomic
-    // } else if (attributeExists(encodingField, 'y')) {
-    //     if ((encodingField.y as Y).type == 'genomic') {
-    //         fields.genomicField = (encodingField.y as Y).field as string;
-    //     }
-    // } else {
-    //     fields.genomicField = 'position';
-    // }
-
-    // // retrieve valueField
-    // if (attributeExists(encodingField, 'y')) {
-    //     if ((encodingField.y as Y).type == 'quantitative') {
-    //         fields.valueField = (encodingField.y as Y).field as string;
-    //     }
-    // } else if (attributeExists(encodingField, 'color')) {
-    //     if ((encodingField.color as Color).type == 'quantitative') {
-    //         fields.valueField = (encodingField.color as Color).field as string;
-    //     }
-    // } else if (attributeExists(encodingField, 'size')) {
-    //     if ((encodingField.size as Size).type == 'quantitative') {
-    //         fields.valueField = (encodingField.size as Size).field as string;
-    //     }
-    // } else if (attributeExists(encodingField, 'text')) {
-    //     if ((encodingField.text as Text).type == 'quantitative') {
-    //         fields.valueField = (encodingField.size as Size).field as string;
-    //     }
-    // } else if (attributeExists(encodingField, 'stroke')) {
-    //     if ((encodingField.stroke as Stroke).type == 'quantitative') {
-    //         fields.valueField = (encodingField.stroke as Stroke).field as string;
-    //     }
-    // } else if (attributeExists(encodingField, 'strokeWidth')) {
-    //     if ((encodingField.strokeWidth as StrokeWidth).type == 'quantitative') {
-    //         fields.valueField = (encodingField.strokeWidth as StrokeWidth).field as string;
-    //     }
-    // } else if (attributeExists(encodingField, 'opacity')) {
-    //     if ((encodingField.opacity as Opacity).type == 'quantitative') {
-    //         fields.valueField = (encodingField.opacity as Opacity).field as string;
-    //     }
-    // } else {
-    //     fields.valueField = 'value';
-    // }
-
-    // // retrieve categoryField
-    // if (attributeExists(encodingField, 'row')) {
-    //     if ((encodingField.row as Row).type == 'nominal') {
-    //         fields.categoryField = (encodingField.row as Row).field as string;
-    //     }
-    // } else if (attributeExists(encodingField, 'color')) {
-    //     if ((encodingField.color as Color).type == 'nominal') {
-    //         fields.categoryField = (encodingField.color as Color).field as string;
-    //     }
-    // } else if (attributeExists(encodingField, 'y')) {
-    //     if ((encodingField.y as Y).type == 'nominal') {
-    //         fields.categoryField = (encodingField.y as Y).field as string;
-    //     }
-    // } else if (attributeExists(encodingField, 'size')) {
-    //     if ((encodingField.size as Size).type == 'nominal') {
-    //         fields.categoryField = (encodingField.size as Size).field as string;
-    //     }
-    // } else if (attributeExists(encodingField, 'text')) {
-    //     if ((encodingField.text as Text).type == 'nominal') {
-    //         fields.categoryField = (encodingField.size as Size).field as string;
-    //     }
-    // } else if (attributeExists(encodingField, 'stroke')) {
-    //     if ((encodingField.stroke as Stroke).type == 'nominal') {
-    //         fields.categoryField = (encodingField.stroke as Stroke).field as string;
-    //     }
-    // } else if (attributeExists(encodingField, 'nominal')) {
-    //     if ((encodingField.strokeWidth as StrokeWidth).type == 'nominal') {
-    //         fields.categoryField = (encodingField.strokeWidth as StrokeWidth).field as string;
-    //     }
-    // } else if (attributeExists(encodingField, 'nominal')) {
-    //     if ((encodingField.opacity as Opacity).type == 'nominal') {
-    //         fields.categoryField = (encodingField.opacity as Opacity).field as string;
-    //     }
-    // } else {
-    //    fields.categoryField = ''; 
-    // }
-
-    // return fields;
 }
 
-export function getSeparatedEncodings(track: SingleTrack): AltEncodingSeparated {
+export function getSeparatedEncodings(track: SingleTrack | OverlaidTracks | Partial<OverlaidTrack>): AltEncodingSeparated {
     const encodingDeepGenomic: EncodingDeepSingle[] = [];
     const encodingDeepQuantitative: EncodingDeepSingle[] = [];
     const encodingDeepNominal: EncodingDeepSingle[] = [];
@@ -345,214 +439,6 @@ export function getSeparatedEncodings(track: SingleTrack): AltEncodingSeparated 
     const encodingSeparated: AltEncodingSeparated = {encodingDeepGenomic: encodingDeepGenomic, encodingDeepQuantitative: encodingDeepQuantitative, encodingDeepNominal: encodingDeepNominal, encodingValue: encodingValue};
     return encodingSeparated;
 }
-
-// function checkEncodings(
-//     track: SingleTrack
-// ): AltEncodingSeparated {
-
-    
-
-//     var encodingDeepGenomic = {} as EncodingDeep;
-//     var encodingDeepQuantitative = {} as EncodingDeep;
-//     var encodingDeepNominal = {} as EncodingDeep;
-//     var encodingValue = {} as EncodingValue;
-
-//     const supportedEncodings = ['x', 'y', 'xe', 'ye', 'x1', 'y1', 'x1e', 'y1e', 'row', 'color', 'size', 'text', 'stroke', 'strokeWidth', 'opacity'];
-    
-    
-
-//     [keyof typeof ChannelTypes, keyof typeof ChannelTypes];
-
-//     if (track.x, 'x') {
-//         var e = track.x;
-//         var name = 'x';
-//         if (IsChannelDeep(e)) {
-//             if (e.type === 'genomic') {
-//                 encodingDeepGenomic[name] = {description: '', details: e};
-//             } else if (e.type === 'quantitative') {
-//                 encodingDeepQuantitative[name] = {description: '', details: e};
-//             } else {
-//                 encodingDeepNominal[name] = {description: '', details: e;
-//             }
-//         } else if (IsChannelValue(e)) {
-//             encodingValue[name] = {description: '', details: e};
-//         }
-//     }
-
-//     if (IsChannelDeep(track.x)) {
-//         // has to be genomic
-//         encodingDeepGenomic['x'] = {description: '', details: track.x};
-//     } else if (IsChannelValue(track.x)) {
-//         encodingValue['x'] = {description: '', details: track.x};
-//     }
-
-//     if (IsChannelDeep(track.y)) {
-//         if (track.y.type === 'genomic') {
-//             encodingDeepGenomic['y'] = {description: '', details: track.y};
-//         } else if (track.y.type === 'quantitative') {
-//             encodingDeepQuantitative['y'] = {description: '', details: track.y};
-//         } else {
-//             encodingDeepNominal['y'] = {description: '', details: track.y};
-//         }
-//     } else if (IsChannelValue(track.y)) {
-//         encodingValue['y'] = {description: '', details: track.y};
-//     }
-
-//     if (IsChannelDeep(track.xe)) {
-//         if (track.xe.type === 'genomic') {
-//             encodingDeepGenomic['xe'] = {description: '', details: track.xe};
-//         } else if (track.xe.type === 'quantitative') {
-//             encodingDeepQuantitative['xe'] = {description: '', details: track.xe};
-//         } else {
-//             encodingDeepNominal['xe'] = {description: '', details: track.xe};
-//         }
-//     } else if (IsChannelValue(track.xe)) {
-//         encodingValue['xe'] = {description: '', details: track.xe};
-//     }
-
-
-//     if (IsChannelDeep(track.y)) {
-//         encodingFields.y = track.y;
-//     } else if (IsChannelValue(track.y)) {
-//         encodingStatics.y = track.y;
-//     }
-
-//     if (IsChannelDeep(track.xe)) {
-//         encodingFields.xe = track.xe;
-//     } else if (IsChannelValue(track.xe)) {
-//         encodingStatics.xe = track.xe;
-//     }
-
-//     if (IsChannelDeep(track.ye)) {
-//         encodingFields.ye = track.ye;
-//     } else if (IsChannelValue(track.ye)) {
-//         encodingStatics.ye = track.ye;
-//     }
-
-//     if (IsChannelDeep(track.x1)) {
-//         encodingFields.x1 = track.x1;
-//     } else if (IsChannelValue(track.x1)) {
-//         encodingStatics.x1 = track.x1;
-//     }
-
-//     if (IsChannelDeep(track.y1)) {
-//         encodingFields.y1 = track.y1;
-//     } else if (IsChannelValue(track.y1)) {
-//         encodingStatics.y1 = track.y1;
-//     }
-
-//     if (IsChannelDeep(track.x1e)) {
-//         encodingFields.x1e = track.x1e;
-//     } else if (IsChannelValue(track.x1e)) {
-//         encodingStatics.x1e = track.x1e;
-//     }
-
-//     if (IsChannelDeep(track.y1e)) {
-//         encodingFields.y1e = track.y1e;
-//     } else if (IsChannelValue(track.y1e)) {
-//         encodingStatics.y1e = track.y1e;
-//     }
-
-//     if (IsChannelDeep(track.row)) {
-//         encodingFields.row = track.row;
-//     } else if (IsChannelValue(track.row)) {
-//         encodingStatics.row = track.row;
-//     }
-
-//     if (IsChannelDeep(track.color)) {
-//         encodingFields.color = track.color;
-//     } else if (IsChannelValue(track.color)) {
-//         encodingStatics.color = track.color;
-//     }
-
-//     if (IsChannelDeep(track.size)) {
-//         encodingFields.size = track.size;
-//     } else if (IsChannelValue(track.size)) {
-//         encodingStatics.size = track.size;
-//     }
-
-//     if (IsChannelDeep(track.text)) {
-//         encodingFields.text = track.text;
-//     } else if (IsChannelValue(track.text)) {
-//         encodingStatics.text = track.text;
-//     }
-
-//     if (IsChannelDeep(track.stroke)) {
-//         encodingFields.stroke = track.stroke;
-//     } else if (IsChannelValue(track.stroke)) {
-//         encodingStatics.stroke = track.stroke;
-//     }
-
-//     if (IsChannelDeep(track.strokeWidth)) {
-//         encodingFields.strokeWidth = track.strokeWidth;
-//     } else if (IsChannelValue(track.strokeWidth)) {
-//         encodingStatics.strokeWidth = track.strokeWidth;
-//     }
-
-//     if (IsChannelDeep(track.opacity)) {
-//         encodingFields.opacity = track.opacity;
-//     } else if (IsChannelValue(track.opacity)) {
-//         encodingStatics.opacity = track.opacity;
-//     }
-
-//     // bundle together into one object
-//     const encodingSeparated: AltEncodingSeparated = {encodingField: encodingFields, encodingStatic: encodingStatics}
-//     return encodingSeparated;
-// }
-
-// function altFlatTracks() {
-
-// }
-
-// function altStackedTracks(
-//     specPart: any,
-//     altParentValues: AltParentValues, 
-//     counter: AltCounter
-// ) {
-    
-// }
-
-function altOverlaidTracks(
-    specPart: OverlaidTracks,
-    altParentValues: AltParentValues, 
-    counter: AltCounter
-) {
-    let tracks: Track[] = convertToFlatTracks(specPart);
-    console.log('before spreading', tracks)
-    tracks = spreadTracksByData(tracks);
-    console.log('after spreading', tracks)
-    if (tracks.length > 1) {
-
-    } else {
-
-    }
-    // test if different data source or not
-    // if different data source, get new track for each, and do that
-}
-
-function altOverlaidDifferentData(
-
-) {
-
-}
-
-function altOverlaidSameData(
-
-) {
-
-}
-
-function altOverlaidSameDataMultipleMarks(
-
-) {
-
-}
-
-function altOverlaidSameDataOther(
-
-    ) {
-        
-    }
 
 
 function getPositionMatrix(counter: AltCounter) {
