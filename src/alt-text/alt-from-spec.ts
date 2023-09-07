@@ -68,8 +68,7 @@ function determineStructure(
             // check if overlaid
             if (IsOverlaidTracks(specPart)) {
                 const track =  specPart as OverlaidTracks;
-                altOverlaidTracks(track, altParentValuesCopy, counter);
-                // altSpec.tracks[counter.nTracks] = altOverlaidTracks(track, altParentValuesCopy, counter);
+                altSpec.tracks[counter.nTracks] = altOverlaidTracks(track, altParentValuesCopy, counter);
                 if (counter.nTracks > 0) {
                     counter.allPositions = [...counter.allPositions, [counter.rowViews, counter.colViews]]
                 }
@@ -330,6 +329,8 @@ function altOverlaidByData(
     altTrack.position = position;
     
     altTrack.title = specPart.title;
+
+    altTrack.appearance = {details: {layout: 'linear'}}; // only linear is supported at this time
 
     altTrack.tracks = altTrackInd;
     altTrack.uids = uids;

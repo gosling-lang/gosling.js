@@ -16,8 +16,12 @@ export function addDescriptions(altGoslingSpec: AltGoslingSpec) {
 
 function addTrackPositionDescriptions(altGoslingSpec: AltGoslingSpec) {
     if (altGoslingSpec.composition.nTracks == 1) {
-        altGoslingSpec.tracks[0].position.description = 'This is the only track.'
-        altGoslingSpec.composition.description = 'There is one (' + altGoslingSpec.tracks[0].appearance.details.layout + ') track.'
+        altGoslingSpec.tracks[0].position.description = 'This is the only track.';
+        if (altGoslingSpec.tracks[0].type === 'single') {
+            altGoslingSpec.composition.description = 'There is one (' + altGoslingSpec.tracks[0].appearance.details.layout + ') track.';
+        } else {
+            altGoslingSpec.composition.description = 'There is one (overlaid) track.';
+        }
     } else if (altGoslingSpec.composition.nTracks == 2) {
         addTrackPositionDescriptionsTwo(altGoslingSpec);      
     } else {
