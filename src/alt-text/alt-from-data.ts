@@ -1,6 +1,7 @@
 //const _spec = models[0]?.spec(); _spec?.id
 import type { AltGoslingSpec, AltTrackDataFields, AltDataStatistics } from './alt-gosling-schema';
 import type { Datum } from '@gosling-lang/gosling-schema';
+import { addTrackDataDescriptionsTrack } from './alt-to-text'
 
 export function altRetrieveDataStatistics(id: string, flatTileData: Datum[], dataFields: AltTrackDataFields): AltDataStatistics {
 
@@ -81,7 +82,7 @@ export function altUpdateSpecWithData(
     for (let i = 0; i < Object.keys(altGoslingSpec.tracks).length; i++) {
         var track = altGoslingSpec.tracks[i];
 
-        if (track.type === 'single' || track.type === 'ov-mark') {
+        if (track.alttype === 'single' || track.alttype === 'ov-mark') {
             if (track.uid === id) {
 
                 // get genomic field headers for that track
@@ -94,6 +95,7 @@ export function altUpdateSpecWithData(
                 track.data.details.dataStatistics = altDataStatistics;
     
                 // update description            
+                addTrackDataDescriptionsTrack(track);
     
             }
         }     
