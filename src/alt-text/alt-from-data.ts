@@ -79,25 +79,24 @@ export function altUpdateSpecWithData(
 
     // get correct track index
     for (let i = 0; i < Object.keys(altGoslingSpec.tracks).length; i++) {
+        var track = altGoslingSpec.tracks[i];
 
-        if(i === 3) {
-            continue
-        }
+        if (track.type === 'single' || track.type === 'ov-mark') {
+            if (track.uid === id) {
 
-        if (altGoslingSpec.tracks[i].uid === id) {
-
-            // get genomic field headers for that track
-            const fields = altGoslingSpec.tracks[i].data.details.fields;
-
-            // retrieve data statistics
-            const altDataStatistics = altRetrieveDataStatistics(id, flatTileData, fields);
-
-            // fill in data
-            altGoslingSpec.tracks[i].data.details.dataStatistics = altDataStatistics;
-
-            // update description            
-
-        }
+                // get genomic field headers for that track
+                const fields = track.data.details.fields;
+    
+                // retrieve data statistics
+                const altDataStatistics = altRetrieveDataStatistics(id, flatTileData, fields);
+    
+                // fill in data
+                track.data.details.dataStatistics = altDataStatistics;
+    
+                // update description            
+    
+            }
+        }     
     }
 
     return(altGoslingSpec);

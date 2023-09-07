@@ -192,9 +192,15 @@ function addTrackAppearanceDescriptions(altGoslingSpec: AltGoslingSpec) {
                 desc = desc.concat('Chart with ' + markToText.get(track.appearance.details.mark));
             }
     
-            desc = desc.concat(' ' + addEncodingDescriptions(track));
+            let encodingDescriptions = addEncodingDescriptions(track);
+            desc = desc.concat(' ' + encodingDescriptions.desc);
         
             track.appearance.description = desc;
+            track.appearance.details.encodingsDescList = encodingDescriptions.descList;
+        } else if (track.type === 'ov-mark') {
+            track.appearance.details.encodingsDescList = [[]]
+        } else {
+
         }
     }   
 }
@@ -208,23 +214,37 @@ function addEncodingDescriptions(track: AltTrackSingle) {
     var descNominal = '';
     var descValue = '';
 
+    var descList = {} as string[][];
+
     // genomic encodings
     let genomicEncodingsI = track.appearance.details.encodings.encodingDeepGenomic.map(o => o.name);
     if (genomicEncodingsI.includes('x') && genomicEncodingsI.includes('y')) {
         descGenomic = descGenomic.concat('The genome is shown on both the x- and y-axes.')
         if (genomicEncodingsI.includes('xe') && genomicEncodingsI.includes('ye')) {
             descGenomic = descGenomic.concat(' Each displays genomic intervals.')
+            descList.push(['x', 'The x-axis show genomic intervals.'])
+            descList.push(['y', 'The y-axis show genomic intervals.'])
         } else if (genomicEncodingsI.includes('xe')) {
             descGenomic = descGenomic.concat(' The genome on the x-axis displays genomic intervals.')
+            descList.push(['x', 'The x-axis show genomic intervals.'])
+            descList.push(['y', 'The y-axis shows the genome.'])
+
         } else if (genomicEncodingsI.includes('ye')) {
             descGenomic = descGenomic.concat(' The genome on the y-axis displays genomic intervals.')
+            descList.push(['x', 'The x-axis shows the genome.'])
+            descList.push(['y', 'The y-axis show genomic intervals.'])
         } else {
+            descList.push(['x', 'The x-axis shows the genome.'])
+            descList.push(['y', 'The y-axis shows the genome.'])
         }
     } else {
         if (genomicEncodingsI.includes('x')) {
             let add = ''
             if (genomicEncodingsI.includes('xe')) {
                 add = 'in intervals'
+                descList.push(['x', 'The x-axis show genomic intervals.'])
+            } else {
+                descList.push(['x', 'The x-axis shows the genome.'])
             }
             descGenomic = descGenomic.concat('The genome is shown ' + add + ' on the x-axis.')
         }
@@ -233,31 +253,40 @@ function addEncodingDescriptions(track: AltTrackSingle) {
             let add = ''
             if (genomicEncodingsI.includes('ye')) {
                 add = 'in intervals'
+                descList.push(['y', 'The y-axis show genomic intervals.'])
+            } else {
+                descList.push(['y', 'The y-axis shows the genome.'])
             }
             descGenomic = descGenomic.concat('The genome is shown ' + add + ' on the y-axis.')
         }
     }
-    if (attributeExists(track.data.details.data, 'binSize')) {
-        let bin = attributeExistsReturn(track.data.details.data, 'binSize') * 256;
-        if (typeof bin === 'number') {
-            descGenomic = descGenomic.concat(' Data is binned in intervals of ' +  + ' basepairs.');
-        }
-    }
+    // if (attributeExists(track.data.details.data, 'binSize')) {
+    //     let bin = attributeExistsReturn(track.data.details.data, 'binSize') * 256;
+    //     if (typeof bin === 'number') {
+    //         descGenomic = descGenomic.concat(' Data is binned in intervals of ' +  + ' basepairs.');
+    //     }
+    // }
 
     // expression encodings
     let quantitativeEncodingsI = track.appearance.details.encodings.encodingDeepQuantitative.map(o => o.name);
 
     if (quantitativeEncodingsI.length > 1) {
         descQuantitative = descQuantitative.concat('The expression values are shown with ' + markToText.get(mark) + ' on the ' + arrayToString(quantitativeEncodingsI) + '-axes.');
-    } else {
+        for (let q of quantitativeEncodingsI) {
+            descList.push([q, 'The ' + q + ' of the ' + markToText.get(mark) + ' shows the expression values.'])
+        }
+    } else if (quantitativeEncodingsI.length === 1) {
         if (quantitativeEncodingsI.includes('y')) {
             descQuantitative = descQuantitative.concat('The expression is shown on the y-axis with ' + markToText.get(mark) + '.');
+            descList.push(['y', 'The y-axis shows the expression with' + markToText.get(mark) + '.'])
         }
         else if (quantitativeEncodingsI.includes('color')) {
             descQuantitative = descQuantitative.concat('The height of the expression values is shown with color.');
+            descList.push(['color', 'The color of the ' + markToText.get(mark) + ' shows the expression values.'])
         }
         else {
             descQuantitative = descQuantitative.concat('The height of the expression values is shown with the ' + quantitativeEncodingsI[0] + '-axis.');
+            descList.push([channelToText.get(quantitativeEncodingsI[0]) as string, 'The ' + channelToText.get(quantitativeEncodingsI[0]) + ' of the ' + markToText.get(mark) + ' shows the expression values.'])
         }
     }
 
@@ -269,18 +298,27 @@ function addEncodingDescriptions(track: AltTrackSingle) {
             descNominal = descNominal.concat('The chart is stratified by rows for the categories.');
             let nominalEncodingsINames = nominalEncodingsI.filter(e => e !== 'row').map(e => channelToText.get(e)) as string[];
             descNominal = descNominal.concat(' The categories are also shown with the ' + arrayToString(nominalEncodingsINames) + ' of the ' + markToText.get(mark) + '.');
+            descList.push(['row', 'The chart is stratified by rows for the categories.']);
+            for (let q of nominalEncodingsINames) {
+                descList.push([channelToText.get(q) as string, 'The ' + q + ' of the ' + markToText.get(mark) + ' show the different categories.']);
+            }
         }
         else {
             let nominalEncodingsINames = nominalEncodingsI.map(e => channelToText.get(e)) as string[];
             descNominal = descNominal.concat('The categories are shown with the ' + arrayToString(nominalEncodingsINames) + ' of the ' + markToText.get(mark) + '.');
+            for (let q of nominalEncodingsI) {
+                descList.push([channelToText.get(q) as string, 'The ' + q + ' of the ' + markToText.get(mark) + ' show the different categories.']);
+            }
         }
     }
     else {
         if (nominalEncodingsI.includes('row')) {
             descNominal = descNominal.concat('The chart is stratified by rows for the categories.');
+            descList.push(['row', 'The chart is stratified by rows for the categories.']);
         }
         else {
             descNominal = descNominal.concat('The ' + channelToText.get(nominalEncodingsI[0]) + ' of the ' + markToText.get(mark) + ' indicates the different categories.');
+            descList.push([channelToText.get(nominalEncodingsI[0]) as string, 'The ' + channelToText.get(nominalEncodingsI[0]) + ' of the ' + markToText.get(mark) + ' show the different categories.']);
         }
     }
 
@@ -288,13 +326,14 @@ function addEncodingDescriptions(track: AltTrackSingle) {
     for (let i = 0; i < track.appearance.details.encodings.encodingValue.length; i++) {
         const e = track.appearance.details.encodings.encodingValue[i];
         if (e.name === 'color') {
-            descValue = descValue.concat('The color of the ' + markToText.get(mark) + ' is ' + e.details.value);
+            descValue = descValue.concat('The color of the ' + markToText.get(mark) + ' is ' + e.details.value + '.');
+            descList.push(['color', 'The color of the ' + markToText.get(mark) + ' is ' + e.details.value + '.']);
         }
     }
 
     const desc = ''.concat(descGenomic + ' ' + descQuantitative + ' ' + descNominal + ' ' + descValue);
 
-    return desc;
+    return {desc: desc, descList: descList};
 }
 
 

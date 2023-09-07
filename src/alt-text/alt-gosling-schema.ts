@@ -49,6 +49,7 @@ export type AltTrackAppearanceDetails = {
     layout: Layout;
     mark: Mark;
     encodings: AltEncodingSeparated;
+    encodingsDescList: string[][];
     orientation?: Orientation;
     assembly?: Assembly;
 }
@@ -59,6 +60,7 @@ export type AltTrackAppearanceDetailsOverlaid = {
     mark: Mark[];
     encodings: AltEncodingSeparated;
     encodingsByMark: AltEncodingSeparated[];
+    encodingsDescList: string[][];
     orientation?: Orientation;
     assembly?: Assembly;
 }
@@ -129,6 +131,7 @@ export interface AltTrackOverlaidByMark extends AltTrackBase {
 export interface AltTrackOverlaidByData extends AltTrackBase {
     type: 'ov-data';
     uids: string[];
+    appearance: {details: {layout: Layout}};
     tracks: AltTrackOverlaidByDataInd[];
 }
 

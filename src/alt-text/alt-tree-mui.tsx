@@ -69,135 +69,172 @@ function createTreeMUI(data: AltGoslingSpec) {
 }
 
 
+// function createTreeTrackMUI(t: AltTrack) {
+//     // if (t.type === 'ov-data') {
+//     //     return createTreeTrackMUIOverlaidData(t);
+//     // } else {
+//     //     return createTreeTrackMUISingle(t);
+//     // }
+// }
+
+
+
 function createTreeTrackMUI(t: AltTrack) {
-    if (t.type === 'ov-data') {
-        return createTreeTrackMUIOverlaidData(t);
-    } else {
-        return createTreeTrackMUISingle(t);
-    }
-}
-
-
-function createTreeTrackMUISingle(t: AltTrackSingle | AltTrackOverlaidByMark) {
-    if(t.uid === 'unknown') {
-        t.uid = t.position.details.trackNumber.toString()
-    }
-
+    var uid = t.position.details.trackNumber as any as string;
+    
     return (
-        <TreeItem key={'T-'+t.uid} nodeId={'T-'+t.uid} label={'Track: '+t.uid}>
-            {createTreeItemLeaf('T-'+t.uid+'-desc', 'Description', t.description, true)}
-
-            <TreeItem key={'T-'+t.uid+'-details'} nodeId={'T-'+t.uid+'details'} label={'Details'}>  
-
-                {t.title ? (
-                    <TreeItem key={'T-'+t.uid+'details-title'} nodeId={'T-'+t.uid+'details-title'} label={'Title: '+t.title}></TreeItem>
-                ): null}   
-
-                {t.charttype ? (
-                    <TreeItem key={'T-'+t.uid+'details-type'} nodeId={'T-'+t.uid+'details-type'} label={'Type: '+t.charttype}></TreeItem>
-                ): null}
-
-                <TreeItem key={'T-'+t.uid+'-details-pos'} nodeId={'T-'+t.uid+'-details-pos'} label={'Position'}>
-                    {createTreeItemLeaf('T-'+t.uid+'-details-pos-desc', 'Description', t.position.description, true)}
-                    {createTreeItemLeaf('T-'+t.uid+'-details-pos-desc', 'Track number:', t.position.details.trackNumber, true)}
-                </TreeItem>
-
-                <TreeItem key={'T-'+t.uid+'details-app'} nodeId={'T-'+t.uid+'details-app'} label={'Appearance'}>
-                    {createTreeItemLeaf('T-'+t.uid+'-details-app-desc', 'Description', t.appearance.description, true)}
-                    <TreeItem key={'T-'+t.uid+'-details-app-details'} nodeId={'T-'+t.uid+'-details-app-details'} label={'Details'}>
-                        {t.type === 'ov-mark' ? (
-                            createTreeItemLeaf('T-'+t.uid+'-details-pos-details-mark', 'Mark', arrayToString(t.appearance.details.mark), true)
-                            ) : (createTreeItemLeaf('T-'+t.uid+'-details-pos-details-mark', 'Mark', t.appearance.details.mark, true))}
-                        {/* {createTreeItemLeaf('T-'+t.uid+'-details-pos-details-mark', 'Mark', t.appearance.details.mark)}  */}
-                            {/* <TreeItem key={'T-'+t.uid+'-details-app-details-encodings'} nodeId={'T-'+t.uid+'-details-app-encodings'} label={'Encodings'}>
-                                <TreeItem key={'T-'+t.uid+'-details-app-details-encodings-field'} nodeId={'T-'+t.uid+'-details-app-encodings-field'} label={'Encodings dependent on data fields'}>
-                                    {Object.keys(t.appearance.details.encodings.encodingField).map(e => (
-                                        <TreeItem key={'T-'+t.uid+'-details-app-details-encodings-field-'+e} nodeId={'T-'+t.uid+'-details-app-encodings-field-'+e} label={e}>
-                                            {createTreeItemLeaf('T-'+t.uid+'-details-app-details-encodings-field-'+e+'-field', 'Field', t.appearance.details.encodings.encodingField[e].field)}
-                                            {createTreeItemLeaf('T-'+t.uid+'-details-app-details-encodings-field-'+e+'-type', 'Type', t.appearance.details.encodings.encodingField[e].type)}
-                                            {t.appearance.details.encodings.encodingField[e].axis ? (
-                                                createTreeItemLeaf('T-'+t.uid+'-details-app-details-encodings-field-'+e+'-axis', 'Axis', t.appearance.details.encodings.encodingField[e].axis)
-                                            ):null}
-                                        </TreeItem>
-                                    ))}
-                                </TreeItem>
-                                <TreeItem key={'T-'+t.uid+'-details-app-details-encodings-static'} nodeId={'T-'+t.uid+'-details-app-encodings-static'} label={'Static encodings'}>
-                                    {Object.keys(t.appearance.details.encodings.encodingStatic).map(e => (
-                                        <TreeItem key={'T-'+t.uid+'-details-app-details-encodings-static-'+e} nodeId={'T-'+t.uid+'-details-app-encodings-static-'+e} label={e}>
-                                            {createTreeItemLeaf('T-'+t.uid+'-details-app-details-encodings-static-'+e+'-value', 'Value', t.appearance.details.encodings.encodingStatic[e].value)}
-                                        </TreeItem>
-                                    ))}
-                                </TreeItem>
-                            </TreeItem> */}
-                        {createTreeItemLeaf('T-'+t.uid+'-details-pos-details-layout', 'Layout (linear or circular)', t.appearance.details.layout, false)} 
-                        {createTreeItemLeaf('T-'+t.uid+'-details-pos-details-overlaid', 'Overlaid', t.appearance.details.overlaid, false)}   
-                    </TreeItem>
-                </TreeItem>
-
-                {t.data.details.dataStatistics ? 
-                    (
-                        <TreeItem key={'T-'+t.uid+'details-data'} nodeId={'T-'+t.uid+'details-data'} label={'Data'}>
-                            {createTreeItemLeaf('T-'+t.uid+'-details-data-desc', 'Description', t.data.description, true)}
-                            <TreeItem key={'T-'+t.uid+'-details-data-details-stats'} nodeId={'T-'+t.uid+'-details-data-details-stats'} label={'Data statistics'}>
-                                <TreeItem key={'T-'+t.uid+'-details-data-details-stats-genomic'} nodeId={'T-'+t.uid+'-details-data-details-stats-genomic'} label={'Genomic range'}>
-                                    {createTreeItemLeaf('T-'+t.uid+'-details-data-details-stats-genomic-min', 'Minimum', t.data.details.dataStatistics?.genomicMin, false)}    
-                                    {createTreeItemLeaf('T-'+t.uid+'-details-data-details-stats-genomic-max', 'Maximum', t.data.details.dataStatistics?.genomicMax, false)}
-                                </TreeItem>
-                                <TreeItem key={'T-'+t.uid+'-details-data-details-stats-value'} nodeId={'T-'+t.uid+'-details-data-details-stats-value'} label={'Value range'}>
-                                    <TreeItem key={'T-'+t.uid+'-details-data-details-stats-value-min'} nodeId={'T-'+t.uid+'-details-data-details-stats-value-min'} label={'Minimum: ' + t.data.details.dataStatistics?.valueMin}>
-                                        {createTreeItemLeaf('T-'+t.uid+'-details-data-details-stats-value-min-genomic', 'Found at position(s): ', t.data.details.dataStatistics?.valueMinGenomic?.toString(), false)}    
-                                    </TreeItem>
-                                    <TreeItem key={'T-'+t.uid+'-details-data-details-stats-value-max'} nodeId={'T-'+t.uid+'-details-data-details-stats-value-max'} label={'Maxmimum: ' + t.data.details.dataStatistics?.valueMax}>
-                                        {createTreeItemLeaf('T-'+t.uid+'-details-data-details-stats-value-max-genomic', 'Found at position(s): ', t.data.details.dataStatistics?.valueMaxGenomic?.toString(), false)}    
-                                    </TreeItem>
-                                </TreeItem>
-
-                                {t.data.details.dataStatistics?.categories ? (
-                                    <TreeItem key={'T-'+t.uid+'-details-data-details-stats-category'} nodeId={'T-'+t.uid+'-details-data-details-stats-category'} label={'Categories'}>
-                                        {createTreeItemLeaf('T-'+t.uid+'-details-data-details-stats-category-list', 'Categories', arrayToString(t.data.details.dataStatistics.categories), false)}    
-                                    </TreeItem>
-                                ): null}
-                            </TreeItem>
-                            <TreeItem key={'T-'+t.uid+'-details-data-details-rawdata'} nodeId={'T-'+t.uid+'-details-data-details-rawdata'} label={'Raw data table'}>
-                                {t.data.details.dataStatistics?.flatTileData ? (
-                                    <table>
-                                        <tbody>
-                                            <tr>
-                                                {Object.keys(
-                                                    (t.data.details.dataStatistics?.flatTileData[0])
-                                                ).map((field: string, i: number) => (
-                                                    <th key={i}>{field}</th>
-                                                ))}
-                                            </tr>
-                                            {t.data.details.dataStatistics?.flatTileData.map(
-                                                (row: Datum, i: number) => (
-                                                    <tr key={i}>
-                                                        {Object.keys(row).map(
-                                                            (field: string, j: number) => (
-                                                                <td key={j}>
-                                                                    {row[field]?.toString()}
-                                                                </td>
-                                                            )
-                                                        )}
-                                                    </tr>
-                                                )
-                                            )}
-                                        </tbody>
-                                    </table>
-                                    
-                                ): null}       
-                            </TreeItem>
-                        </TreeItem>
-                    ): null }
+        <TreeItem key={'T-'+uid} nodeId={'T-'+uid} label={'Track: '+ t.position.description}>
+            {createTreeItemLeaf('T-'+uid+'-desc', 'Description', t.description, true)}
+            <TreeItem key={'T-'+uid+'-details'} nodeId={'T-'+uid+'details'} label={'Details'}>  
+                {createTreeTrackTitle(t, uid)}
+                {createTreeTrackPosition(t, uid)}
+                {createTreeTrackChartType(t, uid)}
+                {createTreeTrackAppearance(t, uid)}
+                {createTreeTrackDataStatistics(t, uid)}
             </TreeItem>
         </TreeItem>
     );
 }
 
-function createTreeTrackMUIOverlaidData(t: AltTrackOverlaidByData) {
-    return (
-        <></>
+// function createTreeTrackMUIOverlaidData(t: AltTrackOverlaidByData) {
+//     return (
+//         <></>
+//     )
+// }
+
+
+
+function createTreeTrackTitle(t: AltTrack, uid: string) {
+    if (t.title) {
+        return(
+           <TreeItem key={'T-'+uid+'details-title'} nodeId={'T-'+uid+'details-title'} label={'Title: '+t.title}></TreeItem>
+        )
+    }
+    // return(
+    //     <>
+    //         {t.title ? (
+    //                 <TreeItem key={'T-'+uid+'details-title'} nodeId={'T-'+uid+'details-title'} label={'Title: '+t.title}></TreeItem>
+    //             ): null}   
+    //     </>
+    // )
+}
+
+function createTreeTrackChartType(t: AltTrack, uid: string) {
+    if (t.type === 'single') {
+        return(
+            <>
+                {t.charttype ? (
+                    <TreeItem key={'T-'+t.uid+'details-type'} nodeId={'T-'+t.uid+'details-type'} label={'Type: '+t.charttype}></TreeItem>
+                ): null}
+            </>
+        )
+    } else if (t.type === 'ov-mark') {
+        return(
+            <>
+                {t.charttype ? (
+                    <TreeItem key={'T-'+t.uid+'details-type'} nodeId={'T-'+t.uid+'details-type'} label={'Type: '+arrayToString(t.charttype)}></TreeItem>
+                ): null}
+            </>
+        )
+    } else {
+        return (<></>)
+    }
+}
+
+function createTreeTrackPosition(t: AltTrack, uid: string) {
+    return(
+        <TreeItem key={'T-'+uid+'-details-pos'} nodeId={'T-'+uid+'-details-pos'} label={'Position'}>
+            {createTreeItemLeaf('T-'+uid+'-details-pos-desc', 'Description', t.position.description, true)}
+            {createTreeItemLeaf('T-'+uid+'-details-pos-number', 'Track number', t.position.details.trackNumber, true)}
+        </TreeItem>
     )
+}
+
+
+
+function createTreeTrackAppearance(t: AltTrack, uid: string) {
+    if (t.type === 'single' || t.type === 'ov-mark') {
+        return(
+            <TreeItem key={'T-'+uid+'details-app'} nodeId={'T-'+uid+'details-app'} label={'Appearance'}>
+                {createTreeItemLeaf('T-'+uid+'-details-app-desc', 'Description', t.appearance.description, true)}
+                <TreeItem key={'T-'+uid+'-details-app-details'} nodeId={'T-'+uid+'-details-app-details'} label={'Details'}>
+                    {t.type === 'ov-mark' ? (
+                        createTreeItemLeaf('T-'+uid+'-details-pos-details-mark', 'Mark', arrayToString(t.appearance.details.mark), true)
+                        ) : (createTreeItemLeaf('T-'+uid+'-details-pos-details-mark', 'Mark', t.appearance.details.mark, true))}
+                    {t.appearance.details.encodingsDescList.map((enc) => createTreeItemLeaf('T-'+uid+'-details-pos-details-enc'+enc[0], enc[0], enc[1], true))}
+                    
+                    {createTreeItemLeaf('T-'+uid+'-details-pos-details-layout', 'Layout (linear or circular)', t.appearance.details.layout, false)} 
+                    {createTreeItemLeaf('T-'+uid+'-details-pos-details-overlaid', 'Overlaid', t.appearance.details.overlaid, false)}   
+                </TreeItem>
+            </TreeItem>
+        )
+    } else {
+        return <></>
+    }
+    
+}
+
+function createTreeTrackDataStatistics(t: AltTrack, uid: string) {
+    if (t.type === 'single' || t.type === 'ov-mark') {
+        return (
+            (
+                <TreeItem key={'T-'+uid+'details-data'} nodeId={'T-'+uid+'details-data'} label={'Data'}>
+                    {createTreeItemLeaf('T-'+uid+'-details-data-desc', 'Description', t.data.description, true)}
+                    <TreeItem key={'T-'+uid+'-details-data-details-stats'} nodeId={'T-'+uid+'-details-data-details-stats'} label={'Data statistics'}>
+                        <TreeItem key={'T-'+uid+'-details-data-details-stats-genomic'} nodeId={'T-'+uid+'-details-data-details-stats-genomic'} label={'Genomic range'}>
+                            {createTreeItemLeaf('T-'+uid+'-details-data-details-stats-genomic-min', 'Minimum', t.data.details.dataStatistics?.genomicMin, false)}    
+                            {createTreeItemLeaf('T-'+uid+'-details-data-details-stats-genomic-max', 'Maximum', t.data.details.dataStatistics?.genomicMax, false)}
+                        </TreeItem>
+                        <TreeItem key={'T-'+uid+'-details-data-details-stats-value'} nodeId={'T-'+uid+'-details-data-details-stats-value'} label={'Value range'}>
+                            <TreeItem key={'T-'+uid+'-details-data-details-stats-value-min'} nodeId={'T-'+uid+'-details-data-details-stats-value-min'} label={'Minimum: ' + t.data.details.dataStatistics?.valueMin}>
+                                {createTreeItemLeaf('T-'+uid+'-details-data-details-stats-value-min-genomic', 'Found at position(s)', t.data.details.dataStatistics?.valueMinGenomic?.toString(), false)}    
+                            </TreeItem>
+                            <TreeItem key={'T-'+uid+'-details-data-details-stats-value-max'} nodeId={'T-'+uid+'-details-data-details-stats-value-max'} label={'Maxmimum: ' + t.data.details.dataStatistics?.valueMax}>
+                                {createTreeItemLeaf('T-'+uid+'-details-data-details-stats-value-max-genomic', 'Found at position(s)', t.data.details.dataStatistics?.valueMaxGenomic?.toString(), false)}    
+                            </TreeItem>
+                        </TreeItem>
+
+                        {t.data.details.dataStatistics?.categories ? (
+                            <TreeItem key={'T-'+uid+'-details-data-details-stats-category'} nodeId={'T-'+uid+'-details-data-details-stats-category'} label={'Categories'}>
+                                {createTreeItemLeaf('T-'+uid+'-details-data-details-stats-category-list', 'Categories', arrayToString(t.data.details.dataStatistics.categories), false)}    
+                            </TreeItem>
+                        ): null}
+                    </TreeItem>
+                    <TreeItem key={'T-'+uid+'-details-data-details-rawdata'} nodeId={'T-'+uid+'-details-data-details-rawdata'} label={'Raw data table'}>
+                        {t.data.details.dataStatistics?.flatTileData ? (
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        {Object.keys(
+                                            (t.data.details.dataStatistics?.flatTileData[0])
+                                        ).map((field: string, i: number) => (
+                                            <th key={i}>{field}</th>
+                                        ))}
+                                    </tr>
+                                    {t.data.details.dataStatistics?.flatTileData.map(
+                                        (row: Datum, i: number) => (
+                                            <tr key={i}>
+                                                {Object.keys(row).map(
+                                                    (field: string, j: number) => (
+                                                        <td key={j}>
+                                                            {row[field]?.toString()}
+                                                        </td>
+                                                    )
+                                                )}
+                                            </tr>
+                                        )
+                                    )}
+                                </tbody>
+                            </table>
+                            
+                        ): null}       
+                    </TreeItem>
+                </TreeItem>
+            )
+        )
+    } else {
+        return (<></>)
+    }
 }
 
 
