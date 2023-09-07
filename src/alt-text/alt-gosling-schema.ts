@@ -105,7 +105,7 @@ export interface AltTrackOverlaidByDataInd {
 }
 
 export interface AltTrackBase {
-    type: 'single' | 'ov-mark' | 'ov-data';
+    alttype: 'single' | 'ov-mark' | 'ov-data';
     description: string;
     title?: string;
     position: AltTrackPosition;
@@ -113,7 +113,7 @@ export interface AltTrackBase {
 
 
 export interface AltTrackSingle extends AltTrackBase {
-    type: 'single';
+    alttype: 'single';
     uid: string;
     charttype?: string;
     appearance: AltTrackAppearance;
@@ -121,7 +121,7 @@ export interface AltTrackSingle extends AltTrackBase {
 }
 
 export interface AltTrackOverlaidByMark extends AltTrackBase {
-    type: 'ov-mark';
+    alttype: 'ov-mark';
     uid: string;
     charttype?: string[];
     appearance: AltTrackAppearanceOverlaid;
@@ -129,7 +129,7 @@ export interface AltTrackOverlaidByMark extends AltTrackBase {
 }
 
 export interface AltTrackOverlaidByData extends AltTrackBase {
-    type: 'ov-data';
+    alttype: 'ov-data';
     uids: string[];
     appearance: {details: {layout: Layout}};
     tracks: AltTrackOverlaidByDataInd[];

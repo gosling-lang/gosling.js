@@ -17,7 +17,7 @@ export function getAlt(
     // add descriptions
     addDescriptions(altSpec)
 
-    console.log(altSpec);
+    console.log('altspec', altSpec);
 
     return altSpec;
 }

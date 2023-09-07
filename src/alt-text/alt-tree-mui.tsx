@@ -70,7 +70,7 @@ function createTreeMUI(data: AltGoslingSpec) {
 
 
 // function createTreeTrackMUI(t: AltTrack) {
-//     // if (t.type === 'ov-data') {
+//     // if (t.alttype === 'ov-data') {
 //     //     return createTreeTrackMUIOverlaidData(t);
 //     // } else {
 //     //     return createTreeTrackMUISingle(t);
@@ -120,7 +120,7 @@ function createTreeTrackTitle(t: AltTrack, uid: string) {
 }
 
 function createTreeTrackChartType(t: AltTrack, uid: string) {
-    if (t.type === 'single') {
+    if (t.alttype === 'single') {
         return(
             <>
                 {t.charttype ? (
@@ -128,7 +128,7 @@ function createTreeTrackChartType(t: AltTrack, uid: string) {
                 ): null}
             </>
         )
-    } else if (t.type === 'ov-mark') {
+    } else if (t.alttype === 'ov-mark') {
         return(
             <>
                 {t.charttype ? (
@@ -153,12 +153,12 @@ function createTreeTrackPosition(t: AltTrack, uid: string) {
 
 
 function createTreeTrackAppearance(t: AltTrack, uid: string) {
-    if (t.type === 'single' || t.type === 'ov-mark') {
+    if (t.alttype === 'single' || t.alttype === 'ov-mark') {
         return(
             <TreeItem key={'T-'+uid+'details-app'} nodeId={'T-'+uid+'details-app'} label={'Appearance'}>
                 {createTreeItemLeaf('T-'+uid+'-details-app-desc', 'Description', t.appearance.description, true)}
                 <TreeItem key={'T-'+uid+'-details-app-details'} nodeId={'T-'+uid+'-details-app-details'} label={'Details'}>
-                    {t.type === 'ov-mark' ? (
+                    {t.alttype === 'ov-mark' ? (
                         createTreeItemLeaf('T-'+uid+'-details-pos-details-mark', 'Mark', arrayToString(t.appearance.details.mark), true)
                         ) : (createTreeItemLeaf('T-'+uid+'-details-pos-details-mark', 'Mark', t.appearance.details.mark, true))}
                     {t.appearance.details.encodingsDescList.map((enc) => createTreeItemLeaf('T-'+uid+'-details-pos-details-enc'+enc[0], enc[0], enc[1], true))}
@@ -175,7 +175,7 @@ function createTreeTrackAppearance(t: AltTrack, uid: string) {
 }
 
 function createTreeTrackDataStatistics(t: AltTrack, uid: string) {
-    if (t.type === 'single' || t.type === 'ov-mark') {
+    if (t.alttype === 'single' || t.alttype === 'ov-mark') {
         return (
             (
                 <TreeItem key={'T-'+uid+'details-data'} nodeId={'T-'+uid+'details-data'} label={'Data'}>
@@ -270,8 +270,8 @@ function createTreeItemLeaf(id: string, label: string, item: string | number | b
 //                 {t.title ? (
 //                         <TreeItem key={t.uid + 'details-title'} nodeId={t.uid + 'details-title'} label={'Title: ' + t.title}></TreeItem>
 //                     ): null}
-//                 {t.type ? (
-//                         <TreeItem key={t.uid + 'details-type'} nodeId={t.uid + 'details-type'} label={'Type: ' + t.type}></TreeItem>
+//                 {t.alttype ? (
+//                         <TreeItem key={t.uid + 'details-type'} nodeId={t.uid + 'details-type'} label={'Type: ' + t.alttype}></TreeItem>
 //                     ): null}
 //                 <TreeItem key={t.uid + 'details-app'} nodeId={t.uid + 'details-app'} label={'Appearance'}>
 //                     <TreeItem key={t.uid + 'details-app-desc'} nodeId={t.uid + 'details-app-desc'} label={'Description: ' + t.appearance.description}></TreeItem>

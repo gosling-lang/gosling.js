@@ -1,5 +1,5 @@
 import type { GoslingSpec, Mark, Track, SingleTrack, ChannelTypes, View, PartialTrack, RootSpecWithSingleView, ResponsiveSpecOfSingleView, RootSpecWithMultipleViews, ResponsiveSpecOfMultipleViews, ChannelValue, Encoding, DataDeep, MultivecData, X, Y, Color, Size, Text, Stroke, StrokeWidth, Opacity, Row, OverlaidTrack, OverlaidTracks } from '@gosling-lang/gosling-schema';
-import type { AltTrackDataFields,AltTrackOverlaidByDataInd,  AltTrackOverlaidByMark, AltTrackOverlaidByData, AltTrackAppearanceDetailsOverlaid, AltTrackAppearanceOverlaid, AltSpecComposition, AltTrackPosition, AltTrackAppearance, AltTrackData, AltTrackDataDetails, AltTrackAppearanceDetails, AltTrackPositionDetails, AltTrackSingle, AltTrackOverlaid, AltEncodingSeparated, AltCounter, AltParentValues, AltGoslingSpec, EncodingValueSingle, EncodingDeepSingle } from './alt-gosling-schema';
+import type { AltTrackDataFields, AltTrack, AltTrackOverlaidByDataInd,  AltTrackOverlaidByMark, AltTrackOverlaidByData, AltTrackAppearanceDetailsOverlaid, AltTrackAppearanceOverlaid, AltSpecComposition, AltTrackPosition, AltTrackAppearance, AltTrackData, AltTrackDataDetails, AltTrackAppearanceDetails, AltTrackPositionDetails, AltTrackSingle, AltTrackOverlaid, AltEncodingSeparated, AltCounter, AltParentValues, AltGoslingSpec, EncodingValueSingle, EncodingDeepSingle } from './alt-gosling-schema';
 import { attributeExists, attributeExistsDefaultString, attributeHasChildValue, attributeExistsAndChildHasValue} from './util';
 import { SUPPORTED_CHANNELS } from './../core/mark/index';
 import { determineSpecialCases } from './chart-types';
@@ -27,7 +27,7 @@ export function getAltSpec(
     spec: GoslingSpec
 ): AltGoslingSpec {
     var altSpec = {} as AltGoslingSpec;
-    altSpec.tracks = {} as (AltTrackSingle | AltTrackOverlaid)[];
+    altSpec.tracks = {} as (AltTrack)[];
 
     altSpec.title =  spec.title;
     altSpec.subtitle =  spec.subtitle;
@@ -155,6 +155,7 @@ function altSingleTrack(
     counter: AltCounter
 ): AltTrackSingle {
     var altTrack = {} as AltTrackSingle;
+    altTrack.alttype === 'single';
 
     // uid
     if (track.id !== 'unknown') {
@@ -228,6 +229,7 @@ function altOverlaidByMark(
     counter: AltCounter
 ): AltTrackOverlaidByMark {
     var altTrack = {} as AltTrackOverlaidByMark;
+    altTrack.alttype === 'ov-mark';
 
     // uid
     if (track.id !== 'unknown') {
@@ -306,6 +308,7 @@ function altOverlaidByData(
     counter: AltCounter
 ): AltTrackOverlaidByData {
     var altTrack = {} as AltTrackOverlaidByData;
+    altTrack.alttype === 'ov-data';
 
     // position
     var positionDetails: AltTrackPositionDetails = {trackNumber: counter.nTracks, rowNumber: counter.rowViews, colNumber: counter.colViews}

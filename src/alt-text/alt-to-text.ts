@@ -7,6 +7,7 @@ import { IsChannelValue, IsChannelDeep } from '@gosling-lang/gosling-schema';
 export function addDescriptions(altGoslingSpec: AltGoslingSpec) {
     addTrackPositionDescriptions(altGoslingSpec);
     addTrackAppearanceDescriptions(altGoslingSpec);
+    console.log('after app', altGoslingSpec)
     addTrackDataDescriptions(altGoslingSpec);
     addGlobalDescription(altGoslingSpec);
 }
@@ -17,7 +18,7 @@ export function addDescriptions(altGoslingSpec: AltGoslingSpec) {
 function addTrackPositionDescriptions(altGoslingSpec: AltGoslingSpec) {
     if (altGoslingSpec.composition.nTracks == 1) {
         altGoslingSpec.tracks[0].position.description = 'This is the only track.';
-        if (altGoslingSpec.tracks[0].type === 'single') {
+        if (altGoslingSpec.tracks[0].alttype === 'single') {
             altGoslingSpec.composition.description = 'There is one (' + altGoslingSpec.tracks[0].appearance.details.layout + ') track.';
         } else {
             altGoslingSpec.composition.description = 'There is one (overlaid) track.';
@@ -78,7 +79,6 @@ function addTrackPositionDescriptionsTwo(altGoslingSpec: AltGoslingSpec) {
     altGoslingSpec.tracks[0].position.description = 'This track is shown on the ' + firstPlace + '.';
     altGoslingSpec.tracks[1].position.description = 'This track is shown on the ' + secondPlace + '.';
     altGoslingSpec.composition.description = desc;
-    
 }
 
 
@@ -131,7 +131,6 @@ function addTrackPositionDescriptionsMulti(altGoslingSpec: AltGoslingSpec) {
                 }
             }
         }
-
     }
 
     // add the description to altGoslingSpec
@@ -180,10 +179,13 @@ function addTrackPositionDescriptionsMulti(altGoslingSpec: AltGoslingSpec) {
 
 
 function addTrackAppearanceDescriptions(altGoslingSpec: AltGoslingSpec) {
+    //console.log('hereee')
     for (const i in altGoslingSpec.tracks) {
         const track = altGoslingSpec.tracks[i];
+        //console.log('track', track)
 
-        if (track.type === 'single') {
+        if (track.alttype === 'single') {
+            //console.log('here')
             var desc = ''
 
             if (track.charttype) {
@@ -193,11 +195,13 @@ function addTrackAppearanceDescriptions(altGoslingSpec: AltGoslingSpec) {
             }
     
             let encodingDescriptions = addEncodingDescriptions(track);
+            console.log('encdesc', encodingDescriptions);
+
             desc = desc.concat(' ' + encodingDescriptions.desc);
         
             track.appearance.description = desc;
             track.appearance.details.encodingsDescList = encodingDescriptions.descList;
-        } else if (track.type === 'ov-mark') {
+        } else if (track.alttype === 'ov-mark') {
             track.appearance.details.encodingsDescList = [[]]
         } else {
 
@@ -354,7 +358,7 @@ function addTrackDataDescriptions(altGoslingSpec: AltGoslingSpec) {
     for (const i in altGoslingSpec.tracks) {
         const track = altGoslingSpec.tracks[i];
 
-        if (track.type === 'single' || track.type === 'ov-mark') {
+        if (track.alttype === 'single' || track.alttype === 'ov-mark') {
             if (track.data.details.dataStatistics) {
                 var desc = '';
     
