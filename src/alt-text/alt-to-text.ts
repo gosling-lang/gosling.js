@@ -183,22 +183,24 @@ function addTrackAppearanceDescriptions(altGoslingSpec: AltGoslingSpec) {
     for (const i in altGoslingSpec.tracks) {
         const track = altGoslingSpec.tracks[i];
 
-        var desc = ''
+        if (track.type === 'single') {
+            var desc = ''
 
-        if (track.charttype) {
-            desc = desc.concat(capDesc(track.charttype));
-        } else {
-            desc = desc.concat('Chart with ' + markToText.get(track.appearance.details.mark));
-        }
-
-        desc = desc.concat(' ' + addEncodingDescriptions(track));
+            if (track.charttype) {
+                desc = desc.concat(capDesc(track.charttype));
+            } else {
+                desc = desc.concat('Chart with ' + markToText.get(track.appearance.details.mark));
+            }
     
-        track.appearance.description = desc;
+            desc = desc.concat(' ' + addEncodingDescriptions(track));
+        
+            track.appearance.description = desc;
+        }
     }   
 }
 
 
-function addEncodingDescriptions(track: AltTrack) {
+function addEncodingDescriptions(track: AltTrackSingle) {
     const mark = track.appearance.details.mark as string;
     
     var descGenomic = '';
@@ -312,40 +314,44 @@ function addMinMaxDescription(values: number[], key: 'minimum' | 'maximum') {
 function addTrackDataDescriptions(altGoslingSpec: AltGoslingSpec) {
     for (const i in altGoslingSpec.tracks) {
         const track = altGoslingSpec.tracks[i];
-        if (track.data.details.dataStatistics) {
-            var desc = '';
 
-            // genomic and expression ranges
-            if (track.data.details.dataStatistics?.genomicMin && track.data.details.dataStatistics?.genomicMax) {
-                desc = desc.concat('The genomic range shown is from ' + track.data.details.dataStatistics?.genomicMin + ' to ' + track.data.details.dataStatistics?.genomicMax + ' basepairs.');
+        if (track.type === 'single' || track.type === 'ov-mark') {
+            if (track.data.details.dataStatistics) {
+                var desc = '';
+    
+                // genomic and expression ranges
+                if (track.data.details.dataStatistics?.genomicMin && track.data.details.dataStatistics?.genomicMax) {
+                    desc = desc.concat('The genomic range shown is from ' + track.data.details.dataStatistics?.genomicMin + ' to ' + track.data.details.dataStatistics?.genomicMax + ' basepairs.');
+                }
+                if (track.data.details.dataStatistics?.valueMin && track.data.details.dataStatistics?.valueMax) {
+                    desc = desc.concat(' The expression values range from ' + track.data.details.dataStatistics?.valueMin + ' to ' + track.data.details.dataStatistics?.valueMax + '.');
+                }
+                
+                // where on the genome are the minimum and maximum expression
+                if (track.data.details.dataStatistics?.valueMaxGenomic && track.data.details.dataStatistics?.valueMinGenomic) {
+                    desc = desc.concat(addMinMaxDescription(track.data.details.dataStatistics?.valueMaxGenomic, 'maximum'));
+                    desc = desc.concat(addMinMaxDescription(track.data.details.dataStatistics?.valueMinGenomic, 'minimum'));
+                }
+               
+                // add category data information
+                if (track.data.details.dataStatistics?.categories) {
+    
+                    // number of categories
+                    desc = desc.concat(' There are ' + track.data.details.dataStatistics?.categories.length + ' categories.');
+    
+                    // which category has the highest expression peak
+                    if (track.data.details.dataStatistics?.highestCategory) {
+                        if (track.data.details.dataStatistics?.highestCategory.length === 1) {
+                            desc = desc.concat(' The highest value is observed in sample ' + track.data.details.dataStatistics?.highestCategory[0] + '.');
+                        } else {
+                            desc = desc.concat(' The highest value is observed in samples ' + arrayToString(track.data.details.dataStatistics?.highestCategory) + '.');
+                        }
+                    }    
+                    // See if genomic positions are the same for the min and max values of each category
+                }
+                track.data.description = desc;
             }
-            if (track.data.details.dataStatistics?.valueMin && track.data.details.dataStatistics?.valueMax) {
-                desc = desc.concat(' The expression values range from ' + track.data.details.dataStatistics?.valueMin + ' to ' + track.data.details.dataStatistics?.valueMax + '.');
-            }
-            
-            // where on the genome are the minimum and maximum expression
-            if (track.data.details.dataStatistics?.valueMaxGenomic && track.data.details.dataStatistics?.valueMinGenomic) {
-                desc = desc.concat(addMinMaxDescription(track.data.details.dataStatistics?.valueMaxGenomic, 'maximum'));
-                desc = desc.concat(addMinMaxDescription(track.data.details.dataStatistics?.valueMinGenomic, 'minimum'));
-            }
-           
-            // add category data information
-            if (track.data.details.dataStatistics?.categories) {
 
-                // number of categories
-                desc = desc.concat(' There are ' + track.data.details.dataStatistics?.categories.length + ' categories.');
-
-                // which category has the highest expression peak
-                if (track.data.details.dataStatistics?.highestCategory) {
-                    if (track.data.details.dataStatistics?.highestCategory.length === 1) {
-                        desc = desc.concat(' The highest value is observed in sample ' + track.data.details.dataStatistics?.highestCategory[0] + '.');
-                    } else {
-                        desc = desc.concat(' The highest value is observed in samples ' + arrayToString(track.data.details.dataStatistics?.highestCategory) + '.');
-                    }
-                }    
-                // See if genomic positions are the same for the min and max values of each category
-            }
-            altGoslingSpec.tracks[i].data.description = desc;
         }
     }
 }

@@ -4,15 +4,18 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import TreeItem from '@mui/lab/TreeItem';
 
-import type { AltGoslingSpec, AltTrack } from 'src/alt-text/alt-gosling-schema';
+import type { AltGoslingSpec, AltTrack, AltTrackOverlaidByData, AltTrackOverlaidByMark, AltTrackSingle } from 'src/alt-text/alt-gosling-schema';
 import type { Datum } from '@gosling-lang/gosling-schema';
+import { arrayToString } from './util';
 
 
-function createTreeItemLeaf(id: string, label: string, item: string | number | boolean) {
-    item = item as string;
-    return (
-        <TreeItem key={id} nodeId={id} label={label + ': ' + item}></TreeItem>
-    )
+export function createAltTree(data: AltGoslingSpec) {
+    return createTreeMUI(data)
+    // try {
+    //     createTreeMUI(data)
+    // } catch {
+    //     return <></>
+    // }
 }
 
 
@@ -63,19 +66,26 @@ function createTreeMUI(data: AltGoslingSpec) {
     
         </TreeView>
     );
-  }
-
-
+}
 
 
 function createTreeTrackMUI(t: AltTrack) {
+    if (t.type === 'ov-data') {
+        return createTreeTrackMUIOverlaidData(t);
+    } else {
+        return createTreeTrackMUISingle(t);
+    }
+}
+
+
+function createTreeTrackMUISingle(t: AltTrackSingle | AltTrackOverlaidByMark) {
     if(t.uid === 'unknown') {
         t.uid = t.position.details.trackNumber.toString()
     }
 
     return (
         <TreeItem key={'T-'+t.uid} nodeId={'T-'+t.uid} label={'Track: '+t.uid}>
-            {createTreeItemLeaf('T-'+t.uid+'-desc', 'Description', t.description)}
+            {createTreeItemLeaf('T-'+t.uid+'-desc', 'Description', t.description, true)}
 
             <TreeItem key={'T-'+t.uid+'-details'} nodeId={'T-'+t.uid+'details'} label={'Details'}>  
 
@@ -88,19 +98,17 @@ function createTreeTrackMUI(t: AltTrack) {
                 ): null}
 
                 <TreeItem key={'T-'+t.uid+'-details-pos'} nodeId={'T-'+t.uid+'-details-pos'} label={'Position'}>
-                    {createTreeItemLeaf('T-'+t.uid+'-details-pos-desc', 'Description', t.position.description)}
-                    <TreeItem key={'T-'+t.uid+'-details-pos-details'} nodeId={'T-'+t.uid+'-details-pos-details'} label={'Details'}>
-                        {createTreeItemLeaf('T-'+t.uid+'-details-pos-details-trackN', 'Track number', t.position.details.trackNumber)} 
-                        {createTreeItemLeaf('T-'+t.uid+'-details-pos-details-rowN', 'Row number', t.position.details.rowNumber)} 
-                        {createTreeItemLeaf('T-'+t.uid+'-details-pos-details-colN', 'Column number', t.position.details.colNumber)}  
-                    </TreeItem>
+                    {createTreeItemLeaf('T-'+t.uid+'-details-pos-desc', 'Description', t.position.description, true)}
+                    {createTreeItemLeaf('T-'+t.uid+'-details-pos-desc', 'Track number:', t.position.details.trackNumber, true)}
                 </TreeItem>
 
-
                 <TreeItem key={'T-'+t.uid+'details-app'} nodeId={'T-'+t.uid+'details-app'} label={'Appearance'}>
-                    {createTreeItemLeaf('T-'+t.uid+'-details-app-desc', 'Description', t.appearance.description)}
+                    {createTreeItemLeaf('T-'+t.uid+'-details-app-desc', 'Description', t.appearance.description, true)}
                     <TreeItem key={'T-'+t.uid+'-details-app-details'} nodeId={'T-'+t.uid+'-details-app-details'} label={'Details'}>
-                        {createTreeItemLeaf('T-'+t.uid+'-details-pos-details-mark', 'Mark', t.appearance.details.mark)} 
+                        {t.type === 'ov-mark' ? (
+                            createTreeItemLeaf('T-'+t.uid+'-details-pos-details-mark', 'Mark', arrayToString(t.appearance.details.mark), true)
+                            ) : (createTreeItemLeaf('T-'+t.uid+'-details-pos-details-mark', 'Mark', t.appearance.details.mark, true))}
+                        {/* {createTreeItemLeaf('T-'+t.uid+'-details-pos-details-mark', 'Mark', t.appearance.details.mark)}  */}
                             {/* <TreeItem key={'T-'+t.uid+'-details-app-details-encodings'} nodeId={'T-'+t.uid+'-details-app-encodings'} label={'Encodings'}>
                                 <TreeItem key={'T-'+t.uid+'-details-app-details-encodings-field'} nodeId={'T-'+t.uid+'-details-app-encodings-field'} label={'Encodings dependent on data fields'}>
                                     {Object.keys(t.appearance.details.encodings.encodingField).map(e => (
@@ -121,78 +129,94 @@ function createTreeTrackMUI(t: AltTrack) {
                                     ))}
                                 </TreeItem>
                             </TreeItem> */}
-                        {createTreeItemLeaf('T-'+t.uid+'-details-pos-details-layout', 'Layout (linear or circular)', t.appearance.details.layout)} 
-                        {createTreeItemLeaf('T-'+t.uid+'-details-pos-details-overlaid', 'Overlaid', t.appearance.details.overlaid)}   
+                        {createTreeItemLeaf('T-'+t.uid+'-details-pos-details-layout', 'Layout (linear or circular)', t.appearance.details.layout, false)} 
+                        {createTreeItemLeaf('T-'+t.uid+'-details-pos-details-overlaid', 'Overlaid', t.appearance.details.overlaid, false)}   
                     </TreeItem>
                 </TreeItem>
 
-                <TreeItem key={'T-'+t.uid+'details-data'} nodeId={'T-'+t.uid+'details-data'} label={'Data'}>
-                    {createTreeItemLeaf('T-'+t.uid+'-details-data-desc', 'Description', t.data.description)}
-                    <TreeItem key={'T-'+t.uid+'-details-data-details-stats'} nodeId={'T-'+t.uid+'-details-data-details-stats'} label={'Data statistics'}>
-                        <TreeItem key={'T-'+t.uid+'-details-data-details-stats-genomic'} nodeId={'T-'+t.uid+'-details-data-details-stats-genomic'} label={'Genomic range'}>
-                            {createTreeItemLeaf('T-'+t.uid+'-details-data-details-stats-genomic-min', 'Minimum', t.data.details.dataStatistics?.genomicMin)}    
-                            {createTreeItemLeaf('T-'+t.uid+'-details-data-details-stats-genomic-max', 'Maximum', t.data.details.dataStatistics?.genomicMax)}
-                        </TreeItem>
-                        <TreeItem key={'T-'+t.uid+'-details-data-details-stats-value'} nodeId={'T-'+t.uid+'-details-data-details-stats-value'} label={'Value range'}>
-                            <TreeItem key={'T-'+t.uid+'-details-data-details-stats-value-min'} nodeId={'T-'+t.uid+'-details-data-details-stats-value-min'} label={'Minimum: ' + t.data.details.dataStatistics?.valueMin}>
-                                {createTreeItemLeaf('T-'+t.uid+'-details-data-details-stats-value-min-genomic', 'Found at position(s): ', t.data.details.dataStatistics?.valueMinGenomic.toString())}    
-                            </TreeItem>
-                            <TreeItem key={'T-'+t.uid+'-details-data-details-stats-value-max'} nodeId={'T-'+t.uid+'-details-data-details-stats-value-max'} label={'Maxmimum: ' + t.data.details.dataStatistics?.valueMax}>
-                                {createTreeItemLeaf('T-'+t.uid+'-details-data-details-stats-value-max-genomic', 'Found at position(s): ', t.data.details.dataStatistics?.valueMaxGenomic.toString())}    
-                            </TreeItem>
-                        </TreeItem>
+                {t.data.details.dataStatistics ? 
+                    (
+                        <TreeItem key={'T-'+t.uid+'details-data'} nodeId={'T-'+t.uid+'details-data'} label={'Data'}>
+                            {createTreeItemLeaf('T-'+t.uid+'-details-data-desc', 'Description', t.data.description, true)}
+                            <TreeItem key={'T-'+t.uid+'-details-data-details-stats'} nodeId={'T-'+t.uid+'-details-data-details-stats'} label={'Data statistics'}>
+                                <TreeItem key={'T-'+t.uid+'-details-data-details-stats-genomic'} nodeId={'T-'+t.uid+'-details-data-details-stats-genomic'} label={'Genomic range'}>
+                                    {createTreeItemLeaf('T-'+t.uid+'-details-data-details-stats-genomic-min', 'Minimum', t.data.details.dataStatistics?.genomicMin, false)}    
+                                    {createTreeItemLeaf('T-'+t.uid+'-details-data-details-stats-genomic-max', 'Maximum', t.data.details.dataStatistics?.genomicMax, false)}
+                                </TreeItem>
+                                <TreeItem key={'T-'+t.uid+'-details-data-details-stats-value'} nodeId={'T-'+t.uid+'-details-data-details-stats-value'} label={'Value range'}>
+                                    <TreeItem key={'T-'+t.uid+'-details-data-details-stats-value-min'} nodeId={'T-'+t.uid+'-details-data-details-stats-value-min'} label={'Minimum: ' + t.data.details.dataStatistics?.valueMin}>
+                                        {createTreeItemLeaf('T-'+t.uid+'-details-data-details-stats-value-min-genomic', 'Found at position(s): ', t.data.details.dataStatistics?.valueMinGenomic?.toString(), false)}    
+                                    </TreeItem>
+                                    <TreeItem key={'T-'+t.uid+'-details-data-details-stats-value-max'} nodeId={'T-'+t.uid+'-details-data-details-stats-value-max'} label={'Maxmimum: ' + t.data.details.dataStatistics?.valueMax}>
+                                        {createTreeItemLeaf('T-'+t.uid+'-details-data-details-stats-value-max-genomic', 'Found at position(s): ', t.data.details.dataStatistics?.valueMaxGenomic?.toString(), false)}    
+                                    </TreeItem>
+                                </TreeItem>
 
-                        {t.data.details.dataStatistics?.categories ? (
-                            <TreeItem key={'T-'+t.uid+'-details-data-details-stats-category'} nodeId={'T-'+t.uid+'-details-data-details-stats-category'} label={'Categories'}>
-                                {createTreeItemLeaf('T-'+t.uid+'-details-data-details-stats-category-list', 'Categories', t.data.details.dataStatistics.categories)}    
+                                {t.data.details.dataStatistics?.categories ? (
+                                    <TreeItem key={'T-'+t.uid+'-details-data-details-stats-category'} nodeId={'T-'+t.uid+'-details-data-details-stats-category'} label={'Categories'}>
+                                        {createTreeItemLeaf('T-'+t.uid+'-details-data-details-stats-category-list', 'Categories', arrayToString(t.data.details.dataStatistics.categories), false)}    
+                                    </TreeItem>
+                                ): null}
                             </TreeItem>
-                        ): null}
-                    </TreeItem>
-                    <TreeItem key={'T-'+t.uid+'-details-data-details-rawdata'} nodeId={'T-'+t.uid+'-details-data-details-rawdata'} label={'Raw data table'}>
-                        {t.data.details.dataStatistics?.flatTileData ? (
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        {Object.keys(
-                                            (t.data.details.dataStatistics?.flatTileData[0])
-                                        ).map((field: string, i: number) => (
-                                            <th key={i}>{field}</th>
-                                        ))}
-                                    </tr>
-                                    {t.data.details.dataStatistics?.flatTileData.map(
-                                        (row: Datum, i: number) => (
-                                            <tr key={i}>
-                                                {Object.keys(row).map(
-                                                    (field: string, j: number) => (
-                                                        <td key={j}>
-                                                            {row[field]?.toString()}
-                                                        </td>
-                                                    )
-                                                )}
+                            <TreeItem key={'T-'+t.uid+'-details-data-details-rawdata'} nodeId={'T-'+t.uid+'-details-data-details-rawdata'} label={'Raw data table'}>
+                                {t.data.details.dataStatistics?.flatTileData ? (
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                {Object.keys(
+                                                    (t.data.details.dataStatistics?.flatTileData[0])
+                                                ).map((field: string, i: number) => (
+                                                    <th key={i}>{field}</th>
+                                                ))}
                                             </tr>
-                                        )
-                                    )}
-                                </tbody>
-                            </table>
-                            
-                        ): null}       
-                    </TreeItem>
-                </TreeItem>
+                                            {t.data.details.dataStatistics?.flatTileData.map(
+                                                (row: Datum, i: number) => (
+                                                    <tr key={i}>
+                                                        {Object.keys(row).map(
+                                                            (field: string, j: number) => (
+                                                                <td key={j}>
+                                                                    {row[field]?.toString()}
+                                                                </td>
+                                                            )
+                                                        )}
+                                                    </tr>
+                                                )
+                                            )}
+                                        </tbody>
+                                    </table>
+                                    
+                                ): null}       
+                            </TreeItem>
+                        </TreeItem>
+                    ): null }
             </TreeItem>
         </TreeItem>
     );
 }
 
-
-export function createAltTree(data: AltGoslingSpec) {
-    return createTreeMUI(data)
-    // try {
-    //     createTreeMUI(data)
-    // } catch {
-    //     return <></>
-    // }
+function createTreeTrackMUIOverlaidData(t: AltTrackOverlaidByData) {
+    return (
+        <></>
+    )
 }
 
+
+function createTreeItemLeaf(id: string, label: string, item: string | number | boolean | undefined, showIfUndefined: boolean) {
+    if (item) {
+        item = item as string;
+        return (
+            <TreeItem key={id} nodeId={id} label={label + ': ' + item}></TreeItem>
+        )
+    } else {
+        if (showIfUndefined) {
+            return (
+                <TreeItem key={id} nodeId={id} label={label + ': Information could not be retrieved.'}></TreeItem>
+            )
+        } else {
+            return
+        }
+    }
+}
 
 // function createTreeTrackMUI(t: AltTrack) {
 //     return (
