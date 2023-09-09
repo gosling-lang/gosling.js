@@ -161,10 +161,9 @@ function createTreeTrackAppearance(t: AltTrack, uid: string) {
                     {t.alttype === 'ov-mark' ? (
                         createTreeItemLeaf('T-'+uid+'-details-pos-details-mark', 'Mark', arrayToString(t.appearance.details.mark), true)
                         ) : (createTreeItemLeaf('T-'+uid+'-details-pos-details-mark', 'Mark', t.appearance.details.mark, true))}
-                    {t.appearance.details.encodingsDescList.map((enc) => createTreeItemLeaf('T-'+uid+'-details-pos-details-enc'+enc[0], enc[0], enc[1], true))}
-                    
                     {createTreeItemLeaf('T-'+uid+'-details-pos-details-layout', 'Layout (linear or circular)', t.appearance.details.layout, false)} 
                     {createTreeItemLeaf('T-'+uid+'-details-pos-details-overlaid', 'Overlaid', t.appearance.details.overlaid, false)}   
+                    {t.appearance.details.encodingsDescList.map((enc) => createTreeItemNode('T-'+uid+'-details-pos-details-enc'+enc[0], enc[0], enc[1], true))}
                 </TreeItem>
             </TreeItem>
         )
@@ -248,6 +247,27 @@ function createTreeItemLeaf(id: string, label: string, item: string | number | b
         if (showIfUndefined) {
             return (
                 <TreeItem key={id} nodeId={id} label={label + ': Information could not be retrieved.'}></TreeItem>
+            )
+        } else {
+            return
+        }
+    }
+}
+
+function createTreeItemNode(id: string, label: string, item: string | number | boolean | undefined, showIfUndefined: boolean) {
+    if (item) {
+        item = item as string;
+        return (
+            <TreeItem key={id} nodeId={id} label={label}>
+                 <TreeItem key={id} nodeId={id} label={item}></TreeItem>
+            </TreeItem>
+        )
+    } else {
+        if (showIfUndefined) {
+            return (
+                <TreeItem key={id} nodeId={id} label={label}>
+                    <TreeItem key={id} nodeId={id} label={'Information could not be retrieved.'}></TreeItem>
+                </TreeItem>
             )
         } else {
             return

@@ -155,7 +155,7 @@ function altSingleTrack(
     counter: AltCounter
 ): AltTrackSingle {
     var altTrack = {} as AltTrackSingle;
-    altTrack.alttype === 'single';
+    altTrack.alttype = 'single';
 
     // uid
     if (track.id !== 'unknown') {
@@ -201,7 +201,7 @@ function altSingleTrack(
     // empty description, to be filled in.
     altTrack.description = '';
 
-    console.log(altTrack)
+    console.log('type', altTrack.alttype)
 
     return altTrack;
     
@@ -231,7 +231,7 @@ function altOverlaidByMark(
     counter: AltCounter
 ): AltTrackOverlaidByMark {
     var altTrack = {} as AltTrackOverlaidByMark;
-    altTrack.alttype === 'ov-mark';
+    altTrack.alttype = 'ov-mark';
 
     // uid
     if (track.id !== 'unknown') {
@@ -310,7 +310,7 @@ function altOverlaidByData(
     counter: AltCounter
 ): AltTrackOverlaidByData {
     var altTrack = {} as AltTrackOverlaidByData;
-    altTrack.alttype === 'ov-data';
+    altTrack.alttype = 'ov-data';
 
     // position
     var positionDetails: AltTrackPositionDetails = {trackNumber: counter.nTracks, rowNumber: counter.rowViews, colNumber: counter.colViews}
