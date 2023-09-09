@@ -7,7 +7,6 @@ import { IsChannelValue, IsChannelDeep } from '@gosling-lang/gosling-schema';
 export function addDescriptions(altGoslingSpec: AltGoslingSpec) {
     addTrackPositionDescriptions(altGoslingSpec);
     addTrackAppearanceDescriptions(altGoslingSpec);
-    console.log('after app', altGoslingSpec)
     addTrackDataDescriptions(altGoslingSpec);
     addGlobalDescription(altGoslingSpec);
 }
@@ -191,7 +190,7 @@ function addTrackAppearanceDescriptions(altGoslingSpec: AltGoslingSpec) {
             if (track.charttype) {
                 desc = desc.concat(capDesc(track.charttype));
             } else {
-                desc = desc.concat('Chart with ' + markToText.get(track.appearance.details.mark));
+                desc = desc.concat('Chart with ' + markToText.get(track.appearance.details.mark) + '.');
             }
     
             let encodingDescriptions = addEncodingDescriptions(track);
@@ -218,7 +217,7 @@ function addEncodingDescriptions(track: AltTrackSingle) {
     var descNominal = '';
     var descValue = '';
 
-    var descList = {} as string[][];
+    var descList = [] as string[][];
 
     // genomic encodings
     let genomicEncodingsI = track.appearance.details.encodings.encodingDeepGenomic.map(o => o.name);
@@ -403,6 +402,26 @@ export function addTrackDataDescriptionsTrack(track: AltTrack) {
 
 
 function addGlobalDescription(altGoslingSpec: AltGoslingSpec) {
+
+    let includePosition = true;
+    if (altGoslingSpec.composition.nTracks === 1) {
+        includePosition = false;
+        for (const t of altGoslingSpec.tracks) {
+            if (t.alttype === 'single' || t.alttype === 'ov-mark') {  
+                if (includePosition) {
+                    t.description = t.position.description;
+                }
+                t.description = t.description.concat(' ' + t.appearance.description + ' ' + t.data.description);
+            } else {
+                if (includePosition) {
+                    t.description = t.position.description;
+                }
+                t.description = t.description.concat(' Overlaid track with different data sources. See individual tracks for details.');
+            }
+        }
+    }
+    
+
     altGoslingSpec.alt = 'Gosling visualization.';
 
     if (altGoslingSpec.composition.nTracks === 1) {
@@ -416,5 +435,7 @@ function addGlobalDescription(altGoslingSpec: AltGoslingSpec) {
         desc = desc.concat('Figure with ' + altGoslingSpec.composition.nTracks + ' individual charts.');
         altGoslingSpec.longDescription = desc;
     }
+
+    
     
 }
