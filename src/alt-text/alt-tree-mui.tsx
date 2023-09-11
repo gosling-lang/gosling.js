@@ -163,7 +163,7 @@ function createTreeTrackAppearance(t: AltTrack, uid: string) {
                         ) : (createTreeItemLeaf('T-'+uid+'-details-pos-details-mark', 'Mark', t.appearance.details.mark, true))}
                     {createTreeItemLeaf('T-'+uid+'-details-pos-details-layout', 'Layout (linear or circular)', t.appearance.details.layout, false)} 
                     {createTreeItemLeaf('T-'+uid+'-details-pos-details-overlaid', 'Overlaid', t.appearance.details.overlaid, false)}   
-                    {t.appearance.details.encodingsDescList.map((enc) => createTreeItemNode('T-'+uid+'-details-pos-details-enc'+enc[0], enc[0], enc[1], true))}
+                    {t.appearance.details.encodingsDescList.map((enc, i) => createTreeItemNode('T-'+uid+'-details-pos-details-enc'+enc[0]+i, enc[0], enc[1], true))}
                 </TreeItem>
             </TreeItem>
         )
@@ -259,14 +259,14 @@ function createTreeItemNode(id: string, label: string, item: string | number | b
         item = item as string;
         return (
             <TreeItem key={id} nodeId={id} label={label}>
-                 <TreeItem key={id} nodeId={id} label={item}></TreeItem>
+                <TreeItem key={id+'-item'} nodeId={id+'-item'} label={item}></TreeItem>
             </TreeItem>
         )
     } else {
         if (showIfUndefined) {
             return (
                 <TreeItem key={id} nodeId={id} label={label}>
-                    <TreeItem key={id} nodeId={id} label={'Information could not be retrieved.'}></TreeItem>
+                    <TreeItem key={id+'-item'} nodeId={id+'-item'} label={'Information could not be retrieved.'}></TreeItem>
                 </TreeItem>
             )
         } else {
