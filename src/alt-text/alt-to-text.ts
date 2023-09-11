@@ -178,17 +178,14 @@ function addTrackPositionDescriptionsMulti(altGoslingSpec: AltGoslingSpec) {
 
 
 function addTrackAppearanceDescriptions(altGoslingSpec: AltGoslingSpec) {
-    //console.log('hereee')
     for (const i in altGoslingSpec.tracks) {
         const track = altGoslingSpec.tracks[i];
-        //console.log('track', track)
 
         if (track.alttype === 'single') {
-            //console.log('here')
             var desc = ''
 
             if (track.charttype) {
-                desc = desc.concat(capDesc(track.charttype));
+                desc = desc.concat(capDesc(track.charttype) + '.');
             } else {
                 desc = desc.concat('Chart with ' + markToText.get(track.appearance.details.mark) + '.');
             }

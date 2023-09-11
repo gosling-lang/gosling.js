@@ -145,7 +145,7 @@ function createTreeTrackPosition(t: AltTrack, uid: string) {
     return(
         <TreeItem key={'T-'+uid+'-details-pos'} nodeId={'T-'+uid+'-details-pos'} label={'Position'}>
             {createTreeItemLeaf('T-'+uid+'-details-pos-desc', 'Description', t.position.description, true)}
-            {createTreeItemLeaf('T-'+uid+'-details-pos-number', 'Track number', t.position.details.trackNumber, true)}
+            {createTreeItemLeaf('T-'+uid+'-details-pos-number', 'Track number', t.position.details.trackNumber + 1, true)}
         </TreeItem>
     )
 }
