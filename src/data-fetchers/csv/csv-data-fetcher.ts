@@ -5,7 +5,7 @@ import type { Assembly, CsvData, FilterTransform, Datum } from '@gosling-lang/go
 import { filterData } from '../../core/utils/data-transform';
 import { type CommonDataConfig, filterUsingGenoPos, sanitizeChrName, RemoteFile } from '../utils';
 
-type CsvDataConfig = CsvData & CommonDataConfig & { filter: FilterTransform[] };
+type CsvDataConfig = CsvData & CommonDataConfig & { filter?: FilterTransform[] };
 
 interface ChromSizes {
     chrToAbs: (chrom: string, chromPos: number) => number;
@@ -84,6 +84,7 @@ export class CsvDataFetcherClass {
         try {
             const buffer = await this.#file.readFile();
             const text = buffer.toString();
+            console.warn(text);
             const textWithHeader = headerNames ? `${headerNames.join(separator)}\n${text}` : text;
 
             const parsedCSV = d3dsvFormat(separator).parse(textWithHeader, (row: DSVRowString<string>) =>
