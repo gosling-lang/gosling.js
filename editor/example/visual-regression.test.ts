@@ -31,9 +31,11 @@ let page: Page;
 beforeAll(async () => {
     browser = await puppeteer.launch({
         headless: false,
+        // devtools: true,
         args: ['--enable-webgl'] // necessary for canvas to not be blank in the screenshot
     });
     page = await browser.newPage();
+    await page.goto('http://gosling-lang.org/docs/'); // must go to a page with a URL
     await page.setContent(generateHTML(), { waitUntil: 'networkidle0' });
     await page.addScriptTag({ path: './dist/gosling.js' });
 });
@@ -44,10 +46,9 @@ beforeAll(async () => {
 Object.entries(examples)
     .filter(([name]) => name === 'doc_vcf_indels') // we only want to see the broken example now
     .forEach(([name, example]) => {
-        test('example', async () => {
+        test(name, async () => {
             let spec = JSON.stringify(example.spec);
             spec = spec.replaceAll('\\', '\\\\');
-
             await page.addScriptTag({
                 content: `gosling.embed(document.getElementById("vis"), JSON.parse(\`${spec}\`))`
             });
