@@ -82,6 +82,28 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
         [viewConfig, theme]
     );
 
+    /**
+     * This makes sure that all the current zooming status is preserved when new tracks are added
+     */
+    const preverseZoomStatus = (newSpec: gosling.HiGlassSpec, prevSpec: gosling.HiGlassSpec) => {
+        newSpec.views.forEach((view) => {
+            const viewUid = view.uid!;
+            const newView = !prevSpec.views.find(v => v.uid === viewUid);
+            if (newView) {
+                // if this view is linked with another view, we need to preverse the current zooming status of this view from the linked view
+                // Otherwise, all the views that is linked with this view will be reset to the original zooming position
+                const { locksByViewUid } = newSpec.zoomLocks;
+                const lockUid = locksByViewUid[viewUid];
+                const linkedViewUid = Object.entries(locksByViewUid).find(([_, uid]) => _ && uid === lockUid)?.[0];
+                if (linkedViewUid) {
+                    // We found a linked view, so copy the current zooming status
+                    view.initialXDomain = prevSpec.views.find(v => v.uid === linkedViewUid)?.initialXDomain;
+                    view.initialYDomain = prevSpec.views.find(v => v.uid === linkedViewUid)?.initialYDomain;
+                }
+            }
+        });
+    };
+
     // TODO: add a `force` parameter since changing `linkingId` might not update vis
     const compile = useCallback(() => {
         if (props.spec) {
@@ -115,6 +137,10 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
                     if (props.experimental?.reactive && isMountedOnce) {
                         // Use API to update visualization.
                         setTimeout(() => {
+                            preverseZoomStatus(
+                                newHiGlassSpec,
+                                hgRef.current?.api.getViewConfig() as gosling.HiGlassSpec
+                            );
                             hgRef.current?.api.setViewConfig(newHiGlassSpec);
                         }, DELAY_FOR_CONTAINER_RESIZE_BEFORE_RERENDER);
                     } else {
@@ -138,6 +164,8 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
 
     // TODO: If not necessary, do not update `wrapperSize` (i.e., when responsiveSize is not set)
     useEffect(() => {
+        if (!props.spec?.responsiveSize) return;
+
         const containerElement = document.getElementById(wrapperDivId);
         if (!containerElement) return;
 
