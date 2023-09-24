@@ -46,17 +46,21 @@ beforeAll(async () => {
 Object.entries(examples)
     .filter(([name]) => name === 'doc_vcf_indels') // we only want to see the broken example now
     .forEach(([name, example]) => {
-        test(name, async () => {
-            let spec = JSON.stringify(example.spec);
-            spec = spec.replaceAll('\\', '\\\\');
-            await page.addScriptTag({
-                content: `gosling.embed(document.getElementById("vis"), JSON.parse(\`${spec}\`))`
-            });
-            const component = await page.waitForSelector('.gosling-component');
-            await page.waitForNetworkIdle();
-            await delay(2000); // wait 2 seconds for rendering to complete. TODO: see if we can implement javascript API subscription which fires when rendering is done
-            await component!.screenshot({ path: `editor/example/visual-regression-imgs/${name}.png` });
-        });
+        test(
+            name,
+            async () => {
+                let spec = JSON.stringify(example.spec);
+                spec = spec.replaceAll('\\', '\\\\');
+                await page.addScriptTag({
+                    content: `gosling.embed(document.getElementById("vis"), JSON.parse(\`${spec}\`))`
+                });
+                const component = await page.waitForSelector('.gosling-component');
+                await page.waitForNetworkIdle({ idleTime: 2000 });
+                await delay(2000); // wait 2 seconds for rendering to complete. TODO: see if we can implement javascript API subscription which fires when rendering is done
+                await component!.screenshot({ path: `editor/example/visual-regression-imgs/${name}.png` });
+            },
+            10000
+        );
     });
 
 // afterAll(async () => {
