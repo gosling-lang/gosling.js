@@ -32,7 +32,7 @@ interface GoslingCompProps {
     className?: string;
     theme?: Theme;
     templates?: TemplateTrackDef[];
-    urlToFetchOptions: UrlToFetchOptions;
+    urlToFetchOptions?: UrlToFetchOptions;
     experimental?: {
         reactive?: boolean;
     };
