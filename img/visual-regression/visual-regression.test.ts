@@ -67,6 +67,10 @@ let browser: Browser;
 let page: Page;
 let currentGosling: string;
 
+/**
+ * Setup the browser and page
+ */
+
 beforeAll(async () => {
     currentGosling = await readFile('./dist/gosling.js');
     browser = await puppeteer.launch({
@@ -75,8 +79,7 @@ beforeAll(async () => {
         args: ['--use-gl=swiftshader'] // necessary for canvas to not be blank in the screenshot
     });
     page = await browser.newPage();
-    await page.goto('http://gosling-lang.org/docs/'); // must go to a page with a URL
-    // await page.setContent(generateHTML(), { waitUntil: 'networkidle0' });
+    await page.goto('http://gosling-lang.org/docs/'); // must first go to a page with a URL for workers to work properly
 });
 
 console.warn('Expect this to take about 10 minutes to run, depending on your internet speed');
@@ -96,7 +99,7 @@ Object.entries(examples)
                 await page.addScriptTag({ path: './dist/gosling.js' });
                 const component = await page.waitForSelector('.gosling-component');
                 await page.waitForNetworkIdle({ idleTime: 2000 });
-                await delay(2000); // wait 2 seconds for rendering to complete. TODO: see if we can implement javascript API subscription which fires when rendering is done
+                await delay(2000); // wait extra 2 seconds. Should be enough time for any rendering to finish
                 await component!.screenshot({ path: `./img/visual-regression/new-screenshots/${name}.png` });
                 comparePNG(
                     `img/visual-regression/screenshots/${name}.png`,
@@ -108,6 +111,6 @@ Object.entries(examples)
         );
     });
 
-// afterAll(async () => {
-//     await browser.close();
-// });
+afterAll(async () => {
+    await browser.close();
+});

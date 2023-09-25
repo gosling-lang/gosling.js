@@ -61,6 +61,14 @@ yarn build-editor
 yarn preview
 ```
 
+## Visual Regression
+
+To test if your changes make a difference visually across a large number of specifications, you can use can use the `yarn screenshot` command. 
+This command will use `dist/gosling.js` in a headless browser (using puppeteer) and take a screenshot of the visualization that is included in the editor. 
+It will save these screenshots in `img/visual-regression/new-screenshots`. If there is a difference compared to the screenshots in `img/visual-regression/screenshots`
+it will show the differences in an image in `img/visual-regression/diffs`. Currently, the Gosling axis can have non-deterministic behavior so you
+should not be alarmed if there are a number of examples where the axis seems to have changed. 
+
 ## Editing `gosling.js/embed`
 
 This repo also contains the source code for `gosling.js/embed`, an ES Module intended to be
