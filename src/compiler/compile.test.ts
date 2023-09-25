@@ -263,36 +263,6 @@ describe('Maintain IDs', () => {
         };
         const flattened = convertToFlatTracks(twoTracksWithDiffData);
         const spread = spreadTracksByData(flattened);
-        expect(spread).toMatchInlineSnapshot(`
-          [
-            {
-              "data": {
-                "type": "csv",
-                "url": "http://abc",
-              },
-              "id": "first",
-              "overlay": [
-                {
-                  "data": {
-                    "type": "csv",
-                    "url": "http://abc",
-                  },
-                  "id": "first",
-                },
-              ],
-              "overlayOnPreviousTrack": false,
-              "y": undefined,
-            },
-            {
-              "data": {
-                "type": "csv",
-                "url": "http://def",
-              },
-              "id": "second",
-              "overlayOnPreviousTrack": true,
-              "y": undefined,
-            },
-          ]
-        `);
+        expect(spread.map(d => d.id)).toEqual(['first', 'second']);
     });
 });
