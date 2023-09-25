@@ -2,6 +2,9 @@ import { EX_SPEC_VISUAL_ENCODING } from '../../editor/example/json-spec/visual-e
 import { compile } from './compile';
 import { getTheme } from '../core/utils/theme';
 import type { GoslingSpec } from '../index';
+import { convertToFlatTracks } from './spec-preprocess';
+import type { SingleView } from '@gosling-lang/gosling-schema';
+import { spreadTracksByData } from '../core/utils/overlay';
 
 describe('compile', () => {
     it('compile should not touch the original spec of users', () => {
@@ -341,5 +344,24 @@ describe('Compiler with UrlToFetchOptions', () => {
             {},
             urlToFetchOptions
         );
+
+describe('Maintain IDs', () => {
+    it('Overlaid tracks', () => {
+        const twoTracksWithDiffData: SingleView = {
+            alignment: 'overlay',
+            tracks: [
+                {
+                    id: 'first',
+                    data: { type: 'csv', url: 'http://abc' }
+                },
+                {
+                    id: 'second',
+                    data: { type: 'csv', url: 'http://def' }
+                }
+            ]
+        };
+        const flattened = convertToFlatTracks(twoTracksWithDiffData);
+        const spread = spreadTracksByData(flattened);
+        expect(spread.map(d => d.id)).toEqual(['first', 'second']);
     });
 });

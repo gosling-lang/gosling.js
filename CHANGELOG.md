@@ -1,3 +1,22 @@
+## [0.10.3](https://github.com/gosling-lang/gosling.js/compare/v0.10.2...v0.10.3) (2023-09-25)
+
+
+### Bug Fixes
+
+* **core:** first track ID should not be lost after compile ([#972](https://github.com/gosling-lang/gosling.js/issues/972)) ([f73410d](https://github.com/gosling-lang/gosling.js/commit/f73410d7a16435fd99cc14ef3e9c1eaf15de61d0))
+
+
+
+## [0.10.2](https://github.com/gosling-lang/gosling.js/compare/v0.10.1...v0.10.2) (2023-09-22)
+
+
+### Bug Fixes
+
+* **core:** preserve zoom status when new track added ([#971](https://github.com/gosling-lang/gosling.js/issues/971)) ([875a9b5](https://github.com/gosling-lang/gosling.js/commit/875a9b54911fb259b795eab7afad853d1ef3e3b7))
+* **core:** rule mark calculation in circular layout ([#967](https://github.com/gosling-lang/gosling.js/issues/967)) ([09a5207](https://github.com/gosling-lang/gosling.js/commit/09a5207fb58c877484911b7158724deec6304f67))
+
+
+
 ## [0.10.1](https://github.com/gosling-lang/gosling.js/compare/v0.10.0...v0.10.1) (2023-08-02)
 
 

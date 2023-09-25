@@ -1,4 +1,11 @@
-import type { AxisPosition, SingleTrack, OverlaidTrack, Track, ChannelDeep, DataDeep } from '@gosling-lang/gosling-schema';
+import type {
+    AxisPosition,
+    SingleTrack,
+    OverlaidTrack,
+    Track,
+    ChannelDeep,
+    DataDeep
+} from '@gosling-lang/gosling-schema';
 import { IsChannelDeep, IsDataTrack, IsOverlaidTrack, IsSingleTrack, IsDummyTrack } from '@gosling-lang/gosling-schema';
 
 /**
@@ -77,7 +84,7 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
                 return [t];
             }
 
-            const base: Partial<OverlaidTrack> = {...t, id: undefined, overlay: undefined };
+            const base: Partial<OverlaidTrack> = { ...t, id: undefined, overlay: undefined };
             const spread: Track[] = [];
             const original: OverlaidTrack = JSON.parse(JSON.stringify(base));
             original.overlay = [];
@@ -86,6 +93,11 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
                 // If data specs are undefined, put the first spec to the parent
                 if (!original.data) {
                     original.data = subSpec.data;
+                }
+
+                // If the id is undefined, put the first spec to the parent
+                if (!original.id) {
+                    original.id = subSpec.id;
                 }
 
                 // Determine if this `subSpec` should be added to `overlay` or become a separate track
