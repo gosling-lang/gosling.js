@@ -95,6 +95,11 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
                     original.data = subSpec.data;
                 }
 
+                // If the id is undefined, put the first spec to the parent
+                if (!original.id) {
+                    original.id = subSpec.id;
+                }
+
                 // Determine if this `subSpec` should be added to `overlay` or become a separate track
                 if (!subSpec.data || isIdenticalDataSpec([original.data, subSpec.data])) {
                     original.overlay.push(subSpec);
