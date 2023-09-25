@@ -110,7 +110,7 @@ const dev = defineConfig({
 const testing = defineConfig({
     resolve: { alias },
     test: {
-        exclude: ['./img/visual-regression/*'],
+        exclude: ['./node_modules/**', './dist/**', './img/**'], // img is excluded because it is used for visual regression testing
         globals: true,
         setupFiles: [path.resolve(__dirname, './scripts/setup-vitest.js')],
         environment: 'jsdom',
