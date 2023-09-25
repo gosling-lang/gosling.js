@@ -62,6 +62,8 @@ beforeAll(async () => {
     // await page.setContent(generateHTML(), { waitUntil: 'networkidle0' });
 });
 
+console.warn('Expect this to take about 10 minutes to run, depending on your internet speed');
+
 /**
  * Loop over all examples and take a screenshot
  */

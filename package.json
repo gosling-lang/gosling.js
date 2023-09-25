@@ -29,7 +29,7 @@
         "preview": "vite preview",
         "check": "tsc --noEmit",
         "test": "vitest",
-        "image": "vitest --mode image",
+        "screenshot": "vitest --mode screenshot",
         "coverage": "vitest run --coverage",
         "format": "eslint src/ editor/ --fix && prettier 'editor/**/*.css' --write",
         "schema": "node scripts/generate-schemas.mjs",

@@ -131,7 +131,7 @@ const testing = defineConfig({
 /**
  * This config is used to take screenshots of every example Gosling spec using a headless browser (puppeteer)
  */
-const image = defineConfig({
+const screenshot = defineConfig({
     test: {
         include: ['./img/visual-regression/*'],
         globals: true,
@@ -148,7 +148,7 @@ const image = defineConfig({
 export default ({ command, mode }) => {
     if (command === 'build' && mode === 'lib') return esm;
     if (mode == 'test') return testing;
-    if (mode == 'image') return image;
+    if (mode == 'screenshot') return screenshot;
     if (mode === 'editor') {
         dev.plugins.push(reactRefresh());
     }
