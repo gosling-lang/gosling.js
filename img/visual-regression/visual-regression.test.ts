@@ -1,8 +1,10 @@
 import puppeteer, { Page, Browser } from 'puppeteer';
 import { examples } from '../../editor/example';
 import * as fs from 'fs';
-
 import { beforeAll } from 'vitest';
+
+import { PNG } from 'pngjs';
+import pixelmatch from 'pixelmatch';
 
 function delay(time: number) {
     return new Promise(resolve => {
@@ -46,6 +48,21 @@ function readFile(filePath: string): Promise<string> {
     });
 }
 
+/**
+ * Compares two PNG files and writes the difference to a third file if a difference is found
+ */
+function comparePNG(path1: string, path2: string, diffPath: string) {
+    const img1 = PNG.sync.read(fs.readFileSync(path1));
+    const img2 = PNG.sync.read(fs.readFileSync(path2));
+    const { width, height } = img1;
+    const diff = new PNG({ width, height });
+    const pixeldifference = pixelmatch(img1.data, img2.data, diff.data, width, height, { threshold: 0.1 });
+    // only write to file if there is a difference in the images
+    if (pixeldifference > 0) {
+        fs.writeFileSync(diffPath, PNG.sync.write(diff));
+    }
+}
+
 let browser: Browser;
 let page: Page;
 let currentGosling: string;
@@ -80,7 +97,12 @@ Object.entries(examples)
                 const component = await page.waitForSelector('.gosling-component');
                 await page.waitForNetworkIdle({ idleTime: 2000 });
                 await delay(2000); // wait 2 seconds for rendering to complete. TODO: see if we can implement javascript API subscription which fires when rendering is done
-                await component!.screenshot({ path: `img/visual-regression/screenshots/${name}.png` });
+                await component!.screenshot({ path: `./img/visual-regression/new-screenshots/${name}.png` });
+                comparePNG(
+                    `img/visual-regression/screenshots/${name}.png`,
+                    `img/visual-regression/new-screenshots/${name}.png`,
+                    `img/visual-regression/diffs/${name}.png`
+                );
             },
             20000
         );
