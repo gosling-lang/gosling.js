@@ -632,28 +632,10 @@
       "type": "object"
     },
     "RequestInit": {
+      "additionalProperties": false,
       "properties": {
-        "body": {},
-        "cache": {
-          "type": "string"
-        },
-        "credentials": {
-          "type": "string"
-        },
         "headers": {
           "type": "object"
-        },
-        "method": {
-          "type": "string"
-        },
-        "mode": {
-          "type": "string"
-        },
-        "referrer": {
-          "type": "string"
-        },
-        "referrerPolicy": {
-          "type": "string"
         }
       },
       "type": "object"

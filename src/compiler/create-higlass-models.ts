@@ -11,7 +11,8 @@ import type {
     ViewApiData
 } from '@gosling-lang/gosling-schema';
 import type { CompleteThemeDeep } from '../core/utils/theme';
-import type { CompileCallback, UrlToFetchOptions } from './compile';
+import type { CompileCallback } from './compile';
+import type { UrlToFetchOptions } from 'src/core/gosling-component';
 import { getViewApiData } from '../api/api-data';
 import { GoslingToHiGlassIdMapper } from '../api/track-and-view-ids';
 import { IsDummyTrack } from '@gosling-lang/gosling-schema';

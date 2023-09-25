@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { type HiGlassApi, HiGlassComponentWrapper } from './higlass-component-wrapper';
 import type { TemplateTrackDef, VisUnitApiData } from '@gosling-lang/gosling-schema';
+import type { RequestInit } from '@gosling-lang/higlass-schema';
 import React, { useState, useEffect, useMemo, useRef, forwardRef, useCallback, useImperativeHandle } from 'react';
 import ResizeSensor from 'css-element-queries/src/ResizeSensor';
 import * as gosling from '..';
@@ -17,6 +18,10 @@ import type { IdTable } from '../api/track-and-view-ids';
 // If HiGlass is rendered and then the container resizes, the viewport position changes, unmatching `xDomain` specified by users.
 const DELAY_FOR_CONTAINER_RESIZE_BEFORE_RERENDER = 300;
 
+/** Matches URLs to specific fetch options so that datafetchers have access URL specific fetch options */
+export interface UrlToFetchOptions {
+    [url: string]: RequestInit;
+}
 interface GoslingCompProps {
     spec?: gosling.GoslingSpec;
     compiled?: (goslingSpec: gosling.GoslingSpec, higlassSpec: gosling.HiGlassSpec) => void;
@@ -27,6 +32,7 @@ interface GoslingCompProps {
     className?: string;
     theme?: Theme;
     templates?: TemplateTrackDef[];
+    urlToFetchOptions: UrlToFetchOptions;
     experimental?: {
         reactive?: boolean;
     };
@@ -131,7 +137,8 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
                 {
                     containerSize: wrapperSize.current,
                     containerParentSize: wrapperParentSize.current
-                }
+                },
+                props.urlToFetchOptions
             );
         }
     }, [props.spec, theme]);
