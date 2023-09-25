@@ -84,7 +84,6 @@ export class CsvDataFetcherClass {
         try {
             const buffer = await this.#file.readFile();
             const text = buffer.toString();
-            console.warn(text);
             const textWithHeader = headerNames ? `${headerNames.join(separator)}\n${text}` : text;
 
             const parsedCSV = d3dsvFormat(separator).parse(textWithHeader, (row: DSVRowString<string>) =>
