@@ -1,3 +1,12 @@
+## [0.10.3](https://github.com/gosling-lang/gosling.js/compare/v0.10.2...v0.10.3) (2023-09-25)
+
+
+### Bug Fixes
+
+* **core:** first track ID should not be lost after compile ([#972](https://github.com/gosling-lang/gosling.js/issues/972)) ([f73410d](https://github.com/gosling-lang/gosling.js/commit/f73410d7a16435fd99cc14ef3e9c1eaf15de61d0))
+
+
+
 ## [0.10.2](https://github.com/gosling-lang/gosling.js/compare/v0.10.1...v0.10.2) (2023-09-22)
 
 
