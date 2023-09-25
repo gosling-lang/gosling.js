@@ -1,5 +1,5 @@
 import puppeteer, { Page, Browser } from 'puppeteer';
-import { examples } from '.';
+import { examples } from '../editor/example';
 import * as fs from 'fs';
 
 import { beforeAll } from 'vitest';
@@ -78,7 +78,7 @@ Object.entries(examples)
                 const component = await page.waitForSelector('.gosling-component');
                 await page.waitForNetworkIdle({ idleTime: 2000 });
                 await delay(2000); // wait 2 seconds for rendering to complete. TODO: see if we can implement javascript API subscription which fires when rendering is done
-                await component!.screenshot({ path: `editor/example/visual-regression-imgs/${name}.png` });
+                await component!.screenshot({ path: `img/visual-regression/${name}.png` });
             },
             20000
         );
