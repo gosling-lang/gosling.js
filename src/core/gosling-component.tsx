@@ -86,7 +86,7 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
      * This makes sure that all the current zooming status is preserved when new tracks are added
      */
     const preverseZoomStatus = (newSpec: gosling.HiGlassSpec, prevSpec: gosling.HiGlassSpec) => {
-        newSpec.views.forEach((view) => {
+        newSpec.views.forEach(view => {
             const viewUid = view.uid!;
             const newView = !prevSpec.views.find(v => v.uid === viewUid);
             if (newView) {

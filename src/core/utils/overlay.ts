@@ -96,7 +96,7 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
                 }
 
                 // If the id is undefined, put the first spec to the parent
-                if(!original.id) {
+                if (!original.id) {
                     original.id = subSpec.id;
                 }
 

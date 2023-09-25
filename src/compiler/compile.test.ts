@@ -260,7 +260,7 @@ describe('Maintain IDs', () => {
                     data: { type: 'csv', url: 'http://def' }
                 }
             ]
-        }
+        };
         const flattened = convertToFlatTracks(twoTracksWithDiffData);
         const spread = spreadTracksByData(flattened);
         expect(spread).toMatchInlineSnapshot(`
