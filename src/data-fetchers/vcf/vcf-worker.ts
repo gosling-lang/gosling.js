@@ -19,6 +19,8 @@ const vcfFiles: Map<string, VcfFile> = new Map();
 
 type VcfFileOptions = {
     sampleLength: number;
+    urlFetchOptions?: RequestInit;
+    indexUrlFetchOptions?: RequestInit;
 };
 
 /**
@@ -33,14 +35,22 @@ class VcfFile {
     /**
      * Function to create an instance of VcfFile from URLs
      * @param url A string which is the URL of the bed file
-     * @param indexUrl A string which is the URL of the bed  index file
+     * @param indexUrl A string which is the URL of the bed index file
      * @param uid A unique identifier for the worker
+     * @param urlFetchOptions
+     * @param indexUrlFetchOptions
      * @returns an instance of VcfFile
      */
-    static fromUrl(url: string, indexUrl: string, uid: string) {
+    static fromUrl(
+        url: string,
+        indexUrl: string,
+        uid: string,
+        urlFetchOptions?: RequestInit,
+        indexUrlFetchOptions?: RequestInit
+    ) {
         const tbi = new TabixIndexedFile({
-            filehandle: new RemoteFile(url),
-            tbiFilehandle: new RemoteFile(indexUrl)
+            filehandle: new RemoteFile(url, { overrides: urlFetchOptions }),
+            tbiFilehandle: new RemoteFile(indexUrl, { overrides: indexUrlFetchOptions })
         });
         return new VcfFile(tbi, uid);
     }
@@ -132,7 +142,7 @@ function init(
 ) {
     let vcfFile = vcfFiles.get(vcf.url);
     if (!vcfFile) {
-        vcfFile = VcfFile.fromUrl(vcf.url, vcf.indexUrl, uid);
+        vcfFile = VcfFile.fromUrl(vcf.url, vcf.indexUrl, uid, options.urlFetchOptions, options.indexUrlFetchOptions);
     }
     const dataSource = new DataSource(vcfFile, chromSizes, {
         sampleLength: 1000,

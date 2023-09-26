@@ -12,6 +12,7 @@ import type {
 } from '@gosling-lang/gosling-schema';
 import type { CompleteThemeDeep } from '../core/utils/theme';
 import type { CompileCallback } from './compile';
+import type { UrlToFetchOptions } from 'src/core/gosling-component';
 import { getViewApiData } from '../api/api-data';
 import { GoslingToHiGlassIdMapper } from '../api/track-and-view-ids';
 import { IsDummyTrack } from '@gosling-lang/gosling-schema';
@@ -20,7 +21,8 @@ export function renderHiGlass(
     spec: GoslingSpec,
     trackInfos: TrackInfo[],
     callback: CompileCallback,
-    theme: CompleteThemeDeep
+    theme: CompleteThemeDeep,
+    urlToFetchOptions?: UrlToFetchOptions
 ) {
     if (trackInfos.length === 0) {
         // no tracks to render
@@ -36,7 +38,7 @@ export function renderHiGlass(
     /* Update the HiGlass model by iterating tracks */
     trackInfos.forEach(tb => {
         const { track, boundingBox: bb, layout } = tb;
-        goslingToHiGlass(hgModel, track, bb, layout, theme, idMapper);
+        goslingToHiGlass(hgModel, track, bb, layout, theme, idMapper, urlToFetchOptions);
     });
 
     /* Add linking information to the HiGlass model */

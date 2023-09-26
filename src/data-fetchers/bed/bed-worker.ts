@@ -4,16 +4,20 @@
  */
 
 import { TabixIndexedFile } from '@gmod/tabix';
-import { expose, Transfer } from 'threads/worker';
 import { sampleSize } from 'lodash-es';
+import { expose, Transfer } from 'threads/worker';
 import type { TilesetInfo } from '@higlass/types';
+
 import type { ChromSizes } from '@gosling-lang/gosling-schema';
+
 import { DataSource, RemoteFile } from '../utils';
 import BedParser from './bed-parser';
 
 export type BedFileOptions = {
     sampleLength: number;
     customFields?: string[];
+    urlFetchOptions?: RequestInit;
+    indexUrlFetchOptions?: RequestInit;
 };
 
 /**
@@ -55,12 +59,20 @@ export class BedFile {
      * @param url A string which is the URL of the bed file
      * @param indexUrl A string which is the URL of the bed  index file
      * @param uid A unique identifier for the worker
+     * @param urlFetchOptions When the url is fetched, these options will be used
+     * @param indexUrlFetchOptions When the index URL is fetched, these options will be used
      * @returns an instance of BedFile
      */
-    static fromUrl(url: string, indexUrl: string, uid: string) {
+    static fromUrl(
+        url: string,
+        indexUrl: string,
+        uid: string,
+        urlFetchOptions?: RequestInit,
+        indexUrlFetchOptions?: RequestInit
+    ) {
         const tbi = new TabixIndexedFile({
-            filehandle: new RemoteFile(url),
-            tbiFilehandle: new RemoteFile(indexUrl)
+            filehandle: new RemoteFile(url, { overrides: urlFetchOptions }),
+            tbiFilehandle: new RemoteFile(indexUrl, { overrides: indexUrlFetchOptions })
         });
         return new BedFile(tbi, uid);
     }
@@ -184,7 +196,7 @@ function init(
 ) {
     let bedFile = bedFiles.get(bed.url);
     if (!bedFile) {
-        bedFile = BedFile.fromUrl(bed.url, bed.indexUrl, uid);
+        bedFile = BedFile.fromUrl(bed.url, bed.indexUrl, uid, options.urlFetchOptions, options.indexUrlFetchOptions);
         if (options.customFields) bedFile.customFields = options.customFields;
     }
     const dataSource = new DataSource(bedFile, chromSizes, {

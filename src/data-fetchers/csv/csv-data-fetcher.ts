@@ -3,9 +3,9 @@ import { computeChromSizes } from '../../core/utils/assembly';
 import { sampleSize } from 'lodash-es';
 import type { Assembly, CsvData, FilterTransform, Datum } from '@gosling-lang/gosling-schema';
 import { filterData } from '../../core/utils/data-transform';
-import { type CommonDataConfig, filterUsingGenoPos, sanitizeChrName } from '../utils';
+import { type CommonDataConfig, filterUsingGenoPos, sanitizeChrName, RemoteFile } from '../utils';
 
-type CsvDataConfig = CsvData & CommonDataConfig & { filter: FilterTransform[] };
+type CsvDataConfig = CsvData & CommonDataConfig & { filter?: FilterTransform[] };
 
 interface ChromSizes {
     chrToAbs: (chrom: string, chromPos: number) => number;
@@ -53,6 +53,7 @@ export class CsvDataFetcherClass {
     #parsedData!: DSVRowString<string>[]; // Either set in the constructor or in #fetchCsv()
     #assembly: Assembly;
     #filter: FilterTransform[] | undefined;
+    #file: RemoteFile;
 
     constructor(dataConfig: CsvDataConfig) {
         this.dataConfig = dataConfig;
@@ -64,6 +65,10 @@ export class CsvDataFetcherClass {
             console.error('Please provide the `url` of the data');
         }
 
+        // Use any headers for this particular URL
+        const { urlFetchOptions, url } = dataConfig;
+        this.#file = new RemoteFile(url, { overrides: urlFetchOptions });
+
         this.#chromSizes = this.#generateChomSizeInfo();
         this.#dataPromise = this.#fetchCsv();
     }
@@ -72,14 +77,13 @@ export class CsvDataFetcherClass {
      * Fetches CSV file from url, parses it, and sets this.#parsedData
      */
     async #fetchCsv(): Promise<void> {
-        const { url, chromosomeField, genomicFields, headerNames, longToWideId, genomicFieldsToConvert } =
-            this.dataConfig;
+        const { chromosomeField, genomicFields, headerNames, longToWideId, genomicFieldsToConvert } = this.dataConfig;
 
         const separator = this.dataConfig.separator ?? ',';
 
         try {
-            const response = await fetch(url);
-            const text = await (response.ok ? response.text() : Promise.reject(response.status));
+            const buffer = await this.#file.readFile();
+            const text = buffer.toString();
             const textWithHeader = headerNames ? `${headerNames.join(separator)}\n${text}` : text;
 
             const parsedCSV = d3dsvFormat(separator).parse(textWithHeader, (row: DSVRowString<string>) =>

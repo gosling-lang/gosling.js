@@ -20,6 +20,7 @@ import { DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM } from './defaults';
 import type { CompleteThemeDeep } from '../core/utils/theme';
 import { DEFAULT_TEXT_STYLE } from '../core/utils/text-style';
 import type { GoslingToHiGlassIdMapper } from '../api/track-and-view-ids';
+import type { UrlToFetchOptions } from 'src/core/gosling-component';
 
 /**
  * Convert a gosling track into a HiGlass view and add it into a higlass model.
@@ -30,7 +31,8 @@ export function goslingToHiGlass(
     bb: BoundingBox,
     layout: RelativePosition,
     theme: Required<CompleteThemeDeep>,
-    idMapper: GoslingToHiGlassIdMapper
+    idMapper: GoslingToHiGlassIdMapper,
+    urlToFetchOptions?: UrlToFetchOptions
 ): HiGlassModel {
     // TODO: check whether there are multiple track.data across superposed tracks
     // ...
@@ -152,10 +154,19 @@ export function goslingToHiGlass(
                 x1: getFieldName('x1'),
                 x1e: getFieldName('x1e')
             } as const;
-            // use gosling's custom data fetchers
+
+            // Check whether there are any URL specific fetch options
+            const urlFetchOptions =
+                ('url' in firstResolvedSpec.data && urlToFetchOptions?.[firstResolvedSpec.data.url]) || {};
+            const indexUrlFetchOptions =
+                ('indexUrl' in firstResolvedSpec.data && urlToFetchOptions?.[firstResolvedSpec.data.indexUrl]) || {};
+
+            // This object will be passed to the data fetchers
             hgTrack.data = {
                 ...firstResolvedSpec.data,
                 ...xFields,
+                urlFetchOptions,
+                indexUrlFetchOptions,
                 // Additionally, add assembly, otherwise, a default genome build is used
                 assembly
                 // TODO: should look all sub tracks' `dataTransform` and apply OR operation.

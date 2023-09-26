@@ -86,10 +86,10 @@ function BigWigDataFetcher(HGC: import('@higlass/types').HGC, dataConfig: BigWig
             this.dataPromises.push(this.loadBBI(dataConfig));
         }
 
-        async loadBBI(dataConfig: { url: string }) {
+        async loadBBI(dataConfig: BigWigDataConfig) {
             if (dataConfig.url) {
                 this.bwFile = new BigWig({
-                    filehandle: new RemoteFile(dataConfig.url)
+                    filehandle: new RemoteFile(dataConfig.url, { overrides: dataConfig.urlFetchOptions })
                 });
                 return this.bwFile.getHeader().then((h: BigWigHeader) => {
                     this.bwFileHeader = h;

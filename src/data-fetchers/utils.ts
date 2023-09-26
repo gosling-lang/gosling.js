@@ -10,6 +10,7 @@ export type CommonDataConfig = {
     xe?: string;
     x1?: string;
     x1e?: string;
+    urlFetchOptions?: RequestInit;
 };
 
 export class DataSource<File, Options> {

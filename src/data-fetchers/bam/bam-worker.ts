@@ -1,13 +1,22 @@
 // Adopted from https://github.com/higlass/higlass-pileup/blob/master/src/bam-fetcher-worker.js
 import { expose, Transfer } from 'threads/worker';
 import { BamFile as _BamFile } from '@gmod/bam';
-import QuickLRU from 'quick-lru';
-
-import type { TilesetInfo } from '@higlass/types';
 import type { BamRecord } from '@gmod/bam';
+import QuickLRU from 'quick-lru';
+import type { TilesetInfo } from '@higlass/types';
+
+import type { ChromSizes } from '@gosling-lang/gosling-schema';
 
 import { DataSource, RemoteFile } from '../utils';
-import type { ChromSizes } from '@gosling-lang/gosling-schema';
+
+interface BamFileOptions {
+    loadMates: boolean;
+    maxInsertSize: number;
+    extractJunction: boolean;
+    junctionMinCoverage: number;
+    urlFetchOptions?: RequestInit;
+    indexUrlFetchOptions?: RequestInit;
+}
 
 function parseMD(mdString: string, useCounts: true): { type: string; length: number }[];
 function parseMD(mdString: string, useCounts: false): { pos: number; base: string; length: 1; bamSeqShift: number }[];
@@ -127,14 +136,6 @@ function getSubstitutions(segment: Segment, seq: string) {
             } else {
                 // console.log('skipping:', sub.type);
             }
-            // if (referenceConsuming.has(sub.base)) {
-            //   if (queryConsuming.has(sub.base)) {
-            //     substitutions.push(
-            //     {
-            //       pos:
-            //     })
-            //   }
-            // }
         }
 
         const firstSub = cigarSubs[0];
@@ -235,25 +236,15 @@ class BamFile extends _BamFile {
         super(...args);
         this.headerPromise = this.getHeader();
     }
-    static fromUrl(url: string, indexUrl: string) {
+    static fromUrl(url: string, indexUrl: string, urlFetchOptions?: RequestInit, indexUrlFetchOptions?: RequestInit) {
         return new BamFile({
-            bamFilehandle: new RemoteFile(url),
-            baiFilehandle: new RemoteFile(indexUrl)
-            // fetchSizeLimit: 500000000,
-            // chunkSizeLimit: 100000000,
-            // yieldThreadTime: 1000,
+            bamFilehandle: new RemoteFile(url, { overrides: urlFetchOptions }),
+            baiFilehandle: new RemoteFile(indexUrl, { overrides: indexUrlFetchOptions })
         });
     }
     getChromNames() {
         return this.indexToChr.map((v: { refName: string; length: number }) => v.refName);
     }
-}
-
-interface BamFileOptions {
-    loadMates: boolean;
-    maxInsertSize: number;
-    extractJunction: boolean;
-    junctionMinCoverage: number;
 }
 
 // indexed by dataset uuid
@@ -270,7 +261,7 @@ const init = async (
     options: Partial<BamFileOptions> = {}
 ) => {
     if (!bamFileCache.has(bam.url)) {
-        const bamFile = BamFile.fromUrl(bam.url, bam.indexUrl);
+        const bamFile = BamFile.fromUrl(bam.url, bam.indexUrl, options.urlFetchOptions, options.indexUrlFetchOptions);
         await bamFile.getHeader(); // reads bam/bai headers
 
         // Infer the correct chromosome names between 'chr1' and '1'

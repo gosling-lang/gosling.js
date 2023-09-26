@@ -100,19 +100,29 @@ export interface EnumTrack {
     y?: number;
     options?: any;
 }
+
 export interface Data {
-    type?: string; // TODO: What kinds of types exist?
+    type?: string;
     children?: any[];
     tiles?: any;
     tilesetInfo?: any;
     url?: string;
 
     // Options Gosling internally use
-    assembly?: Assembly;
 
+    assembly?: Assembly;
+    urlFetchOptions?: RequestInit; // Options used when URL is fetched
+    indexUrl?: string; // For datatypes that have indexes
+    indexUrlFetchOptions?: RequestInit; // Options used when index URL is fetched
     // Option to filter datasets
     // This has been added to filter data properly during fetching tiles
     filter?: FilterTransform[];
+}
+
+// When using the built-in RequestInit type, `yarn schema` doesn't work. So we are using our own RequestInit.
+// Currently, we only forsee using the headers option.
+export interface RequestInit {
+    headers?: Record<string, any>;
 }
 
 export interface Overlay {

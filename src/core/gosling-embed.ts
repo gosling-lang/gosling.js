@@ -6,6 +6,7 @@ import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
 
 import { validateGoslingSpec } from '@gosling-lang/gosling-schema';
 import { compile } from '../compiler/compile';
+import type { UrlToFetchOptions } from './gosling-component';
 import { getTheme, type Theme } from './utils/theme';
 import { GoslingTemplates } from './utils/template';
 import { type GoslingApi, createApi } from '../api/api';
@@ -20,6 +21,7 @@ export type GoslingEmbedOptions = Omit<HiGlassComponentWrapperProps['options'], 
     id?: string;
     className?: string;
     theme?: Theme;
+    urlToFetchOptions?: UrlToFetchOptions;
 };
 
 const MAX_TRIES = 20;
@@ -92,7 +94,8 @@ export function embed(element: HTMLElement, spec: GoslingSpec, opts: GoslingEmbe
             },
             [...GoslingTemplates],
             theme,
-            {} // TODO: properly specify this
+            {}, // TODO: properly specify this
+            opts.urlToFetchOptions
         );
     });
 }

@@ -4,6 +4,7 @@ import { traverseToFixSpecDownstream, overrideDataTemplates } from './spec-prepr
 import { replaceTrackTemplates } from '../core/utils/template';
 import { getRelativeTrackInfo, type Size } from './bounding-box';
 import type { CompleteThemeDeep } from '../core/utils/theme';
+import type { UrlToFetchOptions } from 'src/core/gosling-component';
 import { renderHiGlass as createHiGlassModels } from './create-higlass-models';
 import { manageResponsiveSpecs } from './responsive';
 import type { IdTable } from '../api/track-and-view-ids';
@@ -17,6 +18,7 @@ export type CompileCallback = (
     idTable: IdTable
 ) => void;
 
+
 export function compile(
     spec: GoslingSpec,
     callback: CompileCallback,
@@ -25,7 +27,8 @@ export function compile(
     containerStatus: {
         containerSize?: { width: number; height: number };
         containerParentSize?: { width: number; height: number };
-    }
+    },
+    urlToFetchOptions?: UrlToFetchOptions
 ) {
     // Make sure to keep the original spec as-is
     const specCopy = JSON.parse(JSON.stringify(spec));
@@ -68,5 +71,5 @@ export function compile(
     }
 
     // Make HiGlass models for individual tracks
-    createHiGlassModels(specCopy, trackInfos, callback, theme);
+    createHiGlassModels(specCopy, trackInfos, callback, theme, urlToFetchOptions);
 }

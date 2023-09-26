@@ -11,6 +11,8 @@ import { isGFF3Feature, makeRandomSortedArray } from './utils';
 export type GffFileOptions = {
     sampleLength: number;
     attributesToFields?: { attribute: string; defaultValue: string }[];
+    urlFetchOptions?: RequestInit;
+    indexUrlFetchOptions?: RequestInit;
 };
 
 export interface GffTile extends GFF3FeatureLineWithRefs {
@@ -38,12 +40,20 @@ export class GffFile {
      * @param url A string which is the URL of the bed file
      * @param indexUrl A string which is the URL of the bed  index file
      * @param uid A unique identifier for the worker
+     * @param urlFetchOptions When the url is fetched, these options will be used
+     * @param indexUrlFetchOptions When the index URL is fetched, these options will be used
      * @returns an instance of BedFile
      */
-    static fromUrl(url: string, indexUrl: string, uid: string) {
+    static fromUrl(
+        url: string,
+        indexUrl: string,
+        uid: string,
+        urlFetchOptions?: RequestInit,
+        indexUrlFetchOptions?: RequestInit
+    ): GffFile {
         const tbi = new TabixIndexedFile({
-            filehandle: new RemoteFile(url),
-            tbiFilehandle: new RemoteFile(indexUrl)
+            filehandle: new RemoteFile(url, { overrides: urlFetchOptions }),
+            tbiFilehandle: new RemoteFile(indexUrl, { overrides: indexUrlFetchOptions })
         });
         return new GffFile(tbi, uid);
     }
@@ -252,7 +262,7 @@ function init(
 ) {
     let gffFile = gffFiles.get(bed.url);
     if (!gffFile) {
-        gffFile = GffFile.fromUrl(bed.url, bed.indexUrl, uid);
+        gffFile = GffFile.fromUrl(bed.url, bed.indexUrl, uid, options.urlFetchOptions, options.indexUrlFetchOptions);
     }
     const dataSource = new DataSource(gffFile, chromSizes, {
         sampleLength: 1000, // default sampleLength

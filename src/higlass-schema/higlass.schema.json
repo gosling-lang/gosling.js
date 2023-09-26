@@ -107,6 +107,12 @@
           },
           "type": "array"
         },
+        "indexUrl": {
+          "type": "string"
+        },
+        "indexUrlFetchOptions": {
+          "$ref": "#/definitions/RequestInit"
+        },
         "tiles": {},
         "tilesetInfo": {},
         "type": {
@@ -114,6 +120,9 @@
         },
         "url": {
           "type": "string"
+        },
+        "urlFetchOptions": {
+          "$ref": "#/definitions/RequestInit"
         }
       },
       "type": "object"
@@ -620,6 +629,15 @@
         "inRange",
         "type"
       ],
+      "type": "object"
+    },
+    "RequestInit": {
+      "additionalProperties": false,
+      "properties": {
+        "headers": {
+          "type": "object"
+        }
+      },
       "type": "object"
     },
     "Track": {
