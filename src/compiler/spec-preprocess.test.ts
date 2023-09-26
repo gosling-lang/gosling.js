@@ -1,6 +1,11 @@
 import type { GoslingSpec, SingleView, Track } from '@gosling-lang/gosling-schema';
 import { getBoundingBox, getRelativeTrackInfo } from './bounding-box';
-import { traverseToFixSpecDownstream, overrideDataTemplates, convertToFlatTracks, preverseZoomStatus } from './spec-preprocess';
+import {
+    traverseToFixSpecDownstream,
+    overrideDataTemplates,
+    convertToFlatTracks,
+    preverseZoomStatus
+} from './spec-preprocess';
 import { getTheme } from '../core/utils/theme';
 import type { HiGlassSpec, View } from '@gosling-lang/higlass-schema';
 
@@ -362,31 +367,33 @@ describe('Management of HiGlass view configs', () => {
             bottom: [],
             gallery: [],
             whole: []
-        }, layout: {
+        },
+        layout: {
             x: 0,
             y: 0,
             w: 0,
-            h: 0,
+            h: 0
         }
-    }
-    const prev: HiGlassSpec = {
-        views: [
-            { ...viewBase, uid: 'existing-view', initialXDomain: [0, 1], initialYDomain: [0, 1] }
-        ],
-        zoomLocks: { locksByViewUid: {}, locksDict: {}},
-        locationLocks: { locksByViewUid: {}, locksDict: {}},
     };
-    it('Should preserve zoom status', () => {  
+    const prev: HiGlassSpec = {
+        views: [{ ...viewBase, uid: 'existing-view', initialXDomain: [0, 1], initialYDomain: [0, 1] }],
+        zoomLocks: { locksByViewUid: {}, locksDict: {} },
+        locationLocks: { locksByViewUid: {}, locksDict: {} }
+    };
+    it('Should preserve zoom status', () => {
         const cur: HiGlassSpec = {
             views: [
                 { ...viewBase, uid: 'existing-view', initialXDomain: [0, 1], initialYDomain: [0, 1] },
                 { ...viewBase, uid: 'new-view', initialXDomain: [0, 999], initialYDomain: [0, 999] }
             ],
-            zoomLocks: { locksByViewUid: {
-                'existing-view': 'lock-id',
-                'new-view': 'lock-id'
-            }, locksDict: {}},
-            locationLocks: { locksByViewUid: {}, locksDict: {}},
+            zoomLocks: {
+                locksByViewUid: {
+                    'existing-view': 'lock-id',
+                    'new-view': 'lock-id'
+                },
+                locksDict: {}
+            },
+            locationLocks: { locksByViewUid: {}, locksDict: {} }
         };
         preverseZoomStatus(cur, prev);
         expect(cur.views[0].initialXDomain).toEqual(cur.views[1].initialXDomain);
@@ -398,11 +405,14 @@ describe('Management of HiGlass view configs', () => {
                 { ...viewBase, uid: 'new-view-1', initialXDomain: [0, 1], initialYDomain: [0, 1] },
                 { ...viewBase, uid: 'new-view-2', initialXDomain: [0, 999], initialYDomain: [0, 999] }
             ],
-            zoomLocks: { locksByViewUid: {
-                'new-view-1': 'lock-id',
-                'new-view-2': 'lock-id'
-            }, locksDict: {}},
-            locationLocks: { locksByViewUid: {}, locksDict: {}},
+            zoomLocks: {
+                locksByViewUid: {
+                    'new-view-1': 'lock-id',
+                    'new-view-2': 'lock-id'
+                },
+                locksDict: {}
+            },
+            locationLocks: { locksByViewUid: {}, locksDict: {} }
         };
         preverseZoomStatus(cur, prev);
         expect(cur.views[0].initialXDomain).not.toEqual(cur.views[1].initialXDomain);

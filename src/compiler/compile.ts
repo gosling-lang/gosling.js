@@ -18,7 +18,6 @@ export type CompileCallback = (
     idTable: IdTable
 ) => void;
 
-
 export function compile(
     spec: GoslingSpec,
     callback: CompileCallback,
