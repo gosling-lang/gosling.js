@@ -344,6 +344,8 @@ describe('Compiler with UrlToFetchOptions', () => {
             {},
             urlToFetchOptions
         );
+    });
+});
 
 describe('Maintain IDs', () => {
     it('Overlaid tracks', () => {
