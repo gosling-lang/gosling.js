@@ -1,12 +1,7 @@
 import type { GoslingSpec, SingleView, Track } from '@gosling-lang/gosling-schema';
 import { getBoundingBox, getRelativeTrackInfo } from './bounding-box';
-import {
-    traverseToFixSpecDownstream,
-    overrideDataTemplates,
-    convertToFlatTracks
-} from './spec-preprocess';
+import { traverseToFixSpecDownstream, overrideDataTemplates, convertToFlatTracks } from './spec-preprocess';
 import { getTheme } from '../core/utils/theme';
-import type { HiGlassSpec, View } from '@gosling-lang/higlass-schema';
 
 describe('Fix Spec Downstream', () => {
     it('Empty Views', () => {

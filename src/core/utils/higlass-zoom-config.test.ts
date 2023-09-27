@@ -1,5 +1,5 @@
-import type { HiGlassSpec, View } from "@gosling-lang/higlass-schema";
-import { preverseZoomStatus } from "./higlass-zoom-config";
+import type { HiGlassSpec, View } from '@gosling-lang/higlass-schema';
+import { preverseZoomStatus } from './higlass-zoom-config';
 
 describe('Management of HiGlass view configs', () => {
     const viewBase: Pick<View, 'tracks' | 'layout'> = {
