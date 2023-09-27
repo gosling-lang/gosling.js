@@ -1,3 +1,17 @@
+## [0.10.4](https://github.com/gosling-lang/gosling.js/compare/v0.10.3...v0.10.4) (2023-09-27)
+
+
+### Bug Fixes
+
+* **core:** preserve the zoom status only when needed ([#974](https://github.com/gosling-lang/gosling.js/issues/974)) ([b74f10e](https://github.com/gosling-lang/gosling.js/commit/b74f10e98190d2fe89ce8851c33ee8126a5640b9))
+
+
+### Features
+
+* **data-fetcher,core:** Add support for getting data from URLs that require certain request initializations  ([#965](https://github.com/gosling-lang/gosling.js/issues/965)) ([6ddb4b6](https://github.com/gosling-lang/gosling.js/commit/6ddb4b6459066d13e33aa21cf25f3661fc27068b))
+
+
+
 ## [0.10.3](https://github.com/gosling-lang/gosling.js/compare/v0.10.2...v0.10.3) (2023-09-25)
 
 
