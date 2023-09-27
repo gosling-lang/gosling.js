@@ -13,6 +13,7 @@ import { isEqual } from 'lodash-es';
 import * as uuid from 'uuid';
 import { publish } from '../api/pubsub';
 import type { IdTable } from '../api/track-and-view-ids';
+import { preverseZoomStatus } from './utils/higlass-zoom-config';
 
 // Before rerendering, wait for a few time so that HiGlass container is resized already.
 // If HiGlass is rendered and then the container resizes, the viewport position changes, unmatching `xDomain` specified by users.
@@ -87,28 +88,6 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
         },
         [viewConfig, theme]
     );
-
-    /**
-     * This makes sure that all the current zooming status is preserved when new tracks are added
-     */
-    const preverseZoomStatus = (newSpec: gosling.HiGlassSpec, prevSpec: gosling.HiGlassSpec) => {
-        newSpec.views.forEach(view => {
-            const viewUid = view.uid!;
-            const newView = !prevSpec.views.find(v => v.uid === viewUid);
-            if (newView) {
-                // if this view is linked with another view, we need to preverse the current zooming status of this view from the linked view
-                // Otherwise, all the views that is linked with this view will be reset to the original zooming position
-                const { locksByViewUid } = newSpec.zoomLocks;
-                const lockUid = locksByViewUid[viewUid];
-                const linkedViewUid = Object.entries(locksByViewUid).find(([_, uid]) => _ && uid === lockUid)?.[0];
-                if (linkedViewUid) {
-                    // We found a linked view, so copy the current zooming status
-                    view.initialXDomain = prevSpec.views.find(v => v.uid === linkedViewUid)?.initialXDomain;
-                    view.initialYDomain = prevSpec.views.find(v => v.uid === linkedViewUid)?.initialYDomain;
-                }
-            }
-        });
-    };
 
     // TODO: add a `force` parameter since changing `linkingId` might not update vis
     const compile = useCallback(() => {
