@@ -13,7 +13,7 @@ import { isEqual } from 'lodash-es';
 import * as uuid from 'uuid';
 import { publish } from '../api/pubsub';
 import type { IdTable } from '../api/track-and-view-ids';
-import { preverseZoomStatus } from '../compiler/spec-preprocess';
+import { preverseZoomStatus } from './utils/higlass-zoom-config';
 
 // Before rerendering, wait for a few time so that HiGlass container is resized already.
 // If HiGlass is rendered and then the container resizes, the viewport position changes, unmatching `xDomain` specified by users.
