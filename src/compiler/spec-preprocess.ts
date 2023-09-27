@@ -31,7 +31,6 @@ import {
 } from './defaults';
 import { spreadTracksByData } from '../core/utils/overlay';
 import { getStyleOverridden } from '../core/utils/style';
-import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
 
 /**
  * Traverse individual tracks and call the callback function to read and/or update the track definition.
