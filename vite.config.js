@@ -38,7 +38,12 @@ const bundleWebWorker = {
 const manualInlineWorker = {
     apply: 'build',
     async transform(code, id) {
-        if (id.endsWith('bam-worker.ts?worker&inline') || id.endsWith('vcf-worker.ts?worker&inline')) {
+        if (
+            id.endsWith('bam-worker.ts?worker&inline') ||
+            id.endsWith('vcf-worker.ts?worker&inline') ||
+            id.endsWith('gff-worker.ts?worker&inline') ||
+            id.endsWith('bed-worker.ts?worker&inline')
+        ) {
             const bundle = await bundleWebWorker.transform(code, id + '?worker_file');
             const base64 = Buffer.from(bundle).toString('base64');
             // https://github.com/vitejs/vite/blob/72cb33e947e7aa72d27ed0c5eacb2457d523dfbf/packages/vite/src/node/plugins/worker.ts#L78-L87
@@ -60,11 +65,11 @@ const alias = {
     'gosling.js': path.resolve(__dirname, './src/index.ts'),
     '@gosling-lang/gosling-schema': path.resolve(__dirname, './src/gosling-schema/index.ts'),
     '@gosling-lang/higlass-schema': path.resolve(__dirname, './src/higlass-schema/index.ts'),
-    "@gosling-lang/gosling-track": path.resolve(__dirname, "./src/tracks/gosling-track/index.ts"),
-    "@gosling-lang/gosling-genomic-axis": path.resolve(__dirname, "./src/tracks/gosling-genomic-axis/index.ts"),
-    "@gosling-lang/gosling-brush": path.resolve(__dirname, "./src/tracks/gosling-brush/index.ts"),
-    "@gosling-lang/dummy-track": path.resolve(__dirname, "./src/tracks/dummy-track/index.ts"),
-    "@data-fetchers": path.resolve(__dirname, "./src/data-fetchers/index.ts"),
+    '@gosling-lang/gosling-track': path.resolve(__dirname, './src/tracks/gosling-track/index.ts'),
+    '@gosling-lang/gosling-genomic-axis': path.resolve(__dirname, './src/tracks/gosling-genomic-axis/index.ts'),
+    '@gosling-lang/gosling-brush': path.resolve(__dirname, './src/tracks/gosling-brush/index.ts'),
+    '@gosling-lang/dummy-track': path.resolve(__dirname, './src/tracks/dummy-track/index.ts'),
+    '@data-fetchers': path.resolve(__dirname, './src/data-fetchers/index.ts'),
     zlib: path.resolve(__dirname, './src/alias/zlib.ts'),
     uuid: path.resolve(__dirname, './node_modules/uuid/dist/esm-browser/index.js'),
     stream: path.resolve(__dirname, './node_modules/stream-browserify') //  gmod/gff uses stream-browserify
@@ -116,9 +121,9 @@ const testing = defineConfig({
             }
         },
         coverage: {
-          reportsDirectory: './coverage',
-          reporter: ['lcov', 'text'],
-          include: ['src', 'editor'],
+            reportsDirectory: './coverage',
+            reporter: ['lcov', 'text'],
+            include: ['src', 'editor']
         }
     }
 });
