@@ -70,9 +70,7 @@ const alias = {
     stream: path.resolve(__dirname, './node_modules/stream-browserify') //  gmod/gff uses stream-browserify
 };
 
-// get rid of UUID, patch it in manually
-
-const skipExt = new Set(['@gmod/bbi', 'uuid']); // look into whether bbi needs to be there 
+const skipExt = new Set(['@gmod/bbi', 'uuid']);
 const external = [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)].filter(
     dep => !skipExt.has(dep)
 );
