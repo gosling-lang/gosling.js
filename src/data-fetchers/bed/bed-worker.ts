@@ -46,7 +46,7 @@ export interface EmptyTile {
 /**
  * A class to represent a BED file. It takes care of setting up gmod/tabix.
  */
-export class BedFile {
+class BedFile {
     #parser?: BedParser;
     #customFields?: string[];
     #uid: string;

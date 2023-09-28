@@ -115,10 +115,6 @@ export class GoslingTrackModel {
         return this.id;
     }
 
-    public getRenderingId(): string {
-        return this.spec()._renderingId ?? this.getId();
-    }
-
     public originalSpec(): SingleTrack {
         return this.specOriginal;
     }
@@ -226,17 +222,6 @@ export class GoslingTrackModel {
         const channel = this.specComplete[channelKey];
         if (IsChannelDeep(channel)) {
             channel.domain = domain;
-        }
-    }
-
-    /**
-     * Replace a domain with a new one in the complete spec(s).
-     * A domain is replaced only when the channel is bound with data (i.e., `ChannelDeep`).
-     */
-    public setChannelRange(channelKey: keyof typeof ChannelTypes, range: string[] | number[]) {
-        const channel = this.specComplete[channelKey];
-        if (IsChannelDeep(channel)) {
-            channel.range = range;
         }
     }
 
@@ -866,10 +851,6 @@ export class GoslingTrackModel {
      */
     public setChannelScale(channelKey: keyof typeof ChannelTypes, scale: ScaleType) {
         this.channelScales[channelKey] = scale;
-    }
-
-    public addDataRows(_: { [k: string]: number | string }[]) {
-        this.dataAggregated = [...this.dataAggregated, ..._];
     }
 
     /**
