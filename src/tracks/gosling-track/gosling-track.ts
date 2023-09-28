@@ -1,5 +1,4 @@
 import type * as PIXI from 'pixi.js';
-import * as uuid from 'uuid';
 import { isEqual, sampleSize, uniqBy } from 'lodash-es';
 import type { ScaleLinear } from 'd3-scale';
 import type {
@@ -52,6 +51,7 @@ import {
 import { HIGLASS_AXIS_SIZE } from '../../compiler/higlass-model';
 import { flatArrayToPairArray } from '../../core/utils/array';
 import { createPluginTrack, type PluginTrackFactory, type TrackConfig } from '../../core/utils/define-plugin-track';
+import { uuid } from '../../core/utils/uuid';
 
 // Set `true` to print in what order each function is called
 export const PRINT_RENDERING_CYCLE = false;
@@ -190,10 +190,10 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             // Add unique IDs to each of the overlaid tracks that will be rendered independently.
             if ('overlay' in this.options.spec) {
                 this.options.spec.overlay = (this.options.spec as OverlaidTrack).overlay.map(o => {
-                    return { ...o, _renderingId: uuid.v1() };
+                    return { ...o, _renderingId: uuid() };
                 });
             } else {
-                this.options.spec._renderingId = uuid.v1();
+                this.options.spec._renderingId = uuid();
             }
 
             this.fetchedTiles = {};

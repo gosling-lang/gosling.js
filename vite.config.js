@@ -63,11 +63,10 @@ const alias = {
     "@gosling-lang/dummy-track": path.resolve(__dirname, "./src/tracks/dummy-track/index.ts"),
     "@data-fetchers": path.resolve(__dirname, "./src/data-fetchers/index.ts"),
     zlib: path.resolve(__dirname, './src/alias/zlib.ts'),
-    uuid: path.resolve(__dirname, './node_modules/uuid/dist/esm-browser/index.js'),
     stream: path.resolve(__dirname, './node_modules/stream-browserify')
 };
 
-const skipExt = new Set(['@gmod/bbi', 'uuid']);
+const skipExt = new Set(['@gmod/bbi']);
 const external = [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)].filter(
     dep => !skipExt.has(dep)
 );

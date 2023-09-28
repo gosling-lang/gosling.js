@@ -1,7 +1,7 @@
 import { arc as d3arc } from 'd3-shape';
 import type { SubjectPosition, D3DragEvent } from 'd3-drag';
-import * as uuid from 'uuid';
 import { RADIAN_GAP, valueToRadian } from '../../core/utils/polar';
+import { uuid } from '../../core/utils/uuid';
 
 type CircularBrushData = {
     type: 'brush' | 'start' | 'end';
@@ -25,7 +25,7 @@ function BrushTrack(HGC: any, ...args: any[]): any {
             const [context, options] = params;
             const { registerViewportChanged, removeViewportChanged, setDomainsCallback } = context;
 
-            this.uid = uuid.v1();
+            this.uid = uuid();
             this.options = options;
 
             // Is there actually a linked from view? Or is this projection "independent"?

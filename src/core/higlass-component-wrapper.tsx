@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
 import type * as PIXI from 'pixi.js';
 import React, { useEffect, useState, forwardRef, useMemo } from 'react';
-import * as uuid from 'uuid';
 
 import * as gosling from '..';
 // @ts-ignore
 import { HiGlassComponent } from 'higlass';
 import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
+import { uuid } from '../core/utils/uuid';
 
 /**
  * Register plugin tracks and data fetchers to HiGlass. This is necessary for the first time before using Gosling.
@@ -39,9 +39,9 @@ export interface HiGlassComponentWrapperProps {
 export const HiGlassComponentWrapper = forwardRef<HiGlassApi | undefined, HiGlassComponentWrapperProps>(
     (props, ref) => {
         // div `id` and `className` for detailed customization
-        const [wrapperDivId, setWrapperDivId] = useState(props.id ?? uuid.v4());
+        const [wrapperDivId, setWrapperDivId] = useState(props.id ?? uuid());
         useEffect(() => {
-            setWrapperDivId(props.id ?? uuid.v4());
+            setWrapperDivId(props.id ?? uuid());
         }, [props.id]);
 
         const viewConfig = props.viewConfig || {};

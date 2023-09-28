@@ -1,4 +1,3 @@
-import * as uuid from 'uuid';
 import type { HiGlassSpec, Track } from '@gosling-lang/higlass-schema';
 import { HiGlassSchema } from '@gosling-lang/higlass-schema';
 import type { Assembly, AxisPosition, Domain, DummyTrack, Orientation, ZoomLimits } from '@gosling-lang/gosling-schema';
@@ -9,6 +8,7 @@ import { getAutoCompleteId, computeChromSizes } from '../core/utils/assembly';
 import type { CompleteThemeDeep } from '../core/utils/theme';
 import exampleHg from '../core/example/hg-view-config-1';
 import { insertItemToArray } from '../core/utils/array';
+import { uuid } from '../core/utils/uuid';
 
 export const HIGLASS_AXIS_SIZE = 30;
 
@@ -163,7 +163,7 @@ export class HiGlassModel {
         (this.getView(viewId) as any)?.tracks.whole.push({
             // type: 'viewport-projection-center',
             type: layout === 'circular' ? 'brush-track' : 'viewport-projection-horizontal',
-            uid: uuid.v4(),
+            uid: uuid(),
             fromViewUid,
             options: {
                 projectionFillColor: style?.color ?? theme.brush.color,
@@ -288,7 +288,7 @@ export class HiGlassModel {
         this.getLastView().tracks[this.getMainTrackPosition()] = [
             {
                 type: 'combined',
-                uid: `${track.uid ?? uuid.v4()}-${this.getMainTrackPosition()}-combined`,
+                uid: `${track.uid ?? uuid()}-${this.getMainTrackPosition()}-combined`,
                 // !! Hacky, but it is important to subtract 1px. Currently, HiGlass does not well handle a case where a center track is zero width (e.g., linking between views that contain zero-width center tracks).
                 // https://github.com/higlass/higlass/pull/1041
                 width: (track as any).width - 1,
@@ -324,7 +324,7 @@ export class HiGlassModel {
 
         const widthOrHeight = position === 'left' || position === 'right' ? 'width' : 'height';
         const axisTrackTemplate: Track = {
-            // uid: options.id ?? uuid.v1(), // TODO: turning this on makes some tick labels hidden
+            // uid: options.id ?? uuid(), // TODO: turning this on makes some tick labels hidden
             type: 'axis-track',
             chromInfoPath: this.hg.chromInfoPath,
             options: {

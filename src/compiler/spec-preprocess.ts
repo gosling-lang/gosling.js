@@ -1,4 +1,3 @@
-import * as uuid from 'uuid';
 import type {
     SingleTrack,
     GoslingSpec,
@@ -31,6 +30,7 @@ import {
 } from './defaults';
 import { spreadTracksByData } from '../core/utils/overlay';
 import { getStyleOverridden } from '../core/utils/style';
+import { uuid } from '../core/utils/uuid';
 
 /**
  * Traverse individual tracks and call the callback function to read and/or update the track definition.
@@ -176,7 +176,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
 
     // ID should be assigned to each view and track for an API usage
     if (!spec.id) {
-        spec.id = uuid.v4();
+        spec.id = uuid();
     }
 
     if ('tracks' in spec) {
@@ -188,11 +188,11 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
          */
         tracks = spreadTracksByData(tracks);
 
-        const linkID = uuid.v4();
+        const linkID = uuid();
         tracks.forEach((track, i, array) => {
             // ID should be assigned to each view and track for an API usage
             if (!track.id) {
-                track.id = uuid.v4();
+                track.id = uuid();
             }
 
             // If size not defined, set default ones
@@ -215,7 +215,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                     track.xe.field
                     // Question: Should we consider mark types? (e.g., link might not be supported?)
                 ) {
-                    const newField = uuid.v4();
+                    const newField = uuid();
                     const startField = track.x.field;
                     const endField = track.xe.field;
                     const padding = track.displacement.padding;
