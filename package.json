@@ -36,7 +36,8 @@
         "schema": "node scripts/generate-schemas.mjs",
         "predeploy": "yarn build-editor; echo \"gosling.js.org\" >> build/CNAME",
         "deploy": "gh-pages -d build",
-        "version": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md"
+        "version": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
+        "knip": "knip --config knip.config.json"
     },
     "peerDependencies": {
         "pixi.js": "^6.3.0",
