@@ -67,7 +67,7 @@ const alias = {
     "@data-fetchers": path.resolve(__dirname, "./src/data-fetchers/index.ts"),
     zlib: path.resolve(__dirname, './src/alias/zlib.ts'),
     uuid: path.resolve(__dirname, './node_modules/uuid/dist/esm-browser/index.js'),
-    stream: path.resolve(__dirname, './node_modules/stream-browserify')
+    stream: path.resolve(__dirname, './node_modules/stream-browserify') //  gmod/gff uses stream-browserify
 };
 
 // get rid of UUID, patch it in manually
