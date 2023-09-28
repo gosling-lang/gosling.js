@@ -15,14 +15,16 @@
         "dist"
     ],
     "exports": {
-        ".": "./dist/gosling.es.js",
-        "./embed": "./dist/embed/index.js"
+        ".": {
+            "types": "./dist/src/index.d.ts",
+            "import": "./dist/gosling.es.js"
+        }
     },
     "scripts": {
         "start": "vite --mode editor",
         "start-embed": "vite",
         "build": "run-s build-clear build-types build-lib",
-        "build-lib": "vite build --mode lib && node scripts/build-umd && node scripts/build-embed",
+        "build-lib": "vite build --mode lib",
         "build-types": "tsc --emitDeclarationOnly -p tsconfig.build.json",
         "build-editor": "node --max_old_space_size=8192 ./node_modules/vite/bin/vite.js build",
         "build-clear": "rm -rf ./dist",
@@ -41,7 +43,6 @@
         "react": "^16.6.3 || ^17.0.0 || ^18.0.0",
         "react-dom": "^16.6.3 || ^17.0.0 || ^18.0.0"
     },
-    "sideEffect": false,
     "dependencies": {
         "@gmod/bam": "^1.1.18",
         "@gmod/bbi": "^3.0.1",

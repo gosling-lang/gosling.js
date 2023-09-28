@@ -39,7 +39,6 @@
   "files": [
     "src/index.ts",
     "editor/index.tsx",
-    "embed/index.ts"
   ],
   "include": ["src", "src/**/*.d.ts", "editor"],
   "exclude": [

@@ -6,6 +6,7 @@ import pkg from './package.json';
 
 /**
  * Bundles vite worker modules during development into single scripts.
+ * Also injects node globals for gmod libraries.
  * see: https://github.com/hms-dbmi/viv/pull/469#issuecomment-877276110
  * @returns {import('vite').Plugin}
  */
@@ -29,6 +30,8 @@ const bundleWebWorker = {
         }
     }
 };
+
+// audit libraries to see if they use `Buffer` in a way that needs to be shimmed
 
 // We can't inject a global `Buffer` polyfill for the worker entrypoint using vite alone,
 // so we reuse the `bundle-web-worker` plugin to inject the buffer shim during production.
@@ -67,7 +70,9 @@ const alias = {
     stream: path.resolve(__dirname, './node_modules/stream-browserify')
 };
 
-const skipExt = new Set(['@gmod/bbi', 'uuid']);
+// get rid of UUID, patch it in manually
+
+const skipExt = new Set(['@gmod/bbi', 'uuid']); // look into whether bbi needs to be there 
 const external = [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)].filter(
     dep => !skipExt.has(dep)
 );
@@ -94,7 +99,7 @@ const dev = defineConfig({
     build: { outDir: 'build' },
     resolve: { alias },
     define: {
-        'process.platform': 'undefined',
+        'process.platform': 'undefined', // because of the threads library relies on process global
         'process.env.THREADS_WORKER_INIT_TIMEOUT': 'undefined'
     },
     plugins: [bundleWebWorker, manualInlineWorker]
