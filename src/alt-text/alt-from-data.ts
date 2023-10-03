@@ -1,7 +1,7 @@
 //const _spec = models[0]?.spec(); _spec?.id
 import type { AltGoslingSpec, AltTrackDataFields, AltDataStatistics } from './alt-gosling-schema';
 import type { Datum } from '@gosling-lang/gosling-schema';
-import { addTrackDataDescriptionsTrack } from './alt-to-text'
+import { addTrackDataDescriptionsTrack, addTrackDescription } from './alt-to-text'
 
 export function altRetrieveDataStatistics(id: string, flatTileData: Datum[], dataFields: AltTrackDataFields): AltDataStatistics {
 
@@ -78,6 +78,7 @@ export function altUpdateSpecWithData(
     flatTileData: Datum[]
 ): AltGoslingSpec {
 
+    var includePosition = altGoslingSpec.tracks.length > 1;
     // get correct track index
     for (let i = 0; i < Object.keys(altGoslingSpec.tracks).length; i++) {
         var track = altGoslingSpec.tracks[i];
@@ -96,6 +97,7 @@ export function altUpdateSpecWithData(
     
                 // update description            
                 addTrackDataDescriptionsTrack(track);
+                addTrackDescription(track, includePosition);
     
             }
         }     

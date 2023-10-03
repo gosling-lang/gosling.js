@@ -400,24 +400,13 @@ export function addTrackDataDescriptionsTrack(track: AltTrack) {
 
 function addGlobalDescription(altGoslingSpec: AltGoslingSpec) {
 
-    let includePosition = true;
-    if (altGoslingSpec.composition.nTracks === 1) {
-        includePosition = false;
-        for (const t of altGoslingSpec.tracks) {
-            if (t.alttype === 'single' || t.alttype === 'ov-mark') {  
-                if (includePosition) {
-                    t.description = t.position.description;
-                }
-                t.description = t.description.concat(' ' + t.appearance.description + ' ' + t.data.description);
-            } else {
-                if (includePosition) {
-                    t.description = t.position.description;
-                }
-                t.description = t.description.concat(' Overlaid track with different data sources. See individual tracks for details.');
-            }
+    if (altGoslingSpec.tracks.length === 1) {
+        addTrackDescription(altGoslingSpec.tracks[0], false)
+    } else if (altGoslingSpec.tracks.length > 1) {
+        for (let t of altGoslingSpec.tracks) {
+            addTrackDescription(t, true)
         }
     }
-    
 
     altGoslingSpec.alt = 'Gosling visualization.';
 
@@ -431,8 +420,23 @@ function addGlobalDescription(altGoslingSpec: AltGoslingSpec) {
         var desc = '';
         desc = desc.concat('Figure with ' + altGoslingSpec.composition.nTracks + ' individual charts.');
         altGoslingSpec.longDescription = desc;
-    }
+    }    
+}
 
-    
-    
+
+export function addTrackDescription(t: AltTrack, includePosition: boolean) {
+    var desc = '';
+    var descPos = '';
+    if (t.alttype === 'single' || t.alttype === 'ov-mark') {  
+        if (includePosition) {
+            descPos.concat(t.position.description);
+        }
+        desc = descPos.concat(' ' + t.appearance.description + ' ' + t.data.description);
+    } else {
+        if (includePosition) {
+            descPos.concat(t.position.description);
+        }
+        desc = descPos.concat(' Overlaid track with different data sources. See individual tracks for details.');
+    }
+    t.description = desc;
 }
