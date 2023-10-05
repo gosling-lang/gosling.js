@@ -1,5 +1,5 @@
 import { version as goslingVersion } from '../package.json';
-const higlassVersion = '1.11';
+const higlassVersion = '1.12';
 const reactVersion = '17';
 const pixiVersion = '6';
 
@@ -8,17 +8,27 @@ export const getHtmlTemplate = (spec: string) => `
 <html>
 <head>
     <title>Gosling Visualization</title>
-    <link rel="stylesheet" href="https://unpkg.com/higlass@${higlassVersion}/dist/hglib.css">
-    <script src="https://unpkg.com/react@${reactVersion}/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@${reactVersion}/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/pixi.js@${pixiVersion}/dist/browser/pixi.min.js"></script>
-    <script src="https://unpkg.com/higlass@${higlassVersion}/dist/hglib.js"></script>
-    <script src="https://unpkg.com/gosling.js@${goslingVersion}/dist/gosling.js"></script>
+    <link rel="stylesheet" href="https://esm.sh/higlass@${higlassVersion}/dist/hglib.css">
+
+    <script type="importmap">
+    {
+    "imports": {
+        "react": "https://esm.sh/react@${reactVersion}?bundle",
+        "react-dom": "https://esm.sh/react-dom@${reactVersion}?bundle",
+        "pixi.js": "https://esm.sh/pixi.js@${pixiVersion}?bundle",
+        "higlass": "https://esm.sh/higlass@${higlassVersion}?bundle",
+        "gosling.js": "https://esm.sh/gosling.js@${goslingVersion}?bundle"
+    }
+    }
+    </script>
+    
+
 </head>
 <body>
-    <div id="gosling-container"/>
-    <script>
-        gosling.embed(document.getElementById('gosling-container'), ${spec})
+    <div id="gosling-container"></div>
+    <script type="module">
+        import { embed } from 'gosling.js';
+        embed(document.getElementById('gosling-container'), ${spec})
     </script>
 </body>
 </html>
