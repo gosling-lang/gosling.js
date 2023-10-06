@@ -26,7 +26,15 @@ apis.forEach(api => {
 
 beforeAll(() => {
     // jsdom doesn't come with a `URL.createObjectURL` implementation
-    global.URL.createObjectURL = () => { return ''; };
+    global.URL.createObjectURL = () => {
+        return '';
+    };
+    // jsdom doesn't come with a `crypto.getRandomValues` implementation. This is for uuid. 
+    vi.stubGlobal('crypto', {
+        getRandomValues: function (buffer) {
+            return randomFillSync(buffer);
+        }
+    });
 });
 
 afterAll(() => {
