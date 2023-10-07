@@ -69,6 +69,19 @@ export function compile(
         trackInfos = getRelativeTrackInfo(specCopy, theme).trackInfos;
     }
 
+    // publish the fixed spec
+    // used for alt-gosling
+    try {
+        if (PubSub) {
+            PubSub.publish('spec-traversed', {
+                id: specCopy.id,
+                data:
+                    specCopy
+            });
+        }
+    } catch (e) {
+    }
+
     // Make HiGlass models for individual tracks
     createHiGlassModels(specCopy, trackInfos, callback, theme, urlToFetchOptions);
 }
