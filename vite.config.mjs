@@ -5,7 +5,7 @@ import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import pkg from './package.json' assert { type: 'json' }; // must do the assert to solve https://nodejs.org/api/errors.html#err_import_assertion_type_missing
 
-const _dirname = fileURLToPath(dirname(import.meta.url));
+const __dirname = fileURLToPath(dirname(import.meta.url));
 
 /**
  * Bundles vite worker modules during development into single scripts.
@@ -65,17 +65,17 @@ export default function() {
 };
 
 const alias = {
-    'gosling.js': path.resolve(_dirname, './src/index.ts'),
-    '@gosling-lang/gosling-schema': path.resolve(_dirname, './src/gosling-schema/index.ts'),
-    '@gosling-lang/higlass-schema': path.resolve(_dirname, './src/higlass-schema/index.ts'),
-    '@gosling-lang/gosling-track': path.resolve(_dirname, './src/tracks/gosling-track/index.ts'),
-    '@gosling-lang/gosling-genomic-axis': path.resolve(_dirname, './src/tracks/gosling-genomic-axis/index.ts'),
-    '@gosling-lang/gosling-brush': path.resolve(_dirname, './src/tracks/gosling-brush/index.ts'),
-    '@gosling-lang/dummy-track': path.resolve(_dirname, './src/tracks/dummy-track/index.ts'),
-    '@data-fetchers': path.resolve(_dirname, './src/data-fetchers/index.ts'),
-    zlib: path.resolve(_dirname, './src/alias/zlib.ts'),
-    uuid: path.resolve(_dirname, './node_modules/uuid/dist/esm-browser/index.js'),
-    stream: path.resolve(_dirname, './node_modules/stream-browserify') //  gmod/gff uses stream-browserify
+    'gosling.js': path.resolve(__dirname, './src/index.ts'),
+    '@gosling-lang/gosling-schema': path.resolve(__dirname, './src/gosling-schema/index.ts'),
+    '@gosling-lang/higlass-schema': path.resolve(__dirname, './src/higlass-schema/index.ts'),
+    '@gosling-lang/gosling-track': path.resolve(__dirname, './src/tracks/gosling-track/index.ts'),
+    '@gosling-lang/gosling-genomic-axis': path.resolve(__dirname, './src/tracks/gosling-genomic-axis/index.ts'),
+    '@gosling-lang/gosling-brush': path.resolve(__dirname, './src/tracks/gosling-brush/index.ts'),
+    '@gosling-lang/dummy-track': path.resolve(__dirname, './src/tracks/dummy-track/index.ts'),
+    '@data-fetchers': path.resolve(__dirname, './src/data-fetchers/index.ts'),
+    zlib: path.resolve(__dirname, './src/alias/zlib.ts'),
+    uuid: path.resolve(__dirname, './node_modules/uuid/dist/esm-browser/index.js'),
+    stream: path.resolve(__dirname, './node_modules/stream-browserify') //  gmod/gff uses stream-browserify
 };
 
 const skipExt = new Set(['@gmod/bbi', 'uuid']);
@@ -91,7 +91,7 @@ const esm = defineConfig({
         target: 'es2018',
         sourcemap: true,
         lib: {
-            entry: path.resolve(_dirname, 'src/index.ts'),
+            entry: path.resolve(__dirname, 'src/index.ts'),
             formats: ['es'],
             fileName: 'gosling'
         },
@@ -115,7 +115,7 @@ const testing = defineConfig({
     resolve: { alias },
     test: {
         globals: true,
-        setupFiles: [path.resolve(_dirname, './scripts/setup-vitest.js')],
+        setupFiles: [path.resolve(__dirname, './scripts/setup-vitest.js')],
         environment: 'jsdom',
         threads: false,
         environmentOptions: {
