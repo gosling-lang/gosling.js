@@ -73,13 +73,13 @@ export function compile(
     // used for alt-gosling
     try {
         if (PubSub) {
-            PubSub.publish('spec-traversed', {
+            PubSub.publish('specTraversed', {
                 id: specCopy.id,
-                data:
-                    specCopy
+                data: specCopy
             });
         }
     } catch (e) {
+        //
     }
 
     // Make HiGlass models for individual tracks
