@@ -4033,113 +4033,7 @@
           "description": "internal",
           "type": "boolean"
         },
-        "_renderingId": {
-          "description": "internal",
-          "type": "string"
-        },
-        "assembly": {
-          "$ref": "#/definitions/Assembly",
-          "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
-        },
-        "baselineY": {
-          "type": "number"
-        },
-        "centerRadius": {
-          "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
-          "type": "number"
-        },
-        "color": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Color"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "data": {
-          "$ref": "#/definitions/DataDeep"
-        },
-        "dataTransform": {
-          "items": {
-            "$ref": "#/definitions/DataTransform"
-          },
-          "type": "array"
-        },
-        "displacement": {
-          "$ref": "#/definitions/Displacement"
-        },
-        "endAngle": {
-          "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
-          "type": "number"
-        },
-        "experimental": {
-          "additionalProperties": false,
-          "properties": {
-            "mouseEvents": {
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "$ref": "#/definitions/MouseEventsDeep"
-                }
-              ]
-            },
-            "performanceMode": {
-              "default": false,
-              "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
-              "type": "boolean"
-            }
-          },
-          "type": "object"
-        },
-        "flipY": {
-          "type": "boolean"
-        },
-        "height": {
-          "description": "Specify the track height in pixels.",
-          "type": "number"
-        },
-        "id": {
-          "description": "Assigned to `uid` in a HiGlass view config, used for API and caching.",
-          "type": "string"
-        },
-        "innerRadius": {
-          "description": "Specify the inner radius of tracks when (`{\"layout\": \"circular\"}`).",
-          "type": "number"
-        },
-        "layout": {
-          "$ref": "#/definitions/Layout",
-          "description": "Specify the layout type of all tracks."
-        },
-        "linkingId": {
-          "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
-          "type": "string"
-        },
-        "mark": {
-          "$ref": "#/definitions/Mark"
-        },
-        "opacity": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Opacity"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "orientation": {
-          "$ref": "#/definitions/Orientation",
-          "description": "Specify the orientation."
-        },
-        "outerRadius": {
-          "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`.",
-          "type": "number"
-        },
-        "overlay": {
+        "_overlay": {
           "items": {
             "additionalProperties": false,
             "properties": {
@@ -4472,6 +4366,112 @@
           },
           "type": "array"
         },
+        "_renderingId": {
+          "description": "internal",
+          "type": "string"
+        },
+        "assembly": {
+          "$ref": "#/definitions/Assembly",
+          "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
+        },
+        "baselineY": {
+          "type": "number"
+        },
+        "centerRadius": {
+          "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
+          "type": "number"
+        },
+        "color": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Color"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "data": {
+          "$ref": "#/definitions/DataDeep"
+        },
+        "dataTransform": {
+          "items": {
+            "$ref": "#/definitions/DataTransform"
+          },
+          "type": "array"
+        },
+        "displacement": {
+          "$ref": "#/definitions/Displacement"
+        },
+        "endAngle": {
+          "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
+          "type": "number"
+        },
+        "experimental": {
+          "additionalProperties": false,
+          "properties": {
+            "mouseEvents": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "$ref": "#/definitions/MouseEventsDeep"
+                }
+              ]
+            },
+            "performanceMode": {
+              "default": false,
+              "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "flipY": {
+          "type": "boolean"
+        },
+        "height": {
+          "description": "Specify the track height in pixels.",
+          "type": "number"
+        },
+        "id": {
+          "description": "Assigned to `uid` in a HiGlass view config, used for API and caching.",
+          "type": "string"
+        },
+        "innerRadius": {
+          "description": "Specify the inner radius of tracks when (`{\"layout\": \"circular\"}`).",
+          "type": "number"
+        },
+        "layout": {
+          "$ref": "#/definitions/Layout",
+          "description": "Specify the layout type of all tracks."
+        },
+        "linkingId": {
+          "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
+          "type": "string"
+        },
+        "mark": {
+          "$ref": "#/definitions/Mark"
+        },
+        "opacity": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Opacity"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "orientation": {
+          "$ref": "#/definitions/Orientation",
+          "description": "Specify the orientation."
+        },
+        "outerRadius": {
+          "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`.",
+          "type": "number"
+        },
         "overlayOnPreviousTrack": {
           "type": "boolean"
         },
@@ -4700,7 +4700,7 @@
         }
       },
       "required": [
-        "overlay"
+        "_overlay"
       ],
       "type": "object"
     },
@@ -5081,139 +5081,7 @@
           "description": "internal",
           "type": "boolean"
         },
-        "_renderingId": {
-          "description": "internal",
-          "type": "string"
-        },
-        "assembly": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Assembly",
-              "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
-            },
-            {
-              "const": "unknown",
-              "description": "No assemblies can be associated with a dummy track",
-              "type": "string"
-            }
-          ],
-          "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
-        },
-        "baselineY": {
-          "type": "number"
-        },
-        "centerRadius": {
-          "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
-          "type": "number"
-        },
-        "color": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Color"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "data": {
-          "$ref": "#/definitions/DataDeep"
-        },
-        "dataTransform": {
-          "items": {
-            "$ref": "#/definitions/DataTransform"
-          },
-          "type": "array"
-        },
-        "displacement": {
-          "$ref": "#/definitions/Displacement"
-        },
-        "encoding": {
-          "additionalProperties": {
-            "$ref": "#/definitions/Channel"
-          },
-          "type": "object"
-        },
-        "endAngle": {
-          "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
-          "type": "number"
-        },
-        "experimental": {
-          "additionalProperties": false,
-          "properties": {
-            "mouseEvents": {
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "$ref": "#/definitions/MouseEventsDeep"
-                }
-              ]
-            },
-            "performanceMode": {
-              "default": false,
-              "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
-              "type": "boolean"
-            }
-          },
-          "type": "object"
-        },
-        "flipY": {
-          "type": "boolean"
-        },
-        "height": {
-          "description": "Specify the track height in pixels.",
-          "type": "number"
-        },
-        "id": {
-          "description": "Assigned to `uid` in a HiGlass view config, used for API and caching.",
-          "type": "string"
-        },
-        "innerRadius": {
-          "description": "Specify the inner radius of tracks when (`{\"layout\": \"circular\"}`).",
-          "type": "number"
-        },
-        "layout": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Layout",
-              "description": "Specify the layout type of all tracks."
-            },
-            {
-              "const": "linear",
-              "description": "Only linear layout are supported at this time",
-              "type": "string"
-            }
-          ],
-          "description": "Specify the layout type of all tracks."
-        },
-        "linkingId": {
-          "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
-          "type": "string"
-        },
-        "mark": {
-          "$ref": "#/definitions/Mark"
-        },
-        "opacity": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Opacity"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "orientation": {
-          "$ref": "#/definitions/Orientation",
-          "description": "Specify the orientation."
-        },
-        "outerRadius": {
-          "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`.",
-          "type": "number"
-        },
-        "overlay": {
+        "_overlay": {
           "items": {
             "additionalProperties": false,
             "properties": {
@@ -5545,6 +5413,138 @@
             "type": "object"
           },
           "type": "array"
+        },
+        "_renderingId": {
+          "description": "internal",
+          "type": "string"
+        },
+        "assembly": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Assembly",
+              "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
+            },
+            {
+              "const": "unknown",
+              "description": "No assemblies can be associated with a dummy track",
+              "type": "string"
+            }
+          ],
+          "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
+        },
+        "baselineY": {
+          "type": "number"
+        },
+        "centerRadius": {
+          "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
+          "type": "number"
+        },
+        "color": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Color"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "data": {
+          "$ref": "#/definitions/DataDeep"
+        },
+        "dataTransform": {
+          "items": {
+            "$ref": "#/definitions/DataTransform"
+          },
+          "type": "array"
+        },
+        "displacement": {
+          "$ref": "#/definitions/Displacement"
+        },
+        "encoding": {
+          "additionalProperties": {
+            "$ref": "#/definitions/Channel"
+          },
+          "type": "object"
+        },
+        "endAngle": {
+          "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
+          "type": "number"
+        },
+        "experimental": {
+          "additionalProperties": false,
+          "properties": {
+            "mouseEvents": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "$ref": "#/definitions/MouseEventsDeep"
+                }
+              ]
+            },
+            "performanceMode": {
+              "default": false,
+              "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "flipY": {
+          "type": "boolean"
+        },
+        "height": {
+          "description": "Specify the track height in pixels.",
+          "type": "number"
+        },
+        "id": {
+          "description": "Assigned to `uid` in a HiGlass view config, used for API and caching.",
+          "type": "string"
+        },
+        "innerRadius": {
+          "description": "Specify the inner radius of tracks when (`{\"layout\": \"circular\"}`).",
+          "type": "number"
+        },
+        "layout": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Layout",
+              "description": "Specify the layout type of all tracks."
+            },
+            {
+              "const": "linear",
+              "description": "Only linear layout are supported at this time",
+              "type": "string"
+            }
+          ],
+          "description": "Specify the layout type of all tracks."
+        },
+        "linkingId": {
+          "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
+          "type": "string"
+        },
+        "mark": {
+          "$ref": "#/definitions/Mark"
+        },
+        "opacity": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Opacity"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "orientation": {
+          "$ref": "#/definitions/Orientation",
+          "description": "Specify the orientation."
+        },
+        "outerRadius": {
+          "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`.",
+          "type": "number"
         },
         "overlayOnPreviousTrack": {
           "type": "boolean"
