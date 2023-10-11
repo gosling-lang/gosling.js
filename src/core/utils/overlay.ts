@@ -23,16 +23,16 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
         return [track];
     }
 
-    if (track.overlay.length === 0) {
+    if (track._overlay.length === 0) {
         // This makes sure not to return empty object
         return [{ ...track, superpose: undefined } as SingleTrack];
     }
 
     const base: SingleTrack = JSON.parse(JSON.stringify(track));
-    delete (base as Partial<OverlaidTrack>).overlay; // remove `superpose` from the base spec
+    delete (base as Partial<OverlaidTrack>)._overlay; // remove `superpose` from the base spec
 
     const resolved: SingleTrack[] = [];
-    track.overlay.forEach((subSpec, i) => {
+    track._overlay.forEach((subSpec, i) => {
         const spec = Object.assign(JSON.parse(JSON.stringify(base)), subSpec) as SingleTrack;
         if (spec.title && i !== 0) {
             delete spec.title;
@@ -69,27 +69,27 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
 export function spreadTracksByData(tracks: Track[]): Track[] {
     return ([] as Track[]).concat(
         ...tracks.map(t => {
-            if (IsDataTrack(t) || !IsOverlaidTrack(t) || t.overlay.length <= 1) {
+            if (IsDataTrack(t) || !IsOverlaidTrack(t) || t._overlay.length <= 1) {
                 // no overlaid tracks to spread
                 return [t];
             }
 
-            if (t.overlay.filter(s => s.data).length === 0) {
+            if (t._overlay.filter(s => s.data).length === 0) {
                 // overlaid tracks use the parent's data specs as it w/o re-specification, so no point to spread.
                 return [t];
             }
 
-            if (isIdenticalDataSpec([t.data, ...t.overlay.map(s => s.data)])) {
+            if (isIdenticalDataSpec([t.data, ...t._overlay.map(s => s.data)])) {
                 // individual overlaid tracks define the same data, so no point to spread.
                 return [t];
             }
 
-            const base: Partial<OverlaidTrack> = { ...t, id: undefined, overlay: undefined };
+            const base: Partial<OverlaidTrack> = { ...t, id: undefined, _overlay: undefined };
             const spread: Track[] = [];
             const original: OverlaidTrack = JSON.parse(JSON.stringify(base));
-            original.overlay = [];
+            original._overlay = [];
 
-            t.overlay.forEach(subSpec => {
+            t._overlay.forEach(subSpec => {
                 // If data specs are undefined, put the first spec to the parent
                 if (!original.data) {
                     original.data = subSpec.data;
@@ -102,7 +102,7 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
 
                 // Determine if this `subSpec` should be added to `overlay` or become a separate track
                 if (!subSpec.data || isIdenticalDataSpec([original.data, subSpec.data])) {
-                    original.overlay.push(subSpec);
+                    original._overlay.push(subSpec);
                     return;
                 }
 
@@ -110,7 +110,7 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
                 spread.push(spec);
             });
 
-            const output = original.overlay.length > 0 ? [original, ...spread] : spread;
+            const output = original._overlay.length > 0 ? [original, ...spread] : spread;
             return output.map((track, i, arr) => {
                 const overlayOnPreviousTrack = i !== 0;
 

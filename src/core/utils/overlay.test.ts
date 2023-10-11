@@ -15,7 +15,7 @@ describe('Should handle superposition options correctly', () => {
     });
     it('Should resolve `superpose` options when the array length is one', () => {
         const tracks = resolveSuperposedTracks({
-            overlay: [{ mark: 'line' }],
+            _overlay: [{ mark: 'line' }],
             width: 100,
             height: 100
         });
@@ -24,7 +24,7 @@ describe('Should handle superposition options correctly', () => {
     });
     it('Should resolve `superpose` options', () => {
         const tracks = resolveSuperposedTracks({
-            overlay: [{ mark: 'line' }, { mark: 'point' }],
+            _overlay: [{ mark: 'line' }, { mark: 'point' }],
             width: 100,
             height: 100
         });
@@ -34,7 +34,7 @@ describe('Should handle superposition options correctly', () => {
     });
     it('Should correct several options for consistency', () => {
         const tracks = resolveSuperposedTracks({
-            overlay: [{ x: { axis: 'top' } }, { x: { axis: 'bottom' } }],
+            _overlay: [{ x: { axis: 'top' } }, { x: { axis: 'bottom' } }],
             width: 100,
             height: 100
         });
@@ -46,7 +46,7 @@ describe('Should handle superposition options correctly', () => {
     it('Should delete title except the last one in overlaid tracks', () => {
         const tracks = resolveSuperposedTracks({
             title: 'title',
-            overlay: [{ x: { axis: 'top' } }, { x: { axis: 'bottom' } }],
+            _overlay: [{ x: { axis: 'top' } }, { x: { axis: 'bottom' } }],
             width: 100,
             height: 100
         });
@@ -62,22 +62,22 @@ describe('Spread Tracks By Data', () => {
         expect(spread).toHaveLength(1);
     });
     it('overlay: []', () => {
-        const spread = spreadTracksByData([{ overlay: [], width: 100, height: 100 }]);
+        const spread = spreadTracksByData([{ _overlay: [], width: 100, height: 100 }]);
         expect(spread).toHaveLength(1);
     });
     it('overlay: [{}]', () => {
-        const spread = spreadTracksByData([{ overlay: [{}], width: 100, height: 100 }]);
+        const spread = spreadTracksByData([{ _overlay: [{}], width: 100, height: 100 }]);
         expect(spread).toHaveLength(1);
     });
     it('overlay: [{ data }]', () => {
-        const base = { overlay: [{ data: { type: 'csv', url: '' } }] } as OverlaidTrack;
+        const base = { _overlay: [{ data: { type: 'csv', url: '' } }] } as OverlaidTrack;
         const spread = spreadTracksByData([base]);
         expect(spread).toHaveLength(1);
         expect(spread[0]).toEqual(base); // The length is zero, so no point to spread
     });
     it('overlay: [{}, { data }]', () => {
         const spread = spreadTracksByData([
-            { overlay: [{}, { data: { type: 'csv', url: '' } }], width: 100, height: 100 }
+            { _overlay: [{}, { data: { type: 'csv', url: '' } }], width: 100, height: 100 }
         ]);
         expect(spread).toHaveLength(1); // There is only one unique data/dataTransform specification, so should not spread.
         expect('data' in spread[0]).toBe(true); // Since there is not data spec in the parent, it should be borrowed from a child.
@@ -85,7 +85,7 @@ describe('Spread Tracks By Data', () => {
     it('overlay: [{}, { data }, { data }]', () => {
         const spread = spreadTracksByData([
             {
-                overlay: [
+                _overlay: [
                     {},
                     { data: { type: 'csv', url: '' } },
                     { data: { type: 'vector', url: '', column: 'c', value: 'p' } }
@@ -102,7 +102,7 @@ describe('Spread Tracks By Data', () => {
     it('overlay: [{ data1 }, { data2 }]', () => {
         const spread = spreadTracksByData([
             {
-                overlay: [
+                _overlay: [
                     { data: { type: 'csv', url: '' } },
                     { data: { type: 'vector', url: '', column: 'c', value: 'p' } }
                 ],
@@ -119,7 +119,7 @@ describe('Spread Tracks By Data', () => {
     it('Axis Position of overlay: [{ data1 }, { data2 }]', () => {
         const spread = spreadTracksByData([
             {
-                overlay: [
+                _overlay: [
                     { data: { type: 'csv', url: '' }, y: { field: 'y', type: 'quantitative' } },
                     {
                         data: { type: 'vector', url: '', column: 'c', value: 'p' },
@@ -144,7 +144,7 @@ describe('Spread Tracks By Data', () => {
         const spread = spreadTracksByData([
             {
                 title: 'title',
-                overlay: [{ data: { type: 'vector', url: '', column: 'c', value: 'p' } }],
+                _overlay: [{ data: { type: 'vector', url: '', column: 'c', value: 'p' } }],
                 width: 100,
                 height: 100
             }
@@ -156,7 +156,7 @@ describe('Spread Tracks By Data', () => {
         const spread = spreadTracksByData([
             {
                 title: 'title',
-                overlay: [
+                _overlay: [
                     { data: { type: 'vector', url: '', column: 'c', value: 'p' } },
                     { data: { type: 'vector', url: '', column: 'c', value: 'p' } }
                 ],
@@ -172,7 +172,7 @@ describe('Spread Tracks By Data', () => {
         const spread = spreadTracksByData([
             {
                 title: 'title',
-                overlay: [
+                _overlay: [
                     { data: { type: 'csv', url: '' } },
                     { data: { type: 'vector', url: '', column: 'c', value: 'p' } }
                 ],

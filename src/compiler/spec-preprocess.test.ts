@@ -25,7 +25,7 @@ describe('Fix Spec Downstream', () => {
         {
             const spec: GoslingSpec = {
                 style: { outline: 'red' },
-                views: [{ tracks: [{ overlay: [], width: 0, height: 0 }] }]
+                views: [{ tracks: [{ _overlay: [], width: 0, height: 0 }] }]
             };
             traverseToFixSpecDownstream(spec);
             expect((spec.views[0] as SingleView).style?.outline).toEqual('red');
@@ -34,7 +34,7 @@ describe('Fix Spec Downstream', () => {
         {
             const spec: GoslingSpec = {
                 style: { outline: 'red' },
-                views: [{ tracks: [{ overlay: [], width: 0, height: 0, style: { outline: 'green' } }] }]
+                views: [{ tracks: [{ _overlay: [], width: 0, height: 0, style: { outline: 'green' } }] }]
             };
             traverseToFixSpecDownstream(spec);
             expect((spec.views[0] as SingleView).style?.outline).toEqual('red');
@@ -47,7 +47,7 @@ describe('Fix Spec Downstream', () => {
             const spec: GoslingSpec = {
                 static: true,
                 arrangement: 'parallel',
-                views: [{ tracks: [{ overlay: [], width: 0, height: 0 }] }]
+                views: [{ tracks: [{ _overlay: [], width: 0, height: 0 }] }]
             };
             traverseToFixSpecDownstream(spec);
             expect(spec.views[0].static).toEqual(true);
@@ -57,7 +57,7 @@ describe('Fix Spec Downstream', () => {
             const spec: GoslingSpec = {
                 layout: 'circular',
                 arrangement: 'parallel',
-                views: [{ layout: 'linear', tracks: [{ overlay: [], width: 0, height: 0 }] }]
+                views: [{ layout: 'linear', tracks: [{ _overlay: [], width: 0, height: 0 }] }]
             };
             traverseToFixSpecDownstream(spec);
             expect(spec.views[0].static).toEqual(false);
@@ -70,7 +70,7 @@ describe('Fix Spec Downstream', () => {
             const spec: GoslingSpec = {
                 static: true,
                 arrangement: 'parallel',
-                views: [{ tracks: [{ overlay: [], mark: 'withinLink', width: 0, height: 0 }] }]
+                views: [{ tracks: [{ _overlay: [], mark: 'withinLink', width: 0, height: 0 }] }]
             };
             traverseToFixSpecDownstream(spec);
             expect((spec.views[0] as any).tracks[0].flipY).toBeUndefined(); // must not flip if there is only one track
@@ -82,8 +82,8 @@ describe('Fix Spec Downstream', () => {
                 views: [
                     {
                         tracks: [
-                            { overlay: [], width: 0, height: 0 },
-                            { overlay: [], mark: 'withinLink', width: 0, height: 0 }
+                            { _overlay: [], width: 0, height: 0 },
+                            { _overlay: [], mark: 'withinLink', width: 0, height: 0 }
                         ]
                     }
                 ]
@@ -99,8 +99,8 @@ describe('Fix Spec Downstream', () => {
                 views: [
                     {
                         tracks: [
-                            { overlay: [], width: 0, height: 0 },
-                            { overlay: [{ mark: 'withinLink' }], width: 0, height: 0 }
+                            { _overlay: [], width: 0, height: 0 },
+                            { _overlay: [{ mark: 'withinLink' }], width: 0, height: 0 }
                         ]
                     }
                 ]
@@ -108,7 +108,7 @@ describe('Fix Spec Downstream', () => {
             traverseToFixSpecDownstream(spec);
             expect((spec.views[0] as any).tracks[0].flipY).toBeUndefined();
             expect((spec.views[0] as any).tracks[1].flipY).toBeUndefined();
-            expect((spec.views[0] as any).tracks[1].overlay[0].flipY).toEqual(true);
+            expect((spec.views[0] as any).tracks[1]._overlay[0].flipY).toEqual(true);
         }
         {
             const spec: GoslingSpec = {
@@ -117,29 +117,8 @@ describe('Fix Spec Downstream', () => {
                 views: [
                     {
                         tracks: [
-                            { overlay: [{ mark: 'withinLink' }], width: 0, height: 0 },
-                            { overlay: [{ mark: 'withinLink' }], width: 0, height: 0, overlayOnPreviousTrack: true }
-                        ]
-                    }
-                ]
-            };
-            traverseToFixSpecDownstream(spec);
-            expect((spec.views[0] as any).tracks[0].flipY).toBeUndefined();
-            expect((spec.views[0] as any).tracks[1].flipY).toBeUndefined();
-            // only one track, so no flip on both
-            expect((spec.views[0] as any).tracks[0].overlay[0].flipY).toBeUndefined();
-            expect((spec.views[0] as any).tracks[1].overlay[0].flipY).toBeUndefined();
-        }
-        {
-            const spec: GoslingSpec = {
-                static: true,
-                arrangement: 'parallel',
-                views: [
-                    {
-                        tracks: [
-                            { overlay: [], width: 0, height: 0 },
-                            { overlay: [{ mark: 'withinLink' }], width: 0, height: 0 },
-                            { overlay: [{ mark: 'withinLink' }], width: 0, height: 0, overlayOnPreviousTrack: true }
+                            { _overlay: [{ mark: 'withinLink' }], width: 0, height: 0 },
+                            { _overlay: [{ mark: 'withinLink' }], width: 0, height: 0, overlayOnPreviousTrack: true }
                         ]
                     }
                 ]
@@ -148,9 +127,8 @@ describe('Fix Spec Downstream', () => {
             expect((spec.views[0] as any).tracks[0].flipY).toBeUndefined();
             expect((spec.views[0] as any).tracks[1].flipY).toBeUndefined();
             // only one track, so no flip on both
-            expect((spec.views[0] as any).tracks[0].flipY).toBeUndefined();
-            expect((spec.views[0] as any).tracks[1].overlay[0].flipY).toBe(true);
-            expect((spec.views[0] as any).tracks[2].overlay[0].flipY).toBe(true);
+            expect((spec.views[0] as any).tracks[0]._overlay[0].flipY).toBeUndefined();
+            expect((spec.views[0] as any).tracks[1]._overlay[0].flipY).toBeUndefined();
         }
         {
             const spec: GoslingSpec = {
@@ -159,9 +137,9 @@ describe('Fix Spec Downstream', () => {
                 views: [
                     {
                         tracks: [
-                            { overlay: [], width: 0, height: 0 },
-                            { overlay: [{ mark: 'withinLink' }], width: 0, height: 0, overlayOnPreviousTrack: true },
-                            { overlay: [{ mark: 'withinLink' }], width: 0, height: 0, overlayOnPreviousTrack: true }
+                            { _overlay: [], width: 0, height: 0 },
+                            { _overlay: [{ mark: 'withinLink' }], width: 0, height: 0 },
+                            { _overlay: [{ mark: 'withinLink' }], width: 0, height: 0, overlayOnPreviousTrack: true }
                         ]
                     }
                 ]
@@ -171,8 +149,30 @@ describe('Fix Spec Downstream', () => {
             expect((spec.views[0] as any).tracks[1].flipY).toBeUndefined();
             // only one track, so no flip on both
             expect((spec.views[0] as any).tracks[0].flipY).toBeUndefined();
-            expect((spec.views[0] as any).tracks[1].overlay[0].flipY).toBeUndefined();
-            expect((spec.views[0] as any).tracks[2].overlay[0].flipY).toBeUndefined();
+            expect((spec.views[0] as any).tracks[1]._overlay[0].flipY).toBe(true);
+            expect((spec.views[0] as any).tracks[2]._overlay[0].flipY).toBe(true);
+        }
+        {
+            const spec: GoslingSpec = {
+                static: true,
+                arrangement: 'parallel',
+                views: [
+                    {
+                        tracks: [
+                            { _overlay: [], width: 0, height: 0 },
+                            { _overlay: [{ mark: 'withinLink' }], width: 0, height: 0, overlayOnPreviousTrack: true },
+                            { _overlay: [{ mark: 'withinLink' }], width: 0, height: 0, overlayOnPreviousTrack: true }
+                        ]
+                    }
+                ]
+            };
+            traverseToFixSpecDownstream(spec);
+            expect((spec.views[0] as any).tracks[0].flipY).toBeUndefined();
+            expect((spec.views[0] as any).tracks[1].flipY).toBeUndefined();
+            // only one track, so no flip on both
+            expect((spec.views[0] as any).tracks[0].flipY).toBeUndefined();
+            expect((spec.views[0] as any).tracks[1]._overlay[0].flipY).toBeUndefined();
+            expect((spec.views[0] as any).tracks[2]._overlay[0].flipY).toBeUndefined();
         }
     });
 
@@ -181,7 +181,7 @@ describe('Fix Spec Downstream', () => {
             const spec: GoslingSpec = {
                 static: true,
                 arrangement: 'serial',
-                views: [{ views: [{ tracks: [{ overlay: [], width: 0, height: 0 }] }] }]
+                views: [{ views: [{ tracks: [{ _overlay: [], width: 0, height: 0 }] }] }]
             };
             traverseToFixSpecDownstream(spec);
             expect((spec.views[0] as any).arrangement).toEqual('serial');
@@ -189,7 +189,7 @@ describe('Fix Spec Downstream', () => {
         {
             const spec: GoslingSpec = {
                 static: true,
-                views: [{ views: [{ tracks: [{ overlay: [], width: 0, height: 0 }] }] }]
+                views: [{ views: [{ tracks: [{ _overlay: [], width: 0, height: 0 }] }] }]
             };
             traverseToFixSpecDownstream(spec);
             expect(spec.arrangement).toEqual('vertical'); // default one
@@ -205,7 +205,7 @@ describe('Fix Spec Downstream', () => {
                 views: [
                     {
                         arrangement: 'serial',
-                        views: [{ tracks: [{ overlay: [], width: 0, height: 0 }] }]
+                        views: [{ tracks: [{ _overlay: [], width: 0, height: 0 }] }]
                     }
                 ]
             };
@@ -220,7 +220,7 @@ describe('Fix Spec Downstream', () => {
             arrangement: 'parallel',
             views: [
                 {
-                    tracks: [{ layout: 'circular', overlay: [], width: 0, height: 0 }]
+                    tracks: [{ layout: 'circular', _overlay: [], width: 0, height: 0 }]
                 }
             ]
         };
@@ -323,8 +323,8 @@ describe('Spec Preprocess', () => {
             expect(flat).toHaveLength(2);
             expect(flat[0].title).toEqual('A');
             expect(flat[1].title).toEqual('B');
-            expect('overlay' in flat[1]).toEqual(true);
-            expect('overlay' in flat[1] && flat[1].overlay.length === 1).toEqual(true);
+            expect('_overlay' in flat[1]).toEqual(true);
+            expect('_overlay' in flat[1] && flat[1]._overlay.length === 1).toEqual(true);
         }
         {
             const flat2 = convertToFlatTracks({
