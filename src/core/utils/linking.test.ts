@@ -11,7 +11,7 @@ describe('Should get linking information correctly', () => {
             {
                 data: { type: 'csv', url: 'https://' },
                 id: 'track',
-                overlay: [
+                _overlay: [
                     {
                         mark: 'point',
                         x: { linkingId: 'regular' }

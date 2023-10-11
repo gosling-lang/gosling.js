@@ -6,7 +6,7 @@ import { getTheme } from '../core/utils/theme';
 
 describe('Arrangement', () => {
     it('1 View, 1 Track', () => {
-        const spec = { tracks: [{ overlay: [], width: 40, height: 40 }] };
+        const spec = { tracks: [{ _overlay: [], width: 40, height: 40 }] };
         const info = getRelativeTrackInfo(spec, getTheme()).trackInfos;
         expect(info).toHaveLength(1);
 
@@ -18,8 +18,8 @@ describe('Arrangement', () => {
     it('1 View, 1 Track (N Overlaid Tracks)', () => {
         const spec1 = {
             tracks: [
-                { overlay: [], width: 40, height: 40 },
-                { overlay: [], width: 40, height: 40, overlayOnPreviousTrack: true }
+                { _overlay: [], width: 40, height: 40 },
+                { _overlay: [], width: 40, height: 40, overlayOnPreviousTrack: true }
             ]
         };
         expect(getRelativeTrackInfo(spec1, getTheme()).trackInfos).toHaveLength(2);
@@ -29,22 +29,22 @@ describe('Arrangement', () => {
     it('1 View, 2 Tracks (N Overlaid Tracks)', () => {
         const spec1 = {
             tracks: [
-                { overlay: [], width: 10, height: 10 },
-                { overlay: [], width: 10, height: 10 }
+                { _overlay: [], width: 10, height: 10 },
+                { _overlay: [], width: 10, height: 10 }
             ]
         };
         const spec2 = {
             tracks: [
-                { overlay: [{}, {}, {}], width: 10, height: 10 },
-                { overlay: [], width: 10, height: 10 }
+                { _overlay: [{}, {}, {}], width: 10, height: 10 },
+                { _overlay: [], width: 10, height: 10 }
             ]
         };
         const spec3 = {
             tracks: [
-                { overlay: [], width: 10, height: 10 },
-                { overlay: [], width: 10, height: 10, overlayOnPreviousTrack: true },
-                { overlay: [], width: 10, height: 10, overlayOnPreviousTrack: true },
-                { overlay: [], width: 10, height: 10 }
+                { _overlay: [], width: 10, height: 10 },
+                { _overlay: [], width: 10, height: 10, overlayOnPreviousTrack: true },
+                { _overlay: [], width: 10, height: 10, overlayOnPreviousTrack: true },
+                { _overlay: [], width: 10, height: 10 }
             ]
         };
         expect(getBoundingBox(getRelativeTrackInfo(spec1, getTheme()).trackInfos)).toEqual(
@@ -58,8 +58,8 @@ describe('Arrangement', () => {
     it('1 View, N Tracks', () => {
         const spec = {
             tracks: [
-                { overlay: [], width: 10, height: 10 },
-                { overlay: [], width: 10, height: 10 }
+                { _overlay: [], width: 10, height: 10 },
+                { _overlay: [], width: 10, height: 10 }
             ]
         };
         const info = getRelativeTrackInfo(spec, getTheme()).trackInfos;
@@ -80,14 +80,14 @@ describe('Arrangement', () => {
             views: [
                 {
                     tracks: [
-                        { overlay: [], width: 10, height: 10 },
-                        { overlay: [], width: 10, height: 10 }
+                        { _overlay: [], width: 10, height: 10 },
+                        { _overlay: [], width: 10, height: 10 }
                     ]
                 },
                 {
                     tracks: [
-                        { overlay: [], width: 10, height: 10 },
-                        { overlay: [], width: 10, height: 10 }
+                        { _overlay: [], width: 10, height: 10 },
+                        { _overlay: [], width: 10, height: 10 }
                     ]
                 }
             ]
@@ -110,14 +110,14 @@ describe('Arrangement', () => {
             views: [
                 {
                     tracks: [
-                        { overlay: [], width: 10, height: 10 },
-                        { overlay: [], width: 10, height: 10 }
+                        { _overlay: [], width: 10, height: 10 },
+                        { _overlay: [], width: 10, height: 10 }
                     ]
                 },
                 {
                     tracks: [
-                        { overlay: [], width: 10, height: 10 },
-                        { overlay: [], width: 10, height: 10 }
+                        { _overlay: [], width: 10, height: 10 },
+                        { _overlay: [], width: 10, height: 10 }
                     ]
                 }
             ]
@@ -140,14 +140,14 @@ describe('Arrangement', () => {
             views: [
                 {
                     tracks: [
-                        { overlay: [], width: 10, height: 10 },
-                        { overlay: [], width: 10, height: 10 }
+                        { _overlay: [], width: 10, height: 10 },
+                        { _overlay: [], width: 10, height: 10 }
                     ]
                 },
                 {
                     tracks: [
-                        { overlay: [], width: 10, height: 10 },
-                        { overlay: [], width: 10, height: 10 }
+                        { _overlay: [], width: 10, height: 10 },
+                        { _overlay: [], width: 10, height: 10 }
                     ]
                 }
             ]
@@ -157,14 +157,14 @@ describe('Arrangement', () => {
             views: [
                 {
                     tracks: [
-                        { overlay: [], width: 10, height: 10 },
-                        { overlay: [], width: 10, height: 10 }
+                        { _overlay: [], width: 10, height: 10 },
+                        { _overlay: [], width: 10, height: 10 }
                     ]
                 },
                 {
                     tracks: [
-                        { overlay: [], width: 10, height: 10 },
-                        { overlay: [], width: 10, height: 10 }
+                        { _overlay: [], width: 10, height: 10 },
+                        { _overlay: [], width: 10, height: 10 }
                     ]
                 }
             ]
@@ -178,14 +178,14 @@ describe('Arrangement', () => {
             views: [
                 {
                     tracks: [
-                        { overlay: [], width: 10, height: 10 },
-                        { overlay: [], width: 10, height: 10 }
+                        { _overlay: [], width: 10, height: 10 },
+                        { _overlay: [], width: 10, height: 10 }
                     ]
                 },
                 {
                     tracks: [
-                        { overlay: [], width: 10, height: 10 },
-                        { overlay: [], width: 10, height: 10 }
+                        { _overlay: [], width: 10, height: 10 },
+                        { _overlay: [], width: 10, height: 10 }
                     ]
                 }
             ]
@@ -195,14 +195,14 @@ describe('Arrangement', () => {
             views: [
                 {
                     tracks: [
-                        { overlay: [], width: 10, height: 10 },
-                        { overlay: [], width: 10, height: 10 }
+                        { _overlay: [], width: 10, height: 10 },
+                        { _overlay: [], width: 10, height: 10 }
                     ]
                 },
                 {
                     tracks: [
-                        { overlay: [], width: 10, height: 10 },
-                        { overlay: [], width: 10, height: 10 }
+                        { _overlay: [], width: 10, height: 10 },
+                        { _overlay: [], width: 10, height: 10 }
                     ]
                 }
             ]
@@ -212,7 +212,7 @@ describe('Arrangement', () => {
 
     it('Complex Parallel Views in Linear Layout', () => {
         {
-            const t = { overlay: [], width: 10, height: 10 };
+            const t = { _overlay: [], width: 10, height: 10 };
             const spec: GoslingSpec = {
                 arrangement: 'parallel',
                 views: [
@@ -239,7 +239,7 @@ describe('Arrangement', () => {
 
     it('Complex Serial Views in Linear Layout', () => {
         {
-            const t = { overlay: [], width: 10, height: 10 };
+            const t = { _overlay: [], width: 10, height: 10 };
             const spec: GoslingSpec = {
                 arrangement: 'serial',
                 views: [
@@ -267,7 +267,7 @@ describe('Arrangement', () => {
     it('Remove Brush in Combined Circular Views', () => {
         {
             const t: Track = JSON.parse(
-                JSON.stringify({ overlay: [{ mark: 'brush', x: { linkingId: '_' } }], width: 10, height: 10 })
+                JSON.stringify({ _overlay: [{ mark: 'brush', x: { linkingId: '_' } }], width: 10, height: 10 })
             );
             const spec: GoslingSpec = {
                 layout: 'circular',
@@ -293,13 +293,13 @@ describe('Arrangement', () => {
             });
 
             expect(info[0].boundingBox).toEqual(info[1].boundingBox);
-            expect((info[0].track as any).overlay).toHaveLength(0); // brush should be removed
+            expect((info[0].track as any)._overlay).toHaveLength(0); // brush should be removed
         }
     });
 
     it('Complex Views in Linear Layout', () => {
         {
-            const t = { overlay: [], width: 10, height: 10 };
+            const t = { _overlay: [], width: 10, height: 10 };
             const spec1: GoslingSpec = {
                 arrangement: 'parallel',
                 views: [
@@ -317,7 +317,7 @@ describe('Arrangement', () => {
             expect(getRelativeTrackInfo(spec1, getTheme())).toEqual(getRelativeTrackInfo(spec2, getTheme()));
         }
         {
-            const t = { overlay: [], width: 10, height: 10 };
+            const t = { _overlay: [], width: 10, height: 10 };
             const spec1: GoslingSpec = {
                 arrangement: 'serial',
                 views: [
@@ -335,7 +335,7 @@ describe('Arrangement', () => {
             expect(getRelativeTrackInfo(spec1, getTheme())).toEqual(getRelativeTrackInfo(spec2, getTheme()));
         }
         {
-            const t = { overlay: [], width: 10, height: 10 };
+            const t = { _overlay: [], width: 10, height: 10 };
             const spec: GoslingSpec = {
                 arrangement: 'serial',
                 views: [
@@ -363,8 +363,8 @@ describe('Arrangement', () => {
 
     it('Uneven Size of Views', () => {
         {
-            const t = { overlay: [], width: 10, height: 10 };
-            const t_2w = { overlay: [], width: 20, height: 10 };
+            const t = { _overlay: [], width: 10, height: 10 };
+            const t_2w = { _overlay: [], width: 20, height: 10 };
             const spec: GoslingSpec = {
                 arrangement: 'serial',
                 views: [

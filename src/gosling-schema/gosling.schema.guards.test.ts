@@ -11,7 +11,7 @@ describe('Type Guard', () => {
                     chromosomeField: 'Chr.',
                     genomicFields: ['ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop']
                 },
-                overlay: [
+                _overlay: [
                     {
                         mark: 'rect',
                         dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-1', 'acen-2'], not: true }],
