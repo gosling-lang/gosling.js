@@ -7,12 +7,11 @@ While contribution guidelines are loosely defined, we recommend to read the foll
 
 We use Yarn (and not NPM) to manage dependencies in stable and consistent ways. 
 
-After installing [Yarn](https://yarnpkg.com/getting-started/install), clone this repository and run the following commands to install all dependencies and run the Gosling.js editor locally:
+After installing [Yarn](https://yarnpkg.com/getting-started/install), clone this repository and run the following commands to install all dependencies and run the Gosling.js editor locally. We recommend you use Node 20. 
 
 ```sh
 git clone https://github.com/gosling-lang/gosling.js.git # Clone the repository to your current directory
 cd gosling.js                                            # Navigate to gosling repository
-nvm use                                                  # Switch to the version Node that gosling.js uses - you can skip this if you don't plan to run tests locally  
 yarn                                                     # Install dependencies 
 yarn start                                               # Start a local server running the Gosling online editor 
 ```
@@ -54,9 +53,7 @@ We use the [commitlint](#commitlint) for the title of PR. So, if the title of PR
 
 ## Testing 
 
-Gosling.js uses [Vitest](https://vitest.dev/) for running tests. To run all of the tests, you can use the command `yarn test`. Be sure that 
-you are use Node 20+. You can switch Node versions using [nvm](https://github.com/nvm-sh/nvm). Run `nvm use` 
-in the gosling.js directory to switch to the recommended Node version.  
+Gosling.js uses [Vitest](https://vitest.dev/) for running tests. To run all of the tests, you can use the command `yarn test`. 
 
 ## Testing Production Build Using Editor
 
