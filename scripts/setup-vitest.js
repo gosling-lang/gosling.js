@@ -8,7 +8,4 @@ beforeAll(() => {
         return '';
     };
     global.jest = vi; // Needed to mock canvas in jest
-    global.crypto = {
-        getRandomValues: (arr) => randomFillSync(arr)
-    };
 });
