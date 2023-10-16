@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react'
+import react from '@vitejs/plugin-react';
 import * as esbuild from 'esbuild';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -117,7 +117,12 @@ const testing = defineConfig({
         globals: true,
         setupFiles: [path.resolve(__dirname, './scripts/setup-vitest.js')],
         environment: 'jsdom',
-        threads: false,
+        optimizer: {
+            web: {
+                include: ['vitest-canvas-mock']
+            }
+        },
+        threads: false, // see https://github.com/vitest-dev/vitest/issues/740
         environmentOptions: {
             jsdom: {
                 resources: 'usable'
