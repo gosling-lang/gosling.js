@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import reactRefresh from '@vitejs/plugin-react-refresh';
+import react from '@vitejs/plugin-react'
 import * as esbuild from 'esbuild';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -135,7 +135,7 @@ export default ({ command, mode }) => {
     if (command === 'build' && mode === 'lib') return esm;
     if (mode == 'test') return testing;
     if (mode === 'editor') {
-        dev.plugins.push(reactRefresh());
+        dev.plugins.push(react());
     }
     return dev;
 };
