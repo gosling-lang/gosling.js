@@ -1,4 +1,4 @@
-import { createNanoEvents, Emitter } from 'nanoevents';
+import { createNanoEvents, type Emitter } from 'nanoevents';
 import type * as D3Selection from 'd3-selection';
 import type * as D3Drag from 'd3-drag';
 import type { EventStyle } from '@gosling-lang/gosling-schema';
