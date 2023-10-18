@@ -64,10 +64,14 @@ yarn preview
 ## Visual Regression
 
 To test if your changes make a difference visually across a large number of specifications, you can use the `yarn screenshot` command. 
+``` bash
+yarn build      # needed to get the latest gosling build
+yarn screenshot # takes screenshots of all of the example specs and puts them in img/visual-regression/new-screenshots
+yarn update-ref-screenshots # update the reference screenshots with your new screenshots 
+```
 This command will use `dist/gosling.js` in a headless browser (using puppeteer) and take a screenshot of the visualization that is included in the editor. 
-It will save these screenshots in `img/visual-regression/new-screenshots`. If there is a difference compared to the screenshots in `img/visual-regression/screenshots`
-it will show the differences in an image in `img/visual-regression/diffs`. Currently, the Gosling axis can have non-deterministic behavior so you
-should not be alarmed if there are a number of examples where the axis seems to have changed. 
+It will save these screenshots in `img/visual-regression/new-screenshots`. If there is a difference compared to the screenshots in `img/visual-regression/reference-screenshots`
+it will show the differences in an image in `img/visual-regression/diffs`. 
 
 ## Editing `gosling.js/embed`
 
