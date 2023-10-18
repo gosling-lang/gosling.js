@@ -102,7 +102,7 @@ Object.entries(examples)
                 await delay(2000); // wait extra 2 seconds. Should be enough time for any rendering to finish
                 await component!.screenshot({ path: `./img/visual-regression/new-screenshots/${name}.png` });
                 comparePNG(
-                    `img/visual-regression/screenshots/${name}.png`,
+                    `img/visual-regression/reference-screenshots/${name}.png`,
                     `img/visual-regression/new-screenshots/${name}.png`,
                     `img/visual-regression/diffs/${name}.png`
                 );
