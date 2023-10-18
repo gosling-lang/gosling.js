@@ -21,5 +21,3 @@ report.*
 *.swp
 *.swo
 *~
-/img/visual-regression/new-screenshots/*
-/img/visual-regression/diffs/*
