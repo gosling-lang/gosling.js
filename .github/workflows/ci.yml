@@ -43,7 +43,7 @@ jobs:
                 yarn coverage
               env:
                   NODE_OPTIONS: '--max_old_space_size=4096'
-            - uses: codecov/codecov-action@v1
+            - uses: codecov/codecov-action@v3
               with:
                   fail_ci_if_error: true
 
