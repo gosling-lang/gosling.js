@@ -72,6 +72,9 @@ const external = [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDepen
     dep => !skipExt.has(dep)
 );
 
+/**
+ * Used when yarn build-lib is run
+ */
 const esm = defineConfig({
     build: {
         emptyOutDir: false,
@@ -100,9 +103,13 @@ const dev = defineConfig({
     plugins: [bundleWebWorker, manualInlineWorker]
 });
 
+/**
+ * This config is used when vitest is run
+ */
 const testing = defineConfig({
     resolve: { alias },
     test: {
+        exclude: ['./node_modules/**', './dist/**', './img/**'], // img is excluded because it is used for visual regression testing
         globals: true,
         setupFiles: [path.resolve(__dirname, './scripts/setup-vitest.js')],
         environment: 'jsdom',
@@ -120,9 +127,27 @@ const testing = defineConfig({
     }
 });
 
+/**
+ * This config is used to take screenshots of every example Gosling spec using a headless browser (puppeteer)
+ */
+const screenshot = defineConfig({
+    test: {
+        include: ['./img/visual-regression/*'],
+        globals: true,
+        environment: 'jsdom',
+        threads: false,
+        environmentOptions: {
+            jsdom: {
+                resources: 'usable'
+            }
+        }
+    }
+});
+
 export default ({ command, mode }) => {
     if (command === 'build' && mode === 'lib') return esm;
     if (mode == 'test') return testing;
+    if (mode == 'screenshot') return screenshot;
     if (mode === 'editor') {
         dev.plugins.push(reactRefresh());
     }
