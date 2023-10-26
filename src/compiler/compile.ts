@@ -8,6 +8,7 @@ import type { UrlToFetchOptions } from 'src/core/gosling-component';
 import { renderHiGlass as createHiGlassModels } from './create-higlass-models';
 import { manageResponsiveSpecs } from './responsive';
 import type { IdTable } from '../api/track-and-view-ids';
+import { publish } from '../api/pubsub';
 
 /** The callback function called everytime after the spec has been compiled */
 export type CompileCallback = (
@@ -68,6 +69,13 @@ export function compile(
         traverseToFixSpecDownstream(specCopy);
         trackInfos = getRelativeTrackInfo(specCopy, theme).trackInfos;
     }
+
+    // publish the fixed spec
+    // used for alt-gosling
+    publish('specProcessed', {
+        id: specCopy.id,
+        spec: specCopy
+    });
 
     // Make HiGlass models for individual tracks
     createHiGlassModels(specCopy, trackInfos, callback, theme, urlToFetchOptions);

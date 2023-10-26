@@ -350,7 +350,7 @@ function traverseAndCollectTrackInfo(
             // !!! As circular tracks are not well supported now when parallelized or serialized, we do not support brush for now.
             if (ifMultipleViews) {
                 if (IsOverlaidTrack(t.track)) {
-                    t.track.overlay = t.track.overlay.filter(o => o.mark !== 'brush');
+                    t.track._overlay = t.track._overlay.filter(o => o.mark !== 'brush');
                 }
             }
         });

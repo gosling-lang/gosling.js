@@ -129,11 +129,11 @@ export function IsTrackStyle(track: Style | undefined): track is Style {
 }
 
 export function IsSingleTrack(track: Track): track is SingleTrack {
-    return !('overlay' in track);
+    return !('_overlay' in track);
 }
 
 export function IsOverlaidTrack(track: Partial<Track>): track is OverlaidTrack {
-    return 'overlay' in track;
+    return '_overlay' in track;
 }
 
 export function IsTemplateTrack(track: Partial<Track>): track is TemplateTrack {
@@ -298,7 +298,7 @@ export function IsXAxis(_: Track) {
         return true;
     } else if (IsOverlaidTrack(_)) {
         let isFound = false;
-        _.overlay.forEach(t => {
+        _._overlay.forEach(t => {
             if (isFound) return;
 
             if (IsChannelDeep(t.x) && t.x.axis && t.x.axis !== 'none') {
@@ -315,7 +315,7 @@ export function IsYAxis(_: Track) {
         return true;
     } else if (IsOverlaidTrack(_)) {
         let isFound = false;
-        _.overlay.forEach(t => {
+        _._overlay.forEach(t => {
             if (isFound) return;
 
             if (IsChannelDeep(t.y) && t.y.axis && t.y.axis !== 'none') {
