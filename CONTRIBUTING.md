@@ -7,11 +7,13 @@ While contribution guidelines are loosely defined, we recommend to read the foll
 
 We use Yarn (and not NPM) to manage dependencies in stable and consistent ways. 
 
-After installing [Yarn](https://yarnpkg.com/getting-started/install), clone this repository and run the following commands to install all dependencies and run the Gosling.js editor locally:
+After installing [Yarn](https://yarnpkg.com/getting-started/install), clone this repository and run the following commands to install all dependencies and run the Gosling.js editor locally. We recommend you use Node 20. 
 
 ```sh
-yarn
-yarn start
+git clone https://github.com/gosling-lang/gosling.js.git # Clone the repository to your current directory
+cd gosling.js                                            # Navigate to gosling repository
+yarn                                                     # Install dependencies 
+yarn start                                               # Start a local server running the Gosling online editor 
 ```
 
 Then, you can open http://localhost:3000/ in a web browser to test the online editor.
@@ -48,6 +50,10 @@ To learn more about the commitlint, please visit [conventional-changelog/commitl
 
 ## Opening Pull Requests
 We use the [commitlint](#commitlint) for the title of PR. So, if the title of PR is not following the commitlint conventions, [Semantic Pull Request](https://github.com/zeke/semantic-pull-requests) will complain about it, disallowing your PR to be merged. When your PR is accepted and merged into the master branch, the title of the PR will be recorded as a single commit message which will then added as a single item in [CHANGELOG.md](/CHANGELOG.md).
+
+## Testing 
+
+Gosling.js uses [Vitest](https://vitest.dev/) for running tests. To run all of the tests, you can use the command `yarn test`. 
 
 ## Testing Production Build Using Editor
 

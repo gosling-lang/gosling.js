@@ -26,7 +26,7 @@ export interface EmptyTile {
 /**
  * A class to represent a GFF file. It takes care of setting up gmod/tabix.
  */
-export class GffFile {
+class GffFile {
     #uid: string;
     tbi: TabixIndexedFile;
     #n_features?: number;
