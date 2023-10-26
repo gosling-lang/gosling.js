@@ -3675,10 +3675,10 @@ higlass-text@^0.1.1:
     higlass-register "^0.3.0"
     slugid "^2.0.0"
 
-higlass@^1.12.4:
-  version "1.12.4"
-  resolved "https://registry.yarnpkg.com/higlass/-/higlass-1.12.4.tgz#e494908a2316055ba31f01dfba4205da930eaf33"
-  integrity sha512-MfjB6RHjTAqWxi5PjoyetnIigdzjcnTBzOdCSaU5ek6G3ewytuXBLD6KIOKUGBRT2D8cfb4Cz/TP6ZzSDBd3kw==
+higlass@^1.13.1:
+  version "1.13.1"
+  resolved "https://registry.yarnpkg.com/higlass/-/higlass-1.13.1.tgz#3a5034be6e61d67656a4824b384f4002a60b3abf"
+  integrity sha512-h62OVuh76Od+HLVAWRjEylGIgwiD0KKsRzxtTWtbSg3jnge6i9noMER5UKML1J5WMp59qhge3N/fSWt75RoIzw==
   dependencies:
     ajv "^6.10.0"
     box-intersect "^1.0.1"
@@ -3715,7 +3715,7 @@ higlass@^1.12.4:
     react-sortable-hoc "^1.10.1"
     reactcss "^1.2.3"
     robust-point-in-polygon "^1.0.3"
-    slugid "^3.1.0"
+    slugid "^3.2.0"
     stream "0.0.2"
     url-parse "^1.4.3"
     vkbeautify "^0.99.3"
@@ -6106,7 +6106,7 @@ slash@^4.0.0:
   resolved "https://registry.yarnpkg.com/slash/-/slash-4.0.0.tgz#2422372176c4c6c5addb5e2ada885af984b396a7"
   integrity sha512-3dOsAHXXUkQTpOYcoAxLIorMTp4gIQr5IW3iVb7A7lFIp0VHhnynm9izx6TssdrIcVIESAlVjtnO2K8bg+Coew==
 
-slugid@^2.0.0, slugid@^3.0.0, slugid@^3.1.0:
+slugid@^2.0.0, slugid@^3.0.0, slugid@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/slugid/-/slugid-3.2.0.tgz#3731f4debe46b319f6fbbefda58de30316af957d"
   integrity sha512-f0vZb6VyjUdZG5kaxd9CNpfhy+eUUTC8RnbDolC3ZLjYa7n5AdPkQnqnIjmoZYoPS9dWMOXQdoBREAGQqdZb9A==
