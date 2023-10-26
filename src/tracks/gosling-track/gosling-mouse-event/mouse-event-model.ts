@@ -6,7 +6,7 @@ import {
     isPointNearPoint,
     isCircleWithinRange
 } from './polygon';
-import * as uuid from 'uuid';
+import { uuid } from '../../../core/utils/uuid';
 
 export type MouseEventData = PointEventData | LineEventData | PolygonEventData;
 
@@ -52,21 +52,21 @@ export class MouseEventModel {
      * Add a new mouse event that is polygon-based.
      */
     public addPolygonBasedEvent(value: Datum, polygon: number[]) {
-        this.data.push({ uid: uuid.v4(), type: 'polygon', value, polygon });
+        this.data.push({ uid: uuid(), type: 'polygon', value, polygon });
     }
 
     /**
      * Add a new mouse event that is point-based.
      */
     public addPointBasedEvent(value: Datum, pointAndRadius: [number, number, number]) {
-        this.data.push({ uid: uuid.v4(), type: 'point', value, polygon: pointAndRadius });
+        this.data.push({ uid: uuid(), type: 'point', value, polygon: pointAndRadius });
     }
 
     /**
      * Add a new mouse event that is line-based.
      */
     public addLineBasedEvent(value: Datum, path: number[]) {
-        this.data.push({ uid: uuid.v4(), type: 'line', value, polygon: path });
+        this.data.push({ uid: uuid(), type: 'line', value, polygon: path });
     }
 
     /**

@@ -10,10 +10,10 @@ import { createApi, type GoslingApi } from '../api/api';
 import { GoslingTemplates } from '..';
 import { omitDeep } from './utils/omit-deep';
 import { isEqual } from 'lodash-es';
-import * as uuid from 'uuid';
 import { publish } from '../api/pubsub';
 import type { IdTable } from '../api/track-and-view-ids';
 import { preverseZoomStatus } from './utils/higlass-zoom-config';
+import { uuid } from '../core/utils/uuid';
 
 // Before rerendering, wait for a few time so that HiGlass container is resized already.
 // If HiGlass is rendered and then the container resizes, the viewport position changes, unmatching `xDomain` specified by users.
@@ -59,7 +59,7 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
     const hgRef = useRef<HiGlassApi>(null);
 
     const theme = getTheme(props.theme || 'light');
-    const wrapperDivId = props.id ?? uuid.v4();
+    const wrapperDivId = props.id ?? uuid();
 
     /**
      * Publishes event if there is a new view added

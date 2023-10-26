@@ -1,4 +1,3 @@
-import * as uuid from 'uuid';
 import type { Track as HiGlassTrack } from '@gosling-lang/higlass-schema';
 import { HiGlassModel, HIGLASS_AXIS_SIZE } from './higlass-model';
 import { parseServerAndTilesetUidFromUrl } from '../core/utils';
@@ -20,7 +19,8 @@ import { DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM } from './defaults';
 import type { CompleteThemeDeep } from '../core/utils/theme';
 import { DEFAULT_TEXT_STYLE } from '../core/utils/text-style';
 import type { GoslingToHiGlassIdMapper } from '../api/track-and-view-ids';
-import type { UrlToFetchOptions } from 'src/core/gosling-component';
+import type { UrlToFetchOptions } from '../core/gosling-component';
+import { uuid } from '../core/utils/uuid';
 
 /**
  * Convert a gosling track into a HiGlass view and add it into a higlass model.
@@ -47,7 +47,7 @@ export function goslingToHiGlass(
     const firstResolvedSpec = resolvedSpecs[0];
 
     // If missing, create a unique track ID that will be used as HiGlass view ID for caching
-    const trackId = firstResolvedSpec.id ?? uuid.v4();
+    const trackId = firstResolvedSpec.id ?? uuid();
     if (!firstResolvedSpec.id) {
         firstResolvedSpec.id = trackId;
     }
