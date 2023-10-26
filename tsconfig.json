@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
     "lib": [
@@ -39,7 +39,6 @@
   "files": [
     "src/index.ts",
     "editor/index.tsx",
-    "embed/index.ts"
   ],
   "include": ["src", "src/**/*.d.ts", "editor"],
   "exclude": [

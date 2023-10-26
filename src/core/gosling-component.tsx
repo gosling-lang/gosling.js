@@ -3,7 +3,7 @@ import { type HiGlassApi, HiGlassComponentWrapper } from './higlass-component-wr
 import type { TemplateTrackDef, VisUnitApiData } from '@gosling-lang/gosling-schema';
 import type { RequestInit } from '@gosling-lang/higlass-schema';
 import React, { useState, useEffect, useMemo, useRef, forwardRef, useCallback, useImperativeHandle } from 'react';
-import ResizeSensor from 'css-element-queries/src/ResizeSensor';
+import { ResizeSensor } from 'css-element-queries';
 import * as gosling from '..';
 import { getTheme, type Theme } from './utils/theme';
 import { createApi, type GoslingApi } from '../api/api';

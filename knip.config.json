@@ -1,0 +1,4 @@
+{
+    "entry": ["./src/index.ts", "./editor/index.tsx", "scripts/setup-vitest.js"],
+    "project": ["**/*.ts", "**/*.tsx"]
+  }

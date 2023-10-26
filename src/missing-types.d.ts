@@ -26,8 +26,6 @@ declare module '@higlass/libraries' {
     export * as d3Geo from 'd3-geo';
     export * as d3Scale from 'd3-scale';
     export * as d3Selection from 'd3-selection';
-    // export * as d3Queue from 'd3-queue';
-    // export * as d3Request from 'd3-request';
     export * as d3Transition from 'd3-transition';
     export * as d3Zoom from 'd3-zoom';
     // minimal typing of https://github.com/taskcluster/slugid/blob/main/slugid.js

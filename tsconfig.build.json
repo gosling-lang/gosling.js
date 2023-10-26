@@ -2,7 +2,7 @@
     "extends": "./tsconfig.json",
     "files": [
         "src/index.ts",
-        "embed/index.ts"
     ],
-    "exclude": ["**/*.test.ts"]
+    "exclude": ["**/*.test.ts"],
+    "include": ["src"],
 }

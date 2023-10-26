@@ -29,7 +29,7 @@ const DEFAULT_BED_SCHEMA = `table defaultBedSchema
 /**
  * A class to create a BED file parser
  */
-export class BedParser {
+class BedParser {
     #customFields?: string[];
     #n_columns?: number;
     #parser: BED;

@@ -1,4 +1,4 @@
-import { BedParser } from './bed-parser';
+import BedParser from './bed-parser';
 
 describe('BED parser with default columns', () => {
     const parser = new BedParser();

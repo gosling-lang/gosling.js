@@ -1,13 +1,14 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Route } from 'react-router-dom';
 import Editor from './Editor';
 import './index.css';
 import 'higlass/dist/hglib.css';
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('root') as HTMLElement);
+
+root.render(
     <BrowserRouter>
         <Route component={Editor} />
-    </BrowserRouter>,
-    document.getElementById('root') as HTMLElement
+    </BrowserRouter>
 );
