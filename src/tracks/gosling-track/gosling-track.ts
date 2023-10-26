@@ -189,7 +189,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
             // Add unique IDs to each of the overlaid tracks that will be rendered independently.
             if ('overlay' in this.options.spec) {
-                this.options.spec.overlay = (this.options.spec as OverlaidTrack).overlay.map(o => {
+                this.options.spec.overlay = (this.options.spec as OverlaidTrack)._overlay.map(o => {
                     return { ...o, _renderingId: uuid() };
                 });
             } else {
