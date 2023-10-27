@@ -8,8 +8,8 @@
         "url": "https://github.com/gosling-lang/gosling.js"
     },
     "homepage": "https://gosling-lang.github.io/gosling.js/",
-    "main": "dist/gosling.es.js",
-    "module": "dist/gosling.es.js",
+    "main": "dist/gosling.js",
+    "module": "dist/gosling.js",
     "types": "dist/src/index.d.ts",
     "files": [
         "dist"
@@ -18,7 +18,7 @@
     "exports": {
         ".": {
             "types": "./dist/src/index.d.ts",
-            "import": "./dist/gosling.es.js"
+            "import": "./dist/gosling.js"
         }
     },
     "scripts": {
