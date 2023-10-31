@@ -1,3 +1,18 @@
+# [0.12.0](https://github.com/gosling-lang/gosling.js/compare/v0.11.0...v0.12.0) (2023-10-31)
+
+
+### Bug Fixes
+
+* **core:** rename exports from .es.js to .js ([#987](https://github.com/gosling-lang/gosling.js/issues/987)) ([f97269a](https://github.com/gosling-lang/gosling.js/commit/f97269ac48bcef2ebe3e2a7b6f8e4b8208f1d24a))
+
+
+### Features
+
+* **api:** publish traversed spec to gosling api ([#978](https://github.com/gosling-lang/gosling.js/issues/978)) ([f17e69f](https://github.com/gosling-lang/gosling.js/commit/f17e69f8ea9d83e9c574e864b7dfca94a49fa328))
+* **core:** replace `uuid` dependency with `crypto.randomUUID()` ([#976](https://github.com/gosling-lang/gosling.js/issues/976)) ([9b1e89b](https://github.com/gosling-lang/gosling.js/commit/9b1e89b51067abc1b582a99df4a2e94a7f0bb1ac))
+
+
+
 # [0.11.0](https://github.com/gosling-lang/gosling.js/compare/v0.10.4...v0.11.0) (2023-09-27)
 
 
