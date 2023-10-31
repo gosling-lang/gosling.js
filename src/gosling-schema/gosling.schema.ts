@@ -304,6 +304,16 @@ interface OnNewViewEventData {
     id: string;
 }
 
+interface OnTrackTilesProcessed {
+    /** ID of the track whose tiles have been processed */
+    id: string;
+}
+
+interface onTrackTilesReceived {
+    /** ID of the track which has just received tiles */
+    id: string;
+}
+
 interface PointMouseEventData extends CommonEventData {
     /** A genomic coordinate, e.g., `chr1:100,000`. */
     genomicPosition: GenomicPosition;
@@ -385,6 +395,8 @@ export type _EventMap = {
     onNewTrack: OnNewTrackEventData;
     onNewView: OnNewViewEventData;
     location: LocationEventData;
+    onTrackTilesProcessed: OnTrackTilesProcessed;
+    onTrackTilesReceived: onTrackTilesReceived;
 };
 
 /** Options for determining mouse events in detail, e.g., turning on specific events only */
