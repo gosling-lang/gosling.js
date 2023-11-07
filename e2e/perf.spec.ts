@@ -78,14 +78,14 @@ test.beforeEach(async ({ page, context }) => {
 
 test('Measure zoom time', async ({ page, browser }) => {
     // Get the spec we want to test and paste it into the editor
-    const jsonString = fs.readFileSync('./e2e/example-spec.json', 'utf-8');
+    const jsonString = fs.readFileSync('./e2e/assets/example-spec.json', 'utf-8');
     await changeEditorSpec(page, jsonString);
     
     // Wait for the visualization to render 
     const gosComponent = page.getByLabel('Gosling visualization');
     await checkScreenshotUntilMatches(
         gosComponent,
-        'e2e/perf.spec.ts-snapshots/changes-editor-spec-1-chromium-darwin.png',
+        'e2e/assets/example-spec-expected.png',
         10000
     );
 
