@@ -1,9 +1,9 @@
-import { test, expect, type Page, Locator } from '@playwright/test';
+import { type Page, type Locator } from '@playwright/test';
 import { PNG } from 'pngjs';
 import pixelmatch from 'pixelmatch';
 import * as fs from 'fs';
 
-function delay(time: number) {
+export function delay(time: number) {
     return new Promise(resolve => {
         setTimeout(resolve, time);
     });
@@ -12,7 +12,7 @@ function delay(time: number) {
 /**
  * Compares two PNG files and returns true if they are the same.
  */
-function isPngSame(newImg: Buffer, oldImg: Buffer) {
+export function isPngSame(newImg: Buffer, oldImg: Buffer) {
     const img1 = PNG.sync.read(newImg);
     const img2 = PNG.sync.read(oldImg);
     // check if the images have the same dimensions
@@ -28,7 +28,7 @@ function isPngSame(newImg: Buffer, oldImg: Buffer) {
 /**
  * This function changes the editor spec by pasting the given JSON string.
  */
-async function changeEditorSpec(page: Page, jsonString: string) {
+export async function changeEditorSpec(page: Page, jsonString: string) {
     // Copy the spec to the keyboard using the clipboard API
     await page.evaluate(jsonString => {
         navigator.clipboard.writeText(jsonString);
@@ -53,7 +53,7 @@ async function changeEditorSpec(page: Page, jsonString: string) {
 /**
  * This function polls until the screenshot of the given component matches the expected screenshot.
  */
-async function checkScreenshotUntilMatches(component: Locator, expectedScreenshotPath: string, timeout: number) {
+export async function checkScreenshotUntilMatches(component: Locator, expectedScreenshotPath: string, timeout: number) {
     let screenshotMatchesExpected = false;
     let timeElapsed = 0;
     const compImgBuffer = fs.readFileSync(expectedScreenshotPath);
@@ -69,41 +69,3 @@ async function checkScreenshotUntilMatches(component: Locator, expectedScreensho
         }
     }
 }
-
-test.beforeEach(async ({ page, context }) => {
-    // Enable clipboard permissions. This is needed to copy the spec to the clipboard in the chromium browser.
-    await context.grantPermissions(['clipboard-read', 'clipboard-write']);
-    await page.goto('/');
-});
-
-test('Measure zoom time', async ({ page, browser }) => {
-    // Get the spec we want to test and paste it into the editor
-    const jsonString = fs.readFileSync('./e2e/assets/example-spec.json', 'utf-8');
-    await changeEditorSpec(page, jsonString);
-    
-    // Wait for the visualization to render 
-    const gosComponent = page.getByLabel('Gosling visualization');
-    await checkScreenshotUntilMatches(
-        gosComponent,
-        'e2e/assets/example-spec-expected.png',
-        10000
-    );
-
-    // Hover over a track
-    await delay(1000);
-    const centerTrack: Locator = page.locator('.center-track').first();
-    await centerTrack.hover();
-    
-    // Start timer and zoom in
-    const startTime =  Date.now();
-    const zoomSteps = 15; // Trigger zoomSteps number of zooms
-    for (let i = 0; i < zoomSteps; i++) {
-        await page.mouse.wheel(0, -1);
-    }
-    const endTime = Date.now();
-    const zoomTime = endTime - startTime;
-    console.log(`Zoom time: ${zoomTime}ms`);
-
-    // Just make sure the zoom time is less than 3 seconds. In practice it should be much less than this.
-    expect(zoomTime).toBeLessThan(3000);
-});
