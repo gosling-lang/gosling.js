@@ -3,8 +3,6 @@ import { PNG } from 'pngjs';
 import pixelmatch from 'pixelmatch';
 import * as fs from 'fs';
 
-const jsonString = fs.readFileSync('./e2e/spec.json', 'utf-8');
-
 function delay(time: number) {
     return new Promise(resolve => {
         setTimeout(resolve, time);
@@ -72,63 +70,40 @@ async function checkScreenshotUntilMatches(component: Locator, expectedScreensho
     }
 }
 
-async function getTotalBlockingTime(page: Page) {
-    const blockingTime = await page.evaluate(() => {
-        return new Promise(resolve => {
-            let totalBlockingTime = 0;
-            new PerformanceObserver(function (list) {
-                const perfEntries = list.getEntries();
-
-                perfEntries.forEach(perfEntry => {
-                    totalBlockingTime += perfEntry.duration - 50;
-                });
-
-                console.log(JSON.stringify(perfEntries));
-
-                resolve(totalBlockingTime);
-            }).observe({ type: 'longtask', buffered: true });
-
-            // Resolve promise if there haven't been long tasks
-            setTimeout(() => resolve(totalBlockingTime), 5000);
-        });
-    });
-    return blockingTime;
-}
-
 test.beforeEach(async ({ page, context }) => {
+    // Enable clipboard permissions. This is needed to copy the spec to the clipboard in the chromium browser.
     await context.grantPermissions(['clipboard-read', 'clipboard-write']);
     await page.goto('/');
-    // await page.waitForLoadState('networkidle');
 });
 
-test('changes editor spec', async ({ page, browser }) => {
-    // await browser.startTracing(page, { path: './perfTraces.json', screenshots: false })
+test('Measure zoom time', async ({ page, browser }) => {
+    // Get the spec we want to test and paste it into the editor
+    const jsonString = fs.readFileSync('./e2e/example-spec.json', 'utf-8');
     await changeEditorSpec(page, jsonString);
-    // wait for network to go idle
-    // await page.waitForLoadState('networkidle');
+    
+    // Wait for the visualization to render 
     const gosComponent = page.getByLabel('Gosling visualization');
-
     await checkScreenshotUntilMatches(
         gosComponent,
         'e2e/perf.spec.ts-snapshots/changes-editor-spec-1-chromium-darwin.png',
         10000
     );
 
+    // Hover over a track
     await delay(1000);
     const centerTrack: Locator = page.locator('.center-track').first();
     await centerTrack.hover();
     
+    // Start timer and zoom in
     const startTime =  Date.now();
-    // Trigger zoomSteps number of zooms
-    const zoomSteps = 15;
+    const zoomSteps = 15; // Trigger zoomSteps number of zooms
     for (let i = 0; i < zoomSteps; i++) {
         await page.mouse.wheel(0, -1);
     }
     const endTime = Date.now();
     const zoomTime = endTime - startTime;
     console.log(`Zoom time: ${zoomTime}ms`);
-    // await browser.stopTracing()
 
-    // Add the zoomTime to the test report
-    expect(zoomTime).toBeLessThan(5100);
+    // Just make sure the zoom time is less than 3 seconds. In practice it should be much less than this.
+    expect(zoomTime).toBeLessThan(3000);
 });
