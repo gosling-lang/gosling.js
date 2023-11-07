@@ -108,24 +108,27 @@ test('changes editor spec', async ({ page, browser }) => {
     // await page.waitForLoadState('networkidle');
     const gosComponent = page.getByLabel('Gosling visualization');
 
-    console.time('Time until screenshot matches expected');
     await checkScreenshotUntilMatches(
         gosComponent,
         'e2e/perf.spec.ts-snapshots/changes-editor-spec-1-chromium-darwin.png',
         10000
     );
-    console.timeEnd('Time until screenshot matches expected');
 
     await delay(1000);
     const centerTrack: Locator = page.locator('.center-track').first();
     await centerTrack.hover();
     
-    for (let i = 0; i < 20; i++) {
-        await page.mouse.wheel(0, -100);
+    const startTime =  Date.now();
+    // Trigger zoomSteps number of zooms
+    const zoomSteps = 15;
+    for (let i = 0; i < zoomSteps; i++) {
+        await page.mouse.wheel(0, -1);
     }
-
-    await delay(1000);
-    const blockingTime = await getTotalBlockingTime(page);
-    console.log(blockingTime);
+    const endTime = Date.now();
+    const zoomTime = endTime - startTime;
+    console.log(`Zoom time: ${zoomTime}ms`);
     // await browser.stopTracing()
+
+    // Add the zoomTime to the test report
+    expect(zoomTime).toBeLessThan(5100);
 });
