@@ -14,14 +14,14 @@ test('Measure zoom time', async ({ page, browser }) => {
     await changeEditorSpec(page, jsonString);
     
     // Wait for the visualization to render 
+    const gosComponent = page.getByLabel('Gosling visualization');
     await delay(5000);
-    // Optionally, wait for the visualization to render by checking the screenshot. However, this does not work in CI
-    // const gosComponent = page.getByLabel('Gosling visualization');
-    // await checkScreenshotUntilMatches(
-    //     gosComponent,
-    //     'e2e/assets/example-spec-expected.png',
-    //     10000
-    // );
+    gosComponent.screenshot({ path: 'e2e/assets/example-spec-expected-2.png' });
+    await checkScreenshotUntilMatches(
+        gosComponent,
+        'e2e/assets/example-spec-expected.png',
+        10000
+    );
 
     // Hover over a track
     await delay(1000);
