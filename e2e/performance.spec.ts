@@ -16,12 +16,13 @@ test('Measure zoom time', async ({ page, browser }, testInfo) => {
     
     // Wait for the visualization to render 
     const gosComponent = page.getByLabel('Gosling visualization');
-    await delay(5000);
-    const screenshot = await gosComponent.screenshot();
-    await testInfo.attach('gosComponentScreenshot', {
-        body: screenshot,
-        contentType: 'image/png',
-    });
+
+    // Uncomment this to see the screenshot of the component in the report
+    // const screenshot = await gosComponent.screenshot();
+    // await testInfo.attach('gosComponentScreenshot', {
+    //     body: screenshot,
+    //     contentType: 'image/png',
+    // });
 
     await checkScreenshotUntilMatches(
         gosComponent,
