@@ -16,6 +16,7 @@ export function isPngSame(newImg: Buffer, oldImg: Buffer) {
     const img1 = PNG.sync.read(newImg);
     const img2 = PNG.sync.read(oldImg);
     // check if the images have the same dimensions
+    console.warn(img1.width, img2.width, img1.height, img2.height)
     if (img1.width !== img2.width || img1.height !== img2.height) return false;
 
     const { width, height } = img1;
