@@ -16,12 +16,14 @@ export function isPngSame(newImg: Buffer, oldImg: Buffer) {
     const img1 = PNG.sync.read(newImg);
     const img2 = PNG.sync.read(oldImg);
     // check if the images have the same dimensions
-    console.warn(img1.width, img2.width, img1.height, img2.height)
     if (img1.width !== img2.width || img1.height !== img2.height) return false;
+
+    console.warn('same size');
 
     const { width, height } = img1;
     const diff = new PNG({ width, height });
     const pixeldifference = pixelmatch(img1.data, img2.data, diff.data, width, height, { threshold: 0.1 });
+    console.warn(`pixel difference: ${pixeldifference}`);
     // only write to file if there is a difference in the images
     return pixeldifference === 0;
 }
