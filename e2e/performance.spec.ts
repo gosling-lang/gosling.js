@@ -9,7 +9,7 @@ test.beforeEach(async ({ page, context }) => {
     await page.goto('/');
 });
 
-test('Measure zoom time', async ({ page, browser }) => {
+test('Measure zoom time', async ({ page, browser }, testInfo) => {
     // Get the spec we want to test and paste it into the editor
     const jsonString = fs.readFileSync('./e2e/assets/example-spec.json', 'utf-8');
     await changeEditorSpec(page, jsonString);
@@ -17,7 +17,12 @@ test('Measure zoom time', async ({ page, browser }) => {
     // Wait for the visualization to render 
     const gosComponent = page.getByLabel('Gosling visualization');
     await delay(5000);
-    // gosComponent.screenshot({ path: 'e2e/assets/example-spec-expected-2.png' });
+    const screenshot = await gosComponent.screenshot();
+    await testInfo.attach('gosComponentScreenshot', {
+        body: screenshot,
+        contentType: 'image/png',
+    });
+
     await checkScreenshotUntilMatches(
         gosComponent,
         'e2e/assets/example-spec-expected.png',
