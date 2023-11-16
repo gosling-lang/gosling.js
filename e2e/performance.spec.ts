@@ -5,6 +5,7 @@ import * as fs from 'fs';
 test.beforeEach(async ({ page, context }) => {
     // Enable clipboard permissions. This is needed to copy the spec to the clipboard in the chromium browser.
     await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+    console.warn(page.viewportSize());
     await page.goto('/');
 });
 
@@ -16,7 +17,7 @@ test('Measure zoom time', async ({ page, browser }) => {
     // Wait for the visualization to render 
     const gosComponent = page.getByLabel('Gosling visualization');
     await delay(5000);
-    gosComponent.screenshot({ path: 'e2e/assets/example-spec-expected-2.png' });
+    // gosComponent.screenshot({ path: 'e2e/assets/example-spec-expected-2.png' });
     await checkScreenshotUntilMatches(
         gosComponent,
         'e2e/assets/example-spec-expected.png',
