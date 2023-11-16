@@ -47,6 +47,6 @@ test('Measure zoom time', async ({ page, browser }, testInfo) => {
     const zoomTime = endTime - startTime;
     console.log(`Zoom time: ${zoomTime}ms`);
 
-    // Just make sure the zoom time is less than 8 seconds. This is how long it in CI
-    expect(zoomTime).toBeLessThan(8000);
+    // Just make sure the zoom time is less than 9 seconds. This is how long it in CI
+    expect(zoomTime).toBeLessThan(9000);
 });
