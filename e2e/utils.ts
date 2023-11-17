@@ -27,6 +27,7 @@ export function isPngSame(newImg: Buffer, oldImg: Buffer) {
 
 /**
  * This function changes the editor spec by pasting the given JSON string.
+ * Make sure to use context.grantPermissions(['clipboard-read', 'clipboard-write']); before calling this function.
  */
 export async function changeEditorSpec(page: Page, jsonString: string) {
     // Copy the spec to the keyboard using the clipboard API
