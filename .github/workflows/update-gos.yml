@@ -5,7 +5,6 @@ on:
     inputs:
       tag_name:
         required: true
-        default: "latest"
   release:
     types: [published]
 
@@ -40,7 +39,7 @@ jobs:
 
       - uses: actions/setup-python@v4
         with:
-          python-version: "3.x"
+          python-version: "3.11"
       - run: |
           python -m pip install .
           python tools/generate_schema_wrapper.py ${{ steps.tag.outputs.tag_name }}
