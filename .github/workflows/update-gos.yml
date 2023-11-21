@@ -25,11 +25,7 @@ jobs:
         id: tag
         run: |
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            if [ "${{ github.event.inputs.tag_name }}" == "latest" ]; then
-              echo "tag_name=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_OUTPUT
-            else
-              echo "tag_name=${{ github.event.inputs.tag_name }}" >> $GITHUB_OUTPUT
-            fi
+            echo "tag_name=${{ github.event.inputs.tag_name }}" >> $GITHUB_OUTPUT
           elif [ "${{ github.event_name }}" == "release" ]; then
             echo "tag_name=${{ github.event.release.tag_name }}" >> $GITHUB_OUTPUT
           else
