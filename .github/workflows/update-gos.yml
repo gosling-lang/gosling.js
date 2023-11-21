@@ -42,8 +42,7 @@ jobs:
         with:
           python-version: "3.x"
       - run: |
-          python -m pip install --upgrade hatch
-          hatch shell
+          python -m pip install .
           python tools/generate_schema_wrapper.py ${{ steps.tag.outputs.tag_name }}
 
       - name: Create Pull Request
