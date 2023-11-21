@@ -50,7 +50,7 @@ test.beforeEach(async ({ page, context }) => {
 // });
 
 Object.entries(JsonExampleSpecs)
-    // .filter(([name]) => name === 'doc_text') // If only want to see the certain example
+    .filter(([name]) => name === 'EX_SPEC_MATRIX') // If only want to see the certain example
     .forEach(([name, jsonSpec]) => {
         test(name, async ({ page }, testInfo) => {
             test.setTimeout(60000); // 60 seconds
