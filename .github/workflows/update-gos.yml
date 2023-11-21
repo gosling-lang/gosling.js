@@ -1,0 +1,56 @@
+name: Create Gos Pull Request
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        required: true
+        default: "latest"
+  release:
+    types: [published]
+
+jobs:
+
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout gosling-lang/gos (with submodules)
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          repository: gosling-lang/gos
+          submodules: true
+
+      - name: Determine Tag Name
+        id: tag
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            if [ "${{ github.event.inputs.tag_name }}" == "latest" ]; then
+              echo "tag_name=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_OUTPUT
+            else
+              echo "tag_name=${{ github.event.inputs.tag_name }}" >> $GITHUB_OUTPUT
+            fi
+          elif [ "${{ github.event_name }}" == "release" ]; then
+            echo "tag_name=${{ github.event.release.tag_name }}" >> $GITHUB_OUTPUT
+          else
+            echo "Unknown event type"
+            exit 1
+          fi
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+      - run: |
+          python -m pip install --upgrade hatch
+          hatch shell
+          python tools/generate_schema_wrapper.py ${{ steps.tag.outputs.tag_name }}
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.PAT }}
+          commit-message: "Bump Gosling.js to `${{ steps.tag.outputs.tag_name }}`"
+          title: "Bump Gosling.js to `${{ steps.tag.outputs.tag_name }}`"
+          body: "Automated PR. Update binding for Gosling.js `${{ steps.tag.outputs.tag_name }}`."
+          delete-branch: true
