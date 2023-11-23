@@ -15,7 +15,8 @@ export type ThemeType =
     | 'excel'
     | 'google';
 // export type ThemType = keyof typeof Themes;
-// Above line leads to `TypeError: Invalid value used as weak map key` error, due to cyclic dependency, I think.
+// Above line leads to `TypeError: Invalid value used as weak map key` error, due to cyclic dependency.
+// So, instead hard-coding the list as workaround
 // Refer to https://github.com/vega/ts-json-schema-generator/issues/1727
 
 export interface ThemeDeep {
