@@ -1,13 +1,12 @@
-import * as gt from '@gosling-lang/gosling-theme';
+import { type Themes, isThereTheme, getTheme as _getTheme } from '@gosling-lang/gosling-theme';
 import { CHANNEL_DEFAULTS } from '../channel';
 
 /* ----------------------------- THEME ----------------------------- */
 export type Theme = ThemeType | ThemeDeep;
-export type ThemeType = keyof typeof gt.Themes;
-export enum Themes {
-    light = 'light',
-    dark = 'dark'
-}
+export type ThemeType = "light" | "dark" | "warm" | "ggplot" | "igv" | "ensembl" | "jbrowse" | "ucsc" | "washu" | "excel" | "google";
+// export type ThemType = keyof typeof Themes; 
+// Above line leads to `TypeError: Invalid value used as weak map key` error, due to cyclic dependency, I think.
+// Refer to https://github.com/vega/ts-json-schema-generator/issues/1727
 
 export interface ThemeDeep {
     base: ThemeType;
@@ -143,8 +142,8 @@ export interface MarkStyle {
 // TODO: Instead of calling this function everytime, create a JSON object and use it throughout the project.
 export function getTheme(theme: Theme = 'light'): Required<CompleteThemeDeep> {
     if (typeof theme === 'string') {
-        if (gt.isThereTheme(theme)) {
-            return gt.getTheme(theme);
+        if (isThereTheme(theme)) {
+            return _getTheme(theme);
         } else if (theme === 'dark' || theme === 'light') {
             return THEMES[theme];
         } else {
@@ -153,8 +152,8 @@ export function getTheme(theme: Theme = 'light'): Required<CompleteThemeDeep> {
     } else {
         // Iterate all keys to override from base
         let baseSpec = JSON.parse(JSON.stringify(THEMES['light']));
-        if (gt.isThereTheme(theme.base)) {
-            baseSpec = gt.getTheme(theme.base);
+        if (isThereTheme(theme.base)) {
+            baseSpec = _getTheme(theme.base);
         } else if (theme.base === 'light' || theme.base === 'dark') {
             baseSpec = JSON.parse(JSON.stringify(THEMES[theme.base]));
         }
@@ -184,7 +183,7 @@ const LightThemeMarkCommonStyle: Required<MarkStyle> = {
 const DarkThemeMarkCommonStyle: Required<MarkStyle> = { ...LightThemeMarkCommonStyle, stroke: 'white' };
 
 /* ----------------------------- THEME PRESETS ----------------------------- */
-export const THEMES: { [key in Themes]: Required<CompleteThemeDeep> } = {
+export const THEMES: { [k in 'light' | 'dark']: Required<CompleteThemeDeep> } = {
     light: {
         base: 'light',
 
