@@ -26,6 +26,7 @@
       "gosling.js": ["./src/index.ts"],
       "@gosling-lang/gosling-schema": ["src/gosling-schema/index.ts"],
       "@gosling-lang/higlass-schema": ["src/higlass-schema/index.ts"],
+      "@gosling-lang/gosling-theme": ["src/gosling-theme/index.ts"],
       "@gosling-lang/gosling-track": ["./src/tracks/gosling-track/index.ts"],
       "@gosling-lang/gosling-genomic-axis": ["./src/tracks/gosling-genomic-axis/index.ts"],
       "@gosling-lang/gosling-brush": ["./src/tracks/gosling-brush/index.ts"],

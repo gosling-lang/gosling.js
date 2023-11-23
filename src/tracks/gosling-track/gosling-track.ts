@@ -15,7 +15,7 @@ import { type MouseEventData, isPointInsideDonutSlice } from '../gosling-track/g
 import { BamDataFetcher, type TabularDataFetcher } from '@data-fetchers';
 import type { Tile as _Tile, TileData, TileDataBase } from '@higlass/services';
 import { LinearBrushModel } from '@gosling-lang/gosling-brush';
-import { getTheme } from 'gosling-theme';
+import { getTheme } from '@gosling-lang/gosling-theme';
 import { getTabularData } from './data-abstraction';
 
 import type { CompleteThemeDeep } from '../../core/utils/theme';

@@ -1,4 +1,4 @@
-import * as gt from 'gosling-theme';
+import * as gt from '@gosling-lang/gosling-theme';
 import { CHANNEL_DEFAULTS } from '../channel';
 
 /* ----------------------------- THEME ----------------------------- */
