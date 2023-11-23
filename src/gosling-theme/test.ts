@@ -1,15 +1,15 @@
-export const test = { 
+export const test = {
     base: 'light',
     root: {
-        background: 'white',
+        background: 'white'
     },
     axis: {
         baselineColor: 'blue',
-        tickColor: "red",
+        tickColor: 'red',
         labelColor: 'green',
         gridColor: 'yellow'
     },
     point: {
         size: 8
     }
-}
+};

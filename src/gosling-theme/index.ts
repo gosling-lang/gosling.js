@@ -24,7 +24,7 @@ export const Themes = {
     washu,
     excel,
     google
-}
+};
 
 export function isThereTheme(key: string) {
     return Object.keys(Themes).indexOf(key) !== -1;

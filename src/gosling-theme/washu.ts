@@ -1,6 +1,15 @@
-import type { ThemeDeep } from "src/core/utils/theme";
+import type { ThemeDeep } from 'src/core/utils/theme';
 
-const NOMINAL_COLOR = ['#6E12AC', '#15C250', '#E70FB1', '#FF8E55', '#A3B8F3', '#DE5E59', '#77AAAA','#F5CCCA' /*'#000000'*/];
+const NOMINAL_COLOR = [
+    '#6E12AC',
+    '#15C250',
+    '#E70FB1',
+    '#FF8E55',
+    '#A3B8F3',
+    '#DE5E59',
+    '#77AAAA',
+    '#F5CCCA' /*'#000000'*/
+];
 
 const WashUThemeMarkCommonStyle = {
     color: NOMINAL_COLOR[0],
@@ -20,26 +29,26 @@ export const washu: ThemeDeep = {
         titleColor: 'gray',
         //titleFontSize:16,
         //titleFontFamily:'',
-        titleAlign:'left',
-        titleFontWeight:'normal',
-        titleBackgroundColor:'white',
+        titleAlign: 'left',
+        titleFontWeight: 'normal',
+        titleBackgroundColor: 'white',
         subtitleColor: 'lightgray',
         //subtitleFontSize:12,
         //subtitleFontFamily:'',
-        subtitleAlign:'left',
-        subtitleFontWeight:'light',
-        subtitleBackgroundColor:'white',
+        subtitleAlign: 'left',
+        subtitleFontWeight: 'light',
+        subtitleBackgroundColor: 'white',
         showMousePosition: true,
         mousePositionColor: '#000000'
     },
 
     track: {
-        background:'white',
+        background: 'white',
         //alternatingBackground:'',
         titleColor: 'gray',
         titleBackground: 'white',
         //titleFontSize:'',
-        titleAlign:'left',
+        titleAlign: 'left',
         outline: 'gray',
         outlineWidth: 1
     },
@@ -63,10 +72,9 @@ export const washu: ThemeDeep = {
         //labelFontFamily: '',
         baselineColor: 'gray',
         gridColor: 'transparent',
-        gridStrokeWidth: 0//,
+        gridStrokeWidth: 0 //,
         //gridStrokeType: '',
         //gridStrokeDash:
-
     },
 
     markCommon: {
@@ -111,4 +119,4 @@ export const washu: ThemeDeep = {
         stroke: 'gray',
         strokeWidth: 1
     }
-}
+};

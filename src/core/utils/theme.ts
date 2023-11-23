@@ -106,7 +106,7 @@ export interface LegendStyle {
 
 export interface AxisStyle {
     tickColor?: string;
-    /** 
+    /**
      * The margin around labels for calculating visual overlaps between labels.
      * This is mainly used for determining the visibility of axis labels.
      * `0` if no margin to use. Negative values (`-1`) for showing all labels even if they overlap.

@@ -1,6 +1,6 @@
-import type { ThemeDeep } from "src/core/utils/theme";
+import type { ThemeDeep } from 'src/core/utils/theme';
 
-const NOMINAL_COLOR = ['#3A62FE', '#F85353', '#3A62FE', '#F85353','#DCA326', '#03BF06', '#BABABA'/*'#000000'*/];
+const NOMINAL_COLOR = ['#3A62FE', '#F85353', '#3A62FE', '#F85353', '#DCA326', '#03BF06', '#BABABA' /*'#000000'*/];
 
 const JBrowseThemeMarkCommonStyle = {
     color: NOMINAL_COLOR[0],
@@ -18,26 +18,26 @@ export const jbrowse: ThemeDeep = {
     root: {
         background: 'white',
         titleColor: 'white',
-        titleFontSize:20,
-        titleFontFamily:'Roboto',
-        titleAlign:'middle',
-        titleFontWeight:'normal',
-        titleBackgroundColor:'#0b243f',
+        titleFontSize: 20,
+        titleFontFamily: 'Roboto',
+        titleAlign: 'middle',
+        titleFontWeight: 'normal',
+        titleBackgroundColor: '#0b243f',
         subtitleColor: 'white',
-        subtitleFontSize:18,
-        subtitleFontFamily:'Roboto',
-        subtitleAlign:'middle',
-        subtitleFontWeight:'normal',
-        subtitleBackgroundColor:'#732162',
+        subtitleFontSize: 18,
+        subtitleFontFamily: 'Roboto',
+        subtitleAlign: 'middle',
+        subtitleFontWeight: 'normal',
+        subtitleBackgroundColor: '#732162',
         showMousePosition: true,
         mousePositionColor: '#000000'
     },
 
     track: {
-        background:'white',
-        alternatingBackground:'white',
+        background: 'white',
+        alternatingBackground: 'white',
         //titleFontSize:'',
-        titleAlign:'middle',
+        titleAlign: 'middle',
         titleColor: 'white',
         titleBackground: '#0B243F',
         outline: 'black',
@@ -45,7 +45,7 @@ export const jbrowse: ThemeDeep = {
     },
 
     legend: {
-        position:'top',
+        position: 'top',
         background: 'white',
         backgroundOpacity: 0.7,
         labelColor: '#DCA326',
@@ -64,10 +64,9 @@ export const jbrowse: ThemeDeep = {
         labelFontFamily: 'Roboto',
         baselineColor: 'black',
         gridColor: '#c5d5d9',
-        gridStrokeWidth: 1//,
+        gridStrokeWidth: 1 //,
         //gridStrokeType: '',
-        //gridStrokeDash: 
-
+        //gridStrokeDash:
     },
 
     markCommon: {
@@ -112,4 +111,4 @@ export const jbrowse: ThemeDeep = {
         stroke: 'black',
         strokeWidth: 1
     }
-}
+};

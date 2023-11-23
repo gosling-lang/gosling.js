@@ -1,6 +1,6 @@
-import type { ThemeDeep } from "src/core/utils/theme";
+import type { ThemeDeep } from 'src/core/utils/theme';
 
-const NOMINAL_COLOR = ['#37E649','#ED2D44','#AEAFEA','#EBAEAE','#CE7B3D','#8743E0','#5233F0'];
+const NOMINAL_COLOR = ['#37E649', '#ED2D44', '#AEAFEA', '#EBAEAE', '#CE7B3D', '#8743E0', '#5233F0'];
 
 const IGVThemeMarkCommonStyle = {
     color: NOMINAL_COLOR[0],
@@ -20,22 +20,22 @@ export const igv: ThemeDeep = {
         titleColor: 'white',
         //titleFontSize:'',
         //titleFontFamily:'',
-        titleAlign:'left',
-        titleFontWeight:'bold',
-        titleBackgroundColor:'#5f5f5f',
+        titleAlign: 'left',
+        titleFontWeight: 'bold',
+        titleBackgroundColor: '#5f5f5f',
         subtitleColor: '#3b3b3b',
         //subtitleFontSize:'',
         //subtitleFontFamily:'',
-        subtitleAlign:'left',
-        subtitleFontWeight:'bold',
-        subtitleBackgroundColor:'#c4c4c4',
+        subtitleAlign: 'left',
+        subtitleFontWeight: 'bold',
+        subtitleBackgroundColor: '#c4c4c4',
         showMousePosition: true,
         mousePositionColor: 'black'
     },
 
     track: {
-        background:'white',
-        alternatingBackground:'#e8e8e8',
+        background: 'white',
+        alternatingBackground: '#e8e8e8',
         titleColor: 'white',
         titleBackground: '#5F5F5F',
         //titleFontSize:'',
@@ -45,7 +45,7 @@ export const igv: ThemeDeep = {
     },
 
     legend: {
-        position:'top',
+        position: 'top',
         background: 'white',
         backgroundOpacity: 1,
         labelColor: 'black',
@@ -65,10 +65,9 @@ export const igv: ThemeDeep = {
         //baselineColor: '#E6E6E6',
         baselineColor: 'white',
         gridColor: 'transparent',
-        gridStrokeWidth: 0,
+        gridStrokeWidth: 0
         //gridStrokeType: '',
-        //gridStrokeDash: 
-
+        //gridStrokeDash:
     },
 
     markCommon: {
@@ -113,4 +112,4 @@ export const igv: ThemeDeep = {
         stroke: 'black',
         strokeWidth: 1
     }
-}
+};

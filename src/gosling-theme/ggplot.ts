@@ -1,6 +1,6 @@
-import type { ThemeDeep } from "src/core/utils/theme";
+import type { ThemeDeep } from 'src/core/utils/theme';
 
-const NOMINAL_COLOR = ['#F66A62','#05B230','#5692FF','#D764D6','#86E9D4','#6E6AD7','#FFFB00'];
+const NOMINAL_COLOR = ['#F66A62', '#05B230', '#5692FF', '#D764D6', '#86E9D4', '#6E6AD7', '#FFFB00'];
 
 const GgplotThemeMarkCommonStyle = {
     color: NOMINAL_COLOR[0],
@@ -19,23 +19,23 @@ export const ggplot: ThemeDeep = {
         background: 'white',
         titleColor: 'black',
         titleFontSize: 18,
-        titleFontFamily:'Helvetica',
-        titleAlign:'middle',
-        titleFontWeight:'bold',
-        titleBackgroundColor:'white',
+        titleFontFamily: 'Helvetica',
+        titleAlign: 'middle',
+        titleFontWeight: 'bold',
+        titleBackgroundColor: 'white',
         subtitleColor: 'gray',
-        subtitleFontSize:14,
-        subtitleFontFamily:'Helvetica',
-        subtitleAlign:'middle',
-        subtitleFontWeight:'light',
-        subtitleBackgroundColor:'white',
+        subtitleFontSize: 14,
+        subtitleFontFamily: 'Helvetica',
+        subtitleAlign: 'middle',
+        subtitleFontWeight: 'light',
+        subtitleBackgroundColor: 'white',
         showMousePosition: true,
         mousePositionColor: 'black'
     },
 
     track: {
-        background:'#e8e8e8',
-        alternatingBackground:'#d1d1d1',
+        background: '#e8e8e8',
+        alternatingBackground: '#d1d1d1',
         titleColor: 'black',
         titleBackground: 'white',
         //titleFontSize:'',
@@ -45,16 +45,15 @@ export const ggplot: ThemeDeep = {
     },
 
     legend: {
-        position:'right',
+        position: 'right',
         background: '#e8e8e8',
         backgroundOpacity: 1,
         labelColor: 'black',
         backgroundStroke: '#e8e8e8',
-        tickColor: 'white',
+        tickColor: 'white'
         //,labelFontSize: '',
         //labelFontWeight: '',
         //labelFontFamily: ''
-
     },
 
     axis: {
@@ -67,8 +66,7 @@ export const ggplot: ThemeDeep = {
         gridColor: 'white',
         gridStrokeWidth: 2
         //,gridStrokeType: '',
-        //gridStrokeDash: 
-
+        //gridStrokeDash:
     },
 
     markCommon: {
@@ -113,4 +111,4 @@ export const ggplot: ThemeDeep = {
         stroke: 'black',
         strokeWidth: 1
     }
-}
+};

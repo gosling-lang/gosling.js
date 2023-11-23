@@ -1,6 +1,16 @@
-import type { ThemeDeep } from "src/core/utils/theme";
+import type { ThemeDeep } from 'src/core/utils/theme';
 
-const NOMINAL_COLOR = ['#CD9B1D', '#8A668B', '#40E0D0', '#FF6969', '#666666', '#FAC902','#FE0000','#CC96CD', '#D9D9D9' /*'#000000'*/];
+const NOMINAL_COLOR = [
+    '#CD9B1D',
+    '#8A668B',
+    '#40E0D0',
+    '#FF6969',
+    '#666666',
+    '#FAC902',
+    '#FE0000',
+    '#CC96CD',
+    '#D9D9D9' /*'#000000'*/
+];
 
 const EnsemblThemeMarkCommonStyle = {
     color: NOMINAL_COLOR[0],
@@ -18,27 +28,27 @@ export const ensembl: ThemeDeep = {
     root: {
         background: 'white',
         titleColor: '#494949',
-        titleFontSize:24,
-        titleFontFamily:'GGX88',
-        titleAlign:'left',
-        titleFontWeight:'bold',
-        titleBackgroundColor:'white',
+        titleFontSize: 24,
+        titleFontFamily: 'GGX88',
+        titleAlign: 'left',
+        titleFontWeight: 'bold',
+        titleBackgroundColor: 'white',
         subtitleColor: 'white',
-        subtitleFontSize:19,
-        subtitleFontFamily:'GGX88',
-        subtitleAlign:'left',
-        subtitleFontWeight:'normal',
-        subtitleBackgroundColor:'#7B8BAF',
+        subtitleFontSize: 19,
+        subtitleFontFamily: 'GGX88',
+        subtitleAlign: 'left',
+        subtitleFontWeight: 'normal',
+        subtitleBackgroundColor: '#7B8BAF',
         mousePositionColor: '#FE0000',
         showMousePosition: true
     },
 
     track: {
-        background:'white',
-        alternatingBackground:'#fffdf7',
+        background: 'white',
+        alternatingBackground: '#fffdf7',
         titleColor: 'black',
         titleBackground: 'white',
-        titleAlign:'left',
+        titleAlign: 'left',
         outline: '#7B8BAF',
         outlineWidth: 2
     },
@@ -52,7 +62,6 @@ export const ensembl: ThemeDeep = {
         background: 'white',
         backgroundOpacity: 2,
         backgroundStroke: 'lightgray'
-        
     },
 
     axis: {
@@ -63,9 +72,9 @@ export const ensembl: ThemeDeep = {
         labelFontFamily: 'GGX88',
         baselineColor: 'black',
         gridColor: '#7B8BAF',
-        gridStrokeWidth: 2,
+        gridStrokeWidth: 2
         //gridStrokeType: '',
-        //gridStrokeDash: 
+        //gridStrokeDash:
     },
 
     markCommon: {
@@ -173,4 +182,4 @@ export const ensembl: ThemeDeep = {
         stroke: 'black',
         strokeWidth: 1
     }
-}
+};

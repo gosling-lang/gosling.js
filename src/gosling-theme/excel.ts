@@ -1,6 +1,17 @@
-import type { ThemeDeep } from "src/core/utils/theme";
+import type { ThemeDeep } from 'src/core/utils/theme';
 
-const NOMINAL_COLOR = ['#ED7D31', '#4472C4', '#FFC207', '#76AE4F', '#9E480E', '#A5A5A5', '#4472C4', '#264378', '#76AE4F','#5B9CD5' /*'#000000'*/];
+const NOMINAL_COLOR = [
+    '#ED7D31',
+    '#4472C4',
+    '#FFC207',
+    '#76AE4F',
+    '#9E480E',
+    '#A5A5A5',
+    '#4472C4',
+    '#264378',
+    '#76AE4F',
+    '#5B9CD5' /*'#000000'*/
+];
 
 const ExcelThemeMarkCommonStyle = {
     color: NOMINAL_COLOR[0],
@@ -18,24 +29,24 @@ export const excel: ThemeDeep = {
     root: {
         background: 'white',
         titleColor: '#5A5A5A',
-        titleFontSize:30,
-        titleFontFamily:'Calibri',
-        titleAlign:'middle',
-        titleFontWeight:'bold',
-        titleBackgroundColor:'white',
+        titleFontSize: 30,
+        titleFontFamily: 'Calibri',
+        titleAlign: 'middle',
+        titleFontWeight: 'bold',
+        titleBackgroundColor: 'white',
         subtitleColor: '#5A5A5A',
-        subtitleFontSize:22,
-        subtitleFontFamily:'Calibri',
-        subtitleAlign:'middle',
-        subtitleFontWeight:'bold',
-        subtitleBackgroundColor:'white',
+        subtitleFontSize: 22,
+        subtitleFontFamily: 'Calibri',
+        subtitleAlign: 'middle',
+        subtitleFontWeight: 'bold',
+        subtitleBackgroundColor: 'white',
         showMousePosition: true,
         mousePositionColor: '#000000'
     },
 
     track: {
-        background:'white',
-        alternatingBackground:'#f5f5f5',
+        background: 'white',
+        alternatingBackground: '#f5f5f5',
         titleColor: '#5A5A5A',
         titleBackground: 'white',
         //titleFontSize:'',
@@ -45,7 +56,7 @@ export const excel: ThemeDeep = {
     },
 
     legend: {
-        position:'right',
+        position: 'right',
         tickColor: '#5A5A5A',
         labelColor: '#5A5A5A',
         labelFontSize: 12,
@@ -53,8 +64,7 @@ export const excel: ThemeDeep = {
         labelFontFamily: 'Calibri',
         background: 'white',
         backgroundOpacity: 0.7,
-        backgroundStroke: '#5A5A5A',
-        
+        backgroundStroke: '#5A5A5A'
     },
 
     axis: {
@@ -65,10 +75,9 @@ export const excel: ThemeDeep = {
         labelFontFamily: 'Calibri',
         baselineColor: '#5A5A5A',
         gridColor: '#5A5A5A',
-        gridStrokeWidth: 1,
+        gridStrokeWidth: 1
         //gridStrokeType: '',
-        //gridStrokeDash: 
-
+        //gridStrokeDash:
     },
 
     markCommon: {
@@ -113,4 +122,4 @@ export const excel: ThemeDeep = {
         stroke: '#5A5A5A',
         strokeWidth: 1
     }
-}
+};

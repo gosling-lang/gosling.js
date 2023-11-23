@@ -1,4 +1,4 @@
-import type { ThemeDeep } from "src/core/utils/theme";
+import type { ThemeDeep } from 'src/core/utils/theme';
 
 const NOMINAL_COLOR = ['#E79F00', '#029F73', '#0072B2', '#CB7AA7', '#D45E00', '#57B4E9', '#EFE441' /*'#000000'*/];
 
@@ -111,4 +111,4 @@ export const light: ThemeDeep = {
         stroke: 'black',
         strokeWidth: 1
     }
-}
+};

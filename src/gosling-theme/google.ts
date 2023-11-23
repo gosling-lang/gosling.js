@@ -1,4 +1,4 @@
-import type { ThemeDeep } from "src/core/utils/theme";
+import type { ThemeDeep } from 'src/core/utils/theme';
 
 const NOMINAL_COLOR = ['#4185f4', '#DB4437', '#F4B400', '#0D9D58', '#AA30C3', '#FF6E02', '#CBC74C' /*'#000000'*/];
 
@@ -19,33 +19,33 @@ export const google: ThemeDeep = {
         background: 'white',
         titleColor: '#454545',
         titleFontSize: 20,
-        titleFontFamily:'Arial',
-        titleAlign:'left',
-        titleFontWeight:'normal',
-        titleBackgroundColor:'white',
+        titleFontFamily: 'Arial',
+        titleAlign: 'left',
+        titleFontWeight: 'normal',
+        titleBackgroundColor: 'white',
         subtitleColor: '#7d7d7d',
         subtitleFontSize: 16,
-        subtitleFontFamily:'Arial',
-        subtitleAlign:'left',
-        subtitleFontWeight:'light',
-        subtitleBackgroundColor:'white',
+        subtitleFontFamily: 'Arial',
+        subtitleAlign: 'left',
+        subtitleFontWeight: 'light',
+        subtitleBackgroundColor: 'white',
         showMousePosition: true,
         mousePositionColor: '#000000'
     },
 
     track: {
-        background:'white',
-        alternatingBackground:'#f5f5f5',
+        background: 'white',
+        alternatingBackground: '#f5f5f5',
         titleColor: '#e8e8e8',
         titleBackground: 'white',
-        titleFontSize:12,
-        titleAlign:'left',
+        titleFontSize: 12,
+        titleAlign: 'left',
         outline: 'black',
         outlineWidth: 1
     },
 
     legend: {
-        position:'right',
+        position: 'right',
         background: 'white',
         backgroundOpacity: 1,
         labelColor: 'black',
@@ -64,10 +64,9 @@ export const google: ThemeDeep = {
         labelColor: 'black',
         baselineColor: 'black',
         gridColor: 'black',
-        gridStrokeWidth: 1//,
+        gridStrokeWidth: 1 //,
         //gridStrokeType: '',
         //gridStrokeDash:
-
     },
 
     markCommon: {
@@ -112,4 +111,4 @@ export const google: ThemeDeep = {
         stroke: 'black',
         strokeWidth: 0.7
     }
-}
+};

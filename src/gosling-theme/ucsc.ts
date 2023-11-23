@@ -1,6 +1,20 @@
-import type { ThemeDeep } from "src/core/utils/theme";
+import type { ThemeDeep } from 'src/core/utils/theme';
 
-const NOMINAL_COLOR = ['#3A5FCD', '#FFA54E', '#8FBC8F', '#B6709B', '#EE6A50', '#CCB79E', '#DADA8F','#00CDCC','#EED5D2','#CD8EDD','#9ACD31','#D1BEA8','#FFB6C0' /*'#000000'*/];
+const NOMINAL_COLOR = [
+    '#3A5FCD',
+    '#FFA54E',
+    '#8FBC8F',
+    '#B6709B',
+    '#EE6A50',
+    '#CCB79E',
+    '#DADA8F',
+    '#00CDCC',
+    '#EED5D2',
+    '#CD8EDD',
+    '#9ACD31',
+    '#D1BEA8',
+    '#FFB6C0' /*'#000000'*/
+];
 
 const UCSCThemeMarkCommonStyle = {
     color: NOMINAL_COLOR[0],
@@ -18,24 +32,24 @@ export const ucsc: ThemeDeep = {
     root: {
         background: 'white',
         titleColor: 'white',
-        titleFontSize:22,
+        titleFontSize: 22,
         //titleFontFamily:'',
-        titleAlign:'middle',
-        titleFontWeight:'bold',
-        titleBackgroundColor:'#00457c',
+        titleAlign: 'middle',
+        titleFontWeight: 'bold',
+        titleBackgroundColor: '#00457c',
         subtitleColor: 'black',
         //subtitleFontSize:'',
         //subtitleFontFamily:'',
-        subtitleAlign:'middle',
-        subtitleFontWeight:'bold',
-        subtitleBackgroundColor:'white',
+        subtitleAlign: 'middle',
+        subtitleFontWeight: 'bold',
+        subtitleBackgroundColor: 'white',
         showMousePosition: true,
         mousePositionColor: '#FE0000'
     },
 
     track: {
-        background:'white',
-        alternatingBackground:'#e3f7fc',
+        background: 'white',
+        alternatingBackground: '#e3f7fc',
         titleColor: '#3A5FCD',
         titleBackground: 'white',
         //titleFontSize:'',
@@ -45,7 +59,7 @@ export const ucsc: ThemeDeep = {
     },
 
     legend: {
-        position:'top',
+        position: 'top',
         background: 'white',
         backgroundOpacity: 0.7,
         labelColor: 'black',
@@ -64,10 +78,9 @@ export const ucsc: ThemeDeep = {
         //labelFontFamily: '',
         baselineColor: 'black',
         gridColor: '#E3E3E3',
-        gridStrokeWidth: 1//,
+        gridStrokeWidth: 1 //,
         //gridStrokeType: '',
         //gridStrokeDash:
-
     },
 
     markCommon: {
@@ -112,4 +125,4 @@ export const ucsc: ThemeDeep = {
         stroke: 'black',
         strokeWidth: 1
     }
-}
+};
