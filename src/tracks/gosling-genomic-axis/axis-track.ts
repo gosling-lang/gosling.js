@@ -27,6 +27,8 @@ type AxisTrackOptions = {
     width: number;
     height: number;
     layout: 'linear' | 'circular';
+    labelMargin: number;
+    excludeChrPrefix: boolean;
     labelPosition: string;
     labelColor: string;
     labelTextOpacity: number;
@@ -77,6 +79,8 @@ const config: TrackConfig<AxisTrackOptions> = {
         width: 700,
         height: 700,
         layout: 'linear',
+        labelMargin: 5,
+        excludeChrPrefix: false,
         labelPosition: 'none',
         labelColor: 'black',
         labelTextOpacity: 0.4,
@@ -263,7 +267,8 @@ const factory: PluginTrackFactory<never, AxisTrackOptions> = (HGC, context, opti
                 if (!this.tickTexts[chromName]) this.tickTexts[chromName] = [];
 
                 // Give each PIXI text object a random hash so that some get hidden when there's overlaps
-                const text = createTickText(chromName, this.pixiTextConfig);
+                const chromNameText = this.options.excludeChrPrefix ? chromName.replace('chr', '') : chromName;
+                const text = createTickText(chromNameText, this.pixiTextConfig);
 
                 this.pTicks?.addChild(text);
                 this.pTicks?.addChild(this.gTicks[chromName]);
@@ -673,14 +678,14 @@ const factory: PluginTrackFactory<never, AxisTrackOptions> = (HGC, context, opti
                 .forEach(({ text, rope }: any) => {
                     text.updateTransform();
                     const b = text.getBounds();
-                    const m = 5;
+                    const m = this.options.labelMargin;
                     const boxWithMargin = {
                         minX: b.x - m,
                         minY: b.y - m,
                         maxX: b.x + b.width + m * 2,
                         maxY: b.y + b.height + m * 2
                     };
-                    if (!tree.collides(boxWithMargin)) {
+                    if (m < 0 || !tree.collides(boxWithMargin)) {
                         // if not overlapping, add a new boundingbox
                         tree.insert(boxWithMargin);
                     } else {

@@ -332,6 +332,8 @@ export class HiGlassModel {
                 assembly: this.getAssembly(),
                 stroke: 'transparent', // text outline
                 color: options.theme.axis.labelColor,
+                labelMargin: options.theme.axis.labelMargin,
+                excludeChrPrefix: options.theme.axis.labelExcludeChrPrefix,
                 fontSize: options.theme.axis.labelFontSize,
                 fontFamily: options.theme.axis.labelFontFamily,
                 fontWeight: options.theme.axis.labelFontWeight,

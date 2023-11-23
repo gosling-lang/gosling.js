@@ -106,6 +106,16 @@ export interface LegendStyle {
 
 export interface AxisStyle {
     tickColor?: string;
+    /** 
+     * The margin around labels for calculating visual overlaps between labels.
+     * This is mainly used for determining the visibility of axis labels.
+     * `0` if no margin to use. Negative values (`-1`) for showing all labels even if they overlap.
+     */
+    labelMargin?: number;
+    /**
+     * If `true`, labels of genomics axes excludes the chromosome prefix (e.g., `chr1` -> `1`).
+     */
+    labelExcludeChrPrefix?: boolean;
     labelColor?: string;
     labelFontSize?: number;
     labelFontWeight?: 'bold' | 'normal' | 'light';
@@ -221,6 +231,8 @@ export const THEMES: { [key in Themes]: Required<CompleteThemeDeep> } = {
 
         axis: {
             tickColor: 'black',
+            labelMargin: 5,
+            labelExcludeChrPrefix: false,
             labelColor: 'black',
             labelFontSize: 12,
             labelFontWeight: 'normal',
@@ -321,6 +333,8 @@ export const THEMES: { [key in Themes]: Required<CompleteThemeDeep> } = {
 
         axis: {
             tickColor: 'white',
+            labelMargin: 5,
+            labelExcludeChrPrefix: false,
             labelColor: 'white',
             labelFontSize: 10,
             labelFontWeight: 'normal',

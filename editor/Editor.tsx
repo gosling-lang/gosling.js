@@ -237,7 +237,7 @@ function Editor(props: RouteComponentProps) {
         examples[urlExampleId] ? { id: urlExampleId, ...examples[urlExampleId] } : INIT_DEMO
     );
     const [isImportDemo, setIsImportDemo] = useState<boolean>(false);
-    const [theme, setTheme] = useState<gosling.Theme>('light');
+    const [theme, setTheme] = useState<gosling.Theme>('light'); // or `{ base: 'light', axis: { labelMargin: -1 } }`
     const [hg, setHg] = useState<HiGlassSpec>();
     const [code, setCode] = useState(defaultCode);
     const [jsCode, setJsCode] = useState(defaultJsCode); //[TO-DO: more js format examples]
