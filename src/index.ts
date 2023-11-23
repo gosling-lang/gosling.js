@@ -14,12 +14,12 @@ export { GoslingComponent } from './core/gosling-component';
 export type { GoslingRef } from './core/gosling-component';
 export { embed } from './core/gosling-embed';
 
-import { 
+import {
     getRelativeGenomicPosition,
     computeChromSizes,
     getChromInterval,
     getChromTotalSize,
-    parseGenomicPosition,
+    parseGenomicPosition
 } from './core/utils/assembly';
 import { sanitizeChrName } from './data-fetchers/utils';
 const utils = {
