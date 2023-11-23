@@ -1,3 +1,5 @@
+import type { ThemeDeep } from "src/core/utils/theme";
+
 const NOMINAL_COLOR = ['#F66A62','#05B230','#5692FF','#D764D6','#86E9D4','#6E6AD7','#FFFB00'];
 
 const GgplotThemeMarkCommonStyle = {
@@ -7,10 +9,10 @@ const GgplotThemeMarkCommonStyle = {
     strokeWidth: 0,
     opacity: 1,
     nominalColorRange: NOMINAL_COLOR,
-    quantitativeSizeRange: [2, 6]
+    quantitativeSizeRange: [2, 6] as [number, number]
 };
 
-export const ggplot = {
+export const ggplot: ThemeDeep = {
     base: 'ggplot',
 
     root: {

@@ -1,3 +1,5 @@
+import type { ThemeDeep } from "src/core/utils/theme";
+
 const NOMINAL_COLOR = ['#6E12AC', '#15C250', '#E70FB1', '#FF8E55', '#A3B8F3', '#DE5E59', '#77AAAA','#F5CCCA' /*'#000000'*/];
 
 const WashUThemeMarkCommonStyle = {
@@ -7,10 +9,10 @@ const WashUThemeMarkCommonStyle = {
     strokeWidth: 0,
     opacity: 1,
     nominalColorRange: NOMINAL_COLOR,
-    quantitativeSizeRange: [2, 6]
+    quantitativeSizeRange: [2, 6] as [number, number]
 };
 
-export const washu = {
+export const washu: ThemeDeep = {
     base: 'washu',
 
     root: {
@@ -43,7 +45,6 @@ export const washu = {
     },
 
     legend: {
-        position:'left',
         background: 'white',
         backgroundOpacity: 0.5,
         labelColor: 'gray',

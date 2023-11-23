@@ -1,3 +1,5 @@
+import type { ThemeDeep } from "src/core/utils/theme";
+
 const NOMINAL_COLOR = ['#ED7D31', '#4472C4', '#FFC207', '#76AE4F', '#9E480E', '#A5A5A5', '#4472C4', '#264378', '#76AE4F','#5B9CD5' /*'#000000'*/];
 
 const ExcelThemeMarkCommonStyle = {
@@ -7,10 +9,10 @@ const ExcelThemeMarkCommonStyle = {
     strokeWidth: 0,
     opacity: 1,
     nominalColorRange: NOMINAL_COLOR,
-    quantitativeSizeRange: [2, 6]
+    quantitativeSizeRange: [2, 6] as [number, number]
 };
 
-export const excel = {
+export const excel: ThemeDeep = {
     base: 'excel',
 
     root: {

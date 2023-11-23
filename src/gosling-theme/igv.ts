@@ -1,3 +1,5 @@
+import type { ThemeDeep } from "src/core/utils/theme";
+
 const NOMINAL_COLOR = ['#37E649','#ED2D44','#AEAFEA','#EBAEAE','#CE7B3D','#8743E0','#5233F0'];
 
 const IGVThemeMarkCommonStyle = {
@@ -7,10 +9,10 @@ const IGVThemeMarkCommonStyle = {
     strokeWidth: 0,
     opacity: 1,
     nominalColorRange: NOMINAL_COLOR,
-    quantitativeSizeRange: [2, 6]
+    quantitativeSizeRange: [2, 6] as [number, number]
 };
 
-export const igv = {
+export const igv: ThemeDeep = {
     base: 'igv',
 
     root: {

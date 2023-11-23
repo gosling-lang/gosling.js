@@ -1,3 +1,5 @@
+import type { ThemeDeep } from "src/core/utils/theme";
+
 const NOMINAL_COLOR = ['#D19000', '#008F67', '#005F96', '#B86E97', '#B55100', '#4793BF', '#C9C03'];
 
 const WarmThemeMarkCommonStyle = {
@@ -7,10 +9,10 @@ const WarmThemeMarkCommonStyle = {
     strokeWidth: 0,
     opacity: 1,
     nominalColorRange: NOMINAL_COLOR,
-    quantitativeSizeRange: [2, 6]
+    quantitativeSizeRange: [2, 6] as [number, number]
 };
 
-export const warm = {
+export const warm: ThemeDeep = {
     base: 'warm',
 
     root: {

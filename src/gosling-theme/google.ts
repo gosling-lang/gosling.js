@@ -1,3 +1,5 @@
+import type { ThemeDeep } from "src/core/utils/theme";
+
 const NOMINAL_COLOR = ['#4185f4', '#DB4437', '#F4B400', '#0D9D58', '#AA30C3', '#FF6E02', '#CBC74C' /*'#000000'*/];
 
 const GoogleThemeMarkCommonStyle = {
@@ -7,10 +9,10 @@ const GoogleThemeMarkCommonStyle = {
     strokeWidth: 0.3,
     opacity: 1,
     nominalColorRange: NOMINAL_COLOR,
-    quantitativeSizeRange: [2, 6]
+    quantitativeSizeRange: [2, 6] as [number, number]
 };
 
-export const google = {
+export const google: ThemeDeep = {
     base: 'google',
 
     root: {

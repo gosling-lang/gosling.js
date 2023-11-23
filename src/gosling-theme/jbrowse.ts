@@ -1,3 +1,5 @@
+import type { ThemeDeep } from "src/core/utils/theme";
+
 const NOMINAL_COLOR = ['#3A62FE', '#F85353', '#3A62FE', '#F85353','#DCA326', '#03BF06', '#BABABA'/*'#000000'*/];
 
 const JBrowseThemeMarkCommonStyle = {
@@ -7,10 +9,10 @@ const JBrowseThemeMarkCommonStyle = {
     strokeWidth: 0,
     opacity: 1,
     nominalColorRange: NOMINAL_COLOR,
-    quantitativeSizeRange: [2, 6]
+    quantitativeSizeRange: [2, 6] as [number, number]
 };
 
-export const jbrowse = {
+export const jbrowse: ThemeDeep = {
     base: 'jbrowse',
 
     root: {

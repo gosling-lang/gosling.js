@@ -1,3 +1,5 @@
+import type { ThemeDeep } from "src/core/utils/theme";
+
 const NOMINAL_COLOR = ['#CD9B1D', '#8A668B', '#40E0D0', '#FF6969', '#666666', '#FAC902','#FE0000','#CC96CD', '#D9D9D9' /*'#000000'*/];
 
 const EnsemblThemeMarkCommonStyle = {
@@ -7,10 +9,10 @@ const EnsemblThemeMarkCommonStyle = {
     strokeWidth: 0,
     opacity: 1,
     nominalColorRange: NOMINAL_COLOR,
-    quantitativeSizeRange: [2, 6]
+    quantitativeSizeRange: [2, 6] as [number, number]
 };
 
-export const ensembl = {
+export const ensembl: ThemeDeep = {
     base: 'ensembl',
 
     root: {
@@ -36,14 +38,12 @@ export const ensembl = {
         alternatingBackground:'#fffdf7',
         titleColor: 'black',
         titleBackground: 'white',
-        titleFontSize:'normal',
         titleAlign:'left',
         outline: '#7B8BAF',
         outlineWidth: 2
     },
 
     legend: {
-        position:'middle',
         tickColor: 'black',
         labelColor: 'black',
         //labelFontSize: ,

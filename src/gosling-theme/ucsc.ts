@@ -1,3 +1,5 @@
+import type { ThemeDeep } from "src/core/utils/theme";
+
 const NOMINAL_COLOR = ['#3A5FCD', '#FFA54E', '#8FBC8F', '#B6709B', '#EE6A50', '#CCB79E', '#DADA8F','#00CDCC','#EED5D2','#CD8EDD','#9ACD31','#D1BEA8','#FFB6C0' /*'#000000'*/];
 
 const UCSCThemeMarkCommonStyle = {
@@ -7,10 +9,10 @@ const UCSCThemeMarkCommonStyle = {
     strokeWidth: 0,
     opacity: 1,
     nominalColorRange: NOMINAL_COLOR,
-    quantitativeSizeRange: [2, 6]
+    quantitativeSizeRange: [2, 6] as [number, number]
 };
 
-export const ucsc = {
+export const ucsc: ThemeDeep = {
     base: 'ucsc',
 
     root: {

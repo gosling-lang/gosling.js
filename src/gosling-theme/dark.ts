@@ -1,3 +1,5 @@
+import type { ThemeDeep } from "src/core/utils/theme";
+
 const NOMINAL_COLOR = ['#E79F00', '#029F73', '#0072B2', '#CB7AA7', '#D45E00', '#57B4E9', '#EFE441' /*'#000000'*/];
 
 const LightThemeMarkCommonStyle = {
@@ -7,12 +9,12 @@ const LightThemeMarkCommonStyle = {
     strokeWidth: 0,
     opacity: 1,
     nominalColorRange: NOMINAL_COLOR,
-    quantitativeSizeRange: [2, 6]
+    quantitativeSizeRange: [2, 6] as [number, number]
 };
 
 const DarkThemeMarkCommonStyle = { ...LightThemeMarkCommonStyle, stroke: 'white' };
 
-export const dark = {
+export const dark: ThemeDeep = {
     base: 'dark',
 
     root: {
