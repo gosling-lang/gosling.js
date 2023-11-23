@@ -38,7 +38,7 @@ export const light: ThemeDeep = {
         alternatingBackground: 'transparent',
         titleColor: 'black',
         titleBackground: 'white',
-        titleFontSize: 12,
+        titleFontSize: 24,
         titleAlign: 'left',
         outline: 'black',
         outlineWidth: 1
@@ -59,6 +59,8 @@ export const light: ThemeDeep = {
     axis: {
         tickColor: 'black',
         labelColor: 'black',
+        labelMargin: 5,
+        labelExcludeChrPrefix: false,
         labelFontSize: 12,
         labelFontWeight: 'normal',
         labelFontFamily: 'Arial',
