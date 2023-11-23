@@ -13,3 +13,21 @@ export { validateGoslingSpec } from '@gosling-lang/gosling-schema';
 export { GoslingComponent } from './core/gosling-component';
 export type { GoslingRef } from './core/gosling-component';
 export { embed } from './core/gosling-embed';
+
+import { 
+    getRelativeGenomicPosition,
+    computeChromSizes,
+    getChromInterval,
+    getChromTotalSize,
+    parseGenomicPosition,
+} from './core/utils/assembly';
+import { sanitizeChrName } from './data-fetchers/utils';
+const utils = {
+    getRelativeGenomicPosition,
+    computeChromSizes,
+    getChromInterval,
+    getChromTotalSize,
+    parseGenomicPosition,
+    sanitizeChrName
+};
+export { utils };
