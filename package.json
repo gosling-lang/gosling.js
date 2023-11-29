@@ -19,6 +19,10 @@
         ".": {
             "types": "./dist/src/index.d.ts",
             "import": "./dist/gosling.js"
+        },
+        "./utils": {
+            "types": "./dist/src/exported-utils.d.ts",
+            "import": "./dist/utils.js"
         }
     },
     "scripts": {
