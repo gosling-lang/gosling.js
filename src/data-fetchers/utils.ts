@@ -4,6 +4,8 @@ import { RemoteFile as _RemoteFile } from 'generic-filehandle';
 import type * as HiGlass from '@higlass/types';
 import type { Assembly, ChromSizes, Datum } from '@gosling-lang/gosling-schema';
 
+export { sanitizeChrName } from './exported-utils';
+
 export type CommonDataConfig = {
     assembly: Assembly;
     x?: string;
@@ -86,30 +88,6 @@ const absToChr = (absPosition: number, chromInfo: HiGlass.ChromInfo) => {
 
     return [chromInfo.cumPositions[insertPoint].chr, chrPosition, offset, insertPoint] as const;
 };
-
-/**
- * Get a chromosome name for the consistentcy, e.g., `1` --> `chr1`.
- * @param chrName A chromosome name to be sanitized
- * @param assembly A genome assembly of the data
- * @param chromosomePrefix A prefix string that can be replaced to 'chr'
- * @returns
- */
-export function sanitizeChrName(chrName: string, assembly: Assembly, chromosomePrefix?: string) {
-    if (Array.isArray(assembly)) {
-        // this is a custom assembly, so use this as is
-        return chrName;
-    }
-
-    // For assemblies in Gosling, we use the `chr` prefix consistently
-    if (chromosomePrefix) {
-        // `hs1` --> `chr1`
-        chrName = chrName.replace(chromosomePrefix, 'chr');
-    } else if (!chrName.includes('chr')) {
-        // `1` --> `chr1`
-        chrName = `chr${chrName}`;
-    }
-    return chrName;
-}
 
 export type ExtendedChromInfo = HiGlass.ChromInfo & {
     absToChr(absPos: number): ReturnType<typeof absToChr> | null;

@@ -19,15 +19,20 @@
         ".": {
             "types": "./dist/src/index.d.ts",
             "import": "./dist/gosling.js"
+        },
+        "./utils": {
+            "types": "./dist/src/exported-utils.d.ts",
+            "import": "./dist/exported-utils.js"
         }
     },
     "scripts": {
         "start": "vite --mode editor",
         "start-embed": "vite",
         "build": "run-s build-clear build-types build-lib",
-        "build-lib": "vite build --mode lib",
+        "build-lib": "vite build --mode lib && npm run build-utils",
         "build-types": "tsc --emitDeclarationOnly -p tsconfig.build.json",
         "build-editor": "node --max_old_space_size=8192 ./node_modules/vite/bin/vite.js build",
+        "build-utils": "esbuild --bundle --format=esm --outfile=dist/exported-utils.js ./src/exported-utils.ts",
         "build-clear": "rm -rf ./dist",
         "preview": "vite preview",
         "check": "tsc --noEmit",
