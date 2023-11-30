@@ -90,9 +90,11 @@ const esm = defineConfig({
         target: 'es2018',
         sourcemap: true,
         lib: {
-            entry: path.resolve(__dirname, 'src/index.ts'),
+            entry: {
+                gosling: path.resolve(__dirname, 'src/index.ts'),
+                utils: path.resolve(__dirname, 'src/exported-utils.ts'),
+            },
             formats: ['es'],
-            fileName: 'gosling'
         },
         rollupOptions: { external }
     },
