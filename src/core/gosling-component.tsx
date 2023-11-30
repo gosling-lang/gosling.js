@@ -23,9 +23,15 @@ const DELAY_FOR_CONTAINER_RESIZE_BEFORE_RERENDER = 300;
 export interface UrlToFetchOptions {
     [url: string]: RequestInit;
 }
+type CompiledCallbackFn = (
+    goslingSpec: gosling.GoslingSpec,
+    higlassSpec: gosling.HiGlassSpec,
+    _additionalData: { _processedSpec: gosling.GoslingSpec }
+) => void
+
 interface GoslingCompProps {
     spec?: gosling.GoslingSpec;
-    compiled?: (goslingSpec: gosling.GoslingSpec, higlassSpec: gosling.HiGlassSpec) => void;
+    compiled?: CompiledCallbackFn;
     padding?: number;
     margin?: number;
     border?: string;
@@ -112,7 +118,7 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
                     }
 
                     // If a callback function is provided, return compiled information.
-                    props.compiled?.(props.spec!, newHiGlassSpec);
+                    props.compiled?.(props.spec!, newHiGlassSpec, { _processedSpec: newGoslingSpec });
 
                     // Change the size of wrapper `<div/>` elements
                     setSize(newSize);
