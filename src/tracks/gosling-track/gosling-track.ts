@@ -383,7 +383,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 // because circular brush is not supported.
                 this.mRangeBrush.remove();
             }
-
+            this.getResolvedTracks(true); // force update
             this.clearMouseEventData();
             this.textsBeingUsed = 0;
 
@@ -805,8 +805,8 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
          * Creates an array of SingleTracks if there are overlaid tracks.
          * This method cannot be private because it is called by functions which are called by super.draw();
          */
-        getResolvedTracks() {
-            if (!this.resolvedTracks) {
+        getResolvedTracks(forceUpdate = false) {
+            if (forceUpdate || !this.resolvedTracks) {
                 const copy = structuredClone(this.options.spec);
                 const tracks = resolveSuperposedTracks(copy).filter(t => t.mark !== 'brush');
                 // We will never need to access the values field in the data spec. It can be quite large which can degrade performance so we remove it.
