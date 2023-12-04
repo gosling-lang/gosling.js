@@ -32,6 +32,10 @@
         "labelColor": {
           "type": "string"
         },
+        "labelExcludeChrPrefix": {
+          "description": "If `true`, labels of genomics axes excludes the chromosome prefix (e.g., `chr1` -> `1`).",
+          "type": "boolean"
+        },
         "labelFontFamily": {
           "type": "string"
         },
@@ -45,6 +49,10 @@
             "light"
           ],
           "type": "string"
+        },
+        "labelMargin": {
+          "description": "The margin around labels for calculating visual overlaps between labels. This is mainly used for determining the visibility of axis labels. `0` if no margin to use. Negative values (`-1`) for showing all labels even if they overlap.",
+          "type": "number"
         },
         "tickColor": {
           "type": "string"

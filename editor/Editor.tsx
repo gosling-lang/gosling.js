@@ -16,7 +16,7 @@ import stripJsonComments from 'strip-json-comments';
 import JSONCrush from 'jsoncrush';
 import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
 import type { Datum } from '@gosling-lang/gosling-schema';
-import { Themes } from 'gosling-theme';
+import { Themes } from '@gosling-lang/gosling-theme';
 
 import { ICONS, type ICON_INFO } from './icon';
 import { getHtmlTemplate } from './html-template';
@@ -237,7 +237,7 @@ function Editor(props: RouteComponentProps) {
         examples[urlExampleId] ? { id: urlExampleId, ...examples[urlExampleId] } : INIT_DEMO
     );
     const [isImportDemo, setIsImportDemo] = useState<boolean>(false);
-    const [theme, setTheme] = useState<gosling.Theme>('light');
+    const [theme, setTheme] = useState<gosling.Theme>('light'); // or `{ base: 'light', axis: { labelMargin: -1 } }`
     const [hg, setHg] = useState<HiGlassSpec>();
     const [code, setCode] = useState(defaultCode);
     const [jsCode, setJsCode] = useState(defaultJsCode); //[TO-DO: more js format examples]

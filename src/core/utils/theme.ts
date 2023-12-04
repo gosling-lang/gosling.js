@@ -1,13 +1,23 @@
-import * as gt from 'gosling-theme';
-import { CHANNEL_DEFAULTS } from '../channel';
+import { isThereTheme, getTheme as _getTheme } from '@gosling-lang/gosling-theme';
 
 /* ----------------------------- THEME ----------------------------- */
 export type Theme = ThemeType | ThemeDeep;
-export type ThemeType = keyof typeof gt.Themes;
-export enum Themes {
-    light = 'light',
-    dark = 'dark'
-}
+export type ThemeType =
+    | 'light'
+    | 'dark'
+    | 'warm'
+    | 'ggplot'
+    | 'igv'
+    | 'ensembl'
+    | 'jbrowse'
+    | 'ucsc'
+    | 'washu'
+    | 'excel'
+    | 'google';
+// export type ThemType = keyof typeof Themes;
+// Above line leads to `TypeError: Invalid value used as weak map key` error, due to cyclic dependency.
+// So, instead hard-coding the list as workaround
+// Refer to https://github.com/vega/ts-json-schema-generator/issues/1727
 
 export interface ThemeDeep {
     base: ThemeType;
@@ -106,6 +116,16 @@ export interface LegendStyle {
 
 export interface AxisStyle {
     tickColor?: string;
+    /**
+     * The margin around labels for calculating visual overlaps between labels.
+     * This is mainly used for determining the visibility of axis labels.
+     * `0` if no margin to use. Negative values (`-1`) for showing all labels even if they overlap.
+     */
+    labelMargin?: number;
+    /**
+     * If `true`, labels of genomics axes excludes the chromosome prefix (e.g., `chr1` -> `1`).
+     */
+    labelExcludeChrPrefix?: boolean;
     labelColor?: string;
     labelFontSize?: number;
     labelFontWeight?: 'bold' | 'normal' | 'light';
@@ -133,20 +153,16 @@ export interface MarkStyle {
 // TODO: Instead of calling this function everytime, create a JSON object and use it throughout the project.
 export function getTheme(theme: Theme = 'light'): Required<CompleteThemeDeep> {
     if (typeof theme === 'string') {
-        if (gt.isThereTheme(theme)) {
-            return gt.getTheme(theme);
-        } else if (theme === 'dark' || theme === 'light') {
-            return THEMES[theme];
+        if (isThereTheme(theme)) {
+            return _getTheme(theme);
         } else {
-            return THEMES['light'];
+            return _getTheme('light');
         }
     } else {
         // Iterate all keys to override from base
-        let baseSpec = JSON.parse(JSON.stringify(THEMES['light']));
-        if (gt.isThereTheme(theme.base)) {
-            baseSpec = gt.getTheme(theme.base);
-        } else if (theme.base === 'light' || theme.base === 'dark') {
-            baseSpec = JSON.parse(JSON.stringify(THEMES[theme.base]));
+        let baseSpec = JSON.parse(JSON.stringify(_getTheme('light')));
+        if (isThereTheme(theme.base)) {
+            baseSpec = _getTheme(theme.base);
         }
         // Override defaults from `base`
         Object.keys(baseSpec).forEach(k => {
@@ -160,219 +176,3 @@ export function getTheme(theme: Theme = 'light'): Required<CompleteThemeDeep> {
         return baseSpec;
     }
 }
-
-const LightThemeMarkCommonStyle: Required<MarkStyle> = {
-    color: CHANNEL_DEFAULTS.NOMINAL_COLOR[0],
-    size: 1,
-    stroke: 'black',
-    strokeWidth: 0,
-    opacity: 1,
-    nominalColorRange: CHANNEL_DEFAULTS.NOMINAL_COLOR,
-    quantitativeSizeRange: [2, 6]
-};
-
-const DarkThemeMarkCommonStyle: Required<MarkStyle> = { ...LightThemeMarkCommonStyle, stroke: 'white' };
-
-/* ----------------------------- THEME PRESETS ----------------------------- */
-export const THEMES: { [key in Themes]: Required<CompleteThemeDeep> } = {
-    light: {
-        base: 'light',
-
-        root: {
-            background: 'white',
-            titleColor: 'black',
-            titleBackgroundColor: 'transparent',
-            titleFontSize: 18,
-            titleFontFamily: 'Arial',
-            titleAlign: 'left',
-            titleFontWeight: 'bold',
-            subtitleColor: 'gray',
-            subtitleBackgroundColor: 'transparent',
-            subtitleFontSize: 16,
-            subtitleFontFamily: 'Arial',
-            subtitleFontWeight: 'normal',
-            subtitleAlign: 'left',
-            showMousePosition: true,
-            mousePositionColor: '#000000'
-        },
-
-        track: {
-            background: 'transparent',
-            alternatingBackground: 'transparent',
-            titleColor: 'black',
-            titleBackground: 'white',
-            titleFontSize: 24,
-            titleAlign: 'left',
-            outline: 'black',
-            outlineWidth: 1
-        },
-
-        legend: {
-            position: 'top',
-            background: 'white',
-            backgroundOpacity: 0.7,
-            labelColor: 'black',
-            labelFontSize: 12,
-            labelFontWeight: 'normal',
-            labelFontFamily: 'Arial',
-            backgroundStroke: '#DBDBDB',
-            tickColor: 'black'
-        },
-
-        axis: {
-            tickColor: 'black',
-            labelColor: 'black',
-            labelFontSize: 12,
-            labelFontWeight: 'normal',
-            labelFontFamily: 'Arial',
-            baselineColor: 'black',
-            gridColor: '#E3E3E3',
-            gridStrokeWidth: 1,
-            gridStrokeType: 'solid',
-            gridStrokeDash: [4, 4]
-        },
-
-        markCommon: {
-            ...LightThemeMarkCommonStyle
-        },
-        point: {
-            ...LightThemeMarkCommonStyle,
-            size: 3
-        },
-        rect: {
-            ...LightThemeMarkCommonStyle
-        },
-        triangle: {
-            ...LightThemeMarkCommonStyle
-        },
-        area: {
-            ...LightThemeMarkCommonStyle
-        },
-        line: {
-            ...LightThemeMarkCommonStyle
-        },
-        bar: {
-            ...LightThemeMarkCommonStyle
-        },
-        rule: {
-            ...LightThemeMarkCommonStyle,
-            strokeWidth: 1
-        },
-        link: {
-            ...LightThemeMarkCommonStyle,
-            strokeWidth: 1
-        },
-        text: {
-            ...LightThemeMarkCommonStyle,
-            textAnchor: 'middle',
-            textFontWeight: 'normal'
-        },
-        brush: {
-            ...LightThemeMarkCommonStyle,
-            color: 'gray',
-            opacity: 0.3,
-            stroke: 'black',
-            strokeWidth: 1
-        }
-    },
-    dark: {
-        base: 'dark',
-
-        root: {
-            background: 'black',
-            titleColor: 'white',
-            titleBackgroundColor: 'transparent',
-            titleFontSize: 18,
-            titleFontFamily: 'Arial',
-            titleAlign: 'middle',
-            titleFontWeight: 'bold',
-            subtitleColor: 'lightgray',
-            subtitleBackgroundColor: 'transparent',
-            subtitleFontSize: 16,
-            subtitleFontFamily: 'Arial',
-            subtitleAlign: 'middle',
-            subtitleFontWeight: 'normal',
-            showMousePosition: true,
-            mousePositionColor: '#FFFFFF'
-        },
-
-        track: {
-            background: 'transparent',
-            alternatingBackground: 'transparent',
-            titleColor: 'white',
-            titleBackground: 'black',
-            titleFontSize: 18,
-            titleAlign: 'left',
-            outline: 'white',
-            outlineWidth: 1
-        },
-
-        legend: {
-            position: 'right',
-            background: 'black',
-            backgroundOpacity: 0.7,
-            labelColor: 'white',
-            labelFontSize: 12,
-            labelFontWeight: 'normal',
-            labelFontFamily: 'Arial',
-            backgroundStroke: '#DBDBDB',
-            tickColor: 'white'
-        },
-
-        axis: {
-            tickColor: 'white',
-            labelColor: 'white',
-            labelFontSize: 10,
-            labelFontWeight: 'normal',
-            labelFontFamily: 'Arial',
-            baselineColor: 'white',
-            gridColor: 'gray',
-            gridStrokeWidth: 1,
-            gridStrokeType: 'solid',
-            gridStrokeDash: [4, 4]
-        },
-
-        markCommon: {
-            ...DarkThemeMarkCommonStyle
-        },
-        point: {
-            ...DarkThemeMarkCommonStyle,
-            size: 3
-        },
-        rect: {
-            ...DarkThemeMarkCommonStyle
-        },
-        triangle: {
-            ...DarkThemeMarkCommonStyle
-        },
-        area: {
-            ...DarkThemeMarkCommonStyle
-        },
-        line: {
-            ...DarkThemeMarkCommonStyle
-        },
-        bar: {
-            ...DarkThemeMarkCommonStyle
-        },
-        rule: {
-            ...DarkThemeMarkCommonStyle,
-            strokeWidth: 1
-        },
-        link: {
-            ...DarkThemeMarkCommonStyle,
-            strokeWidth: 1
-        },
-        text: {
-            ...DarkThemeMarkCommonStyle,
-            textAnchor: 'middle',
-            textFontWeight: 'normal'
-        },
-        brush: {
-            ...DarkThemeMarkCommonStyle,
-            color: 'lightgray',
-            opacity: 0.3,
-            stroke: 'white',
-            strokeWidth: 1
-        }
-    }
-};
