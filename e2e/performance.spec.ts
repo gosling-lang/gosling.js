@@ -47,6 +47,12 @@ test('Measure zoom time', async ({ page, browser }, testInfo) => {
     const zoomTime = endTime - startTime;
     console.log(`Zoom time: ${zoomTime}ms`);
 
+    const screenshot = await gosComponent.screenshot();
+    await testInfo.attach('gosComponentScreenshot', {
+        body: screenshot,
+        contentType: 'image/png',
+    });
+
     // Just make sure the zoom time is less than 9 seconds. This is how long it in CI
     expect(zoomTime).toBeLessThan(9000);
 });
