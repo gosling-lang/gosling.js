@@ -38,7 +38,8 @@
         "predeploy": "yarn build-editor; echo \"gosling.js.org\" >> build/CNAME",
         "deploy": "gh-pages -d build",
         "version": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
-        "knip": "knip --config knip.config.json"
+        "knip": "knip --config knip.config.json",
+        "e2e": "playwright test"
     },
     "peerDependencies": {
         "pixi.js": "^6.3.0",
@@ -80,6 +81,7 @@
         "threads": "^1.6.4"
     },
     "devDependencies": {
+        "@playwright/test": "^1.39.0",
         "@types/bezier-js": "^4.1.0",
         "@types/d3": "^7.0.0",
         "@types/d3-drag": "^2.0.0",
@@ -87,6 +89,8 @@
         "@types/d3-selection": "^2.0.0",
         "@types/lodash-es": "^4.17.5",
         "@types/node": "^18.6.2",
+        "@types/pixelmatch": "^5.2.5",
+        "@types/pngjs": "^6.0.3",
         "@types/pubsub-js": "^1.8.2",
         "@types/rbush": "^3.0.0",
         "@types/react": "^18.2.0",
@@ -114,7 +118,9 @@
         "jsoncrush": "^1.1.6",
         "knip": "^2.30.0",
         "npm-run-all": "^4.1.5",
+        "pixelmatch": "^5.3.0",
         "pixi.js": "^6.3.0",
+        "pngjs": "^7.0.0",
         "prettier": "^2.0.5",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",

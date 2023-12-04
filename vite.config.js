@@ -113,6 +113,7 @@ const dev = defineConfig({
 const testing = defineConfig({
     resolve: { alias },
     test: {
+        exclude: ['./node_modules/**', './dist/**', './e2e/**'],
         globals: true,
         setupFiles: [path.resolve(__dirname, './scripts/setup-vitest.js')],
         environment: 'jsdom',

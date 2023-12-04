@@ -827,6 +827,13 @@
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
 
+"@playwright/test@^1.39.0":
+  version "1.39.0"
+  resolved "https://registry.yarnpkg.com/@playwright/test/-/test-1.39.0.tgz#d10ba8e38e44104499e25001945f07faa9fa91cd"
+  integrity sha512-3u1iFqgzl7zr004bGPYiN/5EZpRUSFddQBra8Rqll5N0/vfpqlP9I9EXqAoGacuAbX6c9Ulg/Cjqglp5VkK6UQ==
+  dependencies:
+    playwright "1.39.0"
+
 "@sinclair/typebox@^0.27.8":
   version "0.27.8"
   resolved "https://registry.yarnpkg.com/@sinclair/typebox/-/typebox-0.27.8.tgz#6667fac16c436b5434a387a34dedb013198f6e6e"
@@ -1193,6 +1200,20 @@
   version "2019.7.0"
   resolved "https://registry.yarnpkg.com/@types/offscreencanvas/-/offscreencanvas-2019.7.0.tgz#e4a932069db47bb3eabeb0b305502d01586fa90d"
   integrity sha512-PGcyveRIpL1XIqK8eBsmRBt76eFgtzuPiSTyKHZxnGemp2yzGzWpjYKAfK3wIMiU7eH+851yEpiuP8JZerTmWg==
+
+"@types/pixelmatch@^5.2.5":
+  version "5.2.5"
+  resolved "https://registry.yarnpkg.com/@types/pixelmatch/-/pixelmatch-5.2.5.tgz#65eb7f7076a93cc003a504e363d0bf403ecbeede"
+  integrity sha512-di/HknmWA+KNjlLczJiLft9g1mHJZl5qGAXtDct8KsJg8KPrXKJa8Avumj53fgdJOBbfHABYhp3EjyitmKPdBg==
+  dependencies:
+    "@types/node" "*"
+
+"@types/pngjs@^6.0.3":
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/@types/pngjs/-/pngjs-6.0.3.tgz#33bfafdae1e6803624357be49f27ea70581a199e"
+  integrity sha512-F/WaGVKEZ1XYFlEtsWtqWm92vRfQdOqSSTBPj07BRDKnDtRhCw50DpwEQtrrDwEZUoAZAzv2FaalZiNV/54BoQ==
+  dependencies:
+    "@types/node" "*"
 
 "@types/prop-types@*":
   version "15.7.5"
@@ -3333,7 +3354,7 @@ fs.realpath@^1.0.0:
   resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
   integrity sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==
 
-fsevents@~2.3.2:
+fsevents@2.3.2, fsevents@~2.3.2:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-2.3.2.tgz#8a526f78b8fdf4623b709e0b975c52c24c02fd1a"
   integrity sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==
@@ -5326,6 +5347,13 @@ pinkie@^2.0.0:
   resolved "https://registry.yarnpkg.com/pinkie/-/pinkie-2.0.4.tgz#72556b80cfa0d48a974e80e77248e80ed4f7f870"
   integrity sha512-MnUuEycAemtSaeFSjXKW/aroV7akBbY+Sv+RkyqFjgAe73F+MR0TBWKBRDkmfWq/HiFmdavfZ1G7h4SPZXaCSg==
 
+pixelmatch@^5.3.0:
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/pixelmatch/-/pixelmatch-5.3.0.tgz#5e5321a7abedfb7962d60dbf345deda87cb9560a"
+  integrity sha512-o8mkY4E/+LNUf6LzX96ht6k6CEDi65k9G2rjMtBe9Oo+VPKSvl+0GKHuH/AlG+GA5LPG/i5hrekkxUc3s2HU+Q==
+  dependencies:
+    pngjs "^6.0.0"
+
 pixi.js@^6.3.0:
   version "6.5.9"
   resolved "https://registry.yarnpkg.com/pixi.js/-/pixi.js-6.5.9.tgz#c85fb0f7efa303c17d8edc2698ca4b1545b23ab0"
@@ -5383,6 +5411,30 @@ pkg-types@^1.0.3:
     jsonc-parser "^3.2.0"
     mlly "^1.2.0"
     pathe "^1.1.0"
+
+playwright-core@1.39.0:
+  version "1.39.0"
+  resolved "https://registry.yarnpkg.com/playwright-core/-/playwright-core-1.39.0.tgz#efeaea754af4fb170d11845b8da30b2323287c63"
+  integrity sha512-+k4pdZgs1qiM+OUkSjx96YiKsXsmb59evFoqv8SKO067qBA+Z2s/dCzJij/ZhdQcs2zlTAgRKfeiiLm8PQ2qvw==
+
+playwright@1.39.0:
+  version "1.39.0"
+  resolved "https://registry.yarnpkg.com/playwright/-/playwright-1.39.0.tgz#184c81cd6478f8da28bcd9e60e94fcebf566e077"
+  integrity sha512-naE5QT11uC/Oiq0BwZ50gDmy8c8WLPRTEWuSSFVG2egBka/1qMoSqYQcROMT9zLwJ86oPofcTH2jBY/5wWOgIw==
+  dependencies:
+    playwright-core "1.39.0"
+  optionalDependencies:
+    fsevents "2.3.2"
+
+pngjs@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/pngjs/-/pngjs-6.0.0.tgz#ca9e5d2aa48db0228a52c419c3308e87720da821"
+  integrity sha512-TRzzuFRRmEoSW/p1KVAmiOgPco2Irlah+bGFCeNfJXxxYGwSw7YwAOAcd7X28K/m5bjBWKsC29KyoMfHbypayg==
+
+pngjs@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/pngjs/-/pngjs-7.0.0.tgz#a8b7446020ebbc6ac739db6c5415a65d17090e26"
+  integrity sha512-LKWqWJRhstyYo9pGvgor/ivk2w94eSjE3RGVuzLGlr3NmD8bf7RcYGze1mNdEHRP6TRP6rMuDHk5t44hnTRyow==
 
 postcss@^8.4.27:
   version "8.4.31"

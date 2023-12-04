@@ -21,3 +21,6 @@ report.*
 *.swp
 *.swo
 *~
+/test-results/
+/playwright-report/
+/playwright/.cache/
