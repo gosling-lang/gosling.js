@@ -1,3 +1,15 @@
+# [0.13.0](https://github.com/gosling-lang/gosling.js/compare/v0.12.0...v0.13.0) (2023-12-04)
+
+
+### Features
+
+* **core,track:** move gosling-theme to this repo, support more compact genomic axis style ([#996](https://github.com/gosling-lang/gosling.js/issues/996)) ([09c0179](https://github.com/gosling-lang/gosling.js/commit/09c01799cc13764258cb47cd3e94401f14e558a6))
+* **core:** export several util functions ([#997](https://github.com/gosling-lang/gosling.js/issues/997)) ([7e9a834](https://github.com/gosling-lang/gosling.js/commit/7e9a8342a2ceaf47c63d7736800c44928244bb28)), closes [#1001](https://github.com/gosling-lang/gosling.js/issues/1001)
+* **core:** return a processed spec when a new spec is compiled ([#1002](https://github.com/gosling-lang/gosling.js/issues/1002)) ([59aed49](https://github.com/gosling-lang/gosling.js/commit/59aed49ee378f1bbb816302383150150cc7c41dd))
+* **track:** performance improvements  ([#988](https://github.com/gosling-lang/gosling.js/issues/988)) ([edd24de](https://github.com/gosling-lang/gosling.js/commit/edd24ded8ec73fded1919e5571058709b2aa3dc5)), closes [#823](https://github.com/gosling-lang/gosling.js/issues/823)
+
+
+
 # [0.12.0](https://github.com/gosling-lang/gosling.js/compare/v0.11.0...v0.12.0) (2023-10-31)
 
 
