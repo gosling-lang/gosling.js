@@ -1,0 +1,61 @@
+import { EX_SPEC_LAYOUT_AND_ARRANGEMENT_1, EX_SPEC_LAYOUT_AND_ARRANGEMENT_2 } from './layout-and-arrangement';
+import { EX_SPEC_MATRIX, EX_SPEC_RESPONSIVE_COMPARATIVE_MATRICES } from './matrix';
+import { EX_SPEC_CANCER_VARIANT_PROTOTYPE } from './cancer-variant';
+import { EX_SPEC_MATRIX_HFFC6 } from './matrix-hffc6';
+import { EX_SPEC_LINKING } from './visual-linking';
+import { EX_SPEC_BASIC_SEMANTIC_ZOOM } from './basic-semantic-zoom';
+import {
+    EX_SPEC_RESPONSIVE_COMPARATIVE_VIEWS,
+    EX_SPEC_RESPONSIVE_IDEOGRAM,
+    EX_SPEC_RESPONSIVE_MULTIVEC,
+    EX_SPEC_RESPONSIVE_MULTIVEC_CIRCULAR
+} from './responsive';
+import { EX_SPEC_RESPONSIVE_TRACK_WISE_COMPARISON } from './responsive-track-wise-comparison';
+import { EX_SPEC_ALIGNMENT_CHART, EX_SPEC_RESPONSIVE_ALIGNMENT_CHART } from './responsive-alignment';
+import { EX_SPEC_MARK_DISPLACEMENT } from './mark-displacement';
+import { EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL } from './circular-overview-linear-detail-views';
+import { EX_SPEC_SARS_COV_2 } from './sars-cov-2';
+import { EX_SPEC_CIRCOS, EX_SPEC_CIRCOS_BETWEEN_LINK, EX_SPEC_CIRCULR_RANGE } from './circos';
+import { EX_SPEC_GREMLIN } from './gremlin';
+import { EX_SPEC_GENE_ANNOTATION } from './gene-annotation';
+import { EX_SPEC_CLINVAR_LOLLIPOP, EX_SPEC_SEQUENCE_TRACK } from './semantic-zoom';
+import { EX_SPEC_GIVE } from './give';
+import { EX_SPEC_CYTOBANDS } from './ideograms';
+import { EX_SPEC_PILEUP } from './pileup';
+import { EX_SPEC_TEMPLATE } from './track-template';
+import { EX_SPEC_MOUSE_EVENT } from './mouse-event';
+import { EX_SPEC_DEBUG } from './debug';
+
+export const JsonExampleSpecs = {
+    EX_SPEC_LAYOUT_AND_ARRANGEMENT_1,
+    EX_SPEC_LAYOUT_AND_ARRANGEMENT_2,
+    EX_SPEC_MATRIX,
+    EX_SPEC_RESPONSIVE_COMPARATIVE_MATRICES,
+    EX_SPEC_CANCER_VARIANT_PROTOTYPE,
+    EX_SPEC_MATRIX_HFFC6,
+    EX_SPEC_LINKING,
+    EX_SPEC_BASIC_SEMANTIC_ZOOM,
+    EX_SPEC_RESPONSIVE_COMPARATIVE_VIEWS,
+    EX_SPEC_RESPONSIVE_IDEOGRAM,
+    EX_SPEC_RESPONSIVE_MULTIVEC,
+    EX_SPEC_RESPONSIVE_MULTIVEC_CIRCULAR,
+    EX_SPEC_RESPONSIVE_TRACK_WISE_COMPARISON,
+    EX_SPEC_ALIGNMENT_CHART,
+    EX_SPEC_RESPONSIVE_ALIGNMENT_CHART,
+    EX_SPEC_MARK_DISPLACEMENT,
+    EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL,
+    EX_SPEC_SARS_COV_2,
+    EX_SPEC_CIRCOS,
+    EX_SPEC_CIRCOS_BETWEEN_LINK,
+    EX_SPEC_CIRCULR_RANGE,
+    EX_SPEC_GREMLIN,
+    EX_SPEC_GENE_ANNOTATION,
+    EX_SPEC_CLINVAR_LOLLIPOP,
+    EX_SPEC_SEQUENCE_TRACK,
+    EX_SPEC_GIVE,
+    EX_SPEC_CYTOBANDS,
+    EX_SPEC_PILEUP,
+    EX_SPEC_TEMPLATE,
+    EX_SPEC_MOUSE_EVENT,
+    EX_SPEC_DEBUG
+};

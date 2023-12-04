@@ -1,17 +1,17 @@
 import { version as _goslingVersion } from '../package.json';
+import { dependencies as _goslingDependencies } from '../package.json';
 
 export const getHtmlTemplate = (
     spec: string,
     reactVersion = 18,
     pixiVersion = 6,
-    higlassVersion = 1.13,
+    higlassVersion = _goslingDependencies['higlass'],
     goslingVersion = _goslingVersion
 ) => `
 <!DOCTYPE html>
 <html>
 <head>
     <title>Gosling Visualization</title>
-    <link rel="stylesheet" href="https://esm.sh/higlass@${higlassVersion}/dist/hglib.css">
     <script type="importmap">
       {
         "imports": {

@@ -173,6 +173,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         #loadingTextBg = new HGC.libraries.PIXI.Graphics();
         #loadingText = new HGC.libraries.PIXI.Text('', loadingTextStyle);
         prevVisibleAndFetchedTiles?: Tile[];
+        resolvedTracks: SingleTrack[] | undefined;
 
         /* *
          *
@@ -238,7 +239,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             if (this.options?.showMousePosition && !this.hideMousePosition) {
                 this.hideMousePosition = HGC.utils.showMousePosition(
                     this,
-                    Is2DTrack(resolveSuperposedTracks(this.options.spec)[0]),
+                    Is2DTrack(this.getResolvedTracks()[0]),
                     this.isShowGlobalMousePosition()
                 );
             }
@@ -382,7 +383,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 // because circular brush is not supported.
                 this.mRangeBrush.remove();
             }
-
+            this.getResolvedTracks(true); // force update
             this.clearMouseEventData();
             this.textsBeingUsed = 0;
 
@@ -579,7 +580,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                     );
 
                     let yTiles: number[] | undefined;
-                    if (Is2DTrack(resolveSuperposedTracks(this.options.spec)[0])) {
+                    if (Is2DTrack(this.getResolvedTracks()[0])) {
                         // it makes sense only when the y-axis is being used for a genomic field
                         yTiles = tileProxy.calculateTilesFromResolution(
                             sortedResolutions[zoomLevel],
@@ -603,7 +604,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                     );
 
                     let yTiles: number[] | undefined;
-                    if (Is2DTrack(resolveSuperposedTracks(this.options.spec)[0])) {
+                    if (Is2DTrack(this.getResolvedTracks()[0])) {
                         // it makes sense only when the y-axis is being used for a genomic field
                         yTiles = tileProxy.calculateTiles(
                             zoomLevel,
@@ -801,12 +802,24 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         }
 
         /**
-         * Creates an array of SingleTracks if there are overlaid tracks
+         * Creates an array of SingleTracks if there are overlaid tracks.
+         * This method cannot be private because it is called by functions which are called by super.draw();
          */
-        #getResolvedTracks() {
-            const copy = structuredClone(this.options.spec);
+        getResolvedTracks(forceUpdate = false) {
+            if (forceUpdate || !this.resolvedTracks) {
+                const copy = structuredClone(this.options.spec);
+                const tracks = resolveSuperposedTracks(copy).filter(t => t.mark !== 'brush');
+                // We will never need to access the values field in the data spec. It can be quite large which can degrade performance so we remove it.
+                tracks.forEach(track => {
+                    if ('values' in track.data) {
+                        track.data.values = [];
+                    }
+                });
+                this.resolvedTracks = tracks;
+            }
             // Brushes are drawn by another plugin track.
-            return resolveSuperposedTracks(copy).filter(t => t.mark !== 'brush');
+
+            return this.resolvedTracks;
         }
 
         /**
@@ -824,7 +837,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             }
 
             const tileInfo = initProcessedTileInfo();
-            const resolvedTracks = this.#getResolvedTracks();
+            const resolvedTracks = this.getResolvedTracks();
 
             if (resolvedTracks.length === 0) {
                 // we do not have enough track to display
@@ -880,7 +893,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             // clear the array first
             tileInfo.goslingModels = [];
 
-            const resolvedTracks = this.#getResolvedTracks();
+            const resolvedTracks = this.getResolvedTracks();
             resolvedTracks.forEach(resolvedSpec => {
                 let tabularDataTransformed = Array.from(tileInfo.tabularData);
                 resolvedSpec.dataTransform?.forEach(t => {
@@ -1404,7 +1417,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             scaleOffset: [number, number],
             channelKey: 'color' | 'stroke'
         ) {
-            resolveSuperposedTracks(this.options.spec).map(spec => {
+            this.getResolvedTracks().map(spec => {
                 if (spec._renderingId === _renderingId) {
                     const channel = spec[channelKey];
                     if (IsChannelDeep(channel)) {
