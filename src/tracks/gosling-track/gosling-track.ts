@@ -483,7 +483,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         }
 
         /**
-         * This is how the mask gets drawn. Overrides method in PixiTrack. 
+         * This is how the mask gets drawn. Overrides method in PixiTrack.
          * Compared to the method in PixiTrack, this method draws a circular mask when the layout is circular.
          * @param position
          * @param dimensions
