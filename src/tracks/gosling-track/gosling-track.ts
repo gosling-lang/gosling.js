@@ -482,6 +482,35 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             });
         }
 
+        /**
+         * This is how the mask gets drawn. Overrides method in PixiTrack.
+         * Compared to the method in PixiTrack, this method draws a circular mask when the layout is circular.
+         * @param position
+         * @param dimensions
+         */
+        override setMask(position: [number, number], dimensions: [number, number]) {
+            this.pMask.clear();
+            this.pMask.beginFill();
+
+            if (this.options.spec.layout === 'circular') {
+                /**
+                 * If the layout is circular, we want the mask to be circular as well.
+                 * Circular layout have multiple tracks on top of each other so if the mask is not circular, click
+                 * events will be triggered only on the top track.
+                 */
+                const [x, y] = this.position;
+                const [width, height] = this.dimensions;
+                const cx = x + width / 2.0;
+                const cy = y + height / 2.0;
+                const outerRadius = this.options.spec.outerRadius!;
+                this.pMask.drawCircle(cx, cy, outerRadius);
+            } else {
+                // Normal rectangular mask. This is what is done in PixiTrack
+                this.pMask.drawRect(position[0], position[1], dimensions[0], dimensions[1]);
+            }
+            this.pMask.endFill();
+        }
+
         /* *
          *
          *  Tile and data processing methods
