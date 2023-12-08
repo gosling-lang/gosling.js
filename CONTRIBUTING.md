@@ -5,15 +5,15 @@ While contribution guidelines are loosely defined, we recommend to read the foll
 
 ## Getting Started
 
-We use Yarn (and not NPM) to manage dependencies in stable and consistent ways. 
+We use pnpm (and not NPM) to manage dependencies in stable and consistent ways. 
 
-After installing [Yarn](https://yarnpkg.com/getting-started/install), clone this repository and run the following commands to install all dependencies and run the Gosling.js editor locally. We recommend you use Node 20. 
+After installing [pnpm](https://pnpm.io/installation), clone this repository and run the following commands to install all dependencies and run the Gosling.js editor locally. We recommend you use Node 20. 
 
 ```sh
 git clone https://github.com/gosling-lang/gosling.js.git # Clone the repository to your current directory
 cd gosling.js                                            # Navigate to gosling repository
-yarn                                                     # Install dependencies 
-yarn start                                               # Start a local server running the Gosling online editor 
+pnpm                                                     # Install dependencies 
+pnpm start                                               # Start a local server running the Gosling online editor 
 ```
 
 Then, you can open http://localhost:3000/ in a web browser to test the online editor.
@@ -53,7 +53,7 @@ We use the [commitlint](#commitlint) for the title of PR. So, if the title of PR
 
 ## Testing 
 
-Gosling.js uses [Vitest](https://vitest.dev/) for running tests. To run all of the tests, you can use the command `yarn test`. 
+Gosling.js uses [Vitest](https://vitest.dev/) for running tests. To run all of the tests, you can use the command `pnpm test`. 
 
 ## Testing Production Build Using Editor
 
@@ -62,9 +62,9 @@ It is sometimes necessary to test the production build of Gosling.js. This frequ
 To test this, you need to build the project first and then preview the production build.
 
 ```sh
-yarn build
-yarn build-editor
-yarn preview
+pnpm build
+pnpm build-editor
+pnpm preview
 ```
 
 ## Editing `gosling.js/embed`
@@ -74,7 +74,7 @@ used in [Observable notebooks](https://observablehq.com). You can start the deve
 via:
 
 ```sh
-yarn start-embed
+pnpm start-embed
 ```
 
 and open a new Observable notebook with a cell containing,
@@ -95,7 +95,7 @@ to get started.
 You may want to edit the grammar (e.g., rename properties) and test the updated grammar in the Online Editor. The Gosling's grammar is defined using TypeScript in a single file, [/src/core/gosling.schema.ts](/src/core/gosling.schema.ts). You can update this file to edit grammar. However, to test with Online Editor, you need to update [/src/core/gosling.schema.json](/src/core/gosling.schema.json) by running the following command:
 
 ```sh
-yarn schema
+pnpm schema
 ```
 
 This will create the `gosling.schema.json` file based on the `gosling.schema.ts`. The reason for updating the `*.json` file is that the Online Editor only compiles the gosling spec only if the specification is valid depending of the `gosling.schema.json`. Therefore, if you edit the grammar and do not update the `gosling.schema.json` file, the Online Editor will not compile the spec, showing an empty view.
@@ -141,7 +141,7 @@ If there is an example you would like to add to the editor example library, plea
 GitHub Action handles bumping the version of Gosling.js. The pattern looks like the following:
 
 ```
-yarn version --patch
+pnpm version --patch
 git push origin master --tags
 ```
 

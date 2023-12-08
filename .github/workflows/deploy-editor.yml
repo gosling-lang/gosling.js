@@ -15,8 +15,8 @@ jobs:
             - uses: actions/setup-node@v3
               with:
                   node-version: 20
-            - run: yarn install
-            - run: yarn build-editor
+            - run: pnpm install
+            - run: pnpm build-editor
               env:
                   NODE_OPTIONS: '--max_old_space_size=8192'
             - name: Deploy editor
@@ -24,7 +24,7 @@ jobs:
                   git config --global user.name "action@github.com"
                   git config --global user.email "GitHub Action"
                   git remote set-url origin https://${ACCESS_TOKEN}@github.com/${REPO}.git
-                  yarn deploy
+                  pnpm deploy
               env:
                   ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
                   REPO: ${{ github.repository }}
