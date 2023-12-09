@@ -119,7 +119,7 @@ export interface Data {
     filter?: FilterTransform[];
 }
 
-// When using the built-in RequestInit type, `yarn schema` doesn't work. So we are using our own RequestInit.
+// When using the built-in RequestInit type, `pnpm schema` doesn't work. So we are using our own RequestInit.
 // Currently, we only forsee using the headers option.
 export interface RequestInit {
     headers?: Record<string, any>;

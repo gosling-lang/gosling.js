@@ -20,8 +20,9 @@ jobs:
               uses: actions/setup-node@v3
               with:
                   node-version: 20
-            - run: yarn install
-            - run: yarn build-editor
+            - uses: pnpm/action-setup@v2
+            - run: pnpm install
+            - run: pnpm build-editor
               env:
                   NODE_OPTIONS: '--max_old_space_size=4096'
 
@@ -37,10 +38,11 @@ jobs:
               uses: actions/setup-node@v3
               with:
                   node-version: ${{ matrix.node-version }}
-            - run: yarn install
+            - uses: pnpm/action-setup@v2
+            - run: pnpm install
             - run: |
-                yarn build-types # typecheck
-                yarn coverage
+                pnpm build-types # typecheck
+                pnpm coverage
               env:
                   NODE_OPTIONS: '--max_old_space_size=4096'
             - uses: codecov/codecov-action@v3
@@ -55,10 +57,11 @@ jobs:
             - uses: actions/setup-node@v3
               with:
                   node-version: 20
-            - run: yarn install
+            - uses: pnpm/action-setup@v2
+            - run: pnpm install
             - name: ESLint
-              run: yarn eslint src/ editor/
+              run: pnpm eslint src/ editor/
             - name: Assert schemas are all up to date
               run: |
-                  yarn schema
+                  pnpm schema
                   git diff --exit-code
