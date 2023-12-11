@@ -25,7 +25,7 @@ jobs:
                   git config --global user.name "action@github.com"
                   git config --global user.email "GitHub Action"
                   git remote set-url origin https://${ACCESS_TOKEN}@github.com/${REPO}.git
-                  pnpm deploy
+                  pnpm run deploy
               env:
                   ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
                   REPO: ${{ github.repository }}
