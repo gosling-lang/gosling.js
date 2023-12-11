@@ -12,7 +12,7 @@ After installing [pnpm](https://pnpm.io/installation), clone this repository and
 ```sh
 git clone https://github.com/gosling-lang/gosling.js.git # Clone the repository to your current directory
 cd gosling.js                                            # Navigate to gosling repository
-pnpm                                                     # Install dependencies 
+pnpm install                                             # Install dependencies 
 pnpm start                                               # Start a local server running the Gosling online editor 
 ```
 
