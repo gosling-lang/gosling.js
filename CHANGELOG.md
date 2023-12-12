@@ -1,3 +1,14 @@
+## [0.13.1](https://github.com/gosling-lang/gosling.js/compare/v0.13.0...v0.13.1) (2023-12-12)
+
+
+### Bug Fixes
+
+* **core:** editor deployment  ([#1010](https://github.com/gosling-lang/gosling.js/issues/1010)) ([afb8ae4](https://github.com/gosling-lang/gosling.js/commit/afb8ae46fff8d13b1cc6e5a8971dbcf8ea654504))
+* **core:** pnpm deploy ([#1009](https://github.com/gosling-lang/gosling.js/issues/1009)) ([8e51fbe](https://github.com/gosling-lang/gosling.js/commit/8e51fbe2f1cb37fb6de630aa41699e961ec2e8da))
+* **track:** Allows for tracks in stacked circular tracks to receive click events ([#1005](https://github.com/gosling-lang/gosling.js/issues/1005)) ([aea3a5d](https://github.com/gosling-lang/gosling.js/commit/aea3a5d8a5b700e9316cf6206cf5eaf4d1d9858d))
+
+
+
 # [0.13.0](https://github.com/gosling-lang/gosling.js/compare/v0.12.0...v0.13.0) (2023-12-04)
 
 
