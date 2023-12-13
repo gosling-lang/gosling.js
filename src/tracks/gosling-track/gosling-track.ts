@@ -49,6 +49,7 @@ import {
     hasDataTransform
 } from '@gosling-lang/gosling-schema';
 import { HIGLASS_AXIS_SIZE } from '../../compiler/higlass-model';
+import { type ScaleContinuousNumeric } from 'd3-scale';
 import { flatArrayToPairArray } from '../../core/utils/array';
 import { createPluginTrack, type PluginTrackFactory, type TrackConfig } from '../../core/utils/define-plugin-track';
 import { uuid } from '../../core/utils/uuid';
@@ -333,7 +334,10 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         override drawTile(tile: Tile) {
             if (PRINT_RENDERING_CYCLE) console.warn('drawTile(tile)');
 
-            tile.drawnAtScale = this._xScale.copy(); // being used in `super.draw()`
+            if (!tile.drawnAtScale) {
+                // This is the first time this tile is being drawn
+                tile.drawnAtScale = this._xScale.copy();
+            }
 
             const tileInfo = this.#processedTileInfo[tile.tileId];
             if (!tileInfo) {
@@ -341,33 +345,48 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 return;
             }
 
-            tile.graphics?.clear();
-            tile.graphics?.removeChildren();
+            const [graphicsXScale, graphicsXPos] = this.getXScaleAndOffset(tile.drawnAtScale);
+            // const [graphicsYScale, graphicsYPos] = this.#getYScaleAndOffset(tile.drawnAtScale);
+            // console.warn(graphicsYScale);
 
-            // This is only to render embellishments only once.
-            // TODO: Instead of rendering and removing for every tiles, render pBorder only once
-            this.pBackground.clear();
-            this.pBackground.removeChildren();
-            this.pBorder.clear();
-            this.pBorder.removeChildren();
-            this.displayedLegends = [];
+            if (graphicsXScale != 1 && graphicsXScale < 2 && graphicsXScale > 0.5) {
+                // if graphicsXScale is 1, nothing has been drawn yet so we don't stretch
+                // if graphicsXScale is less than 2 or greater than 0.5, we can stretch the graphics
+                tile.graphics.scale.x = graphicsXScale;
+                tile.graphics.position.x = graphicsXPos;
 
-            // Because a single tile contains one track or multiple tracks overlaid, we draw marks and embellishments
-            // for each GoslingTrackModel
-            tileInfo.goslingModels.forEach((model: GoslingTrackModel) => {
-                // check visibility condition
-                const trackWidth = this.dimensions[0];
-                const zoomLevel = this._xScale.invert(trackWidth) - this._xScale.invert(0);
+                // tile.graphics.scale.y = graphicsYScale;
+                // tile.graphics.position.y = graphicsYPos;
+            } else {
+                tile.drawnAtScale = this._xScale.copy();
+                tile.graphics?.clear();
+                tile.graphics?.removeChildren();
 
-                if (!model.trackVisibility({ zoomLevel })) {
-                    return;
-                }
-                drawPreEmbellishment(HGC, this, tile, model, this.options.theme);
-                drawMark(HGC, this, tile, model);
-                drawPostEmbellishment(HGC, this, tile, model, this.options.theme);
-            });
+                // This is only to render embellishments only once.
+                // TODO: Instead of rendering and removing for every tiles, render pBorder only once
+                this.pBackground.clear();
+                this.pBackground.removeChildren();
+                this.pBorder.clear();
+                this.pBorder.removeChildren();
+                this.displayedLegends = [];
 
-            this.forceDraw();
+                // Because a single tile contains one track or multiple tracks overlaid, we draw marks and embellishments
+                // for each GoslingTrackModel
+                tileInfo.goslingModels.forEach((model: GoslingTrackModel) => {
+                    // check visibility condition
+                    const trackWidth = this.dimensions[0];
+                    const zoomLevel = this._xScale.invert(trackWidth) - this._xScale.invert(0);
+
+                    if (!model.trackVisibility({ zoomLevel })) {
+                        return;
+                    }
+                    drawPreEmbellishment(HGC, this, tile, model, this.options.theme);
+                    drawMark(HGC, this, tile, model);
+                    drawPostEmbellishment(HGC, this, tile, model, this.options.theme);
+                });
+
+                this.forceDraw();
+            }
         }
 
         /**
@@ -390,6 +409,25 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             this.processAllTiles(true);
             this.draw();
             this.forceDraw();
+        }
+
+        /**
+         * Calulates how much the tile has been scaled, and how much to offset the tile.
+         * @param drawnAtScale The scale at which the tile has been drawn
+         * @returns [scale, offset]
+         */
+        #getYScaleAndOffset(drawnAtScale: ScaleContinuousNumeric<number, number>) {
+            const dA = drawnAtScale.domain();
+            const dB = this._yScale.domain();
+
+            // scaling between tiles
+            const tileK = (dA[1] - dA[0]) / (dB[1] - dB[0]);
+
+            const newRange = this._yScale.domain().map(drawnAtScale);
+
+            const posOffset = newRange[0];
+
+            return [tileK, -posOffset * tileK];
         }
         /**
          * Clears MouseEventModel from each GoslingTrackModel. Must be a public method because it is called from draw()
