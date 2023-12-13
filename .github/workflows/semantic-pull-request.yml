@@ -25,6 +25,7 @@ jobs:
             docs
             refactor
             test
+            perf
           # Configure which scopes are allowed.
           scopes: |
             core
