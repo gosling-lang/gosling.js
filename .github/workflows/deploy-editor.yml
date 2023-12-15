@@ -1,32 +1,50 @@
-name: Deploy Editor
+name: Pages
 
 on:
-    push:
-        branches:
-            - main
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
 
-    deploy:
-        runs-on: ubuntu-latest
-        if: github.ref == 'refs/heads/main'
-        steps:
-            - uses: actions/checkout@v3
-            - uses: actions/setup-node@v3
-              with:
-                  node-version: 20
-            - uses: pnpm/action-setup@v2
-            - run: pnpm install
-            - run: pnpm build-editor
-              env:
-                  NODE_OPTIONS: '--max_old_space_size=8192'
-            - name: Deploy editor
-              run: |
-                  git config --global user.name "action@github.com"
-                  git config --global user.email "GitHub Action"
-                  git remote set-url origin https://${ACCESS_TOKEN}@github.com/${REPO}.git
-                  pnpm run predeploy
-                  pnpm run deploy
-              env:
-                  ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-                  REPO: ${{ github.repository }}
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+            node-version: 20
+      - uses: pnpm/action-setup@v2
+      - run: |
+          pnpm install
+          pnpm build-editor
+          echo "gosling.js.org" >> build/CNAME
+        env:
+            NODE_OPTIONS: '--max_old_space_size=8192'
+      - uses: actions/upload-pages-artifact@v2
+        with:
+          path: build
+
+  Deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
