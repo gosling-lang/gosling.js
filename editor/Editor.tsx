@@ -1389,7 +1389,7 @@ function Editor(props: RouteComponentProps) {
                     <br />
                     <br />
                     <a
-                        href="https://github.com/gosling-lang/gosling.js/blob/master/CHANGELOG.md"
+                        href="https://github.com/gosling-lang/gosling.js/blob/main/CHANGELOG.md"
                         target="_blank"
                         rel="noopener noreferrer"
                     >
@@ -1398,7 +1398,7 @@ function Editor(props: RouteComponentProps) {
                     <br />
                     <br />
                     <a
-                        href="https://github.com/gosling-lang/gosling.js/blob/master/LICENSE.md"
+                        href="https://github.com/gosling-lang/gosling.js/blob/main/LICENSE.md"
                         target="_blank"
                         rel="noopener noreferrer"
                     >

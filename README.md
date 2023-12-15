@@ -60,4 +60,4 @@ We welcome and greatly appreciate your contribution to this project! Please read
 
 ## License
 
-This project is licensed under the terms of the [MIT license](https://github.com/gosling-lang/gosling.js/blob/master/LICENSE.md).
+This project is licensed under the terms of the [MIT license](https://github.com/gosling-lang/gosling.js/blob/main/LICENSE.md).
