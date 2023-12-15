@@ -111,7 +111,7 @@ function EditorPanel(props: {
             validate: true,
             schemas: [
                 {
-                    uri: 'https://raw.githubusercontent.com/gosling-lang/gosling.js/master/schema/gosling.schema.json',
+                    uri: 'https://raw.githubusercontent.com/gosling-lang/gosling.js/main/schema/gosling.schema.json',
                     fileMatch: ['*'],
                     schema: GoslingSchema
                 }

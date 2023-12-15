@@ -49,7 +49,7 @@ git commit -m 'docs: add details about commitlint in README.md'
 To learn more about the commitlint, please visit [conventional-changelog/commitlint](https://github.com/conventional-changelog/commitlint#what-is-commitlint).
 
 ## Opening Pull Requests
-We use the [commitlint](#commitlint) for the title of PR. So, if the title of PR is not following the commitlint conventions, [Semantic Pull Request](https://github.com/zeke/semantic-pull-requests) will complain about it, disallowing your PR to be merged. When your PR is accepted and merged into the master branch, the title of the PR will be recorded as a single commit message which will then added as a single item in [CHANGELOG.md](/CHANGELOG.md).
+We use the [commitlint](#commitlint) for the title of PR. So, if the title of PR is not following the commitlint conventions, [Semantic Pull Request](https://github.com/zeke/semantic-pull-requests) will complain about it, disallowing your PR to be merged. When your PR is accepted and merged into the main branch, the title of the PR will be recorded as a single commit message which will then added as a single item in [CHANGELOG.md](/CHANGELOG.md).
 
 ## Testing 
 
@@ -142,7 +142,7 @@ GitHub Action handles bumping the version of Gosling.js. The pattern looks like 
 
 ```
 pnpm version --patch
-git push origin master --tags
+git push origin main --tags
 ```
 
 # Internal Explanations  
