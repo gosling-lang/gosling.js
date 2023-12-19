@@ -1,3 +1,12 @@
+## [0.13.2](https://github.com/gosling-lang/gosling.js/compare/v0.13.1...v0.13.2) (2023-12-19)
+
+
+### Features
+
+* **core:** export util functions for conversion to flat tracks ([#1016](https://github.com/gosling-lang/gosling.js/issues/1016)) ([85f0be1](https://github.com/gosling-lang/gosling.js/commit/85f0be1efcac6db4e2e3e95cb6665e544b1e91f1)), closes [#1017](https://github.com/gosling-lang/gosling.js/issues/1017)
+
+
+
 ## [0.13.1](https://github.com/gosling-lang/gosling.js/compare/v0.13.0...v0.13.1) (2023-12-12)
 
 
