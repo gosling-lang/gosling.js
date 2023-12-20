@@ -1,4 +1,4 @@
-import type * as PIXI from 'pixi.js';
+import * as PIXI from 'pixi.js';
 import { isEqual, sampleSize, uniqBy } from 'lodash-es';
 import type { ScaleLinear } from 'd3-scale';
 import type {
@@ -333,14 +333,43 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         override drawTile(tile: Tile) {
             if (PRINT_RENDERING_CYCLE) console.warn('drawTile(tile)');
 
-            tile.drawnAtScale = this._xScale.copy(); // being used in `super.draw()`
-
+            /**
+             * If we don't have info about the tile, we can't draw anything.
+             */
             const tileInfo = this.#processedTileInfo[tile.tileId];
             if (!tileInfo) {
                 // We do not have a track model prepared to visualize
                 return;
             }
 
+            /**
+             * Add a copy of the track scale to the tile. The tile needs its own scale because we will use it to
+             * determine how much the tile has been stretched (if we are stretching the graphics)
+             */
+            if (!tile.drawnAtScale) {
+                // This is the first time this tile is being drawn
+                tile.drawnAtScale = this._xScale.copy();
+            }
+
+            /**
+             * For certain types of marks and layouts (linear), we can stretch the graphics to avoid redrawing
+             * This is much more performant than redrawing everything at every frame
+             */
+            const [graphicsXScale, graphicsXPos] = this.getXScaleAndOffset(tile.drawnAtScale);
+            if (this.#hasStretchableGraphics() && !this.#isTooStretched(graphicsXScale) && graphicsXScale !== 1) {
+                // Stretch the graphics
+                tile.graphics.scale.x = graphicsXScale;
+                tile.graphics.position.x = graphicsXPos;
+                return;
+            }
+
+            /**
+             * If we can't stretch the graphics, we need to redraw everything!
+             */
+
+            // We need the tile scale to match the scale of the track
+            tile.drawnAtScale = this._xScale.copy();
+            // Clear the graphics and redraw everything
             tile.graphics?.clear();
             tile.graphics?.removeChildren();
 
@@ -1471,6 +1500,30 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                     channelOriginal.scaleOffset = scaleOffset;
                 }
             });
+        }
+
+        /**
+         * Used in drawTile()
+         * Checks if the track has marks which are stretchable. Stretching
+         * is not supported for circular layouts or 2D tracks
+         */
+        #hasStretchableGraphics() {
+            const stretchableMarks = ['bar', 'line', 'rect', 'area'];
+            return (
+                !Is2DTrack(this.getResolvedTracks()[0]) &&
+                this.options.spec.layout !== 'circular' &&
+                stretchableMarks.includes(this.options.spec.mark || '')
+            );
+        }
+
+        /**
+         * Used in drawTile()
+         * Checks if the tile Graphic is too stretched. If so, it returns true.
+         * @param stretchFactor The factor by which the tile is stretched
+         * @returns True if the tile is too stretched, false otherwise
+         */
+        #isTooStretched(stretchFactor: number) {
+            return stretchFactor > 2 || stretchFactor < 0.5;
         }
     }
     return new GoslingTrackClass();
