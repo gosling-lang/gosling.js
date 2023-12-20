@@ -1510,9 +1510,10 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         #hasStretchableGraphics() {
             const stretchableMarks = ['bar', 'line', 'rect', 'area'];
             return (
-                !Is2DTrack(this.getResolvedTracks()[0]) &&
-                this.options.spec.layout !== 'circular' &&
-                stretchableMarks.includes(this.options.spec.mark || '')
+                this.options.spec.experimental?.stretchGraphics ||
+                (!Is2DTrack(this.getResolvedTracks()[0]) &&
+                    this.options.spec.layout !== 'circular' &&
+                    stretchableMarks.includes(this.options.spec.mark || ''))
             );
         }
 
