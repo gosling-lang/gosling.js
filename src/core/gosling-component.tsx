@@ -27,7 +27,7 @@ type CompiledCallbackFn = (
     goslingSpec: gosling.GoslingSpec,
     higlassSpec: gosling.HiGlassSpec,
     _additionalData: { _processedSpec: gosling.GoslingSpec }
-) => void
+) => void;
 
 interface GoslingCompProps {
     spec?: gosling.GoslingSpec;
@@ -52,6 +52,8 @@ export type GoslingRef = {
 
 export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props, ref) => {
     const [viewConfig, setViewConfig] = useState<gosling.HiGlassSpec>();
+    // Keeping track of whether the initial render has occured is important so the API works pr
+    const [isInitialRender, setIsInitialRender] = useState(true);
     const [size, setSize] = useState({ width: 200, height: 200 });
     const wrapperSize = useRef<undefined | { width: number; height: number }>();
     const wrapperParentSize = useRef<undefined | { width: number; height: number }>();
@@ -96,63 +98,66 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
     );
 
     // TODO: add a `force` parameter since changing `linkingId` might not update vis
-    const compile = useCallback(() => {
-        if (props.spec) {
-            const valid = gosling.validateGoslingSpec(props.spec);
+    const compile = useCallback(
+        (spec: gosling.GoslingSpec | undefined) => {
+            if (spec) {
+                const valid = gosling.validateGoslingSpec(spec);
 
-            if (valid.state === 'error') {
-                console.warn('Gosling spec is not valid. Please refer to the console message.');
-                return;
+                if (valid.state === 'error') {
+                    console.warn('Gosling spec is not valid. Please refer to the console message.');
+                    return;
+                }
+
+                gosling.compile(
+                    spec,
+                    (newHiGlassSpec, newSize, newGoslingSpec, newTracksAndViews, newIdTable) => {
+                        // TODO: `linkingId` should be updated
+                        // We may not want to re-render this
+                        if (
+                            prevSpec.current &&
+                            isEqual(omitDeep(prevSpec.current, ['linkingId']), omitDeep(newGoslingSpec, ['linkingId']))
+                        ) {
+                            return;
+                        }
+
+                        // If a callback function is provided, return compiled information.
+                        props.compiled?.(spec, newHiGlassSpec, { _processedSpec: newGoslingSpec });
+
+                        // Change the size of wrapper `<div/>` elements
+                        setSize(newSize);
+
+                        // Update the compiled view config
+                        const isMountedOnce = typeof viewConfig !== 'undefined';
+                        if (props.experimental?.reactive && isMountedOnce) {
+                            // Use API to update visualization.
+                            setTimeout(() => {
+                                preverseZoomStatus(
+                                    newHiGlassSpec,
+                                    hgRef.current?.api.getViewConfig() as gosling.HiGlassSpec
+                                );
+                                hgRef.current?.api.setViewConfig(newHiGlassSpec);
+                            }, DELAY_FOR_CONTAINER_RESIZE_BEFORE_RERENDER);
+                        } else {
+                            // Mount `HiGlassComponent` using this view config.
+                            setViewConfig(newHiGlassSpec);
+                        }
+                        publishOnNewView(newTracksAndViews);
+                        prevSpec.current = newGoslingSpec;
+                        tracksAndViews.current = newTracksAndViews;
+                        idTable.current = newIdTable;
+                    },
+                    [...GoslingTemplates], // TODO: allow user definitions
+                    theme,
+                    {
+                        containerSize: wrapperSize.current,
+                        containerParentSize: wrapperParentSize.current
+                    },
+                    props.urlToFetchOptions
+                );
             }
-
-            gosling.compile(
-                props.spec,
-                (newHiGlassSpec, newSize, newGoslingSpec, newTracksAndViews, newIdTable) => {
-                    // TODO: `linkingId` should be updated
-                    // We may not want to re-render this
-                    if (
-                        prevSpec.current &&
-                        isEqual(omitDeep(prevSpec.current, ['linkingId']), omitDeep(newGoslingSpec, ['linkingId']))
-                    ) {
-                        return;
-                    }
-
-                    // If a callback function is provided, return compiled information.
-                    props.compiled?.(props.spec!, newHiGlassSpec, { _processedSpec: newGoslingSpec });
-
-                    // Change the size of wrapper `<div/>` elements
-                    setSize(newSize);
-
-                    // Update the compiled view config
-                    const isMountedOnce = typeof viewConfig !== 'undefined';
-                    if (props.experimental?.reactive && isMountedOnce) {
-                        // Use API to update visualization.
-                        setTimeout(() => {
-                            preverseZoomStatus(
-                                newHiGlassSpec,
-                                hgRef.current?.api.getViewConfig() as gosling.HiGlassSpec
-                            );
-                            hgRef.current?.api.setViewConfig(newHiGlassSpec);
-                        }, DELAY_FOR_CONTAINER_RESIZE_BEFORE_RERENDER);
-                    } else {
-                        // Mount `HiGlassComponent` using this view config.
-                        setViewConfig(newHiGlassSpec);
-                    }
-                    publishOnNewView(newTracksAndViews);
-                    prevSpec.current = newGoslingSpec;
-                    tracksAndViews.current = newTracksAndViews;
-                    idTable.current = newIdTable;
-                },
-                [...GoslingTemplates], // TODO: allow user definitions
-                theme,
-                {
-                    containerSize: wrapperSize.current,
-                    containerParentSize: wrapperParentSize.current
-                },
-                props.urlToFetchOptions
-            );
-        }
-    }, [props.spec, theme]);
+        },
+        [props.spec, theme]
+    );
 
     // TODO: If not necessary, do not update `wrapperSize` (i.e., when responsiveSize is not set)
     useEffect(() => {
@@ -168,7 +173,7 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
                 wrapperSize.current.width !== newSize.width
             ) {
                 wrapperSize.current = newSize;
-                compile();
+                compile(props.spec);
             }
         });
 
@@ -182,7 +187,7 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
                 wrapperParentSize.current.width !== newSize.width
             ) {
                 wrapperParentSize.current = newSize;
-                compile();
+                compile(props.spec);
             }
         });
 
@@ -193,8 +198,18 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
     });
 
     useEffect(() => {
-        compile();
-    }, [props.spec, theme]);
+        // If this is the initial render, we want to render a blank visualization so that the
+        // ref is associated with the DOM element. This is necessary for the API to work.
+        if (isInitialRender) {
+            compile({
+                title: ' ',
+                tracks: [{}]
+            });
+            setIsInitialRender(false);
+        } else {
+            compile(props.spec);
+        }
+    }, [props.spec, theme, isInitialRender]);
 
     const responsiveHeight =
         typeof props.spec?.responsiveSize !== 'object' ? props.spec?.responsiveSize : props.spec.responsiveSize.height;
