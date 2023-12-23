@@ -421,7 +421,7 @@ export const editorExampleObj: {
         group: 'Experimental',
         name: 'Performance Comparison: Stretching Tiles',
         spec: JsonExampleSpecs.EX_SPEC_PERF_ALIGNMENT,
-        image: THUMBNAILS.ALIGNMENT
+        image: THUMBNAILS.PERF_ALIGNMENT
     },
     CORCES_ET_AL: {
         group: 'Coordinated Multiple Views',
