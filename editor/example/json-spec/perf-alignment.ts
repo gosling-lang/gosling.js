@@ -1,5 +1,5 @@
-import type { GoslingSpec } from "@gosling-lang/gosling-schema"
-import { alignmentWithText } from "./responsive-alignment"
+import type { GoslingSpec } from '@gosling-lang/gosling-schema';
+import { alignmentWithText } from './responsive-alignment';
 
 const commonProps = { width: 800, height: 400, xAxis: false, rowLegend: false, colorLegend: false };
 export const EX_SPEC_PERF_ALIGNMENT: GoslingSpec = {
@@ -8,17 +8,21 @@ export const EX_SPEC_PERF_ALIGNMENT: GoslingSpec = {
     assembly: 'unknown',
     views: [
         {
-            tracks: [{
-                ...alignmentWithText(commonProps),
-                title: 'New Approach: Stretching Tiles',
-                experimental: { stretchGraphics: true },
-            }]
+            tracks: [
+                {
+                    ...alignmentWithText(commonProps),
+                    title: 'New Approach: Stretching Tiles',
+                    experimental: { stretchGraphics: true }
+                }
+            ]
         },
         {
-            tracks: [{
-                ...alignmentWithText(commonProps),
-                title: 'Original Approach'
-            }]
+            tracks: [
+                {
+                    ...alignmentWithText(commonProps),
+                    title: 'Original Approach'
+                }
+            ]
         }
     ]
 };
