@@ -440,7 +440,6 @@ interface SingleTrackBase extends CommonTrackDef {
          * When this option is set to true, all marks will be stretched when zooming in/out.
          * When this option is set to false, all marks will be rerendered when zooming in/out.
          *
-         * @default undefined
          */
         stretchGraphics?: boolean;
 
@@ -448,7 +447,7 @@ interface SingleTrackBase extends CommonTrackDef {
          * Threshold for stretching graphics. If the graphics are scaled larger than the threshold, then the graphic
          * will be rerendered. If the graphics are scaled smaller than 1/threshold (e.g., 1/2), then the graphic will
          * be rerendered. This is to prevent the graphics from being stretched too much.
-         * @default 2
+         * @default 1.5
          */
         stretchGraphicsThreshold?: number;
     };
