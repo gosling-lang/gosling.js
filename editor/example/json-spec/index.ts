@@ -24,6 +24,7 @@ import { EX_SPEC_CYTOBANDS } from './ideograms';
 import { EX_SPEC_PILEUP } from './pileup';
 import { EX_SPEC_TEMPLATE } from './track-template';
 import { EX_SPEC_MOUSE_EVENT } from './mouse-event';
+import { EX_SPEC_PERF_ALIGNMENT } from './perf-alignment'
 import { EX_SPEC_DEBUG } from './debug';
 
 export const JsonExampleSpecs = {
@@ -42,6 +43,7 @@ export const JsonExampleSpecs = {
     EX_SPEC_RESPONSIVE_TRACK_WISE_COMPARISON,
     EX_SPEC_ALIGNMENT_CHART,
     EX_SPEC_RESPONSIVE_ALIGNMENT_CHART,
+    EX_SPEC_PERF_ALIGNMENT,
     EX_SPEC_MARK_DISPLACEMENT,
     EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL,
     EX_SPEC_SARS_COV_2,

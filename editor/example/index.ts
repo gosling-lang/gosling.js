@@ -36,6 +36,7 @@ export type ExampleGroup =
     | 'Coordinated Multiple Views'
     | 'Applications'
     | 'Track Templates'
+    | 'Experimental'
     | 'Doc'
     | 'Unassigned';
 
@@ -74,6 +75,10 @@ export const ExampleGroups: {
     {
         name: 'Track Templates',
         description: 'Built-in track templates that allow creating common tracks, like ideograms and gene annotations.'
+    },
+    {
+        name: 'Experimental',
+        description: 'Examples that include experimental features, such as performance improvements.'
     },
     {
         name: 'Doc',
@@ -411,6 +416,12 @@ export const editorExampleObj: {
         name: 'Alignment Chart',
         spec: JsonExampleSpecs.EX_SPEC_ALIGNMENT_CHART,
         image: THUMBNAILS.ALIGNMENT
+    },
+    PERF_ALIGNMENT: {
+        group: 'Experimental',
+        name: 'Performance Comparison: Stretching Tiles',
+        spec: JsonExampleSpecs.EX_SPEC_PERF_ALIGNMENT,
+        image: THUMBNAILS.PERF_ALIGNMENT
     },
     CORCES_ET_AL: {
         group: 'Coordinated Multiple Views',
