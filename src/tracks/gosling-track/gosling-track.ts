@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js';
+import type * as PIXI from 'pixi.js';
 import { isEqual, sampleSize, uniqBy } from 'lodash-es';
 import type { ScaleLinear } from 'd3-scale';
 import type {
@@ -1509,12 +1509,20 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
          */
         #hasStretchableGraphics() {
             const stretchableMarks = ['bar', 'line', 'rect', 'area'];
-            return (
-                this.options.spec.experimental?.stretchGraphics ||
-                (!Is2DTrack(this.getResolvedTracks()[0]) &&
-                    this.options.spec.layout !== 'circular' &&
-                    stretchableMarks.includes(this.options.spec.mark || ''))
+            const experimentalStretch = this.options.spec.experimental?.stretchGraphics;
+
+            if (experimentalStretch === false) {
+                return false;
+            }
+
+            const isFirstTrack1D = !Is2DTrack(this.getResolvedTracks()[0]);
+            const isNotCircularLayout = this.options.spec.layout !== 'circular';
+            const hasStretchableMark = this.getResolvedTracks().reduce(
+                (acc, spec) => acc && stretchableMarks.includes(spec.mark),
+                true
             );
+
+            return experimentalStretch || (isFirstTrack1D && isNotCircularLayout && hasStretchableMark);
         }
 
         /**
@@ -1524,7 +1532,8 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
          * @returns True if the tile is too stretched, false otherwise
          */
         #isTooStretched(stretchFactor: number) {
-            const threshold = this.options.spec.experimental?.stretchGraphicsThreshold ?? 2;
+            const defaultThreshold = 2;
+            const threshold = this.options.spec.experimental?.stretchGraphicsThreshold ?? defaultThreshold;
             return stretchFactor > threshold || stretchFactor < 1 / threshold;
         }
     }
