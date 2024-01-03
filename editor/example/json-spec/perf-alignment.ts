@@ -1,7 +1,7 @@
 import type { GoslingSpec } from "@gosling-lang/gosling-schema"
 import { alignmentWithText } from "./responsive-alignment"
 
-const commonProps = { width: 800, height: 250, xAxis: false, rowLegend: false, colorLegend: false };
+const commonProps = { width: 800, height: 400, xAxis: false, rowLegend: false, colorLegend: false };
 export const EX_SPEC_PERF_ALIGNMENT: GoslingSpec = {
     zoomLimits: [1, 396],
     xDomain: { interval: [350, 396] },
