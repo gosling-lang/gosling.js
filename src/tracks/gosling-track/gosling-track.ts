@@ -356,7 +356,8 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
              * This is much more performant than redrawing everything at every frame
              */
             const [graphicsXScale, graphicsXPos] = this.getXScaleAndOffset(tile.drawnAtScale);
-            if (this.#hasStretchableGraphics() && !this.#isTooStretched(graphicsXScale) && graphicsXScale !== 1) {
+            const isFirstRender = graphicsXScale === 1; // The graphicsXScale is 1 if first time the tile is being drawn
+            if (this.#hasStretchableGraphics() && !this.#isTooStretched(graphicsXScale) && !isFirstRender) {
                 // Stretch the graphics
                 tile.graphics.scale.x = graphicsXScale;
                 tile.graphics.position.x = graphicsXPos;
