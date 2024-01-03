@@ -1524,7 +1524,8 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
          * @returns True if the tile is too stretched, false otherwise
          */
         #isTooStretched(stretchFactor: number) {
-            return stretchFactor > 2 || stretchFactor < 0.5;
+            const threshold = this.options.spec.experimental?.stretchGraphicsThreshold ?? 2;
+            return stretchFactor > threshold || stretchFactor < 1 / threshold;
         }
     }
     return new GoslingTrackClass();
