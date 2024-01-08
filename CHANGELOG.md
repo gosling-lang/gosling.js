@@ -1,3 +1,12 @@
+# [0.14.0](https://github.com/gosling-lang/gosling.js/compare/v0.13.2...v0.14.0) (2024-01-08)
+
+
+### Performance Improvements
+
+* **core:** stretch certain marks instead of redraw ([#1018](https://github.com/gosling-lang/gosling.js/issues/1018)) ([0b405ba](https://github.com/gosling-lang/gosling.js/commit/0b405ba4d912e988768a467668730b877a0b7a61)), closes [#1023](https://github.com/gosling-lang/gosling.js/issues/1023)
+
+
+
 ## [0.13.2](https://github.com/gosling-lang/gosling.js/compare/v0.13.1...v0.13.2) (2023-12-19)
 
 
