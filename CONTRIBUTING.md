@@ -141,7 +141,7 @@ If there is an example you would like to add to the editor example library, plea
 GitHub Action handles bumping the version of Gosling.js. The pattern looks like the following:
 
 ```
-pnpm version --patch
+pnpm version patch # or minor or major
 git push origin main --tags
 ```
 
