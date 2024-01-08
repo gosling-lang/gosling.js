@@ -431,6 +431,25 @@ interface SingleTrackBase extends CommonTrackDef {
          * @default false
          */
         performanceMode?: boolean;
+
+        /**
+         * Performance rendering option.
+         * By default, certain marks ('bar', 'line', 'rect', 'area') are stretched when zooming in/out to improve
+         * rendering performance. No marks will be stretched in circular layouts.
+         *
+         * When this option is set to true, all marks will be stretched when zooming in/out.
+         * When this option is set to false, all marks will be rerendered when zooming in/out.
+         *
+         */
+        stretchGraphics?: boolean;
+
+        /**
+         * Threshold for stretching graphics. If the graphics are scaled larger than the threshold, then the graphic
+         * will be rerendered. If the graphics are scaled smaller than 1/threshold (e.g., 1/2), then the graphic will
+         * be rerendered. This is to prevent the graphics from being stretched too much.
+         * @default 1.5
+         */
+        stretchGraphicsThreshold?: number;
     };
 
     // Mark

@@ -333,14 +333,44 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         override drawTile(tile: Tile) {
             if (PRINT_RENDERING_CYCLE) console.warn('drawTile(tile)');
 
-            tile.drawnAtScale = this._xScale.copy(); // being used in `super.draw()`
-
+            /**
+             * If we don't have info about the tile, we can't draw anything.
+             */
             const tileInfo = this.#processedTileInfo[tile.tileId];
             if (!tileInfo) {
                 // We do not have a track model prepared to visualize
                 return;
             }
 
+            /**
+             * Add a copy of the track scale to the tile. The tile needs its own scale because we will use it to
+             * determine how much the tile has been stretched (if we are stretching the graphics)
+             */
+            if (!tile.drawnAtScale) {
+                // This is the first time this tile is being drawn
+                tile.drawnAtScale = this._xScale.copy();
+            }
+
+            /**
+             * For certain types of marks and layouts (linear), we can stretch the graphics to avoid redrawing
+             * This is much more performant than redrawing everything at every frame
+             */
+            const [graphicsXScale, graphicsXPos] = this.getXScaleAndOffset(tile.drawnAtScale);
+            const isFirstRender = graphicsXScale === 1; // The graphicsXScale is 1 if first time the tile is being drawn
+            if (!this.#isTooStretched(graphicsXScale) && this.#hasStretchableGraphics() && !isFirstRender) {
+                // Stretch the graphics
+                tile.graphics.scale.x = graphicsXScale;
+                tile.graphics.position.x = graphicsXPos;
+                return;
+            }
+
+            /**
+             * If we can't stretch the graphics, we need to redraw everything!
+             */
+
+            // We need the tile scale to match the scale of the track
+            tile.drawnAtScale = this._xScale.copy();
+            // Clear the graphics and redraw everything
             tile.graphics?.clear();
             tile.graphics?.removeChildren();
 
@@ -1471,6 +1501,43 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                     channelOriginal.scaleOffset = scaleOffset;
                 }
             });
+        }
+
+        /**
+         * Used in drawTile()
+         * Checks if the track has marks which are stretchable. Stretching
+         * is not supported for circular layouts or 2D tracks
+         */
+        #hasStretchableGraphics() {
+            const hasStretchOption = this.options.spec.experimental?.stretchGraphics;
+            if (hasStretchOption === true) {
+                return true;
+            } else if (hasStretchOption === false) {
+                return false;
+            }
+            // The default behavior is that we stretch when stretching looks acceptable
+            const isFirstTrack1D = !Is2DTrack(this.getResolvedTracks()[0]);
+            const isNotCircularLayout = this.options.spec.layout !== 'circular';
+            const stretchableMarks = ['bar', 'line', 'rect', 'area'];
+            const hasStretchableMark = this.getResolvedTracks().reduce(
+                (acc, spec) => acc && stretchableMarks.includes(spec.mark),
+                true
+            );
+            const noMouseInteractions = !this.options.spec.experimental?.mouseEvents;
+
+            return isFirstTrack1D && isNotCircularLayout && hasStretchableMark && noMouseInteractions;
+        }
+
+        /**
+         * Used in drawTile()
+         * Checks if the tile Graphic is too stretched. If so, it returns true.
+         * @param stretchFactor The factor by which the tile is stretched
+         * @returns True if the tile is too stretched, false otherwise
+         */
+        #isTooStretched(stretchFactor: number) {
+            const defaultThreshold = 1.5;
+            const threshold = this.options.spec.experimental?.stretchGraphicsThreshold ?? defaultThreshold;
+            return stretchFactor > threshold || stretchFactor < 1 / threshold;
         }
     }
     return new GoslingTrackClass();
