@@ -357,7 +357,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
              */
             const [graphicsXScale, graphicsXPos] = this.getXScaleAndOffset(tile.drawnAtScale);
             const isFirstRender = graphicsXScale === 1; // The graphicsXScale is 1 if first time the tile is being drawn
-            if (this.#hasStretchableGraphics() && !this.#isTooStretched(graphicsXScale) && !isFirstRender) {
+            if (!this.#isTooStretched(graphicsXScale) && this.#hasStretchableGraphics() && !isFirstRender) {
                 // Stretch the graphics
                 tile.graphics.scale.x = graphicsXScale;
                 tile.graphics.position.x = graphicsXPos;
@@ -1509,21 +1509,23 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
          * is not supported for circular layouts or 2D tracks
          */
         #hasStretchableGraphics() {
-            const stretchableMarks = ['bar', 'line', 'rect', 'area'];
-            const experimentalStretch = this.options.spec.experimental?.stretchGraphics;
-
-            if (experimentalStretch === false) {
+            const hasStretchOption = this.options.spec.experimental?.stretchGraphics;
+            if (hasStretchOption === true) {
+                return true;
+            } else if (hasStretchOption === false) {
                 return false;
             }
-
+            // The default behavior is that we stretch when stretching looks acceptable
             const isFirstTrack1D = !Is2DTrack(this.getResolvedTracks()[0]);
             const isNotCircularLayout = this.options.spec.layout !== 'circular';
+            const stretchableMarks = ['bar', 'line', 'rect', 'area'];
             const hasStretchableMark = this.getResolvedTracks().reduce(
                 (acc, spec) => acc && stretchableMarks.includes(spec.mark),
                 true
             );
+            const noMouseInteractions = !this.options.spec.experimental?.mouseEvents;
 
-            return experimentalStretch || (isFirstTrack1D && isNotCircularLayout && hasStretchableMark);
+            return isFirstTrack1D && isNotCircularLayout && hasStretchableMark && noMouseInteractions;
         }
 
         /**
