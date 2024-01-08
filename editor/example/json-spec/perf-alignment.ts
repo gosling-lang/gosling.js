@@ -6,6 +6,8 @@ export const EX_SPEC_PERF_ALIGNMENT: GoslingSpec = {
     zoomLimits: [1, 396],
     xDomain: { interval: [350, 396] },
     assembly: 'unknown',
+    title: 'Smoother Zoom',
+    subtitle: 'Rather than redrawing every element at every frame, we can scale existing elements',
     views: [
         {
             tracks: [
