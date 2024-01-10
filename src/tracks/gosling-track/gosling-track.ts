@@ -522,11 +522,10 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             this.pMask.clear();
             this.pMask.beginFill();
 
-            if (this.options.spec.layout === 'circular') {
+            if (this.options.spec.layout === 'circular' && this.options.spec.overlayOnPreviousTrack) {
                 /**
-                 * If the layout is circular, we want the mask to be circular as well.
-                 * Circular layout have multiple tracks on top of each other so if the mask is not circular, click
-                 * events will be triggered only on the top track.
+                 * If the layout is circular and is overlaid on another track, the mask should be circular
+                 * so outer tracks can still receive click events.
                  */
                 const [x, y] = this.position;
                 const [width, height] = this.dimensions;
