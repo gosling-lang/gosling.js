@@ -174,7 +174,7 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
                 wrapperSize.current.width !== newSize.width
             ) {
                 wrapperSize.current = newSize;
-                compile(props.spec);
+                compile();
             }
         });
 
@@ -188,7 +188,7 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
                 wrapperParentSize.current.width !== newSize.width
             ) {
                 wrapperParentSize.current = newSize;
-                compile(props.spec);
+                compile();
             }
         });
 
@@ -208,7 +208,7 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
             });
             setIsInitialRender(false);
         } else {
-            compile(props.spec);
+            compile();
         }
     }, [props.spec, theme, isInitialRender]);
 
