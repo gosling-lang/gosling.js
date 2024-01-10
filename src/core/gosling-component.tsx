@@ -100,7 +100,7 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
     // TODO: add a `force` parameter since changing `linkingId` might not update vis
     const compile = useCallback(
         (altSpec?: gosling.GoslingSpec) => {
-                const spec = altSpec ?? props.spec;
+            const spec = altSpec ?? props.spec;
             if (spec) {
                 const valid = gosling.validateGoslingSpec(spec);
 
