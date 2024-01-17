@@ -29,7 +29,7 @@ type CompiledCallbackFn = (
     _additionalData: { _processedSpec: gosling.GoslingSpec }
 ) => void;
 
-interface GoslingCompProps {
+export interface GoslingCompProps {
     spec?: gosling.GoslingSpec;
     compiled?: CompiledCallbackFn;
     padding?: number;
