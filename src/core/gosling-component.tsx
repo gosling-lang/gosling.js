@@ -27,7 +27,7 @@ type CompiledCallbackFn = (
     goslingSpec: gosling.GoslingSpec,
     higlassSpec: gosling.HiGlassSpec,
     _additionalData: { _processedSpec: gosling.GoslingSpec }
-) => void
+) => void;
 
 interface GoslingCompProps {
     spec?: gosling.GoslingSpec;

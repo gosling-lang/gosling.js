@@ -1211,7 +1211,7 @@ function Editor(props: RouteComponentProps) {
                                             background: isResponsive ? 'white' : 'none'
                                         }}
                                     >
-                                        <gosling.GoslingComponent
+                                        <gosling.GoslingComponentWithHeader
                                             ref={gosRef}
                                             spec={goslingSpec}
                                             theme={theme}

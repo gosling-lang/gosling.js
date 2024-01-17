@@ -1,0 +1,28 @@
+#gosling-component-header {
+    padding: 3px;
+}
+
+#gosling-component-header > select,
+#gosling-component-header > button,
+#gosling-component-header > input {
+    margin-right: 4px;
+}
+
+.sel-btn-activated,
+.sel-btn-activated:hover {
+    background-color: orange !important;
+}
+
+#gosling-component-header > select {
+    min-width: 100px;
+}
+
+#gosling-component-header > button {
+    cursor: pointer;
+    border: 1px solid black;
+    border-radius: 4px;
+}
+
+#gosling-component-header > button:hover {
+    background-color: #ddd;
+}

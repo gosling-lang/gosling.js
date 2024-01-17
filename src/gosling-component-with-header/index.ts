@@ -1,0 +1,1 @@
+export { GoslingComponentWithHeader } from './gosling-component-with-header';
