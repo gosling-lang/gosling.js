@@ -12,40 +12,16 @@ type GoslingComponentWithHeaderProps = goslingCompoProps & {
     // ... anything to add?
 };
 
-// forwardRef<GoslingRef, GoslingCompProps>((props, ref) => {
-    // (props: GoslingComponentWithHeaderProps) {
 export const GoslingComponentWithHeader = forwardRef<GoslingRef, GoslingComponentWithHeaderProps>((props) => {
     const ref = useRef<GoslingRef>(null);
 
-    const [selection, setSelection] = useState(false);
+    const [isKeyboardMode, setIsKeyboardMode] = useState(false);
     const [tracks, setTracks] = useState<TrackApiData[]>([]);
-    const [selectedTrackIdx, setSelectedTrackIdx] = useState<number>(0);
-
-    useEffect(() => {
-        document.addEventListener('keydown', (e) => {
-            switch(e.key) {
-                case 'ArrowDown':
-                    setSelectedTrackIdx((selectedTrackIdx + 1) % tracks.length);
-                    event?.preventDefault();
-                    break;
-                case 'ArrowUp':
-                    setSelectedTrackIdx((selectedTrackIdx - 1) % tracks.length);
-                    event?.preventDefault();
-                    break;
-            }
-        });
-        return document.removeEventListener('keydown', () => {});
-    }, []);
+    const [selectedTrackIndex, setSelectedTrackIndex] = useState<number>(0);
 
     type NavigationType = '<' | '>' | '+' | '-' | string;
     const navigationFn = (type: NavigationType) => {
-        const trackIds = ref.current?.api.getTrackIds();
-        
-        if(!trackIds || trackIds.length === 0) {
-            return;
-        }
-
-        const trackId = trackIds[selectedTrackIdx ?? 1];
+        const trackId = tracks[selectedTrackIndex].id;
 
         let [start, end] = ref.current?.hgApi.api.getLocation(trackId).xDomain;
         const delta = (end - start) / 3.0;
@@ -74,59 +50,79 @@ export const GoslingComponentWithHeader = forwardRef<GoslingRef, GoslingComponen
                 });
             }
         }
-        ref?.current?.api.zoomTo(trackId, `chr1:${start}-${end}`, 0, ZOOM_DURATION);
+        ref?.current?.api.zoomTo(trackId, `chr1:${start}-${end}`, 1, ZOOM_DURATION);
     };
 
     const Header = useMemo(() => {
-        // const { ref } = useContext(GoslingContext);
         return (
             <div id='gosling-component-header' style={{ border: "1px solid grey" }}>
                 {'Experimental! '}
-                <select>{tracks.map((d, i) => <option onSelect={() => setSelectedTrackIdx(i)}>{d.id}</option>)}</select>
+                <select value={tracks[selectedTrackIndex]?.id}>{tracks.map((d, i) => <option value={d.id} onSelect={() => setSelectedTrackIndex(i)}>{d.id}</option>)}</select>
                 <button 
-                    className={selection ? 'sel-btn-activated' : 'sel-btn'}
-                    onClick={() => setSelection(!selection)}
+                    className={isKeyboardMode ? 'sel-btn-activated' : 'sel-btn'}
+                    onClick={() => setIsKeyboardMode(!isKeyboardMode)}
                 >🕹️</button>
                 <input type='text' placeholder='chr1:100-200' 
                     onKeyDown={(e) => {
                         if(e.key === 'Enter') navigationFn(e.currentTarget.value);
                     }}
                 ></input>
-                {['<', '>', '+', '-'].map((d: NavigationType) => <button onClick={() => navigationFn(d)}>{d}</button>)}
+                {['<', '>', '+', '-'].map(d => <button onClick={() => navigationFn(d)}>{d}</button>)}
                 <button onClick={() => ref?.current?.api.exportPng()}>Save PNG</button>
-                <button onClick={() => ref?.current?.api.exportPng()}>Save PNG</button>
+                <button onClick={() => ref?.current?.api.exportPdf()}>Save PDF</button>
             </div>
         );
-    }, [tracks, selection]);
+    }, [tracks, isKeyboardMode, selectedTrackIndex]);
 
-    const Selection = useMemo(() => { 
-        if(!selection || !tracks[selectedTrackIdx]) return;
+    const SelectedOutline = useMemo(() => { 
+        if(!isKeyboardMode || !tracks[selectedTrackIndex]) return;
+        // console.log(tracks[selectedTrackIndex]);
+        const selectedTrack = tracks[selectedTrackIndex];
+        let circularPadding = 0;
+        if('outerRadius' in selectedTrack.shape) {
+            circularPadding = (selectedTrack.shape.width - selectedTrack.shape.outerRadius * 2) / 2.0;
+        }
         return (
             <div style={{
-                left: tracks[selectedTrackIdx].shape.x + 60 + 4,
-                top: tracks[selectedTrackIdx].shape.y + 60 + 30 + 4,
-                width: `${tracks[selectedTrackIdx].shape.width}px`,
-                height: `${tracks[selectedTrackIdx].shape.height}px`,
+                left: selectedTrack.shape.x + 60 + 4 + circularPadding / 2.0,
+                top: selectedTrack.shape.y + 60 + 30 + 4 + circularPadding / 2.0,
+                width: `${selectedTrack.shape.width - circularPadding}px`,
+                height: `${selectedTrack.shape.height - circularPadding}px`,
                 border: '2px solid blue',
                 position: 'absolute',
             }}></div>
         );
-    }, [selection, selectedTrackIdx, tracks]);
+    }, [isKeyboardMode, selectedTrackIndex, tracks]);
 
     return (
         <GoslingContext.Provider value={{ ...props, ref }}>
-            {/* XXX: Handle the sizing of Gosling Component */}
-            {Header}
-            <GoslingComponent {...props} ref={ref} compiled={(...args) => {
-                // XXX: Update of track info is one React rendering cycle behind
-                // Update Track information for API calls from <Header/>
-                const _tracks = ref.current?.api.getTracks() ?? [];
-                setTracks(_tracks.filter(d => d.spec.mark !== 'header'));
-                console.error('compiled');
-                // Call this function for the user-defined callback
-                props.compiled?.(...args);
-            }}/>
-            {Selection}
+            <div onKeyDown={(e) => {
+                if(!isKeyboardMode) return;
+                switch(e.key) {
+                    case 'ArrowDown':
+                        setSelectedTrackIndex((selectedTrackIndex + 1) % tracks.length);
+                        event?.preventDefault(); // disable scroll
+                        break;
+                    case 'ArrowUp':
+                        setSelectedTrackIndex((selectedTrackIndex - 1 + tracks.length) % tracks.length);
+                        event?.preventDefault(); // disable scroll
+                        break;
+                }
+            }}>
+                {/* XXX: Handle the sizing of Gosling Component */}
+                {Header}
+                <GoslingComponent {...props} ref={ref} compiled={(...args) => {
+                    setTimeout(() => {
+                        const tracks = ref.current?.api.getTracks() ?? [];
+                        const tracksWithoutTitle = tracks.filter(d => d.spec.mark !== 'header'); // header is the title
+                        setTracks(tracksWithoutTitle);
+                    }, 100);
+                    
+                    // Call this function for the user-defined callback
+                    props.compiled?.(...args);
+                }}/>
+                {SelectedOutline}
+            </div>
         </GoslingContext.Provider>
     );
 });
