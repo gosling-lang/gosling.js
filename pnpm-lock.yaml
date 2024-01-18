@@ -69,8 +69,8 @@ dependencies:
     specifier: ^3.0.1
     version: 3.1.1
   higlass:
-    specifier: ^1.13.3
-    version: 1.13.3(pixi.js@6.5.10)(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^1.13.4
+    version: 1.13.4(pixi.js@6.5.10)(react-dom@18.2.0)(react@18.2.0)
   higlass-register:
     specifier: ^0.3.0
     version: 0.3.0
@@ -2416,7 +2416,7 @@ packages:
     dependencies:
       '@babel/runtime': 7.23.5
       '@types/raf': 3.4.3
-      core-js: 3.33.3
+      core-js: 3.35.0
       raf: 3.4.1
       regenerator-runtime: 0.13.11
       rgbcolor: 1.0.1
@@ -2732,8 +2732,8 @@ packages:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
     dev: true
 
-  /core-js@3.33.3:
-    resolution: {integrity: sha512-lo0kOocUlLKmm6kv/FswQL8zbkH7mVsLJ/FULClOhv8WRVmKLVcs6XPNQAzstfeJTCHMyButEwG+z1kHxHoDZw==}
+  /core-js@3.35.0:
+    resolution: {integrity: sha512-ntakECeqg81KqMueeGJ79Q5ZgQNR+6eaE8sxGCx62zMbAIj65q+uYvatToew3m6eAGdU4gNZwpZ34NMe4GYswg==}
     requiresBuild: true
     dev: false
     optional: true
@@ -4113,8 +4113,8 @@ packages:
       slugid: 3.2.0
     dev: false
 
-  /higlass@1.13.3(pixi.js@6.5.10)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-aZ+Q+ClF1TTeV81ChuGSd5CHiVJf8+1c6w6/sXGAOonkGVQ54yuZpSYafMatKAjytM6/fwSaHs3uQT2xUEE2MA==}
+  /higlass@1.13.4(pixi.js@6.5.10)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-mIr+Yi5aR0zBAB9iqlqTz/K3ZusrGz8f20g5DHaaRZ/FzMOcFsdL+9ESIPndPZrN2Y/GQ4CHilNjPTTSncIOTg==}
     engines: {node: '>=0.12.0'}
     peerDependencies:
       pixi.js: ^5.0.3 || ^6.5.2
@@ -4764,7 +4764,7 @@ packages:
       fflate: 0.4.8
     optionalDependencies:
       canvg: 3.0.10
-      core-js: 3.33.3
+      core-js: 3.35.0
       dompurify: 2.4.7
       html2canvas: 1.4.1
     dev: false
