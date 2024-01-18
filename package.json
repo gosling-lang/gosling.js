@@ -71,7 +71,7 @@
         "events": "^3.3.0",
         "fflate": "^0.7.1",
         "generic-filehandle": "^3.0.1",
-        "higlass": "^1.13.3",
+        "higlass": "^1.13.4",
         "higlass-register": "^0.3.0",
         "higlass-text": "^0.1.1",
         "json-stringify-pretty-compact": "^2.0.0",
