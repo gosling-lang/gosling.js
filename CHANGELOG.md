@@ -1,3 +1,19 @@
+# [0.15.0](https://github.com/gosling-lang/gosling.js/compare/v0.14.0...v0.15.0) (2024-01-19)
+
+
+### Bug Fixes
+
+* **core:** do not print unknown data type warnings in console ([#1034](https://github.com/gosling-lang/gosling.js/issues/1034)) ([dc0386d](https://github.com/gosling-lang/gosling.js/commit/dc0386d812a30ebd666ce07a2d7edec868c74fb9))
+* **core:** publish events on first render ([#1024](https://github.com/gosling-lang/gosling.js/issues/1024)) ([bf470c1](https://github.com/gosling-lang/gosling.js/commit/bf470c15950bc468024748eea6aac6fb72dcf565))
+* **track:** prevent circular layout legend from being obscured ([#1029](https://github.com/gosling-lang/gosling.js/issues/1029)) ([e1649af](https://github.com/gosling-lang/gosling.js/commit/e1649af96cc9ffa81968f4fb4e5fee814bb7612c))
+
+
+### Features
+
+* **core:** export GoslingCompProps ([#1033](https://github.com/gosling-lang/gosling.js/issues/1033)) ([e4091ae](https://github.com/gosling-lang/gosling.js/commit/e4091ae3812227e421ed0160ea7adefcdf324c8a))
+
+
+
 # [0.14.0](https://github.com/gosling-lang/gosling.js/compare/v0.13.2...v0.14.0) (2024-01-08)
 
 
