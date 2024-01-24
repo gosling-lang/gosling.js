@@ -41,7 +41,7 @@
     "src/index.ts",
     "editor/index.tsx",
   ],
-  "include": ["src", "src/**/*.d.ts", "editor"],
+  "include": ["src", "src/**/*.d.ts", "editor", "e2e"],
   "exclude": [
     "node_modules",
     "public",

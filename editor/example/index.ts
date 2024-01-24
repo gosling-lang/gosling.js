@@ -93,7 +93,7 @@ export const ExampleGroups: {
 export interface Example {
     group: ExampleGroup;
     name: string;
-    spec: GoslingSpec | string;
+    spec: GoslingSpec;
     id?: string;
     description?: string;
     underDevelopment?: boolean;
