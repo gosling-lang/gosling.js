@@ -174,6 +174,8 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         #loadingText = new HGC.libraries.PIXI.Text('', loadingTextStyle);
         prevVisibleAndFetchedTiles?: Tile[];
         resolvedTracks: SingleTrack[] | undefined;
+        // This is used to persist processed tile info across draw() calls.
+        #processedTileMap: WeakMap<Tile, boolean> = new WeakMap();
 
         /* *
          *
@@ -555,6 +557,11 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             this.tileSize = this.tilesetInfo?.tile_size ?? 1024;
 
             const tiles = this.visibleAndFetchedTiles();
+            // If we have already processed all tiles, we don't need to do anything
+            // this.#processedTileMap contains all of data needed to draw
+            if (tiles.every(tile => this.#processedTileMap.get(tile) !== undefined)) {
+                return;
+            }
 
             // generated tabular data
             tiles.forEach(tile => this.#generateTabularData(tile, force));
@@ -571,6 +578,9 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             if (flatTileData.length !== 0) {
                 this.options.siblingIds.forEach(id => publish('rawData', { id, data: flatTileData }));
             }
+            tiles.forEach(tile => {
+                this.#processedTileMap.set(tile, true);
+            });
         }
 
         /**
