@@ -3,8 +3,6 @@ import { GoslingComponent } from './gosling-component';
 import { spec as JSON_SPEC_VISUAL_ENCODING } from '../../editor/example/spec/visual-encoding';
 import { JsonExampleSpecs } from 'editor/example/json-spec';
 import React from 'react';
-// import { useRef } from 'react';
-
 
 test.use({ viewport: { width: 1000, height: 1000 } });
 
@@ -14,7 +12,9 @@ async function zoom(direction: 'in' | 'out', page: any, steps = 15) {
         await page.mouse.wheel(0, zoomDirection * 50);
     }
 }
-
+/**
+ * This tests the zooming performance of Gosling. It zooms in and out 15 times and records the time it takes to zoom.
+ */
 test('Zoom visual encoding', async ({ mount, page }) => {
     test.setTimeout(60000); // 60 seconds
     await mount(<GoslingComponent spec={JSON_SPEC_VISUAL_ENCODING} />);
@@ -51,11 +51,11 @@ test('Zoom multiple sequence alignment', async ({ mount, page }) => {
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(5000);
 
+    // Hover over the third track
     const centerTracks = page.locator('.center-track');
     const thirdCenterTrack = centerTracks.nth(2);
     await thirdCenterTrack.hover();
 
-    // Start timer and zoom in
     const zoomTimes: number[] = [];
     for (let i = 0; i < 10; i++) {
         const startTime = Date.now();
