@@ -42,7 +42,6 @@
     "schema": "node scripts/generate-schemas.mjs",
     "version": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
     "knip": "knip --config knip.config.json",
-    "e2e": "playwright test",
     "preinstall": "npx only-allow pnpm",
     "test-ct": "playwright test -c playwright-ct.config.ts"
   },
