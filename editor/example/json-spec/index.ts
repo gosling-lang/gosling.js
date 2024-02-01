@@ -24,7 +24,7 @@ import { EX_SPEC_CYTOBANDS } from './ideograms';
 import { EX_SPEC_PILEUP } from './pileup';
 import { EX_SPEC_TEMPLATE } from './track-template';
 import { EX_SPEC_MOUSE_EVENT } from './mouse-event';
-import { EX_SPEC_PERF_ALIGNMENT } from './perf-alignment'
+import { EX_SPEC_PERF_ALIGNMENT } from './perf-alignment';
 import { EX_SPEC_DEBUG } from './debug';
 
 export const JsonExampleSpecs = {
