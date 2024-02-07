@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-export const getGoslingLogoSvg = (width: number = 20, height: number = 20) => (
+export const getGoslingLogoSvg = (width = 20, height = 20) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width={width} height={height}>
         <rect style={{ fill: 'none' }} width="400" height="400" />
         <circle cx="110.62" cy="129.64" r="41.69" />
