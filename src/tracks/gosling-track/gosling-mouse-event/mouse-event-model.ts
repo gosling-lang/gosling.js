@@ -58,8 +58,8 @@ export class MouseEventModel {
     /**
      * Add a new mouse event that is point-based.
      */
-    public addPointBasedEvent(value: Datum, pointAndRadius: [number, number, number]) {
-        this.data.push({ uid: uuid(), type: 'point', value, polygon: pointAndRadius });
+    public addPointBasedEvent(value: Datum, pointAndRadius: [number, number, number], presetUID?: string) {
+        this.data.push({ uid: presetUID ?? uuid(), type: 'point', value, polygon: pointAndRadius });
     }
 
     /**
