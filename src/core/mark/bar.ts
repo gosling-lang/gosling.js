@@ -96,7 +96,6 @@ export function drawBar(track: any, tile: Tile, model: GoslingTrackModel) {
                     (isFlippedY && y - rowHeight >= 0) ||
                     (!isFlippedY && y <= 0)
                 ) {
-                    console.warn('inside', model.specOriginal.id);
                     return;
                 }
 
@@ -108,11 +107,14 @@ export function drawBar(track: any, tile: Tile, model: GoslingTrackModel) {
                 );
 
                 let polygonForMouseEvents: number[] = [];
+
                 const barHeight = isFlippedY ? rowHeight - y : y;
 
                 if (circular) {
-                    const farR = trackOuterRadius - ((rowHeight - prevYEnd) / trackHeight) * trackRingSize;
-                    const nearR = trackOuterRadius - ((rowHeight - y - prevYEnd) / trackHeight) * trackRingSize;
+                    const ys = isFlippedY ? prevYEnd : rowHeight - prevYEnd;
+                    const farR = trackOuterRadius - (ys / trackHeight) * trackRingSize;
+                    const ye = isFlippedY ? barHeight + prevYEnd : rowHeight - y - prevYEnd;
+                    const nearR = trackOuterRadius - (ye / trackHeight) * trackRingSize;
 
                     const sPos = cartesianToPolar(xs, trackWidth, nearR, cx, cy, startAngle, endAngle);
                     const startRad = valueToRadian(xs, trackWidth, startAngle, endAngle);
@@ -134,7 +136,6 @@ export function drawBar(track: any, tile: Tile, model: GoslingTrackModel) {
 
                 /* Mouse Events */
                 model.getMouseEventModel().addPolygonBasedEvent(d, polygonForMouseEvents);
-
                 prevYEnd += barHeight;
             });
         });
