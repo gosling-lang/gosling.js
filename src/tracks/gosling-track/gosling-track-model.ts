@@ -79,7 +79,7 @@ export class GoslingTrackModel {
         this.dataAggregated = data; // this will be updated after validity of the spec is checked
 
         this.specOriginal = spec;
-        this.specComplete = structuredClone(spec);
+        this.specComplete = JSON.parse(JSON.stringify(spec));
 
         this.channelScales = {};
 
