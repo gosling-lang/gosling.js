@@ -11,4 +11,5 @@ jobs:
         with:
           token: ${{ secrets.PAT }}
           commands: |
-            echo "hello world"
+            deploy
+      - run: echo "hello there"
