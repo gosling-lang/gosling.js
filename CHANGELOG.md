@@ -1,3 +1,17 @@
+# [0.16.0](https://github.com/gosling-lang/gosling.js/compare/v0.15.0...v0.16.0) (2024-02-22)
+
+
+### Bug Fixes
+
+* **core:** Flipped y-axis stacked bar chart ([#1042](https://github.com/gosling-lang/gosling.js/issues/1042)) ([6f13ae7](https://github.com/gosling-lang/gosling.js/commit/6f13ae7d65253d40dd1b2ddd6aece8def52e3fc5))
+
+
+### Performance Improvements
+
+* **track:** Persist GoslingTrackModels ([#1044](https://github.com/gosling-lang/gosling.js/issues/1044)) ([560d121](https://github.com/gosling-lang/gosling.js/commit/560d1210fe9d8f4d7326a9c0dc4a75b5b9254614))
+
+
+
 # [0.15.0](https://github.com/gosling-lang/gosling.js/compare/v0.14.0...v0.15.0) (2024-01-19)
 
 
