@@ -5,35 +5,13 @@ on:
     types: [created]
 
 jobs:
-  slash_command:
-    name: Slash Command
-    if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/update-snapshots')}}
+  update_snapshots:
+    if: github.event.comment.body == '/update-snapshots' && github.event.issue.pull_request
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-      
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '14'
+        uses: actions/checkout@v2
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Install Playwright
-        run: npx playwright install
-
+      # Add your steps here to update snapshots
       - name: Update snapshots
-        run: npx playwright test --update-snapshots --reporter=list
-
-      - name: Commit and push updated snapshots
-        run: |
-          git config --global user.name 'Your Name'
-          git config --global user.email 'you@example.com'
-          git add .
-          git commit -m "Update snapshots"
-          git push
+        run: echo "Updating snapshots..."
