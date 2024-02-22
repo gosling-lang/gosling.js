@@ -59,7 +59,11 @@ jobs:
               with:
                   node-version: 20
             - uses: pnpm/action-setup@v2
+            - name: Install dependencies
             - run: pnpm install
+            - name: Install Playwright Browsers
+              run: npx playwright install --with-deps chromium
+            - name: Run Playwright Component Tests
             - run: pnpm test-ct
             - uses: actions/upload-artifact@v3
               if: always()
