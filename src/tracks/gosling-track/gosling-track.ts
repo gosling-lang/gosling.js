@@ -1025,7 +1025,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
                 // Replace width and height information with the actual values for responsive encoding
                 const [trackWidth, trackHeight] = this.dimensions; // actual size of a track
-                const axisSize = IsXAxis(resolvedSpec) ? HIGLASS_AXIS_SIZE : 0; // Why the axis size must be added here?
+                const axisSize = IsXAxis(resolvedSpec) && this.options.spec.layout === 'linear' ? HIGLASS_AXIS_SIZE : 0; // Why the axis size must be added here?
                 const [w, h] = [trackWidth, trackHeight + axisSize];
                 const circularFactor = Math.min(w, h) / Math.min(resolvedSpec.width!, resolvedSpec.height!);
                 if (resolvedSpec.innerRadius) {

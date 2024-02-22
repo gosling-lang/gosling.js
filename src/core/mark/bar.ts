@@ -71,6 +71,7 @@ export function drawBar(track: any, tile: Tile, model: GoslingTrackModel) {
         const pivotedData = group(data, d => d[genomicChannel.field as string]);
         const xKeys = [...pivotedData.keys()];
 
+        const isFlippedY = (IsChannelDeep(spec.y) && spec.y.flip) || spec.flipY;
         // TODO: users may want to align rows by values
         xKeys.forEach(k => {
             let prevYEnd = 0;
@@ -89,8 +90,12 @@ export function drawBar(track: any, tile: Tile, model: GoslingTrackModel) {
                 const alphaTransition = model.markVisibility(d, { width: barWidth, zoomLevel });
                 const actualOpacity = Math.min(alphaTransition, opacity);
 
-                if (actualOpacity === 0 || barWidth <= 0 || y <= 0) {
-                    // do not draw invisible marks
+                if (
+                    actualOpacity === 0 ||
+                    barWidth <= 0 ||
+                    (isFlippedY && y - rowHeight >= 0) ||
+                    (!isFlippedY && y <= 0)
+                ) {
                     return;
                 }
 
@@ -103,9 +108,13 @@ export function drawBar(track: any, tile: Tile, model: GoslingTrackModel) {
 
                 let polygonForMouseEvents: number[] = [];
 
+                const barHeight = isFlippedY ? rowHeight - y : y;
+
                 if (circular) {
-                    const farR = trackOuterRadius - ((rowHeight - prevYEnd) / trackHeight) * trackRingSize;
-                    const nearR = trackOuterRadius - ((rowHeight - y - prevYEnd) / trackHeight) * trackRingSize;
+                    const ys = isFlippedY ? prevYEnd : rowHeight - prevYEnd;
+                    const farR = trackOuterRadius - (ys / trackHeight) * trackRingSize;
+                    const ye = isFlippedY ? barHeight + prevYEnd : rowHeight - y - prevYEnd;
+                    const nearR = trackOuterRadius - (ye / trackHeight) * trackRingSize;
 
                     const sPos = cartesianToPolar(xs, trackWidth, nearR, cx, cy, startAngle, endAngle);
                     const startRad = valueToRadian(xs, trackWidth, startAngle, endAngle);
@@ -119,16 +128,15 @@ export function drawBar(track: any, tile: Tile, model: GoslingTrackModel) {
                     g.closePath();
                 } else {
                     g.beginFill(colorToHex(color), color === 'none' ? 0 : actualOpacity);
-                    g.drawRect(xs, rowHeight - y - prevYEnd, barWidth, y);
-                    const ys = rowHeight - y - prevYEnd;
+                    const ys = isFlippedY ? prevYEnd : rowHeight - y - prevYEnd;
+                    g.drawRect(xs, ys, barWidth, barHeight);
                     const ye = ys + y;
                     polygonForMouseEvents = [xs, ys, xs, ye, xe, ye, xe, ys];
                 }
 
                 /* Mouse Events */
                 model.getMouseEventModel().addPolygonBasedEvent(d, polygonForMouseEvents);
-
-                prevYEnd += y;
+                prevYEnd += barHeight;
             });
         });
     } else {
