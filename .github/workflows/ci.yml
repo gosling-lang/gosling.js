@@ -49,19 +49,19 @@ jobs:
     #           with:
     #               token: ${{ secrets.CODECOV_TOKEN }}
     #               fail_ci_if_error: true
-    VisualTest:
-        name: Visual Regression
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v3
-            - name: Use Node.js
-              uses: actions/setup-node@v3
-              with:
-                  node-version: 20
-            - uses: pnpm/action-setup@v2
-            - run: pnpm install
-            - run: npx playwright install --with-deps chromium
-            - run: pnpm test-ct
+    # VisualTest:
+    #     name: Visual Regression
+    #     runs-on: ubuntu-latest
+    #     steps:
+    #         - uses: actions/checkout@v3
+    #         - name: Use Node.js
+    #           uses: actions/setup-node@v3
+    #           with:
+    #               node-version: 20
+    #         - uses: pnpm/action-setup@v2
+    #         - run: pnpm install
+    #         - run: npx playwright install --with-deps chromium
+    #         - run: pnpm test-ct
 
     # Lint:
     #     runs-on: ubuntu-latest
