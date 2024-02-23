@@ -75,7 +75,6 @@ export function drawMark(HGC: import('@higlass/types').HGC, trackInfo: any, tile
             model.setChannelScale(d, yScale);
         });
     }
-
     // Size of a track
     const [trackWidth, trackHeight] = trackInfo.dimensions;
 
