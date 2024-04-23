@@ -150,17 +150,29 @@ const CRHOM_SIZES: { [assembly: string]: ChromSize } = Object.freeze({
 /**
  * Some presets of auto-complete IDs (`autocompleteId`) to search for genes using the HiGlass server.
  */
-export function getAutoCompleteId(assembly?: Assembly) {
+export function getAutoCompleteObject(assembly: Assembly = 'hg38') {
+    const base = {
+        autocompleteServer: 'https://server.gosling-lang.org/api/v1',
+        chromInfoServer: 'https://server.gosling-lang.org/api/v1',
+        chromInfoId: assembly
+    };
     switch (assembly) {
         case 'hg19':
-            return 'OHJakQICQD6gTD7skx4EWA';
+            return { ...base, autocompleteId: 'gene-annotation-hg19' };
         case 'mm10':
-            return 'QDutvmyiSrec5nX4pA5WGQ';
+            return { ...base, autocompleteId: 'gene-annotation-mm10' };
         case 'mm9':
-            return 'GUm5aBiLRCyz2PsBea7Yzg';
+            // mm9 is not supported by the Gosling server, so we use HiGlass server.
+            // To support, we need to add mm9 gene annotation to the Gosling server.
+            return {
+                ...base,
+                autocompleteServer: 'https://higlass.io/api/v1',
+                chromInfoServer: 'https://higlass.io/api/v1',
+                autocompleteId: 'GUm5aBiLRCyz2PsBea7Yzg'
+            };
         case 'hg38':
         default:
-            return 'P0PLbQMwTYGy-5uPIQid7A';
+            return { ...base, autocompleteId: 'gene-annotation' };
     }
 }
 
