@@ -318,7 +318,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         }
 
         /**
-         * From BarTrack
+         * Copied from BarTrack
          */
         getXScaleAndOffset(drawnAtScale: Scale) {
             const dA = drawnAtScale.domain();
@@ -1370,7 +1370,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         hideMousePosition?: () => void; // set in HorizontalTiled1DPixiTrack
 
         /**
-         * Overrides method in HorizontalLine1DPixiTrack
+         * Called by showHoverMenu() in HiGlassComponent
          */
         getMouseOverHtml(mouseX: number, mouseY: number) {
             // `trackMouseOver` API
