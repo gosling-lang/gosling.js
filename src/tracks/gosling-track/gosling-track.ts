@@ -1105,12 +1105,6 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
             return tileInfo.goslingModels;
         }
-        /**
-         * Copied from HorizontalTiled1DPixiTrack. This is not being used by anything, can delete
-         */
-        relevantScale(): Scale {
-            return this._xScale;
-        }
 
         /* *
          *
