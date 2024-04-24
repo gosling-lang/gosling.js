@@ -52,6 +52,7 @@ import { HIGLASS_AXIS_SIZE } from '../../compiler/higlass-model';
 import { flatArrayToPairArray } from '../../core/utils/array';
 import { createPluginTrack, type PluginTrackFactory, type TrackConfig } from '../../core/utils/define-plugin-track';
 import { uuid } from '../../core/utils/uuid';
+import type { Scale } from '@higlass/tracks';
 
 // Set `true` to print in what order each function is called
 export const PRINT_RENDERING_CYCLE = false;
@@ -135,7 +136,7 @@ const config: TrackConfig<GoslingTrackOptions> = {
 const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, options) => {
     // Services
     const { tileProxy } = HGC.services;
-    const { BarTrack } = HGC.tracks;
+    const { HorizontalTiled1DPixiTrack } = HGC.tracks;
 
     /* Custom loading label */
     const loadingTextStyle = getTextStyle({ color: 'black', size: 12 });
@@ -144,7 +145,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
      * The main plugin track in Gosling. This is a versetile plugin track for HiGlass which relies on GoslingTrackModel
      * to keep track of mouse event and channel scales.
      */
-    class GoslingTrackClass extends BarTrack<Tile, typeof options> {
+    class GoslingTrackClass extends HorizontalTiled1DPixiTrack<Tile, typeof options> {
         /* *
          *
          *  Properties
@@ -291,6 +292,11 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 // This function calls `drawTile` on each tile.
                 super.draw();
 
+                // From BarTrack
+                Object.values(this.fetchedTiles).forEach(tile => {
+                    [tile.graphics.scale.x, tile.graphics.position.x] = this.getXScaleAndOffset(tile.drawnAtScale);
+                });
+
                 // Record tiles so that we ignore loading same tiles again
                 this.prevVisibleAndFetchedTiles = this.visibleAndFetchedTiles();
             };
@@ -313,6 +319,20 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             }
         }
 
+        /**
+         * From BarTrack
+         */
+        getXScaleAndOffset(drawnAtScale: Scale) {
+            const dA = drawnAtScale.domain();
+            const dB = this._xScale.domain();
+
+            // scaling between tiles
+            const tileK = (dA[1] - dA[0]) / (dB[1] - dB[0]);
+            const newRange = this._xScale.domain().map(drawnAtScale);
+            const posOffset = newRange[0];
+            return [tileK, -posOffset * tileK];
+        }
+
         /*
          * Do whatever is necessary before rendering a new tile. This function is called from `receivedTiles()`.
          * Overrides initTile in BarTrack
@@ -326,7 +346,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         }
 
         override updateTile(/* tile: Tile */) {} // Never mind about this function for the simplicity.
-        override renderTile(/* tile: Tile */) {} // Never mind about this function for the simplicity.
+        renderTile(/* tile: Tile */) {} // Never mind about this function for the simplicity.
 
         /**
          * Display a tile upon receiving a new one or when explicitly called by a developer, e.g., calling
@@ -471,6 +491,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             super.setPosition(newPosition); // This simply changes `this.position`
 
             [this.pMain.position.x, this.pMain.position.y] = this.position;
+            [this.pMouseOver.position.x, this.pMouseOver.position.y] = this.position;
 
             this.mRangeBrush.setOffset(...newPosition);
         }
@@ -1307,7 +1328,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         /**
          * Overrides method in HorizontalLine1DPixiTrack
          */
-        override getMouseOverHtml(mouseX: number, mouseY: number) {
+        getMouseOverHtml(mouseX: number, mouseY: number) {
             // `trackMouseOver` API
             this.#publishTrackEvents('trackMouseOver', mouseX, mouseY);
 
