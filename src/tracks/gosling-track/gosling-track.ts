@@ -52,7 +52,7 @@ import { HIGLASS_AXIS_SIZE } from '../../compiler/higlass-model';
 import { flatArrayToPairArray } from '../../core/utils/array';
 import { createPluginTrack, type PluginTrackFactory, type TrackConfig } from '../../core/utils/define-plugin-track';
 import { uuid } from '../../core/utils/uuid';
-import type { Scale } from '@higlass/tracks';
+import type { Scale, TilePosition } from '@higlass/tracks';
 
 // Set `true` to print in what order each function is called
 export const PRINT_RENDERING_CYCLE = false;
@@ -136,7 +136,7 @@ const config: TrackConfig<GoslingTrackOptions> = {
 const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, options) => {
     // Services
     const { tileProxy } = HGC.services;
-    const { Tiled1DPixiTrack } = HGC.tracks;
+    const { TiledPixiTrack } = HGC.tracks;
 
     /* Custom loading label */
     const loadingTextStyle = getTextStyle({ color: 'black', size: 12 });
@@ -145,7 +145,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
      * The main plugin track in Gosling. This is a versetile plugin track for HiGlass which relies on GoslingTrackModel
      * to keep track of mouse event and channel scales.
      */
-    class GoslingTrackClass extends Tiled1DPixiTrack<Tile, typeof options> {
+    class GoslingTrackClass extends TiledPixiTrack<Tile, typeof options> {
         /* *
          *
          *  Properties
@@ -186,10 +186,8 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
         constructor() {
             super(context, options);
-            // HorizontalTiled1DPixiTrack constructor
             const { isShowGlobalMousePosition } = context;
 
-            // From GoslingTrack constructor
             context.dataFetcher.track = this;
             this.#processedTileInfo = {};
             this.#assembly = this.options.spec.assembly;
@@ -236,12 +234,8 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             this.pMask.on('mouseout', this.#onMouseOut.bind(this));
             this.flipText = this.options.spec.orientation === 'vertical';
 
-            // Remove a mouse graphic if created by a parent, and draw ourselves.
+            // Draw the mouse position
             // See https://github.com/higlass/higlass/blob/38f0c4415f0595c3b9d685a754d6661dc9612f7c/app/scripts/utils/show-mouse-position.js#L28
-            if (this.hideMousePosition) {
-                this.hideMousePosition();
-                this.hideMousePosition = undefined;
-            }
             if (this.options?.showMousePosition && !this.hideMousePosition) {
                 this.hideMousePosition = HGC.utils.showMousePosition(
                     this,
@@ -297,6 +291,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
                 // From BarTrack
                 Object.values(this.fetchedTiles).forEach(tile => {
+                    if (!tile.drawnAtScale) return;
                     [tile.graphics.scale.x, tile.graphics.position.x] = this.getXScaleAndOffset(tile.drawnAtScale);
                 });
 
@@ -635,10 +630,10 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         }
 
         /**
-         * Overrides method in Tiled1DPixiTrack. It is called in the constructor, `super(context, options)`.
+         * This method is called in the TiledPixiTrack constructor `super(context, options)`.
          * So be aware to use defined variables.
          */
-        override calculateVisibleTiles() {
+        calculateVisibleTiles() {
             if (!this.tilesetInfo) return;
             if (isTabularDataFetcher(this.dataFetcher)) {
                 const tiles = HGC.utils.trackUtils.calculate1DVisibleTiles(this.tilesetInfo, this._xScale);
@@ -718,9 +713,8 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 }
             }
         }
-
         /**
-         * From HorizontalTiled1DPixiTrack
+         * Copied from HorizontalTiled1DPixiTrack
          */
         calculateZoomLevel() {
             if (!this.tilesetInfo) {
@@ -736,7 +730,6 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
                 return zoomIndexX;
             }
-
             // the tileProxy calculateZoomLevel function only cares about the
             // difference between the minimum and maximum position
             const xZoomLevel = tileProxy.calculateZoomLevel(
@@ -768,11 +761,10 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             xTiles.forEach(x => yTiles.forEach(y => tiles.push([zoomLevel, x, y])));
             return tiles;
         }
-
         /**
-         * Get the tile's position in its coordinate system. Overrides method in Tiled1DPixiTrack.
+         * Get the tile's position in its coordinate system. Based on method in Tiled1DPixiTrack
          */
-        override getTilePosAndDimensions(zoomLevel: number, tilePos: [number, number]) {
+        getTilePosAndDimensions(zoomLevel: number, tilePos: [number, number]) {
             if (!this.tilesetInfo) {
                 throw Error('tilesetInfo not parsed');
             }
@@ -830,11 +822,10 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             }
             return maybeValue ?? 256;
         }
-
         /**
-         * Gets the indices of the visible data a tile. Overrides method in Tiled1DPixiTrack
+         * Gets the indices of the visible data a tile. Based on method in Tiled1DPixiTrack
          */
-        override getIndicesOfVisibleDataInTile(tile: Tile): [number, number] {
+        getIndicesOfVisibleDataInTile(tile: Tile): [number, number] {
             const visible = this._xScale.range();
 
             if (!this.tilesetInfo || !tile.tileData.tilePos || !('dense' in tile.tileData)) {
@@ -859,7 +850,6 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
         /**
          * Overrides method in TiledPixiTrack
-         * @param loadedTiles
          */
         override receivedTiles(loadedTiles: Record<string, Tile>) {
             // https://github.com/higlass/higlass/blob/38f0c4415f0595c3b9d685a754d6661dc9612f7c/app/scripts/TiledPixiTrack.js#L637
@@ -930,6 +920,18 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             return includesDisplaceTransform && !hasDenseTiles() && !isBamDataFetcher;
         }
 
+        /**
+         * Copied from Tiled1DPixiTrack. The ID of the local tile
+         */
+        tileToLocalId(tile: TilePosition) {
+            return `${tile.join('.')}`;
+        }
+        /**
+         * Copied from Tiled1DPixiTrack. The ID of the tile on the server.
+         */
+        tileToRemoteId(tile: TilePosition) {
+            return `${tile.join('.')}`;
+        }
         /**
          * Creates an array of SingleTracks if there are overlaid tracks.
          * This method cannot be private because it is called by functions which are called by super.draw();
@@ -1103,9 +1105,8 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
             return tileInfo.goslingModels;
         }
-
         /**
-         * This is not being used by anything, can delete
+         * Copied from HorizontalTiled1DPixiTrack. This is not being used by anything, can delete
          */
         relevantScale(): Scale {
             return this._xScale;
@@ -1118,7 +1119,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
          * */
 
         /**
-         * From HorizontalTiled1DPixiTrack
+         * This is for the HiGlass mouseMoveZoom event. However, GoslingTrack has its own way of handling mouse events.
          */
         mouseMoveZoomHandler() {
             return;
@@ -1200,7 +1201,6 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             document.body.style.cursor = 'default';
             this.pMouseHover.clear();
         }
-
         /**
          * From all tiles and overlaid tracks, collect element(s) that are withing a mouse position.
          */
@@ -1517,7 +1517,6 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         override exportSVG(): never {
             throw new Error('exportSVG() not supported for gosling-track');
         }
-
         /**
          * Show visual cue during waiting for visualizations being rendered. Also called by data fetchers
          */
@@ -1551,7 +1550,6 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 this.#loadingTextBg.visible = false;
             }
         }
-
         /**
          * Called in legend.ts
          */
@@ -1569,7 +1567,6 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 }
             });
         }
-
         /**
          * Called in legend.ts
          */
@@ -1586,7 +1583,6 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 }
             });
         }
-
         /**
          * Used in drawTile()
          * Checks if the track has marks which are stretchable. Stretching
@@ -1611,10 +1607,8 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
             return isFirstTrack1D && isNotCircularLayout && hasStretchableMark && noMouseInteractions;
         }
-
         /**
-         * Used in drawTile()
-         * Checks if the tile Graphic is too stretched. If so, it returns true.
+         * Used in drawTile(). Checks if the tile Graphic is too stretched. If so, it returns true.
          * @param stretchFactor The factor by which the tile is stretched
          * @returns True if the tile is too stretched, false otherwise
          */
