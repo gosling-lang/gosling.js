@@ -136,7 +136,7 @@ const config: TrackConfig<GoslingTrackOptions> = {
 const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, options) => {
     // Services
     const { tileProxy } = HGC.services;
-    const { HorizontalTiled1DPixiTrack } = HGC.tracks;
+    const { Tiled1DPixiTrack } = HGC.tracks;
 
     /* Custom loading label */
     const loadingTextStyle = getTextStyle({ color: 'black', size: 12 });
@@ -145,7 +145,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
      * The main plugin track in Gosling. This is a versetile plugin track for HiGlass which relies on GoslingTrackModel
      * to keep track of mouse event and channel scales.
      */
-    class GoslingTrackClass extends HorizontalTiled1DPixiTrack<Tile, typeof options> {
+    class GoslingTrackClass extends Tiled1DPixiTrack<Tile, typeof options> {
         /* *
          *
          *  Properties
@@ -186,7 +186,10 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
         constructor() {
             super(context, options);
+            // HorizontalTiled1DPixiTrack constructor
+            const { isShowGlobalMousePosition } = context;
 
+            // From GoslingTrack constructor
             context.dataFetcher.track = this;
             this.#processedTileInfo = {};
             this.#assembly = this.options.spec.assembly;
@@ -243,7 +246,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 this.hideMousePosition = HGC.utils.showMousePosition(
                     this,
                     Is2DTrack(this.getResolvedTracks()[0]),
-                    this.isShowGlobalMousePosition()
+                    isShowGlobalMousePosition()
                 );
             }
 
@@ -689,7 +692,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 } else {
                     const xTiles = tileProxy.calculateTiles(
                         zoomLevel,
-                        this.relevantScale(),
+                        this._xScale,
                         this.tilesetInfo.min_pos[0],
                         this.tilesetInfo.max_pos[0],
                         this.tilesetInfo.max_zoom,
@@ -714,6 +717,39 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                     this.setVisibleTiles(tiles);
                 }
             }
+        }
+
+        /**
+         * From HorizontalTiled1DPixiTrack
+         */
+        calculateZoomLevel() {
+            if (!this.tilesetInfo) {
+                throw Error('tilesetInfo not parsed');
+            }
+            // offset by 2 because 1D tiles are more dense than 2D tiles
+            // 1024 points per tile vs 256 for 2D tiles
+            if ('resolutions' in this.tilesetInfo) {
+                const zoomIndexX = tileProxy.calculateZoomLevelFromResolutions(
+                    this.tilesetInfo.resolutions,
+                    this._xScale
+                );
+
+                return zoomIndexX;
+            }
+
+            // the tileProxy calculateZoomLevel function only cares about the
+            // difference between the minimum and maximum position
+            const xZoomLevel = tileProxy.calculateZoomLevel(
+                this._xScale,
+                this.tilesetInfo.min_pos[0],
+                this.tilesetInfo.max_pos[0],
+                this.tilesetInfo.bins_per_dimension || this.tilesetInfo.tile_size
+            );
+
+            let zoomLevel = Math.min(xZoomLevel, this.maxZoom);
+            zoomLevel = Math.max(zoomLevel, 0);
+
+            return zoomLevel;
         }
         /**
          * Convert tile positions to tile IDs
@@ -1068,11 +1104,25 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             return tileInfo.goslingModels;
         }
 
+        /**
+         * This is not being used by anything, can delete
+         */
+        relevantScale(): Scale {
+            return this._xScale;
+        }
+
         /* *
          *
          *  Mouse methods
          *
          * */
+
+        /**
+         * From HorizontalTiled1DPixiTrack
+         */
+        mouseMoveZoomHandler() {
+            return;
+        }
 
         #onMouseDown(mouseX: number, mouseY: number, isAltPressed: boolean) {
             // Record these so that we do not triger click event when dragged.
