@@ -125,7 +125,7 @@ declare module '@higlass/tracks' {
     import type { TilesetInfo, ColorRGBA } from '@higlass/services';
     import type { ChromInfo } from '@higlass/utils';
 
-    type Scale = d3.ScaleContinuousNumeric<number, number>;
+    export type Scale = d3.ScaleContinuousNumeric<number, number>;
 
     type Handler = (data: any) => void;
 
@@ -194,6 +194,7 @@ declare module '@higlass/tracks' {
         dimensions: [number, number];
         options: Options;
         pubSubs: Subscription[];
+        isLeftModified: boolean;
         /* Constructor */
         constructor(props: { id: string; pubSub: PubSub; getTheme?: () => string });
         /* Methods */
@@ -315,7 +316,7 @@ declare module '@higlass/tracks' {
         listeners: Record<string, unknown>;
 
         pubSub: Pick<Context<TileData, Options>, 'pubSub'>;
-        animate: Pick<Context<TileData, Options>, 'animate'>;
+        animate: Context<TileData, Options>['animate'];
         onValueScaleChanged: Pick<Context<TileData, Options>, 'onValueScaleChanged'>;
 
         // store the server and tileset uid so they can be used in draw()
@@ -430,7 +431,7 @@ declare module '@higlass/tracks' {
     }
 
     export abstract class Tiled1DPixiTrack<TileData, Options> extends TiledPixiTrack<TileData, Options> {
-        onMouseMoveZoom: Pick<Context<TileData, Options>, 'onMouseMoveZoom'>;
+        onMouseMoveZoom: Context<TileData, Options>['onMouseMoveZoom'];
         isValueScaleLocked: Pick<Context<TileData, Options>, 'isValueScaleLocked'>;
         getLockGroupExtrema: Pick<Context<TileData, Options>, 'getLockGroupExtrema'>;
         initTile(tile: TileData): void;
