@@ -4,7 +4,7 @@ import type { Assembly, AxisPosition, Domain, DummyTrack, Orientation, ZoomLimit
 import { getNumericDomain } from '../core/utils/scales';
 import type { RelativePosition } from './bounding-box';
 import { validateSpec } from '@gosling-lang/gosling-schema';
-import { getAutoCompleteId, computeChromSizes } from '../core/utils/assembly';
+import { getAutoCompleteObject, computeChromSizes } from '../core/utils/assembly';
 import type { CompleteThemeDeep } from '../core/utils/theme';
 import exampleHg from '../core/example/hg-view-config-1';
 import { insertItemToArray } from '../core/utils/array';
@@ -15,12 +15,7 @@ export const HIGLASS_AXIS_SIZE = 30;
 const getViewTemplate = (assembly?: Assembly) => {
     return {
         genomePositionSearchBoxVisible: false,
-        genomePositionSearchBox: {
-            autocompleteServer: 'https://higlass.io/api/v1',
-            autocompleteId: getAutoCompleteId(assembly),
-            chromInfoServer: 'https://higlass.io/api/v1',
-            chromInfoId: assembly ?? 'hg38'
-        },
+        genomePositionSearchBox: getAutoCompleteObject(assembly),
         layout: { w: 12, h: 12, x: 0, y: 0 },
         tracks: {
             top: [],
