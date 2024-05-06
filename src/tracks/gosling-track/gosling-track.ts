@@ -1,4 +1,4 @@
-import type * as PIXI from 'pixi.js';
+import * as PIXI from 'pixi.js';
 import { isEqual, sampleSize, uniqBy } from 'lodash-es';
 import type { ScaleLinear } from 'd3-scale';
 import type {
@@ -399,7 +399,8 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             this.pBackground.clear();
             this.pBackground.removeChildren();
             this.pBorder.clear();
-            this.pBorder.removeChildren();
+            const children = this.pBorder.removeChildren();
+            children.forEach(c => c.destroy());
             this.displayedLegends = [];
 
             // Because a single tile contains one track or multiple tracks overlaid, we draw marks and embellishments
