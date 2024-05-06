@@ -1,3 +1,17 @@
+# [0.17.0](https://github.com/gosling-lang/gosling.js/compare/v0.16.0...v0.17.0) (2024-05-06)
+
+
+### Features
+
+* **api:** use gosling server instead of HiGlass server for gene search ([#1053](https://github.com/gosling-lang/gosling.js/issues/1053)) ([f0ec117](https://github.com/gosling-lang/gosling.js/commit/f0ec117ad857ca89b7b1bc17ee555af8e0e8acda))
+
+
+### Performance Improvements
+
+* **track:** reduce webgl memory usage ([#1057](https://github.com/gosling-lang/gosling.js/issues/1057)) ([80ed16e](https://github.com/gosling-lang/gosling.js/commit/80ed16ec022286efb97d54307623ef02f565a7aa))
+
+
+
 # [0.16.0](https://github.com/gosling-lang/gosling.js/compare/v0.15.0...v0.16.0) (2024-02-22)
 
 
