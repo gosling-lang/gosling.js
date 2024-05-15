@@ -71,6 +71,9 @@ export class GoslingTrackModel {
     /* mouse events */
     private mouseEventModel: MouseEventModel;
 
+    public xScale: ScaleType | undefined;
+    public yScale: ScaleType | undefined;
+
     constructor(spec: SingleTrack, data: { [k: string]: number | string }[], theme: Required<CompleteThemeDeep>) {
         this.id = uuid();
 
