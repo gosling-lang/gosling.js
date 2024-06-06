@@ -72,7 +72,7 @@ export function compile(
 
     // publish the fixed spec
     // used for alt-gosling
-    publish('specProcessed', {
+    publish('specResolved', {
         id: specCopy.id,
         spec: specCopy
     });
