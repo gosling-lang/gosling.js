@@ -6,14 +6,20 @@ import type {
     ChannelDeep,
     DataDeep
 } from '@gosling-lang/gosling-schema';
-import { IsChannelDeep, IsDataTrack, IsOverlaidTrack, IsSingleTrack, IsDummyTrack } from '@gosling-lang/gosling-schema';
+import {
+    IsChannelDeep,
+    IsOverlaidTrack,
+    IsSingleTrack,
+    IsDummyTrack,
+    IsTemplateTrack
+} from '@gosling-lang/gosling-schema';
 
 /**
  * Resolve superposed tracks into multiple track specifications.
  * Some options are corrected to ensure the resolved tracks use consistent visual properties, such as the existence of the axis for genomic coordinates.
  */
 export function resolveSuperposedTracks(track: Track): SingleTrack[] {
-    if (IsDataTrack(track) || IsDummyTrack(track)) {
+    if (IsTemplateTrack(track) || IsDummyTrack(track)) {
         // no BasicSingleTrack to return
         return [];
     }
@@ -69,7 +75,7 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
 export function spreadTracksByData(tracks: Track[]): Track[] {
     return ([] as Track[]).concat(
         ...tracks.map(t => {
-            if (IsDataTrack(t) || !IsOverlaidTrack(t) || t._overlay.length <= 1) {
+            if (!IsOverlaidTrack(t) || t._overlay.length <= 1) {
                 // no overlaid tracks to spread
                 return [t];
             }
