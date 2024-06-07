@@ -1220,7 +1220,6 @@ function Editor(props: RouteComponentProps) {
                                             border={'none'}
                                             id={'goslig-component-root'}
                                             className={'goslig-component'}
-                                            experimental={{ reactive: true }}
                                             compiled={(_, h) => {
                                                 setHg(h);
                                             }}
