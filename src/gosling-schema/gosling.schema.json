@@ -1186,9 +1186,6 @@
             "overlayOnPreviousTrack": {
               "type": "boolean"
             },
-            "overrideTemplate": {
-              "type": "boolean"
-            },
             "prerelease": {
               "additionalProperties": false,
               "description": "internal",
@@ -1345,9 +1342,6 @@
                         "type": "number"
                       },
                       "overlayOnPreviousTrack": {
-                        "type": "boolean"
-                      },
-                      "overrideTemplate": {
                         "type": "boolean"
                       },
                       "prerelease": {
@@ -1972,9 +1966,6 @@
             "overlayOnPreviousTrack": {
               "type": "boolean"
             },
-            "overrideTemplate": {
-              "type": "boolean"
-            },
             "prerelease": {
               "additionalProperties": false,
               "description": "internal",
@@ -2131,9 +2122,6 @@
                         "type": "number"
                       },
                       "overlayOnPreviousTrack": {
-                        "type": "boolean"
-                      },
-                      "overrideTemplate": {
                         "type": "boolean"
                       },
                       "prerelease": {
@@ -2813,9 +2801,6 @@
                         "type": "number"
                       },
                       "overlayOnPreviousTrack": {
-                        "type": "boolean"
-                      },
-                      "overrideTemplate": {
                         "type": "boolean"
                       },
                       "prerelease": {
@@ -4057,9 +4042,6 @@
               "overlayOnPreviousTrack": {
                 "type": "boolean"
               },
-              "overrideTemplate": {
-                "type": "boolean"
-              },
               "prerelease": {
                 "additionalProperties": false,
                 "description": "internal",
@@ -4390,9 +4372,6 @@
           "type": "number"
         },
         "overlayOnPreviousTrack": {
-          "type": "boolean"
-        },
-        "overrideTemplate": {
           "type": "boolean"
         },
         "prerelease": {
@@ -4755,9 +4734,6 @@
           "type": "number"
         },
         "overlayOnPreviousTrack": {
-          "type": "boolean"
-        },
-        "overrideTemplate": {
           "type": "boolean"
         },
         "prerelease": {
@@ -5132,9 +5108,6 @@
               "overlayOnPreviousTrack": {
                 "type": "boolean"
               },
-              "overrideTemplate": {
-                "type": "boolean"
-              },
               "prerelease": {
                 "additionalProperties": false,
                 "description": "internal",
@@ -5491,9 +5464,6 @@
           "type": "number"
         },
         "overlayOnPreviousTrack": {
-          "type": "boolean"
-        },
-        "overrideTemplate": {
           "type": "boolean"
         },
         "prerelease": {
@@ -6037,9 +6007,6 @@
         "overlayOnPreviousTrack": {
           "type": "boolean"
         },
-        "overrideTemplate": {
-          "type": "boolean"
-        },
         "prerelease": {
           "additionalProperties": false,
           "description": "internal",
@@ -6405,9 +6372,6 @@
             "overlayOnPreviousTrack": {
               "type": "boolean"
             },
-            "overrideTemplate": {
-              "type": "boolean"
-            },
             "prerelease": {
               "additionalProperties": false,
               "description": "internal",
@@ -6560,9 +6524,6 @@
                         "type": "number"
                       },
                       "overlayOnPreviousTrack": {
-                        "type": "boolean"
-                      },
-                      "overrideTemplate": {
                         "type": "boolean"
                       },
                       "prerelease": {
@@ -7184,9 +7145,6 @@
             "overlayOnPreviousTrack": {
               "type": "boolean"
             },
-            "overrideTemplate": {
-              "type": "boolean"
-            },
             "prerelease": {
               "additionalProperties": false,
               "description": "internal",
@@ -7339,9 +7297,6 @@
                         "type": "number"
                       },
                       "overlayOnPreviousTrack": {
-                        "type": "boolean"
-                      },
-                      "overrideTemplate": {
                         "type": "boolean"
                       },
                       "prerelease": {
@@ -8014,9 +7969,6 @@
                         "type": "number"
                       },
                       "overlayOnPreviousTrack": {
-                        "type": "boolean"
-                      },
-                      "overrideTemplate": {
                         "type": "boolean"
                       },
                       "prerelease": {

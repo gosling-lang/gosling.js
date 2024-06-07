@@ -95,10 +95,6 @@ export function IsDummyTrack(_: Track): _ is DummyTrack {
     return 'type' in _ && _.type == 'dummy-track';
 }
 
-export function IsDataTemplate(_: Partial<Track>): boolean {
-    return !!('data' in _ && 'overrideTemplate' in _ && _.overrideTemplate);
-}
-
 export function IsDataDeep(data: DataDeep | Datum[]): data is DataDeep {
     return typeof data === 'object';
 }

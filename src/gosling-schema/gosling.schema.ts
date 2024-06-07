@@ -459,7 +459,6 @@ interface SingleTrackBase extends CommonTrackDef {
     flipY?: boolean; // This is only supported for `link` marks.
     baselineY?: number; // This is only supported for `link` marks.
     stretch?: boolean; // Stretch the size to the given range? (e.g., [x, xe])
-    overrideTemplate?: boolean; // Override a spec template that is defined for a given data type.
 }
 
 export interface Encoding {
@@ -1527,7 +1526,6 @@ export type TemplateTrackMappingDef = Omit<
     // Experimental
     flipY?: boolean; // This is only supported for `link` marks.
     stretch?: boolean; // Stretch the size to the given range? (e.g., [x, xe])
-    overrideTemplate?: boolean; // Override a spec template that is defined for a given data type.
 };
 
 // The main difference is that this allows to specify a `base` property
