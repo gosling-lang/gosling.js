@@ -40,9 +40,7 @@ export interface GoslingCompProps {
     theme?: Theme;
     templates?: TemplateTrackDef[];
     urlToFetchOptions?: UrlToFetchOptions;
-    experimental?: {
-        reactive?: boolean;
-    };
+    reactive?: boolean;
 }
 
 export type GoslingRef = {
@@ -51,6 +49,7 @@ export type GoslingRef = {
 };
 
 export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props, ref) => {
+    const { reactive = true } = props;
     const [viewConfig, setViewConfig] = useState<gosling.HiGlassSpec>();
     // Keeping track of whether the initial render has occured is important so the API works pr
     const [isInitialRender, setIsInitialRender] = useState(true);
@@ -129,7 +128,7 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
 
                         // Update the compiled view config
                         const isMountedOnce = typeof viewConfig !== 'undefined';
-                        if (props.experimental?.reactive && isMountedOnce) {
+                        if (reactive && isMountedOnce) {
                             // Use API to update visualization.
                             setTimeout(() => {
                                 preverseZoomStatus(
