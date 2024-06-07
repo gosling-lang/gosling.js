@@ -154,7 +154,7 @@ export interface CommonViewDef {
 }
 
 /* ----------------------------- TRACK ----------------------------- */
-export type Track = SingleTrack | OverlaidTrack | DataTrack | TemplateTrack | DummyTrack;
+export type Track = SingleTrack | OverlaidTrack | TemplateTrack | DummyTrack;
 
 export interface CommonTrackDef extends CommonViewDef {
     /** Assigned to `uid` in a HiGlass view config, used for API and caching. */
@@ -203,12 +203,6 @@ export interface CommonTrackDef extends CommonViewDef {
     };
 }
 
-/**
- * Partial specification of `BasicSingleTrack` to use default visual encoding predefined by data type.
- */
-export interface DataTrack extends CommonTrackDef {
-    data: DataDeep;
-}
 /**
  * A placeholder track. In contrast to other tracks, this track does not display any data. Instead it provides
  * empty space for third party tools to display their data on top of.
