@@ -26,7 +26,7 @@ export interface UrlToFetchOptions {
 type CompiledCallbackFn = (
     goslingSpec: gosling.GoslingSpec,
     higlassSpec: gosling.HiGlassSpec,
-    _additionalData: { _processedSpec: gosling.GoslingSpec }
+    experimental: { experimental_processedSpec: gosling.GoslingSpec }
 ) => void;
 
 export interface GoslingCompProps {
@@ -122,7 +122,7 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
                         }
 
                         // If a callback function is provided, return compiled information.
-                        props.compiled?.(spec, newHiGlassSpec, { _processedSpec: newGoslingSpec });
+                        props.compiled?.(spec, newHiGlassSpec, { experimental_processedSpec: newGoslingSpec });
 
                         // Change the size of wrapper `<div/>` elements
                         setSize(newSize);
