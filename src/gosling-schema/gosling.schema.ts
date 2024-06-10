@@ -284,13 +284,6 @@ interface CommonEventData {
     data: Datum[];
 }
 
-interface SpecEventData {
-    /** Source visualization ID, i.e., `track.id` */
-    id: string;
-    /** Gosling spec */
-    spec: GoslingSpec;
-}
-
 export interface GenomicPosition {
     chromosome: string;
     position: number;
