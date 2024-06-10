@@ -274,7 +274,7 @@ export type Mark =
     | 'brush'
     // TODO: perhaps need to make this invisible to users
     // being used to show title/subtitle internally
-    | 'header';
+    | '_header';
 
 /* ----------------------------- API & MOUSE EVENTS ----------------------------- */
 interface CommonEventData {

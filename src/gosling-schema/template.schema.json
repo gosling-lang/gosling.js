@@ -924,7 +924,7 @@
         "triangleRight",
         "triangleBottom",
         "brush",
-        "header"
+        "_header"
       ],
       "type": "string"
     },
