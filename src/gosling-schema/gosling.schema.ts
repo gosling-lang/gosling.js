@@ -272,8 +272,7 @@ export type Mark =
     | 'triangleRight'
     | 'triangleBottom'
     | 'brush'
-    // TODO: perhaps need to make this invisible to users
-    // being used to show title/subtitle internally
+    // The _header mark is used internally for text tracks
     | '_header';
 
 /* ----------------------------- API & MOUSE EVENTS ----------------------------- */
