@@ -1249,6 +1249,10 @@
           "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
           "type": "number"
         },
+        "clockwise": {
+          "description": "Clockwise or anticlockwise (`{\"layout\": \"circular\"}`). __Default__: `false`",
+          "type": "boolean"
+        },
         "color": {
           "$ref": "#/definitions/ChannelWithBase"
         },
