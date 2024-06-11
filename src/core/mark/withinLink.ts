@@ -145,7 +145,7 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
                         trackOuterRadius,
                         positionToRadian(posX1E.x, posX1E.y, tcx, tcy),
                         positionToRadian(posX1.x, posX1.y, tcx, tcy),
-                        false
+                        isClockwise
                     );
 
                     // inner curve
@@ -157,7 +157,7 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
                         trackOuterRadius,
                         positionToRadian(posXE.x, posXE.y, tcx, tcy),
                         positionToRadian(posX.x, posX.y, tcx, tcy),
-                        false
+                        isClockwise
                     );
                     pathForMouseEvent = Array.from(g.currentPath.points);
                     g.endFill();

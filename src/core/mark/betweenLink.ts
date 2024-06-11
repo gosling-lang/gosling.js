@@ -135,7 +135,7 @@ export function drawBetweenLink(g: PIXI.Graphics, trackInfo: any, model: Gosling
                         trackOuterRadius,
                         positionToRadian(posX1E.x, posX1E.y, tcx, tcy),
                         positionToRadian(posX1.x, posX1.y, tcx, tcy),
-                        false
+                        isClockwise
                     );
 
                     // inner curve
@@ -147,7 +147,7 @@ export function drawBetweenLink(g: PIXI.Graphics, trackInfo: any, model: Gosling
                         trackOuterRadius,
                         positionToRadian(posXE.x, posXE.y, tcx, tcy),
                         positionToRadian(posX.x, posX.y, tcx, tcy),
-                        false
+                        isClockwise
                     );
                     g.endFill();
                 } else {
