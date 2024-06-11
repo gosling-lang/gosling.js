@@ -313,6 +313,7 @@ export class HiGlassModel {
             startAngle?: number;
             endAngle?: number;
             theme: Required<CompleteThemeDeep>;
+            clockwise?: boolean;
         }
     ) {
         if (!this.hg.views) return this;
@@ -342,7 +343,7 @@ export class HiGlassModel {
             // circular axis: superpose an axis track on top of the `center` track
             this.addTrackToCombined({
                 ...axisTrackTemplate,
-                options: { ...axisTrackTemplate.options, layout: 'circular' }
+                options: { ...axisTrackTemplate.options, layout: 'circular', clockwise: options.clockwise}
             });
         } else {
             // linear axis: place an axis track on the top, left, bottom, or right
