@@ -46,6 +46,7 @@ type AxisTrackOptions = {
     tickFormat?: string;
     assembly?: Assembly;
     reverseOrientation?: boolean;
+    clockwise?: boolean;
 };
 type TickLabelInfo = {
     importance: number;
@@ -94,7 +95,8 @@ const config: TrackConfig<AxisTrackOptions> = {
         stroke: '#ffffff',
         backgroundColor: 'transparent',
         showMousePosition: false,
-        tickColor: TICK_COLOR
+        tickColor: TICK_COLOR,
+        clockwise: false
     }
 };
 
@@ -523,7 +525,16 @@ const factory: PluginTrackFactory<never, AxisTrackOptions> = (HGC, context, opti
             const outerRadius = this.options.outerRadius * factor;
 
             const r = (outerRadius + innerRadius) / 2.0;
-            const centerPos = cartesianToPolar(cx, width, r, width / 2.0, height / 2.0, startAngle, endAngle);
+            const centerPos = cartesianToPolar(
+                cx,
+                width,
+                r,
+                width / 2.0,
+                height / 2.0,
+                startAngle,
+                endAngle,
+                this.options.clockwise
+            );
             textObj.x = centerPos.x;
             textObj.y = centerPos.y;
 
@@ -549,7 +560,16 @@ const factory: PluginTrackFactory<never, AxisTrackOptions> = (HGC, context, opti
             const ropePoints: PIXI.Point[] = [];
             const baseR = innerRadius + metric.height / 2.0 + 3;
             for (let i = maxX; i >= minX; i -= tw / 10.0) {
-                const p = cartesianToPolar(i, width, baseR, width / 2.0, height / 2.0, startAngle, endAngle);
+                const p = cartesianToPolar(
+                    i,
+                    width,
+                    baseR,
+                    width / 2.0,
+                    height / 2.0,
+                    startAngle,
+                    endAngle,
+                    this.options.clockwise
+                );
                 ropePoints.push(new HGC.libraries.PIXI.Point(p.x, p.y));
             }
 
