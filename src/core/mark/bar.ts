@@ -27,6 +27,7 @@ export function drawBar(track: any, tile: Tile, model: GoslingTrackModel) {
 
     /* circular parameters */
     const circular = spec.layout === 'circular';
+    const isClockwise = spec.clockwise ?? false;
     const trackInnerRadius = spec.innerRadius ?? 220;
     const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
     const startAngle = spec.startAngle ?? 0;
@@ -116,14 +117,14 @@ export function drawBar(track: any, tile: Tile, model: GoslingTrackModel) {
                     const ye = isFlippedY ? barHeight + prevYEnd : rowHeight - y - prevYEnd;
                     const nearR = trackOuterRadius - (ye / trackHeight) * trackRingSize;
 
-                    const sPos = cartesianToPolar(xs, trackWidth, nearR, cx, cy, startAngle, endAngle);
-                    const startRad = valueToRadian(xs, trackWidth, startAngle, endAngle);
-                    const endRad = valueToRadian(xs + barWidth, trackWidth, startAngle, endAngle);
+                    const sPos = cartesianToPolar(xs, trackWidth, nearR, cx, cy, startAngle, endAngle, isClockwise);
+                    const startRad = valueToRadian(xs, trackWidth, startAngle, endAngle, isClockwise);
+                    const endRad = valueToRadian(xs + barWidth, trackWidth, startAngle, endAngle, isClockwise);
 
                     g.beginFill(colorToHex(color), color === 'none' ? 0 : actualOpacity);
                     g.moveTo(sPos.x, sPos.y);
-                    g.arc(cx, cy, nearR, startRad, endRad, true);
-                    g.arc(cx, cy, farR, endRad, startRad, false);
+                    g.arc(cx, cy, nearR, startRad, endRad, !isClockwise);
+                    g.arc(cx, cy, farR, endRad, startRad, isClockwise);
                     polygonForMouseEvents = Array.from(g.currentPath.points);
                     g.closePath();
                 } else {
@@ -207,14 +208,14 @@ export function drawBar(track: any, tile: Tile, model: GoslingTrackModel) {
                     const farR = trackOuterRadius - (ys / trackHeight) * trackRingSize;
                     const nearR = trackOuterRadius - (ye / trackHeight) * trackRingSize;
 
-                    const sPos = cartesianToPolar(xs, trackWidth, nearR, cx, cy, startAngle, endAngle);
-                    const startRad = valueToRadian(xs, trackWidth, startAngle, endAngle);
-                    const endRad = valueToRadian(xs + barWidth, trackWidth, startAngle, endAngle);
+                    const sPos = cartesianToPolar(xs, trackWidth, nearR, cx, cy, startAngle, endAngle, isClockwise);
+                    const startRad = valueToRadian(xs, trackWidth, startAngle, endAngle, isClockwise);
+                    const endRad = valueToRadian(xs + barWidth, trackWidth, startAngle, endAngle, isClockwise);
 
                     g.beginFill(colorToHex(color), color === 'none' ? 0 : actualOpacity);
                     g.moveTo(sPos.x, sPos.y);
-                    g.arc(cx, cy, nearR, startRad, endRad, true);
-                    g.arc(cx, cy, farR, endRad, startRad, false);
+                    g.arc(cx, cy, nearR, startRad, endRad, !isClockwise);
+                    g.arc(cx, cy, farR, endRad, startRad, isClockwise);
                     polygonForMouseEvents = Array.from(g.currentPath.points);
                     g.closePath();
                 } else {

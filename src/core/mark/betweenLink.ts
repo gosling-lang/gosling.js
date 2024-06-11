@@ -23,6 +23,7 @@ export function drawBetweenLink(g: PIXI.Graphics, trackInfo: any, model: Gosling
 
     /* circular parameters */
     const circular = spec.layout === 'circular';
+    const isClockwise = spec.clockwise ?? false;
     const trackInnerRadius = spec.innerRadius ?? 220;
     const trackOuterRadius = spec.outerRadius ?? 300;
     const startAngle = spec.startAngle ?? 0;
@@ -118,10 +119,10 @@ export function drawBetweenLink(g: PIXI.Graphics, trackInfo: any, model: Gosling
 
                     // https://pixijs.download/dev/docs/PIXI.Graphics.html#bezierCurveTo
                     const r = trackOuterRadius - (rowPosition / trackHeight) * trackRingSize;
-                    const posX = cartesianToPolar(_x1, trackWidth, r, tcx, tcy, startAngle, endAngle);
-                    const posXE = cartesianToPolar(_x2, trackWidth, r, tcx, tcy, startAngle, endAngle);
-                    const posX1 = cartesianToPolar(_x3, trackWidth, r, tcx, tcy, startAngle, endAngle);
-                    const posX1E = cartesianToPolar(_x4, trackWidth, r, tcx, tcy, startAngle, endAngle);
+                    const posX = cartesianToPolar(_x1, trackWidth, r, tcx, tcy, startAngle, endAngle, isClockwise);
+                    const posXE = cartesianToPolar(_x2, trackWidth, r, tcx, tcy, startAngle, endAngle, isClockwise);
+                    const posX1 = cartesianToPolar(_x3, trackWidth, r, tcx, tcy, startAngle, endAngle, isClockwise);
+                    const posX1E = cartesianToPolar(_x4, trackWidth, r, tcx, tcy, startAngle, endAngle, isClockwise);
 
                     g.moveTo(posX.x, posX.y);
 

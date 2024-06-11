@@ -25,6 +25,7 @@ export function drawPoint(track: any, g: PIXI.Graphics, model: GoslingTrackModel
 
     /* circular parameters */
     const circular = spec.layout === 'circular';
+    const isClockwise = spec.clockwise ?? false;
     const trackInnerRadius = spec.innerRadius ?? 220;
     const trackOuterRadius = spec.outerRadius ?? 300;
     const startAngle = spec.startAngle ?? 0;
@@ -72,7 +73,7 @@ export function drawPoint(track: any, g: PIXI.Graphics, model: GoslingTrackModel
 
             if (circular) {
                 const r = trackOuterRadius - ((rowPosition + rowHeight - cy) / trackHeight) * trackRingSize;
-                const pos = cartesianToPolar(cx, trackWidth, r, tcx, tcy, startAngle, endAngle);
+                const pos = cartesianToPolar(cx, trackWidth, r, tcx, tcy, startAngle, endAngle, isClockwise);
                 g.beginFill(colorToHex(color), actualOpacity);
                 g.drawCircle(pos.x, pos.y, radius);
 

@@ -23,6 +23,7 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
 
     /* circular parameters */
     const circular = spec.layout === 'circular';
+    const isClockwise = spec.clockwise ?? false;
     const trackInnerRadius = spec.innerRadius ?? 220;
     const trackOuterRadius = spec.outerRadius ?? 300;
     const startAngle = spec.startAngle ?? 0;
@@ -128,10 +129,10 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
 
                     // https://pixijs.download/dev/docs/PIXI.Graphics.html#bezierCurveTo
                     const r = trackOuterRadius - (rowPosition / trackHeight) * trackRingSize;
-                    const posX = cartesianToPolar(_x1, trackWidth, r, tcx, tcy, startAngle, endAngle);
-                    const posXE = cartesianToPolar(_x2, trackWidth, r, tcx, tcy, startAngle, endAngle);
-                    const posX1 = cartesianToPolar(_x3, trackWidth, r, tcx, tcy, startAngle, endAngle);
-                    const posX1E = cartesianToPolar(_x4, trackWidth, r, tcx, tcy, startAngle, endAngle);
+                    const posX = cartesianToPolar(_x1, trackWidth, r, tcx, tcy, startAngle, endAngle, isClockwise);
+                    const posXE = cartesianToPolar(_x2, trackWidth, r, tcx, tcy, startAngle, endAngle, isClockwise);
+                    const posX1 = cartesianToPolar(_x3, trackWidth, r, tcx, tcy, startAngle, endAngle, isClockwise);
+                    const posX1E = cartesianToPolar(_x4, trackWidth, r, tcx, tcy, startAngle, endAngle, isClockwise);
 
                     g.moveTo(posX.x, posX.y);
 
@@ -240,7 +241,16 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
                                     (flipY ? -1 : 1);
 
                             const r = trackOuterRadius - (my / trackHeight) * trackRingSize;
-                            const cmx = cartesianToPolar(mx, trackWidth, r, tcx, tcy, startAngle, endAngle);
+                            const cmx = cartesianToPolar(
+                                mx,
+                                trackWidth,
+                                r,
+                                tcx,
+                                tcy,
+                                startAngle,
+                                endAngle,
+                                isClockwise
+                            );
 
                             if (step % 20 === 0 || step === NUM_STEPS) {
                                 // we draw less points than the hidden points for mouse events
@@ -256,8 +266,8 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
                         pathForMouseEvent = morePoints.flatMap(d => [d.x, d.y]);
                     } else if (spec.style?.linkStyle === 'straight') {
                         const r = trackOuterRadius - (rowPosition / trackHeight) * trackRingSize;
-                        const posS = cartesianToPolar(x, trackWidth, r, tcx, tcy, startAngle, endAngle);
-                        const posE = cartesianToPolar(xe, trackWidth, r, tcx, tcy, startAngle, endAngle);
+                        const posS = cartesianToPolar(x, trackWidth, r, tcx, tcy, startAngle, endAngle, isClockwise);
+                        const posE = cartesianToPolar(xe, trackWidth, r, tcx, tcy, startAngle, endAngle, isClockwise);
 
                         const x1 = posS.x;
                         const y1 = posS.y;
@@ -279,8 +289,8 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
                         pathForMouseEvent = eventPoints.flatMap(d => [d.x, d.y]);
                     } else {
                         const r = trackOuterRadius - (rowPosition / trackHeight) * trackRingSize;
-                        const posS = cartesianToPolar(x, trackWidth, r, tcx, tcy, startAngle, endAngle);
-                        const posE = cartesianToPolar(xe, trackWidth, r, tcx, tcy, startAngle, endAngle);
+                        const posS = cartesianToPolar(x, trackWidth, r, tcx, tcy, startAngle, endAngle, isClockwise);
+                        const posE = cartesianToPolar(xe, trackWidth, r, tcx, tcy, startAngle, endAngle, isClockwise);
 
                         const x1 = posS.x;
                         const y1 = posS.y;

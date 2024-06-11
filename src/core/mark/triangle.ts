@@ -23,6 +23,7 @@ export function drawTriangle(g: PIXI.Graphics, model: GoslingTrackModel, trackWi
 
     /* circular parameters */
     const circular = spec.layout === 'circular';
+    const isClockwise = spec.clockwise ?? false;
     const trackInnerRadius = spec.innerRadius ?? 220;
     const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
     const startAngle = spec.startAngle ?? 0;
@@ -77,24 +78,24 @@ export function drawTriangle(g: PIXI.Graphics, model: GoslingTrackModel, trackWi
                 }
 
                 if (spec.mark === 'triangleLeft') {
-                    const p0 = cartesianToPolar(x1, trackWidth, r0, cx, cy, startAngle, endAngle);
-                    const p1 = cartesianToPolar(x0, trackWidth, rm, cx, cy, startAngle, endAngle);
-                    const p2 = cartesianToPolar(x1, trackWidth, r1, cx, cy, startAngle, endAngle);
-                    const p3 = cartesianToPolar(x1, trackWidth, r0, cx, cy, startAngle, endAngle);
+                    const p0 = cartesianToPolar(x1, trackWidth, r0, cx, cy, startAngle, endAngle, isClockwise);
+                    const p1 = cartesianToPolar(x0, trackWidth, rm, cx, cy, startAngle, endAngle, isClockwise);
+                    const p2 = cartesianToPolar(x1, trackWidth, r1, cx, cy, startAngle, endAngle, isClockwise);
+                    const p3 = cartesianToPolar(x1, trackWidth, r0, cx, cy, startAngle, endAngle, isClockwise);
                     polygon = [p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y];
                 } else if (spec.mark === 'triangleRight') {
-                    const p0 = cartesianToPolar(x0, trackWidth, r0, cx, cy, startAngle, endAngle);
-                    const p1 = cartesianToPolar(x1, trackWidth, rm, cx, cy, startAngle, endAngle);
-                    const p2 = cartesianToPolar(x0, trackWidth, r1, cx, cy, startAngle, endAngle);
-                    const p3 = cartesianToPolar(x0, trackWidth, r0, cx, cy, startAngle, endAngle);
+                    const p0 = cartesianToPolar(x0, trackWidth, r0, cx, cy, startAngle, endAngle, isClockwise);
+                    const p1 = cartesianToPolar(x1, trackWidth, rm, cx, cy, startAngle, endAngle, isClockwise);
+                    const p2 = cartesianToPolar(x0, trackWidth, r1, cx, cy, startAngle, endAngle, isClockwise);
+                    const p3 = cartesianToPolar(x0, trackWidth, r0, cx, cy, startAngle, endAngle, isClockwise);
                     polygon = [p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y];
                 } else if (spec.mark === 'triangleBottom') {
                     x0 = xm - markWidth / 2.0;
                     x1 = xm + markWidth / 2.0;
-                    const p0 = cartesianToPolar(x0, trackWidth, r1, cx, cy, startAngle, endAngle);
-                    const p1 = cartesianToPolar(x1, trackWidth, r1, cx, cy, startAngle, endAngle);
-                    const p2 = cartesianToPolar(xm, trackWidth, r0, cx, cy, startAngle, endAngle);
-                    const p3 = cartesianToPolar(x0, trackWidth, r1, cx, cy, startAngle, endAngle);
+                    const p0 = cartesianToPolar(x0, trackWidth, r1, cx, cy, startAngle, endAngle, isClockwise);
+                    const p1 = cartesianToPolar(x1, trackWidth, r1, cx, cy, startAngle, endAngle, isClockwise);
+                    const p2 = cartesianToPolar(xm, trackWidth, r0, cx, cy, startAngle, endAngle, isClockwise);
+                    const p3 = cartesianToPolar(x0, trackWidth, r1, cx, cy, startAngle, endAngle, isClockwise);
                     polygon = [p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y];
                 }
 

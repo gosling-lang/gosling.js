@@ -29,6 +29,7 @@ export function drawText(HGC: import('@higlass/types').HGC, trackInfo: any, tile
 
     /* circular parameters */
     const circular = spec.layout === 'circular';
+    const isClockwise = spec.clockwise ?? false;
     const trackInnerRadius = spec.innerRadius ?? 220;
     const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
     const startAngle = spec.startAngle ?? 0;
@@ -228,7 +229,7 @@ export function drawText(HGC: import('@higlass/types').HGC, trackInfo: any, tile
 
                 if (circular) {
                     const r = trackOuterRadius - ((rowPosition + rowHeight - y) / trackHeight) * trackRingSize;
-                    const centerPos = cartesianToPolar(cx, trackWidth, r, tcx, tcy, startAngle, endAngle);
+                    const centerPos = cartesianToPolar(cx, trackWidth, r, tcx, tcy, startAngle, endAngle, isClockwise);
                     textGraphic.x = centerPos.x;
                     textGraphic.y = centerPos.y;
 
@@ -255,7 +256,7 @@ export function drawText(HGC: import('@higlass/types').HGC, trackInfo: any, tile
                     const eventPointsFar: number[] = [];
                     const eventPointsNear: number[] = [];
                     for (let i = maxX; i >= minX; i -= tw / 10.0) {
-                        const p = cartesianToPolar(i, trackWidth, r, tcx, tcy, startAngle, endAngle);
+                        const p = cartesianToPolar(i, trackWidth, r, tcx, tcy, startAngle, endAngle, isClockwise);
                         ropePoints.push(new HGC.libraries.PIXI.Point(p.x, p.y));
 
                         const pFar = cartesianToPolar(
@@ -265,7 +266,8 @@ export function drawText(HGC: import('@higlass/types').HGC, trackInfo: any, tile
                             tcx,
                             tcy,
                             startAngle,
-                            endAngle
+                            endAngle,
+                            isClockwise
                         );
                         const pNear = cartesianToPolar(
                             i,
@@ -274,7 +276,8 @@ export function drawText(HGC: import('@higlass/types').HGC, trackInfo: any, tile
                             tcx,
                             tcy,
                             startAngle,
-                            endAngle
+                            endAngle,
+                            isClockwise
                         );
                         eventPointsFar.push(pFar.x, pFar.y);
                         if (i === maxX) {
