@@ -150,6 +150,7 @@ export class HiGlassModel {
             endAngle?: number;
             innerRadius?: number;
             outerRadius?: number;
+            clockwise?: boolean;
         }
     ) {
         if (!fromViewUid) return;
@@ -169,7 +170,8 @@ export class HiGlassModel {
                 startAngle: style?.startAngle,
                 endAngle: style?.endAngle,
                 innerRadius: style?.innerRadius,
-                outerRadius: style?.outerRadius
+                outerRadius: style?.outerRadius,
+                clockwise: style?.clockwise
             }
         });
         return this;
