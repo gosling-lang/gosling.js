@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PixiManager } from '@pixi-manager';
+import { addDummyTrack } from './examples/dummy-track';
 
 import './App.css';
 
@@ -12,6 +13,8 @@ function App() {
         plotElement.innerHTML = '';
         // Initialize the PixiManager. This will be used to get containers and overlay divs for the plots
         const pixiManager = new PixiManager(1000, 600, plotElement, setFps);
+        // Add the dummy track
+        addDummyTrack(pixiManager);
     }, []);
 
     return (
