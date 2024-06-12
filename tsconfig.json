@@ -31,8 +31,9 @@
       "@gosling-lang/gosling-genomic-axis": ["./src/tracks/gosling-genomic-axis/index.ts"],
       "@gosling-lang/gosling-brush": ["./src/tracks/gosling-brush/index.ts"],
       "@gosling-lang/dummy-track": ["./src/tracks/dummy-track/index.ts"],
-      "pixi-manager": ["./src/pixi-manager/index.ts"],
+      "@pixi-manager": ["./src/pixi-manager/index.ts"],
       "@data-fetchers": ["./src/data-fetchers/index.ts"],
+      "@higlass": ["./src/higlass"],
       "zlib": ["./src/alias/zlib.ts"]
     },
     "baseUrl": ".",

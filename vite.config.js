@@ -75,6 +75,7 @@ const alias = {
     '@gosling-lang/dummy-track': path.resolve(__dirname, './src/tracks/dummy-track/index.ts'),
     '@pixi-manager': path.resolve(__dirname, './src/pixi-manager/index.ts'),
     '@data-fetchers': path.resolve(__dirname, './src/data-fetchers/index.ts'),
+    '@higlass': path.resolve(__dirname, './src/higlass'),
     zlib: path.resolve(__dirname, './src/alias/zlib.ts'),
     stream: path.resolve(__dirname, './node_modules/stream-browserify') //  gmod/gff uses stream-browserify
 };
