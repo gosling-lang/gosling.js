@@ -31,6 +31,7 @@
       "@gosling-lang/gosling-genomic-axis": ["./src/tracks/gosling-genomic-axis/index.ts"],
       "@gosling-lang/gosling-brush": ["./src/tracks/gosling-brush/index.ts"],
       "@gosling-lang/dummy-track": ["./src/tracks/dummy-track/index.ts"],
+      "pixi-manager": ["./src/pixi-manager/index.ts"],
       "@data-fetchers": ["./src/data-fetchers/index.ts"],
       "zlib": ["./src/alias/zlib.ts"]
     },
@@ -40,6 +41,7 @@
   "files": [
     "src/index.ts",
     "editor/index.tsx",
+    "demo/main.tsx",
   ],
   "include": ["src", "src/**/*.d.ts", "editor", "e2e"],
   "exclude": [
