@@ -1258,16 +1258,6 @@
             "experimental": {
               "additionalProperties": false,
               "properties": {
-                "mouseEvents": {
-                  "anyOf": [
-                    {
-                      "type": "boolean"
-                    },
-                    {
-                      "$ref": "#/definitions/MouseEventsDeep"
-                    }
-                  ]
-                },
                 "performanceMode": {
                   "default": false,
                   "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
@@ -1310,6 +1300,16 @@
             },
             "mark": {
               "$ref": "#/definitions/Mark"
+            },
+            "mouseEvents": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "$ref": "#/definitions/MouseEventsDeep"
+                }
+              ]
             },
             "opacity": {
               "anyOf": [
@@ -1419,16 +1419,6 @@
                       "experimental": {
                         "additionalProperties": false,
                         "properties": {
-                          "mouseEvents": {
-                            "anyOf": [
-                              {
-                                "type": "boolean"
-                              },
-                              {
-                                "$ref": "#/definitions/MouseEventsDeep"
-                              }
-                            ]
-                          },
                           "performanceMode": {
                             "default": false,
                             "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
@@ -1471,6 +1461,16 @@
                       },
                       "mark": {
                         "$ref": "#/definitions/Mark"
+                      },
+                      "mouseEvents": {
+                        "anyOf": [
+                          {
+                            "type": "boolean"
+                          },
+                          {
+                            "$ref": "#/definitions/MouseEventsDeep"
+                          }
+                        ]
                       },
                       "opacity": {
                         "anyOf": [
@@ -2044,16 +2044,6 @@
             "experimental": {
               "additionalProperties": false,
               "properties": {
-                "mouseEvents": {
-                  "anyOf": [
-                    {
-                      "type": "boolean"
-                    },
-                    {
-                      "$ref": "#/definitions/MouseEventsDeep"
-                    }
-                  ]
-                },
                 "performanceMode": {
                   "default": false,
                   "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
@@ -2096,6 +2086,16 @@
             },
             "mark": {
               "$ref": "#/definitions/Mark"
+            },
+            "mouseEvents": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "$ref": "#/definitions/MouseEventsDeep"
+                }
+              ]
             },
             "opacity": {
               "anyOf": [
@@ -2205,16 +2205,6 @@
                       "experimental": {
                         "additionalProperties": false,
                         "properties": {
-                          "mouseEvents": {
-                            "anyOf": [
-                              {
-                                "type": "boolean"
-                              },
-                              {
-                                "$ref": "#/definitions/MouseEventsDeep"
-                              }
-                            ]
-                          },
                           "performanceMode": {
                             "default": false,
                             "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
@@ -2257,6 +2247,16 @@
                       },
                       "mark": {
                         "$ref": "#/definitions/Mark"
+                      },
+                      "mouseEvents": {
+                        "anyOf": [
+                          {
+                            "type": "boolean"
+                          },
+                          {
+                            "$ref": "#/definitions/MouseEventsDeep"
+                          }
+                        ]
                       },
                       "opacity": {
                         "anyOf": [
@@ -2887,16 +2887,6 @@
                       "experimental": {
                         "additionalProperties": false,
                         "properties": {
-                          "mouseEvents": {
-                            "anyOf": [
-                              {
-                                "type": "boolean"
-                              },
-                              {
-                                "$ref": "#/definitions/MouseEventsDeep"
-                              }
-                            ]
-                          },
                           "performanceMode": {
                             "default": false,
                             "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
@@ -2939,6 +2929,16 @@
                       },
                       "mark": {
                         "$ref": "#/definitions/Mark"
+                      },
+                      "mouseEvents": {
+                        "anyOf": [
+                          {
+                            "type": "boolean"
+                          },
+                          {
+                            "$ref": "#/definitions/MouseEventsDeep"
+                          }
+                        ]
                       },
                       "opacity": {
                         "anyOf": [
@@ -4137,16 +4137,6 @@
               "experimental": {
                 "additionalProperties": false,
                 "properties": {
-                  "mouseEvents": {
-                    "anyOf": [
-                      {
-                        "type": "boolean"
-                      },
-                      {
-                        "$ref": "#/definitions/MouseEventsDeep"
-                      }
-                    ]
-                  },
                   "performanceMode": {
                     "default": false,
                     "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
@@ -4181,6 +4171,16 @@
               },
               "mark": {
                 "$ref": "#/definitions/Mark"
+              },
+              "mouseEvents": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "$ref": "#/definitions/MouseEventsDeep"
+                  }
+                ]
               },
               "opacity": {
                 "anyOf": [
@@ -4464,16 +4464,6 @@
         "experimental": {
           "additionalProperties": false,
           "properties": {
-            "mouseEvents": {
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "$ref": "#/definitions/MouseEventsDeep"
-                }
-              ]
-            },
             "performanceMode": {
               "default": false,
               "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
@@ -4516,6 +4506,16 @@
         },
         "mark": {
           "$ref": "#/definitions/Mark"
+        },
+        "mouseEvents": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/MouseEventsDeep"
+            }
+          ]
         },
         "opacity": {
           "anyOf": [
@@ -4829,16 +4829,6 @@
         "experimental": {
           "additionalProperties": false,
           "properties": {
-            "mouseEvents": {
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "$ref": "#/definitions/MouseEventsDeep"
-                }
-              ]
-            },
             "performanceMode": {
               "default": false,
               "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
@@ -4881,6 +4871,16 @@
         },
         "mark": {
           "$ref": "#/definitions/Mark"
+        },
+        "mouseEvents": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/MouseEventsDeep"
+            }
+          ]
         },
         "opacity": {
           "anyOf": [
@@ -5212,16 +5212,6 @@
               "experimental": {
                 "additionalProperties": false,
                 "properties": {
-                  "mouseEvents": {
-                    "anyOf": [
-                      {
-                        "type": "boolean"
-                      },
-                      {
-                        "$ref": "#/definitions/MouseEventsDeep"
-                      }
-                    ]
-                  },
                   "performanceMode": {
                     "default": false,
                     "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
@@ -5256,6 +5246,16 @@
               },
               "mark": {
                 "$ref": "#/definitions/Mark"
+              },
+              "mouseEvents": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "$ref": "#/definitions/MouseEventsDeep"
+                  }
+                ]
               },
               "opacity": {
                 "anyOf": [
@@ -5555,16 +5555,6 @@
         "experimental": {
           "additionalProperties": false,
           "properties": {
-            "mouseEvents": {
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "$ref": "#/definitions/MouseEventsDeep"
-                }
-              ]
-            },
             "performanceMode": {
               "default": false,
               "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
@@ -5617,6 +5607,16 @@
         },
         "mark": {
           "$ref": "#/definitions/Mark"
+        },
+        "mouseEvents": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/MouseEventsDeep"
+            }
+          ]
         },
         "opacity": {
           "anyOf": [
@@ -6109,16 +6109,6 @@
         "experimental": {
           "additionalProperties": false,
           "properties": {
-            "mouseEvents": {
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "$ref": "#/definitions/MouseEventsDeep"
-                }
-              ]
-            },
             "performanceMode": {
               "default": false,
               "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
@@ -6161,6 +6151,16 @@
         },
         "mark": {
           "$ref": "#/definitions/Mark"
+        },
+        "mouseEvents": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/MouseEventsDeep"
+            }
+          ]
         },
         "opacity": {
           "anyOf": [
@@ -6477,16 +6477,6 @@
             "experimental": {
               "additionalProperties": false,
               "properties": {
-                "mouseEvents": {
-                  "anyOf": [
-                    {
-                      "type": "boolean"
-                    },
-                    {
-                      "$ref": "#/definitions/MouseEventsDeep"
-                    }
-                  ]
-                },
                 "performanceMode": {
                   "default": false,
                   "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
@@ -6529,6 +6519,16 @@
             },
             "mark": {
               "$ref": "#/definitions/Mark"
+            },
+            "mouseEvents": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "$ref": "#/definitions/MouseEventsDeep"
+                }
+              ]
             },
             "opacity": {
               "anyOf": [
@@ -6634,16 +6634,6 @@
                       "experimental": {
                         "additionalProperties": false,
                         "properties": {
-                          "mouseEvents": {
-                            "anyOf": [
-                              {
-                                "type": "boolean"
-                              },
-                              {
-                                "$ref": "#/definitions/MouseEventsDeep"
-                              }
-                            ]
-                          },
                           "performanceMode": {
                             "default": false,
                             "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
@@ -6686,6 +6676,16 @@
                       },
                       "mark": {
                         "$ref": "#/definitions/Mark"
+                      },
+                      "mouseEvents": {
+                        "anyOf": [
+                          {
+                            "type": "boolean"
+                          },
+                          {
+                            "$ref": "#/definitions/MouseEventsDeep"
+                          }
+                        ]
                       },
                       "opacity": {
                         "anyOf": [
@@ -7256,16 +7256,6 @@
             "experimental": {
               "additionalProperties": false,
               "properties": {
-                "mouseEvents": {
-                  "anyOf": [
-                    {
-                      "type": "boolean"
-                    },
-                    {
-                      "$ref": "#/definitions/MouseEventsDeep"
-                    }
-                  ]
-                },
                 "performanceMode": {
                   "default": false,
                   "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
@@ -7308,6 +7298,16 @@
             },
             "mark": {
               "$ref": "#/definitions/Mark"
+            },
+            "mouseEvents": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "$ref": "#/definitions/MouseEventsDeep"
+                }
+              ]
             },
             "opacity": {
               "anyOf": [
@@ -7413,16 +7413,6 @@
                       "experimental": {
                         "additionalProperties": false,
                         "properties": {
-                          "mouseEvents": {
-                            "anyOf": [
-                              {
-                                "type": "boolean"
-                              },
-                              {
-                                "$ref": "#/definitions/MouseEventsDeep"
-                              }
-                            ]
-                          },
                           "performanceMode": {
                             "default": false,
                             "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
@@ -7465,6 +7455,16 @@
                       },
                       "mark": {
                         "$ref": "#/definitions/Mark"
+                      },
+                      "mouseEvents": {
+                        "anyOf": [
+                          {
+                            "type": "boolean"
+                          },
+                          {
+                            "$ref": "#/definitions/MouseEventsDeep"
+                          }
+                        ]
                       },
                       "opacity": {
                         "anyOf": [
@@ -8088,16 +8088,6 @@
                       "experimental": {
                         "additionalProperties": false,
                         "properties": {
-                          "mouseEvents": {
-                            "anyOf": [
-                              {
-                                "type": "boolean"
-                              },
-                              {
-                                "$ref": "#/definitions/MouseEventsDeep"
-                              }
-                            ]
-                          },
                           "performanceMode": {
                             "default": false,
                             "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
@@ -8140,6 +8130,16 @@
                       },
                       "mark": {
                         "$ref": "#/definitions/Mark"
+                      },
+                      "mouseEvents": {
+                        "anyOf": [
+                          {
+                            "type": "boolean"
+                          },
+                          {
+                            "$ref": "#/definitions/MouseEventsDeep"
+                          }
+                        ]
                       },
                       "opacity": {
                         "anyOf": [

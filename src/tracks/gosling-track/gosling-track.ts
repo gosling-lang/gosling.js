@@ -1126,7 +1126,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             this.#mouseDownY = mouseY;
 
             // Determine whether to activate a range brush
-            const mouseEvents = this.options.spec.experimental?.mouseEvents;
+            const mouseEvents = this.options.spec.mouseEvents;
             const rangeSelectEnabled = !!mouseEvents || (IsMouseEventsDeep(mouseEvents) && !!mouseEvents.rangeSelect);
             this.#isRangeBrushActivated = rangeSelectEnabled && isAltPressed;
 
@@ -1148,7 +1148,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             // `trackClick` API
             this.#publishTrackEvents('trackClick', mouseX, mouseY);
 
-            const mouseEvents = this.options.spec.experimental?.mouseEvents;
+            const mouseEvents = this.options.spec.mouseEvents;
             const clickEnabled = !!mouseEvents || (IsMouseEventsDeep(mouseEvents) && !!mouseEvents.click);
             const isDrag = Math.sqrt((this.#mouseDownX - mouseX) ** 2 + (this.#mouseDownY - mouseY) ** 2) > 1;
 
@@ -1205,7 +1205,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             // TODO: `Omit` this properties in the schema of individual overlaid tracks.
             // These should be defined only once for a group of overlaid traks (09-May-2022)
             // See https://github.com/gosling-lang/gosling.js/issues/677
-            const mouseEvents = this.options.spec.experimental?.mouseEvents;
+            const mouseEvents = this.options.spec.mouseEvents;
             const multiHovering = IsMouseEventsDeep(mouseEvents) && mouseEvents.enableMouseOverOnMultipleMarks;
             const idField = IsMouseEventsDeep(mouseEvents) && mouseEvents.groupMarksByField;
 
@@ -1289,7 +1289,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
             // Deselect marks if their siblings are not selected.
             // e.g., if only one exon is selected in a gene, we do not select it.
-            const mouseEvents = this.options.spec.experimental?.mouseEvents;
+            const mouseEvents = this.options.spec.mouseEvents;
             const idField = IsMouseEventsDeep(mouseEvents) && mouseEvents.groupMarksByField;
             if (capturedElements.length !== 0 && idField) {
                 models.forEach(model => {
@@ -1404,7 +1404,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             }
 
             if (capturedElements.length !== 0) {
-                const mouseEvents = this.options.spec.experimental?.mouseEvents;
+                const mouseEvents = this.options.spec.mouseEvents;
                 const mouseOverEnabled = !!mouseEvents || (IsMouseEventsDeep(mouseEvents) && !!mouseEvents.mouseOver);
                 if (mouseOverEnabled) {
                     // Display mouse over effects
@@ -1598,7 +1598,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 (acc, spec) => acc && stretchableMarks.includes(spec.mark),
                 true
             );
-            const noMouseInteractions = !this.options.spec.experimental?.mouseEvents;
+            const noMouseInteractions = !this.options.spec.mouseEvents;
 
             return isFirstTrack1D && isNotCircularLayout && hasStretchableMark && noMouseInteractions;
         }
