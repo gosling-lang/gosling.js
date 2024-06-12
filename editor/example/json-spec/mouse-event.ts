@@ -43,11 +43,9 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                 {
                     title: 'Individual Marks',
                     ...BAR,
-                    experimental: {
-                        mouseEvents: {
-                            mouseOver: true,
-                            rangeSelect: true
-                        }
+                    mouseEvents: {
+                        mouseOver: true,
+                        rangeSelect: true
                     },
                     style: {
                         mouseOver: {
@@ -72,12 +70,10 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                 {
                     title: 'Group Marks By Sample',
                     ...BAR,
-                    experimental: {
-                        mouseEvents: {
-                            mouseOver: true,
-                            rangeSelect: true,
-                            groupMarksByField: 'sample'
-                        }
+                    mouseEvents: {
+                        mouseOver: true,
+                        rangeSelect: true,
+                        groupMarksByField: 'sample'
                     },
                     style: {
                         mouseOver: {
@@ -102,12 +98,10 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                 {
                     title: 'Group Marks By Genomic Position',
                     ...BAR,
-                    experimental: {
-                        mouseEvents: {
-                            mouseOver: true,
-                            rangeSelect: true,
-                            groupMarksByField: 'position'
-                        }
+                    mouseEvents: {
+                        mouseOver: true,
+                        rangeSelect: true,
+                        groupMarksByField: 'position'
                     },
                     style: {
                         mouseOver: {
@@ -167,12 +161,10 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                     tooltip: [{ field: 'name', type: 'nominal' }],
                     width: BAR.width,
                     height: BAR.height,
-                    experimental: {
-                        mouseEvents: {
-                            mouseOver: true,
-                            rangeSelect: true,
-                            groupMarksByField: 'name'
-                        }
+                    mouseEvents: {
+                        mouseOver: true,
+                        rangeSelect: true,
+                        groupMarksByField: 'name'
                     },
                     style: {
                         mouseOver: {
@@ -200,13 +192,11 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                     size: { value: 20 },
                     height: 60,
                     tooltip: [{ field: 'Chr.', type: 'nominal' }],
-                    experimental: {
-                        mouseEvents: {
-                            click: true,
-                            mouseOver: true,
-                            rangeSelect: true,
-                            groupMarksByField: 'Chr.'
-                        }
+                    mouseEvents: {
+                        click: true,
+                        mouseOver: true,
+                        rangeSelect: true,
+                        groupMarksByField: 'Chr.'
                     },
                     style: {
                         mouseOver: {
