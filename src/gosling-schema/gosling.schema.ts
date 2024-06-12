@@ -284,13 +284,6 @@ interface CommonEventData {
     data: Datum[];
 }
 
-interface SpecEventData {
-    /** Source visualization ID, i.e., `track.id` */
-    id: string;
-    /** Gosling spec */
-    spec: GoslingSpec;
-}
-
 export interface GenomicPosition {
     chromosome: string;
     position: number;
@@ -379,7 +372,6 @@ export type _EventMap = {
     click: PointMouseEventData;
     rangeSelect: RangeMouseEventData;
     rawData: CommonEventData;
-    specProcessed: SpecEventData;
     trackMouseOver: TrackApiData;
     trackClick: TrackApiData; // TODO (Jul-25-2022): with https://github.com/higlass/higlass/pull/1098, we can support circular layouts
     onNewTrack: OnNewTrackEventData;
