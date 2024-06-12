@@ -26,6 +26,9 @@ dependencies:
   '@gmod/vcf':
     specifier: ^5.0.10
     version: 5.0.10
+  '@preact/signals-core':
+    specifier: ^1.6.1
+    version: 1.6.1
   allotment:
     specifier: ^1.19.0
     version: 1.19.3(react-dom@18.2.0)(react@18.2.0)
@@ -1376,6 +1379,10 @@ packages:
       - terser
       - vite
     dev: true
+
+  /@preact/signals-core@1.6.1:
+    resolution: {integrity: sha512-KXEEmJoKDlo0Igju/cj9YvKIgyaWFDgnprShQjzimUd5VynAAdTWMshawEOjUVeKbsI0aR58V6WOQp+DNcKApw==}
+    dev: false
 
   /@sinclair/typebox@0.27.8:
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
