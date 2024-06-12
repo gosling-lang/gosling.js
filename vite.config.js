@@ -70,10 +70,16 @@ const alias = {
     '@gosling-lang/higlass-schema': path.resolve(__dirname, './src/higlass-schema/index.ts'),
     '@gosling-lang/gosling-theme': path.resolve(__dirname, './src/gosling-theme/index.ts'),
     '@gosling-lang/gosling-track': path.resolve(__dirname, './src/tracks/gosling-track/index.ts'),
-    '@gosling-lang/gosling-genomic-axis': path.resolve(__dirname, './src/tracks/gosling-genomic-axis/index.ts'),
-    '@gosling-lang/gosling-brush': path.resolve(__dirname, './src/tracks/gosling-brush/index.ts'),
+    '@gosling-lang/genomic-axis': path.resolve(__dirname, './src/tracks/genomic-axis/index.ts'),
+    '@gosling-lang/brush-circular': path.resolve(__dirname, './src/tracks/brush-circular/index.ts'),
+    '@gosling-lang/brush-linear': path.resolve(__dirname, './src/tracks/brush-linear/index.ts'),
     '@gosling-lang/dummy-track': path.resolve(__dirname, './src/tracks/dummy-track/index.ts'),
+    '@gosling-lang/heatmap': path.resolve(__dirname, './src/tracks/heatmap/index.ts'),
+    '@gosling-lang/text-track': path.resolve(__dirname, './src/tracks/text-track/index.ts'),
+    '@gosling-lang/interactors': path.resolve(__dirname, './src/interactors/index.ts'),
+    '@pixi-manager': path.resolve(__dirname, './src/pixi-manager/index.ts'),
     '@data-fetchers': path.resolve(__dirname, './src/data-fetchers/index.ts'),
+    '@higlass': path.resolve(__dirname, './src/higlass'),
     zlib: path.resolve(__dirname, './src/alias/zlib.ts'),
     stream: path.resolve(__dirname, './node_modules/stream-browserify') //  gmod/gff uses stream-browserify
 };
@@ -134,7 +140,7 @@ const testing = defineConfig({
         coverage: {
             reportsDirectory: './coverage',
             reporter: ['lcov', 'text'],
-            include: ['src', 'editor']
+            include: ['src', 'editor', 'demo']
         }
     }
 });

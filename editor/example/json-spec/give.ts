@@ -7,6 +7,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
     arrangement: 'vertical',
     views: [
         {
+            xDomain: { chromosome: 'chr17', interval: [200000, 800000] },
             layout: 'linear',
             tracks: [
                 {
@@ -35,12 +36,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                                 { type: 'filter', field: 'strand', oneOf: ['+'] }
                             ],
                             mark: 'rect',
-                            x: {
-                                field: 'end',
-                                type: 'genomic',
-                                domain: { chromosome: 'chr17', interval: [200000, 800000] },
-                                axis: 'top'
-                            },
+                            x: { field: 'end', type: 'genomic', axis: 'top' },
                             size: { value: 7 }
                         },
                         {
@@ -137,7 +133,14 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                     tracks: [
                         {
                             mark: 'rect',
-                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen'], not: true }]
+                            dataTransform: [
+                                {
+                                    type: 'filter',
+                                    field: 'Stain',
+                                    oneOf: ['acen'],
+                                    not: true
+                                }
+                            ]
                         },
                         {
                             mark: 'triangleRight',
@@ -154,11 +157,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                             ]
                         }
                     ],
-                    x: {
-                        field: 'chromStart',
-                        type: 'genomic',
-                        domain: { chromosome: 'chr17', interval: [20000000, 50000000] }
-                    },
+                    x: { field: 'chromStart', type: 'genomic' },
                     xe: { field: 'chromEnd', type: 'genomic' },
                     color: { value: 'white' },
                     size: { value: 14 },
@@ -177,7 +176,6 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                         genomicFields: ['p1', 'p2'],
                         separator: ' ',
                         longToWideId: 'id'
-                        //sampleLength: 5000
                     },
                     dataTransform: [{ type: 'filter', field: 'chr', oneOf: ['hs17'] }],
                     mark: 'rect',
@@ -223,6 +221,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
         },
         {
             layout: 'linear',
+            xDomain: { chromosome: 'chr1', interval: [109000000, 112000000] },
             tracks: [
                 {
                     alignment: 'overlay',
@@ -235,7 +234,14 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                     tracks: [
                         {
                             mark: 'rect',
-                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen'], not: true }]
+                            dataTransform: [
+                                {
+                                    type: 'filter',
+                                    field: 'Stain',
+                                    oneOf: ['acen'],
+                                    not: true
+                                }
+                            ]
                         },
                         {
                             mark: 'triangleRight',
@@ -252,11 +258,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                             ]
                         }
                     ],
-                    x: {
-                        field: 'chromStart',
-                        type: 'genomic',
-                        axis: 'none'
-                    },
+                    x: { field: 'chromStart', type: 'genomic', axis: 'top' },
                     xe: { field: 'chromEnd', type: 'genomic' },
                     color: { value: 'white' },
                     size: { value: 14 },
@@ -275,11 +277,10 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                         genomicFields: ['p1', 'p2'],
                         separator: ' ',
                         longToWideId: 'id'
-                        //sampleLength: 5000
                     },
                     dataTransform: [{ type: 'filter', field: 'chr_2', oneOf: ['hs1'] }],
                     mark: 'rect',
-                    x: { field: 'p1_2', type: 'genomic' },
+                    x: { field: 'p1_2', type: 'genomic', axis: 'top' },
                     xe: { field: 'p2_2', type: 'genomic' },
                     color: {
                         field: 'chr',
@@ -397,12 +398,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                                 { type: 'filter', field: 'strand', oneOf: ['+'] }
                             ],
                             mark: 'rect',
-                            x: {
-                                field: 'end',
-                                type: 'genomic',
-                                domain: { chromosome: 'chr1', interval: [109000000, 112000000] },
-                                axis: 'bottom'
-                            },
+                            x: { field: 'end', type: 'genomic', axis: 'bottom' },
                             size: { value: 7 }
                         },
                         {

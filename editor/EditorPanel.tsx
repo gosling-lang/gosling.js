@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'; // eslint-disable-line no-unused-vars
+import React, { useRef, useState, useEffect } from 'react';
 import MonacoEditor from 'react-monaco-editor';
 
 import ReactResizeDetector from 'react-resize-detector';

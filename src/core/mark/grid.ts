@@ -171,7 +171,7 @@ export function drawYGridQuantitative(trackInfo: any, tm: GoslingTrackModel, the
                     graphics.lineTo(endX, y);
                 } else if (theme.axis.gridStrokeType === 'dashed') {
                     const [line, gap] = theme.axis.gridStrokeDash ?? [1, 1];
-                    // eslint-disable-next-line
+
                     for (let i = startX; i < endX; i += line + gap) {
                         graphics.moveTo(i, y);
                         graphics.lineTo(i + line, y);

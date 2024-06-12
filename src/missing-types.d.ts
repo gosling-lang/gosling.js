@@ -124,6 +124,7 @@ declare module '@higlass/tracks' {
     import type * as d3Selection from 'd3-selection';
     import type { TilesetInfo, ColorRGBA } from '@higlass/services';
     import type { ChromInfo } from '@higlass/utils';
+    import type { DataFetcher } from '@higlass/datafetcher';
 
     export type Scale = d3.ScaleContinuousNumeric<number, number>;
 
@@ -165,22 +166,23 @@ declare module '@higlass/tracks' {
 
     export type Context<TileData, Options> = {
         id: string;
-        viewUid: string;
         pubSub: PubSub;
-        scene: PIXI.Graphics;
-        dataConfig: DataConfig;
+        scene: PIXI.Container;
         dataFetcher: DataFetcher<TileData>;
-        getLockGroupExtrema(): [min: number, max: number] | null;
         handleTilesetInfoReceived(tilesetInfo: TilesetInfo): void;
         animate(): void;
         svgElement: SVGElement;
         isValueScaleLocked(): boolean;
         onValueScaleChanged(): void;
         onTrackOptionsChanged(newOptions: Options): void;
-        onMouseMoveZoom(opts: OnMouseMoveZoomOptions1D | OnMouseMoveZoomOptions2D): void;
-        chromInfoPath: string;
-        isShowGlobalMousePosition(): boolean;
-        getTheme(): string;
+        onMouseMoveZoom?(opts: OnMouseMoveZoomOptions1D | OnMouseMoveZoomOptions2D): void;
+        isShowGlobalMousePosition?(): boolean;
+        viewUid: string;
+        // Members unused in Gosling
+        // chromInfoPath: string;
+        // getTheme(): string;
+        // dataConfig: DataConfig;
+        // getLockGroupExtrema(): [min: number, max: number] | null;
     };
 
     export class Track<Options> {
@@ -207,6 +209,7 @@ declare module '@higlass/tracks' {
         refXScale(scale: Scale): void;
         refYScale(): this['_refYScale'];
         refYScale(scale: Scale): void;
+        refScalesChanged(refXScale: Scale, refYScale: Scale): void;
         xScale(): this['_xScale'];
         xScale(scale: Scale): void;
         yScale(): this['_yScale'];
@@ -233,11 +236,6 @@ declare module '@higlass/tracks' {
     }
 
     type DataConfig = Record<string, any>;
-    export interface DataFetcher<Tile> {
-        tilesetInfo(finished: (info: TilesetInfo) => void): void;
-        fetchTilesDebounced(receivedTiles: (tiles: Record<string, Tile>) => void, tileIds: string[]): void;
-        track?: any;
-    }
 
     type TilePosition1D = [zoom: number, x: number];
     type TilePosition2D = [zoom: number, x: number, y: number];
@@ -266,7 +264,7 @@ declare module '@higlass/tracks' {
         prevOptions: string;
         flipText?: boolean; // Property never assigned https://github.com/higlass/higlass/blob/develop/app/scripts/PixiTrack.js
         /* Constructor */
-        constructor(context: Context<unknown, Options>, options: Options);
+        constructor(context: PixiTrackContext, options: Options);
         /* Methods */
         setMask(position: [number, number], dimensions: [number, number]): void;
         getForeground(): void;
@@ -431,7 +429,7 @@ declare module '@higlass/tracks' {
     }
 
     export abstract class Tiled1DPixiTrack<TileData, Options> extends TiledPixiTrack<TileData, Options> {
-        onMouseMoveZoom: Context<TileData, Options>['onMouseMoveZoom'];
+        onMouseMoveZoom?: (opts: OnMouseMoveZoomOptions1D | OnMouseMoveZoomOptions2D) => void;
         isValueScaleLocked: Pick<Context<TileData, Options>, 'isValueScaleLocked'>;
         getLockGroupExtrema: Pick<Context<TileData, Options>, 'getLockGroupExtrema'>;
         initTile(tile: TileData): void;
@@ -446,7 +444,7 @@ declare module '@higlass/tracks' {
          * This function should be overwritten by HorizontalTiled1DPixiTrack.js
          * and VerticalTiled1DPixiTrack.js
          */
-        abstract relevantScale(): Scale;
+        // abstract relevantScale(): Scale;
         calculateVisibleTiles(): void;
         /** Get the tile's position in its coordinate system. */
         getTilePosAndDimensions(
@@ -481,7 +479,11 @@ declare module '@higlass/tracks' {
          */
         getDataAtPos(relPos: number): number;
         mouseMoveHandler(mousePosition?: { x?: number; y?: number }): void;
-        abstract mouseMoveZoomHandler(absX?: number, abxY?: number): void;
+        // abstract mouseMoveZoomHandler(absX?: number, abxY?: number): void;
+    }
+
+    export abstract class HeatmapTiledPixiTrack<Options> extends Tiled1DPixiTrack<TileData, Options> {
+        // TODO: fill this out
     }
 
     class AxisPixi<Track> {
@@ -514,10 +516,11 @@ declare module '@higlass/tracks' {
         isShowGlobalMousePosition(): boolean;
         is2d?: boolean;
         calculateZoomLevel(): number;
-        relevantScale(): Scale;
         drawAxis(valueScale: Scale): void;
-        mouseMoveZoomHandler(absX?: number, absY?: number): void;
         drawConstIndicator(): void;
+        // Unused members in Gosling
+        // relevantScale(): Scale;
+        // mouseMoveZoomHandler(absX?: number, absY?: number): void;
     }
 
     export class HorizontalLine1DPixiTrack<T, Options> extends HorizontalTiled1DPixiTrack<T, Options> {
@@ -571,11 +574,74 @@ declare module '@higlass/tracks' {
         clipUid: string;
         clipRect: d3Selection.Selection<d3Selection.Datum, d3Selection.PElement, d3Selection.PDatum>;
         /* Constructor */
-        constructor(context: Context<unknown, Options>, options: Options);
+        constructor(context: SVGTrackContext, options: Options);
     }
 
-    /* eslint-disable-next-line @typescript-eslint/ban-types */
-    type LiteralUnion<T, U = string> = T | (U & {});
+    interface PixiTrackContext extends TrackContext {
+        scene: PIXI.Container;
+    }
+
+    export interface PixiTrackContext {
+        pubSub: any;
+        scene: PIXI.Container;
+        id: string;
+        viewUid: string;
+    }
+
+    export interface PixiTrackOptions {
+        labelPosition?: string;
+        labelText?: string;
+        trackBorderWidth?: number;
+        trackBorderColor?: string;
+        backgroundColor?: string;
+        labelColor?: string;
+        lineStrokeColor?: string;
+        barFillColor?: string;
+        name?: string;
+        labelTextOpacity?: number;
+        labelBackgroundColor?: string;
+        labelLeftMargin?: number;
+        labelRightMargin?: number;
+        labelTopMargin?: number;
+        labelBottomMargin?: number;
+        labelBackgroundOpacity?: number;
+        labelShowAssembly?: boolean;
+        labelShowResolution?: boolean;
+        dataTransform?: string;
+    }
+
+    export type TiledPixiTrackContext = PixiTrackContext & {
+        dataFetcher: DataFetcher;
+        animate: () => void;
+        onValueScaleChanged: () => void;
+        handleTilesetInfoReceived: (tilesetInfo: any) => void;
+        // Below is unused from Gosling
+        // dataConfig: MinimalDataConfig;
+    };
+
+    export type TiledPixiTrackOptions = PixiTrackOptions & {
+        maxZoom?: number;
+    };
+
+    interface TrackContext {
+        id: string;
+        pubSub?: PubSub;
+    }
+    interface SVGTrackContext extends TrackContext {
+        svgElement: SVGElement;
+    }
+
+    interface ViewportTrackerHorizontalContext extends SVGTrackContext {
+        registerViewportChanged: (
+            uid: string,
+            callback: (viewportXScale: ScaleLinear<number, number>, viewportYScale: ScaleLinear<number, number>) => void
+        ) => void;
+        removeViewportChanged: (uid: string) => void;
+        setDomainsCallback: (xDomain: [number, number], yDomain: [number, number]) => void;
+        projectionXDomain: [number, number]; // The domain of the brush
+    }
+
+    type LiteralUnion<T, U = string> = T | U;
 
     type Orientation = '2d' | '1d-vertical' | '1d-horizontal' | 'whole' | 'any';
 
@@ -630,6 +696,14 @@ declare module '@higlass/utils' {
     import type { ScaleContinuousNumeric } from 'd3-scale';
     import type { TilesetInfo } from '@higlass/services';
 
+    export const fakePubSub = {
+        __fake__: true,
+        publish: () => {},
+        subscribe: () => ({ event: 'fake', handler: () => {} }),
+        unsubscribe: () => {},
+        clear: () => {}
+    };
+
     export type ChromInfo<Name extends string = string> = {
         cumPositions: { id?: number; pos: number; chr: string }[];
         chrPositions: Record<Name, { pos: number }>;
@@ -674,4 +748,14 @@ declare module '@higlass/utils' {
             scale: ScaleContinuousNumeric<number, number>
         ): [zoomLevel: number, x: number][];
     };
+    export function uuid(): string;
+}
+
+declare module '@higlass/datafetcher' {
+    export class DataFetcher<Tile> {
+        tilesetInfo(finished: (info: TilesetInfo) => void): void;
+        fetchTilesDebounced(receivedTiles: (tiles: Record<string, Tile>) => void, tileIds: string[]): void;
+        track?: any;
+        constructor(dataConfig, pubSub);
+    }
 }

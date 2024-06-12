@@ -14,7 +14,6 @@ import 'allotment/dist/style.css';
 import { debounce, isEqual } from 'lodash-es';
 import stripJsonComments from 'strip-json-comments';
 import JSONCrush from 'jsoncrush';
-import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
 import type { Datum } from '@gosling-lang/gosling-schema';
 import { Themes } from '@gosling-lang/gosling-theme';
 
@@ -25,6 +24,7 @@ import { traverseTracksAndViews } from '../src/compiler/spec-preprocess';
 import { examples, type Example } from './example';
 import EditorPanel, { type EditorLangauge } from './EditorPanel';
 import EditorExamples from './EditorExamples';
+import { GoslingComponent } from '../demo/GoslingComponent';
 
 import './Editor.css';
 import { uuid } from '../src/core/utils/uuid';
@@ -37,7 +37,7 @@ function isJSON(str: string | null) {
     if (!str) return false;
     try {
         return JSON.parse(str);
-    } catch (e) {
+    } catch {
         return false;
     }
 }
@@ -138,8 +138,8 @@ const getDescPanelDefultWidth = () => Math.min(500, window.innerWidth);
 function resolveRelativeCsvUrls(spec: string, importMeta: URL) {
     const newSpec = JSON.parse(spec);
     // https://regex101.com/r/l87Q5q/1
-    // eslint-disable-next-line
-    const relativePathRegex = /^[.\/]|^\.[.\/]|^\.\.[^\/]/;
+
+    const relativePathRegex = /^[./]|^\.[./]|^\.\.[^/]/;
     traverseTracksAndViews(newSpec as gosling.GoslingSpec, (tv: any) => {
         if (tv.data && tv.data.type === 'csv' && relativePathRegex.test(tv.data.url)) {
             tv.data.url = new URL(tv.data.url, importMeta).href;
@@ -155,7 +155,7 @@ const fetchSpecFromGist = async (gist: string) => {
         // which is not supported by the normal `fetch()` so we need `fetchJsonp()`
         const response = await fetchJsonp(`https://gist.github.com/${gist}.json`);
         metadata = await (response.ok ? response.json() : null);
-    } catch (error) {
+    } catch {
         return Promise.reject(new Error('Gist not found'));
     }
 
@@ -238,7 +238,6 @@ function Editor(props: RouteComponentProps) {
     );
     const [isImportDemo, setIsImportDemo] = useState<boolean>(false);
     const [theme, setTheme] = useState<gosling.Theme>('light'); // or `{ base: 'light', axis: { labelMargin: -1 } }`
-    const [hg, setHg] = useState<HiGlassSpec>();
     const [code, setCode] = useState(defaultCode);
     const [jsCode, setJsCode] = useState(defaultJsCode); //[TO-DO: more js format examples]
     const [goslingSpec, setGoslingSpec] = useState<gosling.GoslingSpec>();
@@ -382,7 +381,6 @@ function Editor(props: RouteComponentProps) {
             setCode(jsonCode);
             setJsCode(demo.specJs ?? json2js(jsonCode));
         }
-        setHg(undefined);
     }, [demo]);
 
     const deviceToResolution = {
@@ -429,7 +427,9 @@ function Editor(props: RouteComponentProps) {
                     >
                         {Object.keys(deviceToResolution).map(d => {
                             // separator (https://stackoverflow.com/questions/899148/html-select-option-separator)
-                            if (d === '-') return <optgroup label="──────────"></optgroup>;
+                            if (d === '-') {
+                                return <optgroup key={d} label="──────────"></optgroup>;
+                            }
                             return (
                                 <option key={d} value={d}>
                                     {d}
@@ -534,7 +534,7 @@ function Editor(props: RouteComponentProps) {
                     editedGos = JSON.parse(stripJsonComments(code));
                     valid = gosling.validateGoslingSpec(editedGos);
                     setLog(valid);
-                } catch (e) {
+                } catch {
                     const message = '✘ Cannnot parse the code.';
                     console.warn(message);
                     setLog({ message, state: 'error' });
@@ -588,10 +588,10 @@ function Editor(props: RouteComponentProps) {
             typeof goslingSpec?.responsiveSize === 'undefined'
                 ? false
                 : typeof goslingSpec?.responsiveSize === 'boolean'
-                ? goslingSpec?.responsiveSize === true
-                : typeof goslingSpec?.responsiveSize === 'object'
-                ? goslingSpec?.responsiveSize.width === true || goslingSpec?.responsiveSize.height === true
-                : false;
+                  ? goslingSpec?.responsiveSize === true
+                  : typeof goslingSpec?.responsiveSize === 'object'
+                    ? goslingSpec?.responsiveSize.width === true || goslingSpec?.responsiveSize.height === true
+                    : false;
         if (newIsResponsive !== isResponsive && newIsResponsive) {
             setScreenSize(undefined); // reset the screen
             setVisibleScreenSize(undefined);
@@ -623,13 +623,6 @@ function Editor(props: RouteComponentProps) {
         setSelectedPreviewData(0);
         runSpecUpdateVis();
     }, [code, jsCode, autoRun, language, theme]);
-
-    // Uncommnet below to use HiGlass APIs
-    // useEffect(() => {
-    //     if(hgRef.current) {
-    //         hgRef.current.api.activateTool('select');
-    //     }
-    // }, [hg, hgRef]); // TODO: should `hg` be here?
 
     function getDataPreviewInfo(dataConfig: string) {
         // Detailed information of data config to show in the editor
@@ -738,7 +731,7 @@ function Editor(props: RouteComponentProps) {
                     })}
             </div>
         );
-    }, [hg, demo]);
+    }, [demo]);
 
     // console.log('editor.render()');
     return (
@@ -1027,10 +1020,10 @@ function Editor(props: RouteComponentProps) {
                                                             `URL of the current visualization is copied to your clipboard! `
                                                         )
                                                     )
-                                                    .catch(
+                                                    .catch(e => {
                                                         // eslint-disable-next-line no-alert
-                                                        e => alert(`something went wrong ${e}`)
-                                                    );
+                                                        alert(`something went wrong ${e}`);
+                                                    });
                                             }
                                         }}
                                     >
@@ -1178,20 +1171,6 @@ function Editor(props: RouteComponentProps) {
                                     </div>
                                     <div className={`compile-message compile-message-${log.state}`}>{log.message}</div>
                                 </>
-                                {/* HiGlass View Config */}
-                                <Allotment.Pane preferredSize={BOTTOM_PANEL_HEADER_HEIGHT}>
-                                    <div className={`editor-header ${theme === 'dark' ? 'dark' : ''}`}>
-                                        Compiled HiGlass ViewConfig (Read Only)
-                                    </div>
-                                    <div style={{ height: '100%', visibility: showVC ? 'visible' : 'hidden' }}>
-                                        <EditorPanel
-                                            code={stringify(hg)}
-                                            readOnly={true}
-                                            isDarkTheme={theme === 'dark'}
-                                            language="json"
-                                        />
-                                    </div>
-                                </Allotment.Pane>
                             </Allotment>
                         </Allotment.Pane>
                         <ErrorBoundary>
@@ -1211,20 +1190,7 @@ function Editor(props: RouteComponentProps) {
                                             background: isResponsive ? 'white' : 'none'
                                         }}
                                     >
-                                        <gosling.GoslingComponent
-                                            ref={gosRef}
-                                            spec={goslingSpec}
-                                            theme={theme}
-                                            padding={60}
-                                            margin={0}
-                                            border={'none'}
-                                            id={'goslig-component-root'}
-                                            className={'goslig-component'}
-                                            experimental={{ reactive: true }}
-                                            compiled={(_, h) => {
-                                                setHg(h);
-                                            }}
-                                        />
+                                        <GoslingComponent spec={goslingSpec} width={1000} height={2000} />
                                         {showViews && !isResponsive ? VisHierarchy : null}
                                     </div>
                                     {/* {expertMode && false ? (

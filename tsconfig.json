@@ -23,25 +23,69 @@
     "verbatimModuleSyntax": true,
     "jsx": "react",
     "paths": {
-      "gosling.js": ["./src/index.ts"],
-      "@gosling-lang/gosling-schema": ["src/gosling-schema/index.ts"],
-      "@gosling-lang/higlass-schema": ["src/higlass-schema/index.ts"],
-      "@gosling-lang/gosling-theme": ["src/gosling-theme/index.ts"],
-      "@gosling-lang/gosling-track": ["./src/tracks/gosling-track/index.ts"],
-      "@gosling-lang/gosling-genomic-axis": ["./src/tracks/gosling-genomic-axis/index.ts"],
-      "@gosling-lang/gosling-brush": ["./src/tracks/gosling-brush/index.ts"],
-      "@gosling-lang/dummy-track": ["./src/tracks/dummy-track/index.ts"],
-      "@data-fetchers": ["./src/data-fetchers/index.ts"],
-      "zlib": ["./src/alias/zlib.ts"]
+      "gosling.js": [
+        "./src/index.ts"
+      ],
+      "@gosling-lang/gosling-schema": [
+        "src/gosling-schema/index.ts"
+      ],
+      "@gosling-lang/gosling-theme": [
+        "src/gosling-theme/index.ts"
+      ],
+      "@gosling-lang/gosling-track": [
+        "./src/tracks/gosling-track/index.ts"
+      ],
+      "@gosling-lang/genomic-axis": [
+        "src/tracks/genomic-axis/index.ts"
+      ],
+      "@gosling-lang/brush-circular": [
+        "src/tracks/brush-circular/index.ts"
+      ],
+      "@gosling-lang/brush-linear": [
+        "src/tracks/brush-linear/index.ts"
+      ],
+      "@gosling-lang/dummy-track": [
+        "./src/tracks/dummy-track/index.ts"
+      ],
+      "@gosling-lang/text-track": [
+        "./src/tracks/text-track/index.ts"
+      ],
+      "@gosling-lang/heatmap": [
+        "./src/tracks/heatmap/index.ts"
+      ],
+      "@gosling-lang/interactors": [
+        "./src/interactors/index.ts"
+      ],
+      "@pixi-manager": [
+        "./src/pixi-manager/index.ts"
+      ],
+      "@data-fetchers": [
+        "./src/data-fetchers/index.ts"
+      ],
+      "@higlass": [
+        "./src/higlass"
+      ],
+      "zlib": [
+        "./src/alias/zlib.ts"
+      ]
     },
     "baseUrl": ".",
-    "types": ["vitest/globals", "vite/client"]
+    "types": [
+      "vitest/globals",
+      "vite/client"
+    ]
   },
   "files": [
     "src/index.ts",
     "editor/index.tsx",
+    "demo/main.tsx"
   ],
-  "include": ["src", "src/**/*.d.ts", "editor", "e2e"],
+  "include": [
+    "src",
+    "src/**/*.d.ts",
+    "editor",
+    "e2e"
+  ],
   "exclude": [
     "node_modules",
     "public",

@@ -154,7 +154,7 @@ export interface CommonViewDef {
 }
 
 /* ----------------------------- TRACK ----------------------------- */
-export type Track = SingleTrack | OverlaidTrack | DataTrack | TemplateTrack | DummyTrack;
+export type Track = SingleTrack | OverlaidTrack | TemplateTrack | DummyTrack;
 
 export interface CommonTrackDef extends CommonViewDef {
     /** Assigned to `uid` in a HiGlass view config, used for API and caching. */
@@ -195,20 +195,8 @@ export interface CommonTrackDef extends CommonViewDef {
     _renderingId?: string;
     /** internal */
     _invalidTrack?: boolean; // flag to ignore rendering certain tracks if they have problems // !!! TODO: add tests
-
-    // To test upcoming feature.
-    /** internal */
-    prerelease?: {
-        // ...
-    };
 }
 
-/**
- * Partial specification of `BasicSingleTrack` to use default visual encoding predefined by data type.
- */
-export interface DataTrack extends CommonTrackDef {
-    data: DataDeep;
-}
 /**
  * A placeholder track. In contrast to other tracks, this track does not display any data. Instead it provides
  * empty space for third party tools to display their data on top of.
@@ -272,9 +260,8 @@ export type Mark =
     | 'triangleRight'
     | 'triangleBottom'
     | 'brush'
-    // TODO: perhaps need to make this invisible to users
-    // being used to show title/subtitle internally
-    | 'header';
+    // The _header mark is used internally for text tracks
+    | '_header';
 
 /* ----------------------------- API & MOUSE EVENTS ----------------------------- */
 interface CommonEventData {
@@ -282,13 +269,6 @@ interface CommonEventData {
     id: string;
     /** Values in a JSON array that represent data after data transformation */
     data: Datum[];
-}
-
-interface SpecEventData {
-    /** Source visualization ID, i.e., `track.id` */
-    id: string;
-    /** Gosling spec */
-    spec: GoslingSpec;
 }
 
 export interface GenomicPosition {
@@ -379,7 +359,6 @@ export type _EventMap = {
     click: PointMouseEventData;
     rangeSelect: RangeMouseEventData;
     rawData: CommonEventData;
-    specProcessed: SpecEventData;
     trackMouseOver: TrackApiData;
     trackClick: TrackApiData; // TODO (Jul-25-2022): with https://github.com/higlass/higlass/pull/1098, we can support circular layouts
     onNewTrack: OnNewTrackEventData;
@@ -418,13 +397,13 @@ interface SingleTrackBase extends CommonTrackDef {
     // Tooltip
     tooltip?: Tooltip[];
 
+    /*
+     * Determine whether to use mouse events, such as click and mouse over on marks. __Default__: `false`
+     */
+    mouseEvents?: boolean | MouseEventsDeep;
+
     // Experimental
     experimental?: {
-        /*
-         * Determine whether to use mouse events, such as click and mouse over on marks. __Default__: `false`
-         */
-        mouseEvents?: boolean | MouseEventsDeep;
-
         /**
          * Render visual marks with less smooth curves to increase rendering performance.
          * Only supported for `elliptical` `linkStyle` `withinLink` currently.
@@ -465,7 +444,6 @@ interface SingleTrackBase extends CommonTrackDef {
     flipY?: boolean; // This is only supported for `link` marks.
     baselineY?: number; // This is only supported for `link` marks.
     stretch?: boolean; // Stretch the size to the given range? (e.g., [x, xe])
-    overrideTemplate?: boolean; // Override a spec template that is defined for a given data type.
 }
 
 export interface Encoding {
@@ -1533,7 +1511,6 @@ export type TemplateTrackMappingDef = Omit<
     // Experimental
     flipY?: boolean; // This is only supported for `link` marks.
     stretch?: boolean; // Stretch the size to the given range? (e.g., [x, xe])
-    overrideTemplate?: boolean; // Override a spec template that is defined for a given data type.
 };
 
 // The main difference is that this allows to specify a `base` property

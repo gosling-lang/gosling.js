@@ -12,6 +12,7 @@ import type { Assembly, BedData } from '@gosling-lang/gosling-schema';
 import type { WorkerApi, TilesetInfo } from './bed-worker';
 import type { BedTile, EmptyTile } from './bed-worker';
 import type { TabularDataFetcher } from '../utils';
+import { uuid } from '../../core/utils/uuid';
 
 const DEBOUNCE_TIME = 200;
 
@@ -28,8 +29,8 @@ class BedDataFetcher implements TabularDataFetcher<BedTile> {
     private fetchTimeout?: ReturnType<typeof setTimeout>;
     private worker: Promise<ModuleThread<WorkerApi>>;
 
-    constructor(HGC: import('@higlass/types').HGC, config: BedDataConfig) {
-        this.uid = HGC.libraries.slugid.nice();
+    constructor(config: BedDataConfig) {
+        this.uid = uuid();
         this.prevRequestTime = 0;
         this.toFetch = new Set();
         const { url, indexUrl, assembly, ...options } = config;

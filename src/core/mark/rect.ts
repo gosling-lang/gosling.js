@@ -5,7 +5,7 @@ import type { PIXIVisualProperty } from '../visual-property.schema';
 import colorToHex from '../utils/color-to-hex';
 import { IsChannelDeep } from '@gosling-lang/gosling-schema';
 
-export function drawRect(HGC: import('@higlass/types').HGC, track: any, tile: Tile, model: GoslingTrackModel) {
+export function drawRect(track: any, tile: Tile, model: GoslingTrackModel) {
     /* track spec */
     const spec = model.spec();
 
@@ -137,7 +137,7 @@ export function rectProperty(
     }
 ) {
     switch (propertyKey) {
-        case 'width':
+        case 'width': {
             const width =
                 // (1) size
                 gm.visualPropertyByChannel('xe', datum)
@@ -145,6 +145,7 @@ export function rectProperty(
                     : // (2) unit mark height
                       additionalInfo?.markWidth;
             return width === 0 ? 0.1 : width; // TODO: not sure if this is necessary for all cases. Perhaps, we can have an option.
+        }
         case 'height':
             return (
                 // (1) size

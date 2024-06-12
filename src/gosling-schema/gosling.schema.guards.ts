@@ -22,7 +22,6 @@ import type {
     MultivecData,
     MatrixData,
     VectorData,
-    DataTrack,
     BigWigData,
     SingleView,
     FlatTracks,
@@ -33,7 +32,8 @@ import type {
     TemplateTrack,
     MouseEventsDeep,
     DataTransform,
-    DummyTrack
+    DummyTrack,
+    MultipleViews
 } from './gosling.schema';
 import { SUPPORTED_CHANNELS } from '../core/mark';
 import {
@@ -49,6 +49,7 @@ import {
 } from 'd3-scale-chromatic';
 import { resolveSuperposedTracks } from '../core/utils/overlay';
 import type { TabularDataFetcher } from '@data-fetchers';
+import type { ProcessedDummyTrack, ProcessedTrack } from 'demo/track-def/types';
 
 export const PREDEFINED_COLOR_STR_MAP: { [k: string]: (t: number) => string } = {
     viridis: interpolateViridis,
@@ -92,16 +93,8 @@ export function IsStackedTracks(_: SingleView): _ is StackedTracks {
     return !IsFlatTracks(_) && !IsOverlaidTracks(_);
 }
 
-export function IsDataTrack(_: Track): _ is DataTrack {
-    // !!! Track might not contain `mark` when it is superposed one
-    return !IsOverlaidTrack(_) && 'data' in _ && !('mark' in _);
-}
-export function IsDummyTrack(_: Track): _ is DummyTrack {
+export function IsDummyTrack(_: Track | ProcessedTrack): _ is DummyTrack | ProcessedDummyTrack {
     return 'type' in _ && _.type == 'dummy-track';
-}
-
-export function IsDataTemplate(_: Partial<Track>): boolean {
-    return !!('data' in _ && 'overrideTemplate' in _ && _.overrideTemplate);
 }
 
 export function IsDataDeep(data: DataDeep | Datum[]): data is DataDeep {
@@ -138,6 +131,14 @@ export function IsOverlaidTrack(track: Partial<Track>): track is OverlaidTrack {
 
 export function IsTemplateTrack(track: Partial<Track>): track is TemplateTrack {
     return 'template' in track;
+}
+
+export function IsSingleView(view: unknown): view is SingleView {
+    return isObject(view) && 'tracks' in view;
+}
+
+export function IsMultipleViews(view: unknown): view is MultipleViews {
+    return isObject(view) && 'views' in view;
 }
 
 /**

@@ -1,7 +1,7 @@
 import type { MultipleViews, CommonViewDef, GoslingSpec, Track, SingleView } from '@gosling-lang/gosling-schema';
 import { Is2DTrack, IsDummyTrack, IsOverlaidTrack, IsXAxis, IsYAxis } from '@gosling-lang/gosling-schema';
-import { HIGLASS_AXIS_SIZE } from './higlass-model';
 import {
+    DEFAULT_AXIS_SIZE,
     DEFAULT_CIRCULAR_VIEW_PADDING,
     DEFAULT_INNER_RADIUS_PROP,
     DEFAULT_VIEW_SPACING,
@@ -10,7 +10,7 @@ import {
 import { resolveSuperposedTracks } from '../core/utils/overlay';
 import { traverseTracksAndViews, traverseViewArrangements } from './spec-preprocess';
 import type { CompleteThemeDeep } from '../core/utils/theme';
-
+import type { ProcessedCircularTrack, ProcessedTrack } from '../../demo/track-def/types';
 export interface Size {
     width: number;
     height: number;
@@ -38,7 +38,7 @@ export interface RelativePosition {
  * Track information for its arrangement.
  */
 export interface TrackInfo {
-    track: Track;
+    track: ProcessedTrack;
     boundingBox: BoundingBox;
     layout: RelativePosition;
 }
@@ -186,13 +186,13 @@ function traverseAndCollectTrackInfo(
             cumHeight = Math.max(...tracks.map(d => d.height));
             tracks.forEach((track, i, array) => {
                 if (getNumOfXAxes([track]) === 1) {
-                    track.width += HIGLASS_AXIS_SIZE;
+                    track.width += DEFAULT_AXIS_SIZE;
                 }
 
                 track.height = cumHeight;
 
                 output.push({
-                    track,
+                    track: track as ProcessedTrack,
                     boundingBox: {
                         x: dx + cumWidth,
                         y: dy,
@@ -216,26 +216,26 @@ function traverseAndCollectTrackInfo(
             cumWidth = Math.max(...tracks.map(d => d.width)); //forceWidth ? forceWidth : spec.tracks[0]?.width;
             tracks.forEach((track, i, array) => {
                 // let scaledHeight = track.height;
-
                 if (getNumOfXAxes([track]) === 1) {
-                    track.height += HIGLASS_AXIS_SIZE;
+                    track.height += DEFAULT_AXIS_SIZE;
                 }
+                const boundingBox = {
+                    x: dx,
+                    y: dy + cumHeight,
+                    width: cumWidth,
+                    height: track.height
+                };
                 const singleTrack = resolveSuperposedTracks(track);
                 if (singleTrack.length > 0 && Is2DTrack(singleTrack[0]) && getNumOfYAxes([track]) === 1) {
                     // If this is a 2D track (e.g., matrix), we need to reserve a space for the y-axis track
-                    cumWidth += HIGLASS_AXIS_SIZE;
+                    boundingBox.width += DEFAULT_AXIS_SIZE;
                 }
 
-                track.width = cumWidth;
+                track.width = boundingBox.width;
 
                 output.push({
-                    track,
-                    boundingBox: {
-                        x: dx,
-                        y: dy + cumHeight,
-                        width: cumWidth,
-                        height: track.height
-                    },
+                    track: track as ProcessedTrack,
+                    boundingBox,
                     layout: { x: 0, y: 0, w: 0, h: 0 } // Just put a dummy info here, this should be added after entire bounding box has been determined
                 });
 
@@ -320,25 +320,33 @@ function traverseAndCollectTrackInfo(
             if (IsDummyTrack(t.track)) {
                 return;
             }
-            t.track.layout = 'circular';
+            // TODO: We know that this is a circular track, but it would be better to type guard it.
+            const circularTrack = t.track as ProcessedCircularTrack;
 
-            t.track.outerRadius = TOTAL_RADIUS - PADDING - ((t.boundingBox.y - dy) / cumHeight) * TOTAL_RING_SIZE;
-            t.track.innerRadius =
+            circularTrack.layout = 'circular';
+
+            circularTrack.outerRadius = TOTAL_RADIUS - PADDING - ((t.boundingBox.y - dy) / cumHeight) * TOTAL_RING_SIZE;
+            circularTrack.innerRadius =
                 TOTAL_RADIUS - PADDING - ((t.boundingBox.y + t.boundingBox.height - dy) / cumHeight) * TOTAL_RING_SIZE;
 
             // in circular layouts, we place spacing in the origin as well
             const spacingAngle = (SPACING / cumWidth) * 360;
 
             // !!! Multiplying by (cumWidth - SPACING) / cumWidth) to rescale to exclude SPACING
-            t.track.startAngle =
+            circularTrack.startAngle =
                 spacingAngle + ((((t.boundingBox.x - dx) / cumWidth) * (cumWidth - SPACING)) / cumWidth) * 360;
-            t.track.endAngle =
+            circularTrack.endAngle =
                 ((((t.boundingBox.x + t.boundingBox.width - dx) / cumWidth) * (cumWidth - SPACING)) / cumWidth) * 360;
             // t.track.startAngle = ((t.boundingBox.x - dx) / cumWidth) * 360;
             // t.track.endAngle = ((t.boundingBox.x + t.boundingBox.width - dx) / cumWidth) * 360;
 
-            t.boundingBox.x = dx + (t.track.xOffset ?? 0);
-            t.boundingBox.y = dy + (t.track.yOffset ?? 0);
+            // If this is the first track, we add the offset of the x position
+            if (i == 0) {
+                t.boundingBox.x = dx + (circularTrack.xOffset ?? 0);
+            } else {
+                t.boundingBox.x = dx;
+            }
+            t.boundingBox.y = dy + (circularTrack.yOffset ?? 0);
 
             // Circular tracks share the same size and position since technically these tracks are being overlaid on top of the others
             t.boundingBox.height = t.track.height = t.boundingBox.width = t.track.width = TOTAL_RADIUS * 2;
@@ -385,11 +393,11 @@ export function getNumOfYAxes(tracks: Track[]): number {
 const getTextTrack = (size: Size, title?: string, subtitle?: string) => {
     return JSON.parse(
         JSON.stringify({
-            mark: 'header',
+            mark: '_header',
             width: size.width,
             height: size.height,
             title,
             subtitle
         })
-    ) as Track;
+    ) as ProcessedTrack;
 };

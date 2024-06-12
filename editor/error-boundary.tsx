@@ -4,9 +4,7 @@ interface State {
     hasError: boolean;
 }
 
-interface Props {}
-
-export default class ErrorBoundary extends React.Component<React.PropsWithChildren<Props>, State> {
+export default class ErrorBoundary extends React.Component<React.PropsWithChildren<unknown>, State> {
     state: State = { hasError: false };
 
     componentDidCatch() {

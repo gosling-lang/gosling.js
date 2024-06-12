@@ -924,7 +924,7 @@
         "triangleRight",
         "triangleBottom",
         "brush",
-        "header"
+        "_header"
       ],
       "type": "string"
     },
@@ -1296,14 +1296,6 @@
         },
         "overlayOnPreviousTrack": {
           "type": "boolean"
-        },
-        "overrideTemplate": {
-          "type": "boolean"
-        },
-        "prerelease": {
-          "additionalProperties": false,
-          "description": "internal",
-          "type": "object"
         },
         "row": {
           "$ref": "#/definitions/ChannelWithBase"

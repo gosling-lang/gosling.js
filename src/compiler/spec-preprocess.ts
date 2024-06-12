@@ -11,8 +11,6 @@ import type {
     DisplaceTransform
 } from '@gosling-lang/gosling-schema';
 import {
-    IsDataTemplate,
-    IsDataDeepTileset,
     IsSingleTrack,
     IsChannelDeep,
     IsOverlaidTrack,
@@ -123,12 +121,19 @@ export function convertToFlatTracks(spec: SingleView): Track[] {
                 }
             });
     } else {
-        newTracks.push({
+        const overlays = [...spec.tracks.filter(track => !track._invalidTrack)];
+        let newTrack = {
             ...spec,
-            _overlay: [...spec.tracks.filter(track => !track._invalidTrack)],
             tracks: undefined,
             alignment: undefined
-        } as Track);
+        } as any;
+        if (overlays.length === 1) {
+            // If there is only a single overlay, we just merge it with the track.
+            newTrack = { ...newTrack, ...overlays[0] };
+        } else {
+            newTrack._overlay = overlays;
+        }
+        newTracks.push(newTrack as Track);
     }
 
     return JSON.parse(JSON.stringify(newTracks));
@@ -188,7 +193,6 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
          */
         tracks = spreadTracksByData(tracks);
 
-        const linkID = uuid();
         tracks.forEach((track, i, array) => {
             // ID should be assigned to each view and track for an API usage
             if (!track.id) {
@@ -266,6 +270,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                 track._overlay = track._overlay.filter(overlayTrack => {
                     return !('type' in overlayTrack && overlayTrack.type == 'dummy-track');
                 });
+                // Reuse styles defined by parents
                 track._overlay.forEach(o => {
                     o.style = getStyleOverridden(track.style, o.style);
                 });
@@ -316,7 +321,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
              * Link tracks in a single view
              */
             if ((IsSingleTrack(track) || IsOverlaidTrack(track)) && IsChannelDeep(track.x) && !track.x.linkingId) {
-                track.x.linkingId = spec.linkingId ?? linkID;
+                track.x.linkingId = spec.linkingId;
             } else if (IsOverlaidTrack(track)) {
                 let isAdded = false;
                 track._overlay.forEach(o => {
@@ -324,7 +329,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
 
                     if (IsChannelDeep(o.x) && !o.x.linkingId) {
                         // TODO: Is this safe?
-                        o.x.linkingId = spec.linkingId ?? linkID;
+                        o.x.linkingId = spec.linkingId;
                         isAdded = true;
                     }
                 });
@@ -460,108 +465,4 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             traverseToFixSpecDownstream(v, spec as CommonViewDef);
         });
     }
-}
-
-/**
- * Get an encoding template for the `higlass-vector` data type.
- * @param column
- * @param value
- */
-export function getVectorTemplate(column: string, value: string): SingleTrack {
-    return {
-        data: {
-            type: 'vector',
-            url: '',
-            column,
-            value
-        },
-        mark: 'bar',
-        x: { field: column, type: 'genomic', axis: 'top' },
-        y: { field: value, type: 'quantitative' },
-        width: 400,
-        height: 100
-    };
-}
-
-export function getMultivecTemplate(
-    row: string,
-    column: string,
-    value: string,
-    categories: string[] | undefined
-): SingleTrack {
-    return categories && categories.length < 10
-        ? {
-              data: {
-                  type: 'multivec',
-                  url: '',
-                  row,
-                  column,
-                  value,
-                  categories
-              },
-              mark: 'bar',
-              x: { field: column, type: 'genomic', axis: 'top' },
-              y: { field: value, type: 'quantitative' },
-              row: { field: row, type: 'nominal', legend: true },
-              color: { field: row, type: 'nominal' },
-              width: 400,
-              height: 100
-          }
-        : {
-              data: {
-                  type: 'multivec',
-                  url: '',
-                  row,
-                  column,
-                  value,
-                  categories
-              },
-              mark: 'rect',
-              x: { field: column, type: 'genomic', axis: 'top' },
-              row: { field: row, type: 'nominal', legend: true },
-              color: { field: value, type: 'quantitative' },
-              width: 400,
-              height: 100
-          };
-}
-
-/**
- * Override default visual encoding in each track for given data type.
- * @param spec
- */
-export function overrideDataTemplates(spec: GoslingSpec) {
-    traverseTracks(spec, (t, i, ts) => {
-        if (!('data' in t) || !t.data || !IsDataDeepTileset(t.data)) {
-            // if `data` is not specified, we can not provide a correct template.
-            return;
-        }
-
-        if ('alignment' in t) {
-            // This is an OverlaidTracks, so skip this.
-            return;
-        }
-
-        if (!IsDataTemplate(t)) {
-            // This is not partial specification that we need to use templates
-            return;
-        }
-
-        switch (t.data.type) {
-            case 'vector':
-            case 'bigwig':
-                ts[i] = Object.assign(getVectorTemplate(t.data.column ?? 'position', t.data.value ?? 'value'), t);
-                break;
-            case 'multivec':
-                ts[i] = Object.assign(
-                    getMultivecTemplate(
-                        t.data.row ?? 'category',
-                        t.data.column ?? 'position',
-                        t.data.value ?? 'value',
-                        t.data.categories
-                    ),
-                    t
-                );
-                break;
-        }
-    });
 }

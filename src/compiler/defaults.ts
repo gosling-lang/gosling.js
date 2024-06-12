@@ -22,3 +22,5 @@ export const DEFAULT_CIRCULAR_VIEW_PADDING = 0; // TODO: this is not properly co
 
 // default color when cannot parse
 export const DEFAULT_BACKUP_COLOR = 'gray';
+
+export const DEFAULT_AXIS_SIZE = 30;
