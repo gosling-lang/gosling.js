@@ -26,7 +26,7 @@ export interface UrlToFetchOptions {
 type CompiledCallbackFn = (
     goslingSpec: gosling.GoslingSpec,
     higlassSpec: gosling.HiGlassSpec,
-    experimental: { experimental_processedSpec: gosling.GoslingSpec }
+    experimental: { _processedSpec: gosling.GoslingSpec }
 ) => void;
 
 export interface GoslingCompProps {
