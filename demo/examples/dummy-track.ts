@@ -16,7 +16,7 @@ export function addDummyTrack(pixiManager: PixiManager) {
         },
         pixiManager.makeContainer({
             x: 10,
-            y: 10,
+            y: 30,
             width: 350,
             height: 130
         }).overlayDiv
