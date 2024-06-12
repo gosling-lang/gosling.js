@@ -385,7 +385,7 @@ export function getNumOfYAxes(tracks: Track[]): number {
 const getTextTrack = (size: Size, title?: string, subtitle?: string) => {
     return JSON.parse(
         JSON.stringify({
-            mark: 'header',
+            mark: '_header',
             width: size.width,
             height: size.height,
             title,
