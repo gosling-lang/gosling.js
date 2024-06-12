@@ -124,6 +124,7 @@ declare module '@higlass/tracks' {
     import type * as d3Selection from 'd3-selection';
     import type { TilesetInfo, ColorRGBA } from '@higlass/services';
     import type { ChromInfo } from '@higlass/utils';
+    import type { DataFetcher } from '@higlass/datafetcher';
 
     export type Scale = d3.ScaleContinuousNumeric<number, number>;
 
@@ -207,6 +208,7 @@ declare module '@higlass/tracks' {
         refXScale(scale: Scale): void;
         refYScale(): this['_refYScale'];
         refYScale(scale: Scale): void;
+        refScalesChanged(refXScale: Scale, refYScale: Scale): void;
         xScale(): this['_xScale'];
         xScale(scale: Scale): void;
         yScale(): this['_yScale'];
@@ -233,11 +235,6 @@ declare module '@higlass/tracks' {
     }
 
     type DataConfig = Record<string, any>;
-    export interface DataFetcher<Tile> {
-        tilesetInfo(finished: (info: TilesetInfo) => void): void;
-        fetchTilesDebounced(receivedTiles: (tiles: Record<string, Tile>) => void, tileIds: string[]): void;
-        track?: any;
-    }
 
     type TilePosition1D = [zoom: number, x: number];
     type TilePosition2D = [zoom: number, x: number, y: number];
@@ -266,7 +263,7 @@ declare module '@higlass/tracks' {
         prevOptions: string;
         flipText?: boolean; // Property never assigned https://github.com/higlass/higlass/blob/develop/app/scripts/PixiTrack.js
         /* Constructor */
-        constructor(context: Context<unknown, Options>, options: Options);
+        constructor(context: PixiTrackContext, options: Options);
         /* Methods */
         setMask(position: [number, number], dimensions: [number, number]): void;
         getForeground(): void;
@@ -484,6 +481,10 @@ declare module '@higlass/tracks' {
         abstract mouseMoveZoomHandler(absX?: number, abxY?: number): void;
     }
 
+    export abstract class HeatmapTiledPixiTrack<Options> extends Tiled1DPixiTrack<TileData, Options> {
+        // TODO: fill this out
+    }
+
     class AxisPixi<Track> {
         pAxis: PIXI.Graphics;
         track: Track;
@@ -571,7 +572,45 @@ declare module '@higlass/tracks' {
         clipUid: string;
         clipRect: d3Selection.Selection<d3Selection.Datum, d3Selection.PElement, d3Selection.PDatum>;
         /* Constructor */
-        constructor(context: Context<unknown, Options>, options: Options);
+        constructor(context: SVGTrackContext, options: Options);
+    }
+
+    interface PixiTrackContext extends TrackContext {
+        scene: PIXI.Container;
+    }
+
+    interface TrackContext {
+        id: string;
+        pubSub?: PubSub;
+        getTheme: () => unknown;
+    }
+    interface SVGTrackContext extends TrackContext {
+        svgElement: SVGElement;
+    }
+    interface ViewportTrackerHorizontalContext extends SVGTrackContext {
+        registerViewportChanged: (
+            uid: string,
+            callback: (viewportXScale: ScaleLinear<number, number>, viewportYScale: ScaleLinear<number, number>) => void
+        ) => void;
+        removeViewportChanged: (uid: string) => void;
+        setDomainsCallback: (xDomain: [number, number], yDomain: [number, number]) => void;
+        projectionXDomain: [number, number]; // The domain of the brush
+    }
+
+    interface ViewportTrackerHorizontalOptions {
+        projectionFillColor: string;
+        projectionStrokeColor: string;
+        projectionFillOpacity: number;
+        projectionStrokeOpacity: number;
+        strokeWidth: number;
+    }
+
+    export class ViewportTrackerHorizontal<Options> extends SVGTrack<Options> {
+        options: Options & ViewportTrackerHorizontalOptions;
+        context: ViewportTrackerHorizontalContext;
+        viewportChanged: (viewportXScale: Scale, viewportYScale: Scale) => void;
+
+        constructor(context: ViewportTrackerHorizontalContext, options: Options & ViewportTrackerHorizontalOptions);
     }
 
     /* eslint-disable-next-line @typescript-eslint/ban-types */
@@ -630,6 +669,14 @@ declare module '@higlass/utils' {
     import type { ScaleContinuousNumeric } from 'd3-scale';
     import type { TilesetInfo } from '@higlass/services';
 
+    export const fakePubSub = {
+        __fake__: true,
+        publish: () => {},
+        subscribe: () => ({ event: 'fake', handler: () => {} }),
+        unsubscribe: () => {},
+        clear: () => {}
+    };
+
     export type ChromInfo<Name extends string = string> = {
         cumPositions: { id?: number; pos: number; chr: string }[];
         chrPositions: Record<Name, { pos: number }>;
@@ -674,4 +721,13 @@ declare module '@higlass/utils' {
             scale: ScaleContinuousNumeric<number, number>
         ): [zoomLevel: number, x: number][];
     };
+    export function uuid(): string;
+}
+
+declare module '@higlass/datafetcher' {
+    export class DataFetcher<Tile> {
+        tilesetInfo(finished: (info: TilesetInfo) => void): void;
+        fetchTilesDebounced(receivedTiles: (tiles: Record<string, Tile>) => void, tileIds: string[]): void;
+        track?: any;
+    }
 }
