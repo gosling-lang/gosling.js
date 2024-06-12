@@ -7,6 +7,7 @@ import type { CompleteThemeDeep } from '../utils/theme';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import { isNumberArray, isStringArray } from '../utils/array';
 import { getTextStyle } from '../utils/text-style';
+import * as PIXI from 'pixi.js';
 
 const EXTENT_TICK_SIZE = 8;
 const TICK_SIZE = 6;
@@ -15,7 +16,6 @@ const TICK_SIZE = 6;
  * Draw linear scale Y axis
  */
 export function drawLinearYAxis(
-    HGC: { libraries: { PIXI: typeof import('pixi.js') } },
     trackInfo: any,
     _tile: unknown,
     model: GoslingTrackModel,
@@ -130,7 +130,7 @@ export function drawLinearYAxis(
             const y = yScale(t);
             tickEnd = isLeft ? dx + TICK_SIZE * 2 : dx - TICK_SIZE * 2;
 
-            const textGraphic = new HGC.libraries.PIXI.Text(t, styleConfig);
+            const textGraphic = new PIXI.Text(t, styleConfig);
             textGraphic.anchor.x = isLeft ? 0 : 1;
             textGraphic.anchor.y = y === 0 ? 0.9 : 0.5;
             textGraphic.position.x = tickEnd;
@@ -150,7 +150,6 @@ export function drawLinearYAxis(
  * Draw linear scale Y axis
  */
 export function drawCircularYAxis(
-    HGC: import('@higlass/types').HGC,
     trackInfo: any,
     tile: Tile,
     model: GoslingTrackModel,
@@ -319,15 +318,15 @@ export function drawCircularYAxis(
                 fontFamily: theme.axis.labelFontFamily,
                 fontWeight: theme.axis.labelFontWeight
             });
-            const textGraphic = new HGC.libraries.PIXI.Text(t, styleConfig);
+            const textGraphic = new PIXI.Text(t, styleConfig);
             textGraphic.anchor.x = isLeft ? 1 : 0;
             textGraphic.anchor.y = 0.5;
             textGraphic.position.x = pos.x;
             textGraphic.position.y = pos.y;
 
             textGraphic.resolution = 4;
-            const txtStyle = new HGC.libraries.PIXI.TextStyle(styleConfig);
-            const metric = HGC.libraries.PIXI.TextMetrics.measureText(textGraphic.text, txtStyle);
+            const txtStyle = new PIXI.TextStyle(styleConfig);
+            const metric = PIXI.TextMetrics.measureText(textGraphic.text, txtStyle);
 
             // Scale the width of text label so that its width is the same when converted into circular form
             const txtWidth = ((metric.width / (2 * currentR * Math.PI)) * tw * 360) / (endAngle - startAngle);
@@ -340,13 +339,13 @@ export function drawCircularYAxis(
             const ropePoints: import('pixi.js').Point[] = [];
             for (let i = scaledEndX; i >= scaledStartX; i -= txtWidth / 10.0) {
                 const p = cartesianToPolar(i, tw, currentR, cx, cy, startAngle, endAngle);
-                ropePoints.push(new HGC.libraries.PIXI.Point(p.x, p.y));
+                ropePoints.push(new PIXI.Point(p.x, p.y));
             }
 
             // Render a label
             // @ts-expect-error missing argument in updateText?
             textGraphic.updateText();
-            const rope = new HGC.libraries.PIXI.SimpleRope(textGraphic.texture, ropePoints);
+            const rope = new PIXI.SimpleRope(textGraphic.texture, ropePoints);
             graphics.addChild(rope);
         });
     });

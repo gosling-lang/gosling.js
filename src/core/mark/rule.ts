@@ -5,7 +5,7 @@ import { getValueUsingChannel } from '@gosling-lang/gosling-schema';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
 
-export function drawRule(HGC: import('@higlass/types').HGC, trackInfo: any, tile: Tile, model: GoslingTrackModel) {
+export function drawRule(trackInfo: any, tile: Tile, model: GoslingTrackModel) {
     /* track spec */
     const spec = model.spec();
 

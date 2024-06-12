@@ -391,9 +391,9 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
             if (!model.trackVisibility({ zoomLevel })) {
                 return;
             }
-            drawPreEmbellishment(HGC, this, tile, model, this.options.theme);
-            drawMark(HGC, this, tile, model);
-            drawPostEmbellishment(HGC, this, tile, model, this.options.theme);
+            drawPreEmbellishment(this, tile, model, this.options.theme);
+            drawMark(this, tile, model);
+            drawPostEmbellishment(this, tile, model, this.options.theme);
         });
 
         this.forceDraw();
