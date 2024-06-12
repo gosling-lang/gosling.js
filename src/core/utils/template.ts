@@ -303,6 +303,10 @@ export function replaceTrackTemplates(spec: GoslingSpec, templates: TemplateTrac
         if ('encoding' in viewBase) {
             delete viewBase.encoding;
         }
+        // Remove a template property since it is not a template anymore
+        if('template' in viewBase) {
+            delete viewBase.template;
+        }
         const convertedView: OverlaidTracks = {
             ...viewBase,
             alignment: 'overlay',

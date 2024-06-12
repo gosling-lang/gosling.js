@@ -22,7 +22,6 @@ import type {
     MultivecData,
     MatrixData,
     VectorData,
-    DataTrack,
     BigWigData,
     SingleView,
     FlatTracks,
@@ -92,16 +91,8 @@ export function IsStackedTracks(_: SingleView): _ is StackedTracks {
     return !IsFlatTracks(_) && !IsOverlaidTracks(_);
 }
 
-export function IsDataTrack(_: Track): _ is DataTrack {
-    // !!! Track might not contain `mark` when it is superposed one
-    return !IsOverlaidTrack(_) && 'data' in _ && !('mark' in _);
-}
 export function IsDummyTrack(_: Track): _ is DummyTrack {
     return 'type' in _ && _.type == 'dummy-track';
-}
-
-export function IsDataTemplate(_: Partial<Track>): boolean {
-    return !!('data' in _ && 'overrideTemplate' in _ && _.overrideTemplate);
 }
 
 export function IsDataDeep(data: DataDeep | Datum[]): data is DataDeep {

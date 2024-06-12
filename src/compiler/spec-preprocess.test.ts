@@ -1,6 +1,6 @@
 import type { GoslingSpec, SingleView, Track } from '@gosling-lang/gosling-schema';
 import { getBoundingBox, getRelativeTrackInfo } from './bounding-box';
-import { traverseToFixSpecDownstream, overrideDataTemplates, convertToFlatTracks } from './spec-preprocess';
+import { traverseToFixSpecDownstream, convertToFlatTracks } from './spec-preprocess';
 import { getTheme } from '../core/utils/theme';
 
 describe('Fix Spec Downstream', () => {
@@ -257,36 +257,6 @@ describe('Spec Preprocess', () => {
 
         // The `static` option shouldn't be changed if it is defined by a user.
         expect(spec.tracks[1].static).toEqual(false);
-    });
-
-    it('override template (higlass-vector)', () => {
-        const spec: GoslingSpec = {
-            tracks: [{ data: { type: 'vector', url: '', column: 'c', value: 'v' }, overrideTemplate: true } as Track]
-        };
-        overrideDataTemplates(spec);
-        expect(spec.tracks[0]).toHaveProperty('mark');
-    });
-
-    it('override template (higlass-multivec)', () => {
-        {
-            const spec: GoslingSpec = {
-                tracks: [
-                    {
-                        data: { type: 'multivec', url: '', row: 'r', column: 'c', value: 'v' },
-                        overrideTemplate: true
-                    } as Track
-                ]
-            };
-            overrideDataTemplates(spec);
-            expect(spec.tracks[0]).toHaveProperty('mark');
-        }
-        {
-            const spec: GoslingSpec = {
-                tracks: [{ data: { type: 'multivec', url: '', row: 'r', column: 'c', value: 'v' } } as Track]
-            };
-            overrideDataTemplates(spec);
-            expect(spec.tracks[0]).not.toHaveProperty('mark'); // overrideTemplate is not set, so do not override templates
-        }
     });
 
     it('Convert To FlatTracks', () => {
