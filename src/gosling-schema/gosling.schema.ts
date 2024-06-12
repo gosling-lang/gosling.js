@@ -272,9 +272,8 @@ export type Mark =
     | 'triangleRight'
     | 'triangleBottom'
     | 'brush'
-    // TODO: perhaps need to make this invisible to users
-    // being used to show title/subtitle internally
-    | 'header';
+    // The _header mark is used internally for text tracks
+    | '_header';
 
 /* ----------------------------- API & MOUSE EVENTS ----------------------------- */
 interface CommonEventData {
@@ -282,13 +281,6 @@ interface CommonEventData {
     id: string;
     /** Values in a JSON array that represent data after data transformation */
     data: Datum[];
-}
-
-interface SpecEventData {
-    /** Source visualization ID, i.e., `track.id` */
-    id: string;
-    /** Gosling spec */
-    spec: GoslingSpec;
 }
 
 export interface GenomicPosition {
@@ -379,7 +371,6 @@ export type _EventMap = {
     click: PointMouseEventData;
     rangeSelect: RangeMouseEventData;
     rawData: CommonEventData;
-    specProcessed: SpecEventData;
     trackMouseOver: TrackApiData;
     trackClick: TrackApiData; // TODO (Jul-25-2022): with https://github.com/higlass/higlass/pull/1098, we can support circular layouts
     onNewTrack: OnNewTrackEventData;
