@@ -53,7 +53,8 @@ export function getLinkingInfo(hgModel: HiGlassModel) {
                             startAngle: spec.startAngle,
                             endAngle: spec.endAngle,
                             innerRadius: spec.innerRadius,
-                            outerRadius: spec.outerRadius
+                            outerRadius: spec.outerRadius,
+                            clockwise: spec.clockwise
                         }
                     });
                     return;

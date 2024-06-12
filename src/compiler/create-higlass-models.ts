@@ -97,7 +97,8 @@ export function renderHiGlass(
                           innerRadius: d.track.innerRadius!,
                           outerRadius: d.track.outerRadius!,
                           startAngle: d.track.startAngle!,
-                          endAngle: d.track.endAngle!
+                          endAngle: d.track.endAngle!,
+                          clockwise: d.track.clockwise!
                       }
         };
     });

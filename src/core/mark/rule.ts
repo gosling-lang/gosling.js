@@ -17,6 +17,7 @@ export function drawRule(HGC: import('@higlass/types').HGC, trackInfo: any, tile
 
     /* circular parameters */
     const circular = spec.layout === 'circular';
+    const isClockwise = spec.clockwise ?? false;
     const trackInnerRadius = spec.innerRadius ?? 220;
     const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
     const startAngle = spec.startAngle ?? 0;
@@ -102,14 +103,14 @@ export function drawRule(HGC: import('@higlass/types').HGC, trackInfo: any, tile
                     const farR = midR + strokeWidth / 2.0;
                     const nearR = midR - strokeWidth / 2.0;
 
-                    const sPos = cartesianToPolar(0, trackWidth, nearR, cx, cy, startAngle, endAngle);
-                    const startRad = valueToRadian(0, trackWidth, startAngle, endAngle);
-                    const endRad = valueToRadian(trackWidth, trackWidth, startAngle, endAngle);
+                    const sPos = cartesianToPolar(0, trackWidth, nearR, cx, cy, startAngle, endAngle, isClockwise);
+                    const startRad = valueToRadian(0, trackWidth, startAngle, endAngle, isClockwise);
+                    const endRad = valueToRadian(trackWidth, trackWidth, startAngle, endAngle, isClockwise);
 
                     g.beginFill(colorToHex(color), actualOpacity);
                     g.moveTo(sPos.x, sPos.y);
-                    g.arc(cx, cy, nearR, startRad, endRad, true);
-                    g.arc(cx, cy, farR, endRad, startRad, false);
+                    g.arc(cx, cy, nearR, startRad, endRad, !isClockwise);
+                    g.arc(cx, cy, farR, endRad, startRad, isClockwise);
                     g.closePath();
                 } else {
                     if (dashed) {
@@ -146,14 +147,14 @@ export function drawRule(HGC: import('@higlass/types').HGC, trackInfo: any, tile
                     const farR = midR + strokeWidth / 2.0;
                     const nearR = midR - strokeWidth / 2.0;
 
-                    const sPos = cartesianToPolar(x, trackWidth, nearR, cx, cy, startAngle, endAngle);
-                    const startRad = valueToRadian(x, trackWidth, startAngle, endAngle);
-                    const endRad = valueToRadian(xe, trackWidth, startAngle, endAngle);
+                    const sPos = cartesianToPolar(x, trackWidth, nearR, cx, cy, startAngle, endAngle, isClockwise);
+                    const startRad = valueToRadian(x, trackWidth, startAngle, endAngle, isClockwise);
+                    const endRad = valueToRadian(xe, trackWidth, startAngle, endAngle, isClockwise);
 
                     g.beginFill(colorToHex(color), actualOpacity);
                     g.moveTo(sPos.x, sPos.y);
-                    g.arc(cx, cy, nearR, startRad, endRad, true);
-                    g.arc(cx, cy, farR, endRad, startRad, false);
+                    g.arc(cx, cy, nearR, startRad, endRad, !isClockwise);
+                    g.arc(cx, cy, farR, endRad, startRad, isClockwise);
                     g.closePath();
                 } else if (dashed) {
                     const [dashSize, gapSize] = dashed;

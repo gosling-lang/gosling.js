@@ -19,6 +19,7 @@ export function drawLine(g: PIXI.Graphics, model: GoslingTrackModel, trackWidth:
 
     /* circular parameters */
     const circular = spec.layout === 'circular';
+    const isClockwise = spec.clockwise ?? false;
     const trackInnerRadius = spec.innerRadius ?? 220; // TODO: should default values be filled already
     const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
     const startAngle = spec.startAngle ?? 0;
@@ -76,7 +77,8 @@ export function drawLine(g: PIXI.Graphics, model: GoslingTrackModel, trackWidth:
                             trackCenterX,
                             trackCenterY,
                             startAngle,
-                            endAngle
+                            endAngle,
+                            isClockwise
                         );
 
                         if (i === 0) {

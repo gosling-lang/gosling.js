@@ -253,8 +253,12 @@ function BrushTrack(HGC: any, ...args: any[]): any {
             const x1 = this._xScale(this.viewportXDomain[1]);
 
             const [w] = this.dimensions;
-            let e = valueToRadian(x0, w, this.options.startAngle, this.options.endAngle) + Math.PI / 2.0;
-            let s = valueToRadian(x1, w, this.options.startAngle, this.options.endAngle) + Math.PI / 2.0;
+            let e =
+                valueToRadian(x0, w, this.options.startAngle, this.options.endAngle, this.options.clockwise) +
+                Math.PI / 2.0;
+            let s =
+                valueToRadian(x1, w, this.options.startAngle, this.options.endAngle, this.options.clockwise) +
+                Math.PI / 2.0;
 
             [s, e] = this.cropExtent([s, e]);
 

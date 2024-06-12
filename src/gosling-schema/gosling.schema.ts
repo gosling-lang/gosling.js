@@ -189,6 +189,10 @@ export interface CommonTrackDef extends CommonViewDef {
      * Specify the end angle (in the range of [0, 360]) of circular tracks (`{"layout": "circular"}`).
      */
     endAngle?: number; // [0, 360]
+    /**
+     * Clockwise or anticlockwise (`{"layout": "circular"}`). __Default__: `false`
+     */
+    clockwise?: boolean;
 
     // Internally used properties
     /** internal */

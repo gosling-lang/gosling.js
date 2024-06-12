@@ -586,6 +586,10 @@
           "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
           "type": "number"
         },
+        "clockwise": {
+          "description": "Clockwise or anticlockwise (`{\"layout\": \"circular\"}`). __Default__: `false`",
+          "type": "boolean"
+        },
         "data": {
           "$ref": "#/definitions/DataDeep"
         },
@@ -1226,6 +1230,10 @@
               "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
               "type": "number"
             },
+            "clockwise": {
+              "description": "Clockwise or anticlockwise (`{\"layout\": \"circular\"}`). __Default__: `false`",
+              "type": "boolean"
+            },
             "color": {
               "anyOf": [
                 {
@@ -1389,6 +1397,10 @@
                       "centerRadius": {
                         "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
                         "type": "number"
+                      },
+                      "clockwise": {
+                        "description": "Clockwise or anticlockwise (`{\"layout\": \"circular\"}`). __Default__: `false`",
+                        "type": "boolean"
                       },
                       "color": {
                         "anyOf": [
@@ -2012,6 +2024,10 @@
               "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
               "type": "number"
             },
+            "clockwise": {
+              "description": "Clockwise or anticlockwise (`{\"layout\": \"circular\"}`). __Default__: `false`",
+              "type": "boolean"
+            },
             "color": {
               "anyOf": [
                 {
@@ -2175,6 +2191,10 @@
                       "centerRadius": {
                         "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
                         "type": "number"
+                      },
+                      "clockwise": {
+                        "description": "Clockwise or anticlockwise (`{\"layout\": \"circular\"}`). __Default__: `false`",
+                        "type": "boolean"
                       },
                       "color": {
                         "anyOf": [
@@ -2857,6 +2877,10 @@
                       "centerRadius": {
                         "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
                         "type": "number"
+                      },
+                      "clockwise": {
+                        "description": "Clockwise or anticlockwise (`{\"layout\": \"circular\"}`). __Default__: `false`",
+                        "type": "boolean"
                       },
                       "color": {
                         "anyOf": [
@@ -4108,6 +4132,10 @@
                 "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
                 "type": "number"
               },
+              "clockwise": {
+                "description": "Clockwise or anticlockwise (`{\"layout\": \"circular\"}`). __Default__: `false`",
+                "type": "boolean"
+              },
               "color": {
                 "anyOf": [
                   {
@@ -4434,6 +4462,10 @@
         "centerRadius": {
           "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
           "type": "number"
+        },
+        "clockwise": {
+          "description": "Clockwise or anticlockwise (`{\"layout\": \"circular\"}`). __Default__: `false`",
+          "type": "boolean"
         },
         "color": {
           "anyOf": [
@@ -4799,6 +4831,10 @@
         "centerRadius": {
           "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
           "type": "number"
+        },
+        "clockwise": {
+          "description": "Clockwise or anticlockwise (`{\"layout\": \"circular\"}`). __Default__: `false`",
+          "type": "boolean"
         },
         "color": {
           "anyOf": [
@@ -5183,6 +5219,10 @@
                 "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
                 "type": "number"
               },
+              "clockwise": {
+                "description": "Clockwise or anticlockwise (`{\"layout\": \"circular\"}`). __Default__: `false`",
+                "type": "boolean"
+              },
               "color": {
                 "anyOf": [
                   {
@@ -5519,6 +5559,10 @@
         "centerRadius": {
           "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
           "type": "number"
+        },
+        "clockwise": {
+          "description": "Clockwise or anticlockwise (`{\"layout\": \"circular\"}`). __Default__: `false`",
+          "type": "boolean"
         },
         "color": {
           "anyOf": [
@@ -6080,6 +6124,10 @@
           "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
           "type": "number"
         },
+        "clockwise": {
+          "description": "Clockwise or anticlockwise (`{\"layout\": \"circular\"}`). __Default__: `false`",
+          "type": "boolean"
+        },
         "color": {
           "anyOf": [
             {
@@ -6448,6 +6496,10 @@
               "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
               "type": "number"
             },
+            "clockwise": {
+              "description": "Clockwise or anticlockwise (`{\"layout\": \"circular\"}`). __Default__: `false`",
+              "type": "boolean"
+            },
             "color": {
               "anyOf": [
                 {
@@ -6604,6 +6656,10 @@
                       "centerRadius": {
                         "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
                         "type": "number"
+                      },
+                      "clockwise": {
+                        "description": "Clockwise or anticlockwise (`{\"layout\": \"circular\"}`). __Default__: `false`",
+                        "type": "boolean"
                       },
                       "color": {
                         "anyOf": [
@@ -7227,6 +7283,10 @@
               "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
               "type": "number"
             },
+            "clockwise": {
+              "description": "Clockwise or anticlockwise (`{\"layout\": \"circular\"}`). __Default__: `false`",
+              "type": "boolean"
+            },
             "color": {
               "anyOf": [
                 {
@@ -7383,6 +7443,10 @@
                       "centerRadius": {
                         "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
                         "type": "number"
+                      },
+                      "clockwise": {
+                        "description": "Clockwise or anticlockwise (`{\"layout\": \"circular\"}`). __Default__: `false`",
+                        "type": "boolean"
                       },
                       "color": {
                         "anyOf": [
@@ -8058,6 +8122,10 @@
                       "centerRadius": {
                         "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
                         "type": "number"
+                      },
+                      "clockwise": {
+                        "description": "Clockwise or anticlockwise (`{\"layout\": \"circular\"}`). __Default__: `false`",
+                        "type": "boolean"
                       },
                       "color": {
                         "anyOf": [
@@ -8980,6 +9048,10 @@
         "centerRadius": {
           "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
           "type": "number"
+        },
+        "clockwise": {
+          "description": "Clockwise or anticlockwise (`{\"layout\": \"circular\"}`). __Default__: `false`",
+          "type": "boolean"
         },
         "data": {
           "$ref": "#/definitions/DataDeep"

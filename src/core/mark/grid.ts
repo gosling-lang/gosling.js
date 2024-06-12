@@ -25,6 +25,7 @@ export function drawRowGrid(trackInfo: any, tm: GoslingTrackModel, theme: Requir
 
     /* circular parameters */
     const circular = tm.spec().layout === 'circular';
+    const isClockwise = spec.clockwise ?? false;
     const trackInnerRadius = spec.innerRadius ?? 220;
     const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
     const startAngle = spec.startAngle ?? 0;
@@ -72,9 +73,9 @@ export function drawRowGrid(trackInfo: any, tm: GoslingTrackModel, theme: Requir
             const farR = midR + strokeWidth / 2.0;
             const nearR = midR - strokeWidth / 2.0;
 
-            const sPos = cartesianToPolar(0, trackWidth, nearR, cx, cy, startAngle, endAngle);
-            const startRad = valueToRadian(0, trackWidth, startAngle, endAngle);
-            const endRad = valueToRadian(trackWidth, trackWidth, startAngle, endAngle);
+            const sPos = cartesianToPolar(0, trackWidth, nearR, cx, cy, startAngle, endAngle, isClockwise);
+            const startRad = valueToRadian(0, trackWidth, startAngle, endAngle, isClockwise);
+            const endRad = valueToRadian(trackWidth, trackWidth, startAngle, endAngle, isClockwise);
 
             // For circular grid, we draw 'filled' arc w/ zero strokeWidth
             graphics.lineStyle(
@@ -86,8 +87,8 @@ export function drawRowGrid(trackInfo: any, tm: GoslingTrackModel, theme: Requir
 
             graphics.beginFill(colorToHex(theme.axis.gridColor), 1);
             graphics.moveTo(trackX + sPos.x, trackY + sPos.y);
-            graphics.arc(trackX + cx, trackY + cy, nearR, startRad, endRad, true);
-            graphics.arc(trackX + cx, trackY + cy, farR, endRad, startRad, false);
+            graphics.arc(trackX + cx, trackY + cy, nearR, startRad, endRad, !isClockwise);
+            graphics.arc(trackX + cx, trackY + cy, farR, endRad, startRad, isClockwise);
             graphics.closePath();
         }
     });
@@ -109,6 +110,7 @@ export function drawYGridQuantitative(trackInfo: any, tm: GoslingTrackModel, the
 
     /* circular parameters */
     const circular = tm.spec().layout === 'circular';
+    const isClockwise = spec.clockwise ?? false;
     const trackInnerRadius = spec.innerRadius ?? 220;
     const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
     const startAngle = spec.startAngle ?? 0;
@@ -185,9 +187,9 @@ export function drawYGridQuantitative(trackInfo: any, tm: GoslingTrackModel, the
                 const farR = midR + strokeWidth / 2.0;
                 const nearR = midR - strokeWidth / 2.0;
 
-                const sPos = cartesianToPolar(0, trackWidth, nearR, cx, cy, startAngle, endAngle);
-                const startRad = valueToRadian(0, trackWidth, startAngle, endAngle);
-                const endRad = valueToRadian(trackWidth, trackWidth, startAngle, endAngle);
+                const sPos = cartesianToPolar(0, trackWidth, nearR, cx, cy, startAngle, endAngle, isClockwise);
+                const startRad = valueToRadian(0, trackWidth, startAngle, endAngle, isClockwise);
+                const endRad = valueToRadian(trackWidth, trackWidth, startAngle, endAngle, isClockwise);
 
                 // For circular grid, we draw 'filled' arc w/ zero strokeWidth
                 graphics.lineStyle(
@@ -199,8 +201,8 @@ export function drawYGridQuantitative(trackInfo: any, tm: GoslingTrackModel, the
 
                 graphics.beginFill(colorToHex(theme.axis.gridColor), 1);
                 graphics.moveTo(trackX + sPos.x, trackY + sPos.y);
-                graphics.arc(trackX + cx, trackY + cy, nearR, startRad, endRad, true);
-                graphics.arc(trackX + cx, trackY + cy, farR, endRad, startRad, false);
+                graphics.arc(trackX + cx, trackY + cy, nearR, startRad, endRad, !isClockwise);
+                graphics.arc(trackX + cx, trackY + cy, farR, endRad, startRad, isClockwise);
                 graphics.closePath();
             });
         }

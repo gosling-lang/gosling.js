@@ -150,6 +150,7 @@ export class HiGlassModel {
             endAngle?: number;
             innerRadius?: number;
             outerRadius?: number;
+            clockwise?: boolean;
         }
     ) {
         if (!fromViewUid) return;
@@ -169,7 +170,8 @@ export class HiGlassModel {
                 startAngle: style?.startAngle,
                 endAngle: style?.endAngle,
                 innerRadius: style?.innerRadius,
-                outerRadius: style?.outerRadius
+                outerRadius: style?.outerRadius,
+                clockwise: style?.clockwise
             }
         });
         return this;
@@ -313,6 +315,7 @@ export class HiGlassModel {
             startAngle?: number;
             endAngle?: number;
             theme: Required<CompleteThemeDeep>;
+            clockwise?: boolean;
         }
     ) {
         if (!this.hg.views) return this;
@@ -342,7 +345,7 @@ export class HiGlassModel {
             // circular axis: superpose an axis track on top of the `center` track
             this.addTrackToCombined({
                 ...axisTrackTemplate,
-                options: { ...axisTrackTemplate.options, layout: 'circular' }
+                options: { ...axisTrackTemplate.options, layout: 'circular', clockwise: options.clockwise}
             });
         } else {
             // linear axis: place an axis track on the top, left, bottom, or right

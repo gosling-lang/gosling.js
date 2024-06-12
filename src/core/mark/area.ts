@@ -21,6 +21,7 @@ export function drawArea(HGC: import('@higlass/types').HGC, track: any, tile: Ti
 
     /* circular parameters */
     const circular = spec.layout === 'circular';
+    const isClockwise = spec.clockwise ?? false;
     const trackInnerRadius = spec.innerRadius ?? 220; // TODO: should default values be filled already
     const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
     const startAngle = spec.startAngle ?? 0;
@@ -104,7 +105,8 @@ export function drawArea(HGC: import('@higlass/types').HGC, track: any, tile: Ti
                                     trackCenterX,
                                     trackCenterY,
                                     startAngle,
-                                    endAngle
+                                    endAngle,
+                                    isClockwise
                                 );
                                 areaPointsTop.push([pos.x, pos.y]);
                                 areaPointsBottom.push([pos.x, pos.y]);
@@ -118,7 +120,8 @@ export function drawArea(HGC: import('@higlass/types').HGC, track: any, tile: Ti
                                 trackCenterX,
                                 trackCenterY,
                                 startAngle,
-                                endAngle
+                                endAngle,
+                                isClockwise
                             );
                             areaPointsTop.push([posTop.x, posTop.y]);
 
@@ -130,7 +133,8 @@ export function drawArea(HGC: import('@higlass/types').HGC, track: any, tile: Ti
                                 trackCenterX,
                                 trackCenterY,
                                 startAngle,
-                                endAngle
+                                endAngle,
+                                isClockwise
                             );
                             areaPointsBottom.push([posBot.x, posBot.y]);
 
@@ -144,7 +148,8 @@ export function drawArea(HGC: import('@higlass/types').HGC, track: any, tile: Ti
                                     trackCenterX,
                                     trackCenterY,
                                     startAngle,
-                                    endAngle
+                                    endAngle,
+                                    isClockwise
                                 );
                                 areaPointsTop.push([pos.x, pos.y]);
                                 areaPointsBottom.push([pos.x, pos.y]);
@@ -228,7 +233,8 @@ export function drawArea(HGC: import('@higlass/types').HGC, track: any, tile: Ti
                                 trackCenterX,
                                 trackCenterY,
                                 startAngle,
-                                endAngle
+                                endAngle,
+                                isClockwise
                             );
                             baselinePoints.push([baselinePos.x, baselinePos.y]);
 
@@ -245,7 +251,8 @@ export function drawArea(HGC: import('@higlass/types').HGC, track: any, tile: Ti
                                 trackCenterX,
                                 trackCenterY,
                                 startAngle,
-                                endAngle
+                                endAngle,
+                                isClockwise
                             );
                             areaPoints.push(pos.x, pos.y);
 
@@ -260,7 +267,8 @@ export function drawArea(HGC: import('@higlass/types').HGC, track: any, tile: Ti
                                     trackCenterX,
                                     trackCenterY,
                                     startAngle,
-                                    endAngle
+                                    endAngle,
+                                    isClockwise
                                 );
 
                                 areaPoints.push(curPos.x, curPos.y);

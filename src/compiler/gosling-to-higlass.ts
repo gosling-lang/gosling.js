@@ -276,6 +276,7 @@ export function goslingToHiGlass(
                     height: firstResolvedSpec.height,
                     startAngle: firstResolvedSpec.startAngle,
                     endAngle: firstResolvedSpec.endAngle,
+                    clockwise: firstResolvedSpec.clockwise,
                     theme
                 });
             }

@@ -17,6 +17,7 @@ export function drawRect(HGC: import('@higlass/types').HGC, track: any, tile: Ti
 
     /* circular parameters */
     const circular = spec.layout === 'circular';
+    const isClockwise = spec.clockwise ?? false;
     const trackInnerRadius = spec.innerRadius ?? 220;
     const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
     const startAngle = spec.startAngle ?? 0;
@@ -106,14 +107,14 @@ export function drawRect(HGC: import('@higlass/types').HGC, track: any, tile: Ti
                 nearR = midR + absoluteHeight / 2.0;
             }
 
-            const sPos = cartesianToPolar(xs, trackWidth, nearR, cx, cy, startAngle, endAngle);
-            const startRad = valueToRadian(xs, trackWidth, startAngle, endAngle);
-            const endRad = valueToRadian(xe, trackWidth, startAngle, endAngle);
+            const sPos = cartesianToPolar(xs, trackWidth, nearR, cx, cy, startAngle, endAngle, isClockwise);
+            const startRad = valueToRadian(xs, trackWidth, startAngle, endAngle, isClockwise);
+            const endRad = valueToRadian(xe, trackWidth, startAngle, endAngle, isClockwise);
 
             g.beginFill(colorToHex(color === 'none' ? 'white' : color), color === 'none' ? 0 : actualOpacity);
             g.moveTo(sPos.x, sPos.y);
-            g.arc(cx, cy, nearR, startRad, endRad, true);
-            g.arc(cx, cy, farR, endRad, startRad, false);
+            g.arc(cx, cy, nearR, startRad, endRad, !isClockwise);
+            g.arc(cx, cy, farR, endRad, startRad, isClockwise);
             polygonForMouseEvent = Array.from(g.currentPath.points);
             g.closePath();
         } else {
