@@ -26,7 +26,8 @@ export interface UrlToFetchOptions {
 type CompiledCallbackFn = (
     goslingSpec: gosling.GoslingSpec,
     higlassSpec: gosling.HiGlassSpec,
-    _additionalData: { _processedSpec: gosling.GoslingSpec }
+    /** @deprecated This is an experimental object that is not intended for production usage. */
+    experimental: { _processedSpec: gosling.GoslingSpec }
 ) => void;
 
 export interface GoslingCompProps {
