@@ -1297,9 +1297,6 @@
         "overlayOnPreviousTrack": {
           "type": "boolean"
         },
-        "overrideTemplate": {
-          "type": "boolean"
-        },
         "prerelease": {
           "additionalProperties": false,
           "description": "internal",
