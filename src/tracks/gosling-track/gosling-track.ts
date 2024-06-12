@@ -1,6 +1,7 @@
-import type * as PIXI from 'pixi.js';
+import * as PIXI from 'pixi.js';
 import { isEqual, sampleSize, uniqBy } from 'lodash-es';
 import type { ScaleLinear } from 'd3-scale';
+import { scaleLinear } from 'd3-scale';
 import type {
     SingleTrack,
     OverlaidTrack,
@@ -15,7 +16,6 @@ import { type MouseEventData, isPointInsideDonutSlice } from '../gosling-track/g
 import { BamDataFetcher, type TabularDataFetcher } from '@data-fetchers';
 import type { Tile as _Tile, TileData, TileDataBase } from '@higlass/services';
 import { LinearBrushModel } from './linear-brush-model';
-import { getTheme } from '@gosling-lang/gosling-theme';
 import { getTabularData } from './data-abstraction';
 
 import type { CompleteThemeDeep } from '../../core/utils/theme';
@@ -50,9 +50,8 @@ import {
 } from '@gosling-lang/gosling-schema';
 import { HIGLASS_AXIS_SIZE } from '../../compiler/higlass-model';
 import { flatArrayToPairArray } from '../../core/utils/array';
-import { createPluginTrack, type PluginTrackFactory, type TrackConfig } from '../../core/utils/define-plugin-track';
 import { uuid } from '../../core/utils/uuid';
-import type { Scale, TilePosition } from '@higlass/tracks';
+import type { Context, Scale, TilePosition } from '@higlass/tracks';
 
 // Additions
 import { tileProxy } from '@higlass/services';
@@ -78,7 +77,7 @@ const DEFAULT_MOUSE_EVENT_STYLE: Required<EventStyle> = {
     arrange: 'front'
 };
 
-interface GoslingTrackOptions {
+export interface GoslingTrackOptions {
     /**
      * Track ID specified by users
      */
@@ -89,8 +88,9 @@ interface GoslingTrackOptions {
     siblingIds: string[];
     spec: SingleTrack | OverlaidTrack;
     theme: CompleteThemeDeep;
-    showMousePosition?: boolean;
 }
+
+export type GoslingTrackContext = Context<Tile, GoslingTrackOptions>;
 
 /** Tile data used in Gosling data fetchers */
 interface TabularTileData extends TileDataBase {
@@ -120,30 +120,14 @@ function initProcessedTileInfo(): ProcessedTileInfo {
     return { goslingModels: [], tabularData: [], skipRendering: false };
 }
 
-const config: TrackConfig<GoslingTrackOptions> = {
-    type: 'gosling-track',
-    datatype: ['multivec', 'epilogos'],
-    orientation: '1d-horizontal',
-    // @ts-expect-error missing default spec
-    defaultOptions: {
-        // TODO: Are any of these used?
-        // labelPosition: 'none',
-        // labelColor: 'black',
-        // labelTextOpacity: 0.4,
-        // trackBorderWidth: 0,
-        // trackBorderColor: 'black',
-        // backgroundColor: 'white',
-        // barBorder: false,
-        // sortLargestOnTop: true,
-        // axisPositionHorizontal: 'left',
-        theme: getTheme('light')
-    }
-};
-
 /* Custom loading label */
 const loadingTextStyle = getTextStyle({ color: 'black', size: 12 });
 
-class GoslingTrackClass extends TiledPixiTrack<Tile, typeof options> {
+/**
+ * The main plugin track in Gosling. This is a versetile plugin track for HiGlass which relies on GoslingTrackModel
+ * to keep track of mouse event and channel scales.
+ */
+export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions> {
     /* *
      *
      *  Properties
@@ -154,23 +138,24 @@ class GoslingTrackClass extends TiledPixiTrack<Tile, typeof options> {
     mRangeBrush: LinearBrushModel;
     #assembly?: Assembly; // Used to get the relative genomic position
     #processedTileInfo: Record<string, ProcessedTileInfo>;
+    #viewUid: string;
     firstDraw = true; // False if draw has been called once already. Used with onNewTrack API. Public because used in draw()
     // Used in mark/legend.ts
-    gLegend? = HGC.libraries.d3Selection.select(context.svgElement).append('g');
+    gLegend?: Selection<SVGGElement, unknown, null, undefined>;
     displayedLegends: DisplayedLegend[] = []; // Store the color legends added so far so that we can avoid overlaps and redundancy
     // Used in mark/text.ts
-    textGraphics: unknown[] = [];
+    textGraphics: PIXI.Text[] = [];
     textsBeingUsed = 0;
     // Mouse fields
-    pMouseHover = new HGC.libraries.PIXI.Graphics();
-    pMouseSelection = new HGC.libraries.PIXI.Graphics();
+    pMouseHover = new PIXI.Graphics();
+    pMouseSelection = new PIXI.Graphics();
     #mouseDownX = 0;
     #mouseDownY = 0;
     #isRangeBrushActivated = false;
-    #gBrush = HGC.libraries.d3Selection.select(context.svgElement).append('g');
-    #loadingTextStyleObj = new HGC.libraries.PIXI.TextStyle(loadingTextStyle);
-    #loadingTextBg = new HGC.libraries.PIXI.Graphics();
-    #loadingText = new HGC.libraries.PIXI.Text('', loadingTextStyle);
+    #gBrush: Selection<SVGGElement, unknown, null, undefined>;
+    #loadingTextStyleObj = new PIXI.TextStyle(loadingTextStyle);
+    #loadingTextBg = new PIXI.Graphics();
+    #loadingText = new PIXI.Text('', loadingTextStyle);
     prevVisibleAndFetchedTiles?: Tile[];
     resolvedTracks: SingleTrack[] | undefined;
     // This is used to persist processed tile data across draw() calls.
@@ -182,13 +167,18 @@ class GoslingTrackClass extends TiledPixiTrack<Tile, typeof options> {
      *
      * */
 
-    constructor() {
+    constructor(context: GoslingTrackContext, options: GoslingTrackOptions) {
         super(context, options);
-        const { isShowGlobalMousePosition } = context;
+        this.#viewUid = context.viewUid;
 
-        context.dataFetcher.track = this;
+        if (context.dataFetcher) {
+            context.dataFetcher.track = this;
+        }
+
         this.#processedTileInfo = {};
         this.#assembly = this.options.spec.assembly;
+        this.gLegend = select(context.svgElement).append('g');
+        this.#gBrush = select(context.svgElement).append('g');
 
         // Add unique IDs to each of the overlaid tracks that will be rendered independently.
         if ('overlay' in this.options.spec) {
@@ -214,7 +204,7 @@ class GoslingTrackClass extends TiledPixiTrack<Tile, typeof options> {
 
         // Enable click event
         this.pMask.interactive = true;
-        this.mRangeBrush = new LinearBrushModel(this.#gBrush, HGC.libraries, this.options.spec.style?.brush);
+        this.mRangeBrush = new LinearBrushModel(this.#gBrush, this.options.spec.style?.brush);
         this.mRangeBrush.on('brush', this.#onRangeBrush.bind(this));
 
         this.pMask.on('mousedown', (e: PIXI.InteractionEvent) => {
@@ -232,16 +222,6 @@ class GoslingTrackClass extends TiledPixiTrack<Tile, typeof options> {
         this.pMask.on('mouseout', this.#onMouseOut.bind(this));
         this.flipText = this.options.spec.orientation === 'vertical';
 
-        // Draw the mouse position
-        // See https://github.com/higlass/higlass/blob/38f0c4415f0595c3b9d685a754d6661dc9612f7c/app/scripts/utils/show-mouse-position.js#L28
-        if (this.options?.showMousePosition && !this.hideMousePosition) {
-            this.hideMousePosition = HGC.utils.showMousePosition(
-                this,
-                Is2DTrack(this.getResolvedTracks()[0]),
-                isShowGlobalMousePosition()
-            );
-        }
-
         // We do not use HiGlass' trackNotFoundText
         this.pLabel.removeChild(this.trackNotFoundText);
 
@@ -251,10 +231,10 @@ class GoslingTrackClass extends TiledPixiTrack<Tile, typeof options> {
         this.pLabel.addChild(this.#loadingText);
 
         // This improves the arc/link rendering performance
-        HGC.libraries.PIXI.GRAPHICS_CURVES.adaptive = this.options.spec.style?.enableSmoothPath ?? false;
-        if (HGC.libraries.PIXI.GRAPHICS_CURVES.adaptive) {
-            HGC.libraries.PIXI.GRAPHICS_CURVES.maxLength = 1;
-            HGC.libraries.PIXI.GRAPHICS_CURVES.maxSegments = 2048 * 10;
+        PIXI.GRAPHICS_CURVES.adaptive = this.options.spec.style?.enableSmoothPath ?? false;
+        if (PIXI.GRAPHICS_CURVES.adaptive) {
+            PIXI.GRAPHICS_CURVES.maxLength = 1;
+            PIXI.GRAPHICS_CURVES.maxSegments = 2048 * 10;
         }
     }
 
@@ -527,7 +507,7 @@ class GoslingTrackClass extends TiledPixiTrack<Tile, typeof options> {
             GenomicPosition
         ];
         publish('location', {
-            id: context.viewUid,
+            id: this.#viewUid,
             genomicRange: genomicRange
         });
     }
@@ -614,7 +594,7 @@ class GoslingTrackClass extends TiledPixiTrack<Tile, typeof options> {
         const tilesetInfo = this.tilesetInfo;
         tiles.forEach((tile, i) => {
             if (i === 0) {
-                const [refTile] = HGC.utils.trackUtils.calculate1DVisibleTiles(tilesetInfo, this._xScale);
+                const [refTile] = calculate1DVisibleTiles(tilesetInfo, this._xScale);
                 tile.tileData.zoomLevel = refTile[0];
                 tile.tileData.tilePos = [refTile[1], refTile[1]];
                 (tile.tileData as TabularTileData).tabularData = tabularData;
@@ -633,7 +613,7 @@ class GoslingTrackClass extends TiledPixiTrack<Tile, typeof options> {
     calculateVisibleTiles() {
         if (!this.tilesetInfo) return;
         if (isTabularDataFetcher(this.dataFetcher)) {
-            const tiles = HGC.utils.trackUtils.calculate1DVisibleTiles(this.tilesetInfo, this._xScale);
+            const tiles = calculate1DVisibleTiles(this.tilesetInfo, this._xScale);
             const maxTileWith =
                 this.tilesetInfo.max_tile_width ?? this.dataFetcher.MAX_TILE_WIDTH ?? Number.MAX_SAFE_INTEGER;
 
@@ -828,8 +808,7 @@ class GoslingTrackClass extends TiledPixiTrack<Tile, typeof options> {
 
         const { tileX, tileWidth } = this.getTilePosAndDimensions(tile.tileData.zoomLevel, tile.tileData.tilePos);
 
-        const tileXScale = HGC.libraries.d3Scale
-            .scaleLinear()
+        const tileXScale = scaleLinear()
             .domain([0, this.#binsPerTile])
             .range([tileX, tileX + tileWidth]);
 
@@ -1063,7 +1042,7 @@ class GoslingTrackClass extends TiledPixiTrack<Tile, typeof options> {
                     const NUM_OF_ROWS_IN_PREVIEW = 100;
                     const numOrRows = tabularDataTransformed.length;
                     PubSub.publish('data-preview', {
-                        id: context.viewUid,
+                        id: this.#viewUid,
                         dataConfig: JSON.stringify({ data: resolvedSpec.data }),
                         data:
                             NUM_OF_ROWS_IN_PREVIEW > numOrRows
@@ -1244,14 +1223,25 @@ class GoslingTrackClass extends TiledPixiTrack<Tile, typeof options> {
                 )
             ) {
                 publish(eventType, {
-                    id: context.viewUid,
+                    id: this.#viewUid,
                     spec: structuredClone(this.options.spec),
-                    shape: { x, y, width, height, cx, cy, innerRadius, outerRadius, startAngle, endAngle }
+                    shape: {
+                        x,
+                        y,
+                        width,
+                        height,
+                        cx,
+                        cy,
+                        innerRadius,
+                        outerRadius,
+                        startAngle,
+                        endAngle
+                    }
                 });
             }
         } else {
             publish(eventType, {
-                id: context.viewUid,
+                id: this.#viewUid,
                 spec: structuredClone(this.options.spec),
                 shape: { x, y, width, height }
             });
@@ -1264,7 +1254,11 @@ class GoslingTrackClass extends TiledPixiTrack<Tile, typeof options> {
         if (range === null) {
             // brush just removed
             if (!skipApiTrigger) {
-                publish('rangeSelect', { id: context.viewUid, genomicRange: null, data: [] });
+                publish('rangeSelect', {
+                    id: this.#viewUid,
+                    genomicRange: null,
+                    data: []
+                });
             }
             return;
         }
@@ -1314,7 +1308,7 @@ class GoslingTrackClass extends TiledPixiTrack<Tile, typeof options> {
             ];
 
             publish('rangeSelect', {
-                id: context.viewUid,
+                id: this.#viewUid,
                 genomicRange,
                 data: capturedElements.map(d => d.value)
             });
@@ -1414,7 +1408,7 @@ class GoslingTrackClass extends TiledPixiTrack<Tile, typeof options> {
 
                 // API call
                 publish('mouseOver', {
-                    id: context.viewUid,
+                    id: this.#viewUid,
                     genomicPosition,
                     data: capturedElements.map(d => d.value)
                 });
@@ -1433,11 +1427,11 @@ class GoslingTrackClass extends TiledPixiTrack<Tile, typeof options> {
                         const rawValue = capturedElements[0].value[d.field];
                         let value = rawValue;
                         if (d.type === 'quantitative' && d.format) {
-                            value = HGC.libraries.d3Format.format(d.format)(+rawValue);
+                            value = format(d.format)(+rawValue);
                         } else if (d.type === 'genomic') {
                             // e.g., chr1:204,133
                             const { chromosome, position } = getRelativeGenomicPosition(+rawValue, this.#assembly);
-                            value = `${chromosome}:${HGC.libraries.d3Format.format(',')(position)}`;
+                            value = `${chromosome}:${format(',')(position)}`;
                         }
 
                         return (
@@ -1471,7 +1465,7 @@ class GoslingTrackClass extends TiledPixiTrack<Tile, typeof options> {
      */
     #publishOnNewTrack() {
         publish('onNewTrack', {
-            id: context.viewUid
+            id: this.#viewUid
         });
     }
 
@@ -1515,7 +1509,7 @@ class GoslingTrackClass extends TiledPixiTrack<Tile, typeof options> {
             this.#loadingText.y = this.position[1] + this.dimensions[1] - margin / 2.0;
 
             // Show background
-            const metric = HGC.libraries.PIXI.TextMetrics.measureText(text, this.#loadingTextStyleObj);
+            const metric = PIXI.TextMetrics.measureText(text, this.#loadingTextStyleObj);
             const { width: w, height: h } = metric;
 
             this.#loadingTextBg.clear();
@@ -1603,4 +1597,3 @@ class GoslingTrackClass extends TiledPixiTrack<Tile, typeof options> {
         return stretchFactor > threshold || stretchFactor < 1 / threshold;
     }
 }
-export default createPluginTrack(config, factory);
