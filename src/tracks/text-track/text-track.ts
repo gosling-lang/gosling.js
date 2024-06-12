@@ -1,8 +1,8 @@
 import { PixiTrack } from '@higlass/tracks';
+import { type PixiTrackContext } from '@higlass/tracks';
 import * as PIXI from 'pixi.js';
 import { uuid } from '../../core/utils/uuid';
 import colorToHex from '../../core/utils/color-to-hex';
-import { type PixiTrackContext } from '@higlass/tracks';
 
 const defaultOptions = {
     backgroundColor: '#ededed',
