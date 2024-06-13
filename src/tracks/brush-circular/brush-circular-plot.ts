@@ -2,7 +2,7 @@ import {
     CircularBrushTrackClass,
     type CircularBrushTrackOptions,
     type CircularBrushTrackContext
-} from './circular-brush';
+} from './brush-circular';
 import { scaleLinear } from 'd3-scale';
 import { ZoomTransform, type D3ZoomEvent, zoom } from 'd3-zoom';
 import { select } from 'd3-selection';

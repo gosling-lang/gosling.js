@@ -71,7 +71,7 @@ const alias = {
     '@gosling-lang/gosling-theme': path.resolve(__dirname, './src/gosling-theme/index.ts'),
     '@gosling-lang/gosling-track': path.resolve(__dirname, './src/tracks/gosling-track/index.ts'),
     '@gosling-lang/gosling-genomic-axis': path.resolve(__dirname, './src/tracks/gosling-genomic-axis/index.ts'),
-    '@gosling-lang/circular-brush': path.resolve(__dirname, './src/tracks/circular-brush/index.ts'),
+    '@gosling-lang/brush-circular': path.resolve(__dirname, './src/tracks/brush-circular/index.ts'),
     '@gosling-lang/brush-linear': path.resolve(__dirname, './src/tracks/brush-linear/index.ts'),
     '@gosling-lang/dummy-track': path.resolve(__dirname, './src/tracks/dummy-track/index.ts'),
     '@gosling-lang/text-track': path.resolve(__dirname, './src/tracks/text-track/index.ts'),
