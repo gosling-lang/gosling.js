@@ -9,10 +9,10 @@ import {
     addLinearBrush,
     addBigwig
 } from './examples';
+import { compile } from '../src/compiler/compile';
+import { getTheme } from '../src/core/utils/theme';
 
 import './App.css';
-import { add } from 'lodash-es';
-
 function App() {
     const [fps, setFps] = useState(120);
 
@@ -29,6 +29,17 @@ function App() {
         addAxisTrack(pixiManager);
         addLinearBrush(pixiManager);
         addBigwig(pixiManager);
+
+        const callback = (hg, size, gs, tracksAndViews, idTable) => {
+            console.warn(hg);
+            console.warn(size);
+            console.warn(gs);
+            console.warn(tracksAndViews);
+            console.warn(idTable);
+        };
+
+        // Compile the spec
+        compile(spec, callback, [], getTheme('light'), { containerSize: { width: 600, height: 600 } });
     }, []);
 
     return (
@@ -43,3 +54,44 @@ function App() {
 }
 
 export default App;
+
+const spec = {
+    title: 'Basic Marks: line',
+    subtitle: 'Tutorial Examples',
+    tracks: [
+        {
+            layout: 'linear',
+            width: 800,
+            height: 180,
+            data: {
+                url: 'https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ',
+                type: 'multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
+                categories: ['sample 1']
+            },
+            mark: 'line',
+            x: { field: 'position', type: 'genomic', axis: 'bottom' },
+            y: { field: 'peak', type: 'quantitative', axis: 'right' },
+            size: { value: 2 }
+        },
+        {
+            layout: 'linear',
+            width: 800,
+            height: 180,
+            data: {
+                url: 'https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ',
+                type: 'multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
+                categories: ['sample 1']
+            },
+            mark: 'bar',
+            x: { field: 'position', type: 'genomic', axis: 'bottom' },
+            y: { field: 'peak', type: 'quantitative', axis: 'right' },
+            size: { value: 2 }
+        }
+    ]
+};
