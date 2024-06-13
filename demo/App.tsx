@@ -6,7 +6,8 @@ import {
     addCircularBrush,
     addGoslingTrack,
     addAxisTrack,
-    addLinearBrush
+    addLinearBrush,
+    addBigwig
 } from './examples';
 
 import './App.css';
@@ -27,6 +28,7 @@ function App() {
         addGoslingTrack(pixiManager);
         addAxisTrack(pixiManager);
         addLinearBrush(pixiManager);
+        addBigwig(pixiManager);
     }, []);
 
     return (
