@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PixiManager } from '@pixi-manager';
-import { addDummyTrack, addTextTrack, addCircularBrush, addGoslingTrack } from './examples';
+import { addDummyTrack, addTextTrack, addCircularBrush, addGoslingTrack, addAxisTrack } from './examples';
 
 import './App.css';
 
@@ -17,6 +17,7 @@ function App() {
         addDummyTrack(pixiManager);
         addCircularBrush(pixiManager);
         addGoslingTrack(pixiManager);
+        addAxisTrack(pixiManager);
     }, []);
 
     return (
