@@ -2,6 +2,7 @@ import { createNanoEvents, type Emitter } from 'nanoevents';
 import type * as D3Selection from 'd3-selection';
 import type * as D3Drag from 'd3-drag';
 import type { EventStyle } from '@gosling-lang/gosling-schema';
+import { drag as d3Drag } from 'd3-drag';
 
 const HIDDEN_BRUSH_EDGE_SIZE = 3;
 
@@ -49,19 +50,9 @@ export class LinearBrushModel {
     private offset: [number, number];
     private size: number; // fixed size of one-dimension of a brush (e.g., height)
 
-    /* External libraries that we re-use from HiGlass */
-    private externals: {
-        d3Selection: typeof D3Selection;
-        d3Drag: typeof D3Drag;
-    };
-
     private emitter: Emitter<LinearBrushEvents>;
 
-    constructor(
-        selection: D3Selection.Selection<SVGGElement, unknown, null, unknown>,
-        hgLibraries: any,
-        style: EventStyle = {}
-    ) {
+    constructor(selection: D3Selection.Selection<SVGGElement, unknown, null, unknown>, style: EventStyle = {}) {
         this.emitter = createNanoEvents<LinearBrushEvents>();
         this.range = null;
         this.prevExtent = [0, 0];
@@ -69,11 +60,6 @@ export class LinearBrushModel {
 
         this.offset = [0, 0];
         this.size = 0;
-
-        this.externals = {
-            d3Selection: hgLibraries.d3Selection,
-            d3Drag: hgLibraries.d3Drag
-        };
 
         this.style = Object.assign({}, BRUSH_STYLE_DEFAULT, style);
 
@@ -223,10 +209,7 @@ export class LinearBrushModel {
             this.updateRange([s, e]).drawBrush();
         };
 
-        return this.externals.d3Drag
-            .drag<SVGRectElement, LinearBrushData[number]>()
-            .on('start', started)
-            .on('drag', dragged);
+        return d3Drag<SVGRectElement, LinearBrushData[number]>().on('start', started).on('drag', dragged);
     }
 
     on<E extends keyof LinearBrushEvents>(event: E, callback: LinearBrushEvents[E]) {
