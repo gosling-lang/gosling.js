@@ -32,6 +32,7 @@
       "@gosling-lang/circular-brush": ["src/tracks/circular-brush/index.ts"],
       "@gosling-lang/dummy-track": ["./src/tracks/dummy-track/index.ts"],
       "@gosling-lang/text-track": ["./src/tracks/text-track/index.ts"],
+      "@gosling-lang/interactors": ["./src/interactors/index.ts"],
       "@pixi-manager": ["./src/pixi-manager/index.ts"],
       "@data-fetchers": ["./src/data-fetchers/index.ts"],
       "@higlass": ["./src/higlass"],

@@ -729,5 +729,6 @@ declare module '@higlass/datafetcher' {
         tilesetInfo(finished: (info: TilesetInfo) => void): void;
         fetchTilesDebounced(receivedTiles: (tiles: Record<string, Tile>) => void, tileIds: string[]): void;
         track?: any;
+        constructor(dataConfig, pubSub);
     }
 }

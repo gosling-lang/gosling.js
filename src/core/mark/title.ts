@@ -1,4 +1,4 @@
-import type * as PIXI from 'pixi.js';
+import * as PIXI from 'pixi.js';
 import type { Tile } from '@gosling-lang/gosling-track';
 import type { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
@@ -7,7 +7,6 @@ import type { CompleteThemeDeep } from '../utils/theme';
 import { getTextStyle } from '../utils/text-style';
 
 export function drawCircularTitle(
-    HGC: import('@higlass/types').HGC,
     trackInfo: any,
     tile: Tile,
     model: GoslingTrackModel,
@@ -53,15 +52,15 @@ export function drawCircularTitle(
         fontFamily: theme.axis.labelFontFamily, // TODO: support
         fontWeight: theme.axis.labelFontWeight // TODO: support
     });
-    const textGraphic = new HGC.libraries.PIXI.Text(title, styleConfig);
+    const textGraphic = new PIXI.Text(title, styleConfig);
     textGraphic.anchor.x = 1;
     textGraphic.anchor.y = 0.5;
     textGraphic.position.x = pos.x;
     textGraphic.position.y = pos.y;
 
     textGraphic.resolution = 4;
-    const txtStyle = new HGC.libraries.PIXI.TextStyle(styleConfig);
-    const metric = HGC.libraries.PIXI.TextMetrics.measureText(textGraphic.text, txtStyle);
+    const txtStyle = new PIXI.TextStyle(styleConfig);
+    const metric = PIXI.TextMetrics.measureText(textGraphic.text, txtStyle);
 
     // Scale the width of text label so that its width is the same when converted into circular form
     const txtWidth = ((metric.width / (2 * titleR * Math.PI)) * tw * 360) / (endAngle - startAngle);
@@ -72,7 +71,7 @@ export function drawCircularTitle(
     const ropePoints: PIXI.Point[] = [];
     for (let i = scaledEndX; i >= scaledStartX; i -= txtWidth / 10.0) {
         const p = cartesianToPolar(i, tw, titleR - metric.height / 2.0, cx, cy, startAngle, endAngle);
-        ropePoints.push(new HGC.libraries.PIXI.Point(p.x, p.y));
+        ropePoints.push(new PIXI.Point(p.x, p.y));
     }
 
     /* Background */
@@ -89,6 +88,6 @@ export function drawCircularTitle(
     // Render a label
     // @ts-expect-error, missing argument to updateText
     textGraphic.updateText();
-    const rope = new HGC.libraries.PIXI.SimpleRope(textGraphic.texture, ropePoints);
+    const rope = new PIXI.SimpleRope(textGraphic.texture, ropePoints);
     g.addChild(rope);
 }

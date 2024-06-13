@@ -50,8 +50,8 @@ export const RESOLUTION = 4;
 /**
  * Draw a track based on the track specification in a Gosling grammar.
  */
-export function drawMark(HGC: import('@higlass/types').HGC, trackInfo: any, tile: Tile, model: GoslingTrackModel) {
-    if (!HGC || !trackInfo || !tile) {
+export function drawMark(trackInfo: any, tile: Tile, model: GoslingTrackModel) {
+    if (!trackInfo || !tile) {
         // We did not receive parameters correctly.
         return;
     }
@@ -91,10 +91,10 @@ export function drawMark(HGC: import('@higlass/types').HGC, trackInfo: any, tile
             drawLine(tile.graphics, model, trackWidth, trackHeight);
             break;
         case 'area':
-            drawArea(HGC, trackInfo, tile, model);
+            drawArea(trackInfo, tile, model);
             break;
         case 'rect':
-            drawRect(HGC, trackInfo, tile, model);
+            drawRect(trackInfo, tile, model);
             break;
         case 'triangleLeft':
         case 'triangleRight':
@@ -102,10 +102,10 @@ export function drawMark(HGC: import('@higlass/types').HGC, trackInfo: any, tile
             drawTriangle(tile.graphics, model, trackWidth, trackHeight);
             break;
         case 'text':
-            drawText(HGC, trackInfo, tile, model);
+            drawText(trackInfo, tile, model);
             break;
         case 'rule':
-            drawRule(HGC, trackInfo, tile, model);
+            drawRule(trackInfo, tile, model);
             break;
         case 'betweenLink':
             drawBetweenLink(tile.graphics, trackInfo, model);
@@ -123,13 +123,12 @@ export function drawMark(HGC: import('@higlass/types').HGC, trackInfo: any, tile
  * Draw chart embellishments before rendering marks.
  */
 export function drawPreEmbellishment(
-    HGC: import('@higlass/types').HGC,
     trackInfo: any,
     tile: Tile,
     model: GoslingTrackModel,
     theme: Required<CompleteThemeDeep>
 ) {
-    if (!HGC || !trackInfo || !tile) {
+    if (!trackInfo || !tile) {
         // We did not receive parameters correctly.
         return;
     }
@@ -158,13 +157,12 @@ export function drawPreEmbellishment(
  * Draw chart embellishments after rendering marks.
  */
 export function drawPostEmbellishment(
-    HGC: import('@higlass/types').HGC,
     trackInfo: any,
     tile: Tile,
     model: GoslingTrackModel,
     theme: Required<CompleteThemeDeep>
 ) {
-    if (!HGC || !trackInfo || !tile) {
+    if (!trackInfo || !tile) {
         // We did not receive parameters correctly.
         return;
     }
@@ -181,11 +179,11 @@ export function drawPostEmbellishment(
     const isCircular = model.spec().layout === 'circular';
 
     if (isCircular) {
-        drawCircularYAxis(HGC, trackInfo, tile, model, theme);
-        drawCircularTitle(HGC, trackInfo, tile, model, theme);
+        drawCircularYAxis(trackInfo, tile, model, theme);
+        drawCircularTitle(trackInfo, tile, model, theme);
     } else {
-        drawLinearYAxis(HGC, trackInfo, tile, model, theme);
-        drawRowLegend(HGC, trackInfo, tile, model, theme);
+        drawLinearYAxis(trackInfo, tile, model, theme);
+        drawRowLegend(trackInfo, tile, model, theme);
     }
-    drawColorLegend(HGC, trackInfo, tile, model, theme);
+    drawColorLegend(trackInfo, tile, model, theme);
 }

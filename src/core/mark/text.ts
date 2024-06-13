@@ -4,6 +4,7 @@ import type { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track
 import { group } from 'd3-array';
 import { getValueUsingChannel, IsStackedMark } from '@gosling-lang/gosling-schema';
 import { cartesianToPolar } from '../utils/polar';
+import * as PIXI from 'pixi.js';
 
 // Merge with the one in the `utils/text-style.ts`
 export const TEXT_STYLE_GLOBAL = {
@@ -17,7 +18,7 @@ export const TEXT_STYLE_GLOBAL = {
     strokeThickness: 0
 } as const;
 
-export function drawText(HGC: import('@higlass/types').HGC, trackInfo: any, tile: Tile, model: GoslingTrackModel) {
+export function drawText(trackInfo: any, tile: Tile, model: GoslingTrackModel) {
     /* track spec */
     const spec = model.spec();
 
@@ -53,7 +54,7 @@ export function drawText(HGC: import('@higlass/types').HGC, trackInfo: any, tile
             return;
         }
 
-        const rowGraphics = tile.graphics; // new HGC.libraries.PIXI.Graphics(); // only one row for stacked marks
+        const rowGraphics = tile.graphics; // new PIXI.Graphics(); // only one row for stacked marks
 
         const genomicChannel = model.getGenomicChannel();
         if (!genomicChannel || !genomicChannel.field) {
@@ -98,7 +99,7 @@ export function drawText(HGC: import('@higlass/types').HGC, trackInfo: any, tile
                     strokeThickness: strokeWidth ?? spec.style?.textStrokeWidth ?? TEXT_STYLE_GLOBAL.strokeThickness,
                     fontWeight: spec.style?.textFontWeight ?? TEXT_STYLE_GLOBAL.fontWeight
                 };
-                const textStyleObj = new HGC.libraries.PIXI.TextStyle(localTextStyle);
+                const textStyleObj = new PIXI.TextStyle(localTextStyle);
 
                 let textGraphic;
                 if (trackInfo.textGraphics.length > trackInfo.textsBeingUsed) {
@@ -108,14 +109,14 @@ export function drawText(HGC: import('@higlass/types').HGC, trackInfo: any, tile
                     textGraphic.text = text;
                     textGraphic.alpha = 1;
                 } else {
-                    textGraphic = new HGC.libraries.PIXI.Text(text, {
+                    textGraphic = new PIXI.Text(text, {
                         ...localTextStyle,
                         fill: color
                     });
                     trackInfo.textGraphics.push(textGraphic);
                 }
 
-                const metric = HGC.libraries.PIXI.TextMetrics.measureText(text, textStyleObj);
+                const metric = PIXI.TextMetrics.measureText(text, textStyleObj);
                 trackInfo.textsBeingUsed++;
 
                 const alphaTransition = model.markVisibility(d, {
@@ -135,9 +136,9 @@ export function drawText(HGC: import('@higlass/types').HGC, trackInfo: any, tile
                 textGraphic.resolution = 8;
                 textGraphic.updateText();
 
-                textGraphic.texture.baseTexture.scaleMode = HGC.libraries.PIXI.SCALE_MODES.LINEAR; // or .NEAREST
+                textGraphic.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR; // or .NEAREST
 
-                const sprite = new HGC.libraries.PIXI.Sprite(textGraphic.texture);
+                const sprite = new PIXI.Sprite(textGraphic.texture);
                 sprite.x = x;
                 sprite.y = rowHeight - y - prevYEnd;
                 sprite.width = xe - x;
@@ -188,7 +189,7 @@ export function drawText(HGC: import('@higlass/types').HGC, trackInfo: any, tile
                     strokeThickness: strokeWidth ?? spec.style?.textStrokeWidth ?? TEXT_STYLE_GLOBAL.strokeThickness,
                     fontWeight: spec.style?.textFontWeight ?? TEXT_STYLE_GLOBAL.fontWeight
                 };
-                const textStyleObj = new HGC.libraries.PIXI.TextStyle(localTextStyle);
+                const textStyleObj = new PIXI.TextStyle(localTextStyle);
 
                 let textGraphic;
                 if (trackInfo.textGraphics.length > trackInfo.textsBeingUsed) {
@@ -198,14 +199,14 @@ export function drawText(HGC: import('@higlass/types').HGC, trackInfo: any, tile
                     textGraphic.text = text;
                     textGraphic.alpha = 1;
                 } else {
-                    textGraphic = new HGC.libraries.PIXI.Text(text, {
+                    textGraphic = new PIXI.Text(text, {
                         ...localTextStyle,
                         fill: color
                     });
                     trackInfo.textGraphics.push(textGraphic);
                 }
 
-                const metric = HGC.libraries.PIXI.TextMetrics.measureText(text, textStyleObj);
+                const metric = PIXI.TextMetrics.measureText(text, textStyleObj);
                 trackInfo.textsBeingUsed++;
 
                 const alphaTransition = model.markVisibility(d, {
@@ -233,8 +234,8 @@ export function drawText(HGC: import('@higlass/types').HGC, trackInfo: any, tile
                     textGraphic.y = centerPos.y;
 
                     textGraphic.resolution = 4;
-                    // const txtStyle = new HGC.libraries.PIXI.TextStyle(textStyleObj);
-                    // const metric = HGC.libraries.PIXI.TextMetrics.measureText(textGraphic.text, txtStyle);
+                    // const txtStyle = new PIXI.TextStyle(textStyleObj);
+                    // const metric = PIXI.TextMetrics.measureText(textGraphic.text, txtStyle);
 
                     // scale the width of text label so that its width is the same when converted into circular form
                     const tw = (metric.width / (2 * r * Math.PI)) * trackWidth;
@@ -256,7 +257,7 @@ export function drawText(HGC: import('@higlass/types').HGC, trackInfo: any, tile
                     const eventPointsNear: number[] = [];
                     for (let i = maxX; i >= minX; i -= tw / 10.0) {
                         const p = cartesianToPolar(i, trackWidth, r, tcx, tcy, startAngle, endAngle);
-                        ropePoints.push(new HGC.libraries.PIXI.Point(p.x, p.y));
+                        ropePoints.push(new PIXI.Point(p.x, p.y));
 
                         const pFar = cartesianToPolar(
                             i,
@@ -284,7 +285,7 @@ export function drawText(HGC: import('@higlass/types').HGC, trackInfo: any, tile
                     }
 
                     textGraphic.updateText();
-                    const rope = new HGC.libraries.PIXI.SimpleRope(textGraphic.texture, ropePoints);
+                    const rope = new PIXI.SimpleRope(textGraphic.texture, ropePoints);
                     rope.alpha = actualOpacity;
                     rowGraphics.addChild(rope);
 

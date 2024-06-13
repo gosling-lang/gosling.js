@@ -9,7 +9,7 @@ import colorToHex from '../utils/color-to-hex';
 /**
  * Draw area marks
  */
-export function drawArea(HGC: import('@higlass/types').HGC, track: any, tile: Tile, model: GoslingTrackModel) {
+export function drawArea(track: any, tile: Tile, model: GoslingTrackModel) {
     /* track spec */
     const spec = model.spec();
 
