@@ -30,6 +30,7 @@
       "@gosling-lang/gosling-track": ["./src/tracks/gosling-track/index.ts"],
       "@gosling-lang/gosling-genomic-axis": ["./src/tracks/gosling-genomic-axis/index.ts"],
       "@gosling-lang/circular-brush": ["src/tracks/circular-brush/index.ts"],
+      "@gosling-lang/brush-linear": ["src/tracks/brush-linear/index.ts"],
       "@gosling-lang/dummy-track": ["./src/tracks/dummy-track/index.ts"],
       "@gosling-lang/text-track": ["./src/tracks/text-track/index.ts"],
       "@gosling-lang/interactors": ["./src/interactors/index.ts"],
