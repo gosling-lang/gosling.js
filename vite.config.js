@@ -70,7 +70,7 @@ const alias = {
     '@gosling-lang/higlass-schema': path.resolve(__dirname, './src/higlass-schema/index.ts'),
     '@gosling-lang/gosling-theme': path.resolve(__dirname, './src/gosling-theme/index.ts'),
     '@gosling-lang/gosling-track': path.resolve(__dirname, './src/tracks/gosling-track/index.ts'),
-    '@gosling-lang/gosling-genomic-axis': path.resolve(__dirname, './src/tracks/gosling-genomic-axis/index.ts'),
+    '@gosling-lang/genomic-axis': path.resolve(__dirname, './src/tracks/genomic-axis/index.ts'),
     '@gosling-lang/brush-circular': path.resolve(__dirname, './src/tracks/brush-circular/index.ts'),
     '@gosling-lang/brush-linear': path.resolve(__dirname, './src/tracks/brush-linear/index.ts'),
     '@gosling-lang/dummy-track': path.resolve(__dirname, './src/tracks/dummy-track/index.ts'),

@@ -1,6 +1,6 @@
 import { PixiManager } from '@pixi-manager';
 import { signal } from '@preact/signals-core';
-import { AxisTrack } from '@gosling-lang/gosling-genomic-axis';
+import { AxisTrack } from '@gosling-lang/genomic-axis';
 
 export function addAxisTrack(pixiManager: PixiManager) {
     const view1Domain = signal<[number, number]>([543317951, 544039951]);
