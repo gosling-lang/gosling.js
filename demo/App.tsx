@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { PixiManager } from '@pixi-manager';
-import { addDummyTrack, addTextTrack, addCircularBrush, addGoslingTrack, addAxisTrack } from './examples';
+import {
+    addDummyTrack,
+    addTextTrack,
+    addCircularBrush,
+    addGoslingTrack,
+    addAxisTrack,
+    addLinearBrush
+} from './examples';
 
 import './App.css';
+import { add } from 'lodash-es';
 
 function App() {
     const [fps, setFps] = useState(120);
@@ -18,6 +26,7 @@ function App() {
         addCircularBrush(pixiManager);
         addGoslingTrack(pixiManager);
         addAxisTrack(pixiManager);
+        addLinearBrush(pixiManager);
     }, []);
 
     return (
