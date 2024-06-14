@@ -13,6 +13,10 @@ import { compile } from '../src/compiler/compile';
 import { getTheme } from '../src/core/utils/theme';
 
 import './App.css';
+import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
+import { trackInfoToCanvas } from './trackInfoToCanvas';
+import type { TrackInfo } from 'src/compiler/bounding-box';
+
 function App() {
     const [fps, setFps] = useState(120);
 
@@ -22,24 +26,33 @@ function App() {
         plotElement.innerHTML = '';
         // Initialize the PixiManager. This will be used to get containers and overlay divs for the plots
         const pixiManager = new PixiManager(1000, 600, plotElement, setFps);
-        addTextTrack(pixiManager);
-        addDummyTrack(pixiManager);
-        addCircularBrush(pixiManager);
-        addGoslingTrack(pixiManager);
-        addAxisTrack(pixiManager);
-        addLinearBrush(pixiManager);
-        addBigwig(pixiManager);
+        // addTextTrack(pixiManager);
+        // addDummyTrack(pixiManager);
+        // addCircularBrush(pixiManager);
+        // addGoslingTrack(pixiManager);
+        // addAxisTrack(pixiManager);
+        // addLinearBrush(pixiManager);
+        // addBigwig(pixiManager);
 
-        const callback = (hg, size, gs, tracksAndViews, idTable) => {
-            console.warn(hg);
-            console.warn(size);
-            console.warn(gs);
-            console.warn(tracksAndViews);
-            console.warn(idTable);
+        const callback = (
+            hg: HiGlassSpec,
+            size,
+            gs,
+            tracksAndViews,
+            idTable,
+            trackInfos: TrackInfo[],
+            theme: Require<ThemeDeep>
+        ) => {
+            // console.warn(hg);
+            // console.warn(idTable);
+            // console.warn(tracksAndViews);
+            // drawFromHgSpec(hg, pixiManager);
+            console.warn(trackInfos);
+            trackInfoToCanvas(trackInfos, pixiManager, theme);
         };
 
         // Compile the spec
-        compile(spec, callback, [], getTheme('light'), { containerSize: { width: 600, height: 600 } });
+        compile(spec, callback, [], getTheme('light'), { containerSize: { width: 300, height: 300 } });
     }, []);
 
     return (
@@ -58,9 +71,10 @@ export default App;
 const spec = {
     title: 'Basic Marks: line',
     subtitle: 'Tutorial Examples',
+    layout: 'circular',
     tracks: [
         {
-            layout: 'linear',
+            layout: 'circular',
             width: 800,
             height: 180,
             data: {
@@ -77,7 +91,7 @@ const spec = {
             size: { value: 2 }
         },
         {
-            layout: 'linear',
+            layout: 'circular',
             width: 800,
             height: 180,
             data: {

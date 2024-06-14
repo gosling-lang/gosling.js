@@ -21,7 +21,7 @@ export function renderHiGlass(
     spec: GoslingSpec,
     trackInfos: TrackInfo[],
     callback: CompileCallback,
-    theme: CompleteThemeDeep,
+    theme: Required<CompleteThemeDeep>,
     urlToFetchOptions?: UrlToFetchOptions
 ) {
     if (trackInfos.length === 0) {
@@ -111,5 +111,5 @@ export function renderHiGlass(
         ...views.map(d => ({ ...d, type: 'view' } as VisUnitApiData))
     ];
 
-    callback(hgModel.spec(), getBoundingBox(trackInfos), spec, tracksAndViews, idMapper.getTable());
+    callback(hgModel.spec(), getBoundingBox(trackInfos), spec, tracksAndViews, idMapper.getTable(), trackInfos, theme);
 }
