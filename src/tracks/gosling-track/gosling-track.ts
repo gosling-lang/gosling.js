@@ -1197,7 +1197,8 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             this.pMouseHover.clear();
         }
         /**
-         * From all tiles and overlaid tracks, collect element(s) that are withing a mouse position.
+         * From all tiles and overlaid tracks, collect element(s) that are within a mouse position.
+         * In the array, the first element is the element that is directly within the mouse position.
          */
         #getElementsWithinMouse(mouseX: number, mouseY: number) {
             const models = this.visibleAndFetchedGoslingModels();
@@ -1460,12 +1461,6 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                         .join('');
 
                     content = `<table style='text-align: left; margin-top: 12px'>${content}</table>`;
-                    if (capturedElements.length > 1) {
-                        content +=
-                            `<div style='padding: 4px 8px; margin-top: 4px; text-align: center; color: grey'>` +
-                            `${capturedElements.length - 1} Additional Selections...` +
-                            '</div>';
-                    }
                     return `<div>${content}</div>`;
                 }
             }
