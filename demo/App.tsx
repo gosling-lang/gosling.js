@@ -14,7 +14,7 @@ import { getTheme } from '../src/core/utils/theme';
 
 import './App.css';
 import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
-import { trackInfoToTracks } from './trackInfoToCanvas';
+import { createTrackDefs, renderTrackDefs } from './renderer/main';
 import type { TrackInfo } from 'src/compiler/bounding-box';
 
 function App() {
@@ -43,13 +43,9 @@ function App() {
             trackInfos: TrackInfo[],
             theme: Require<ThemeDeep>
         ) => {
-            // console.warn(hg);
-            // console.warn(idTable);
-            // console.warn(tracksAndViews);
-            // drawFromHgSpec(hg, pixiManager);
             console.warn(trackInfos);
-            // trackInfoToCanvas(trackInfos, pixiManager, theme);
-            trackInfoToTracks(trackInfos, pixiManager, theme);
+            const trackDefs = createTrackDefs(trackInfos, pixiManager, theme);
+            renderTrackDefs(trackDefs, pixiManager);
         };
 
         // Compile the spec
@@ -72,7 +68,7 @@ export default App;
 const spec = {
     title: 'Basic Marks: line',
     subtitle: 'Tutorial Examples',
-    layout: 'linear',
+    layout: 'circular',
     tracks: [
         {
             layout: 'circular',
@@ -650,6 +646,475 @@ const spec3 = {
             xe: { field: 'end', type: 'genomic' },
             y: { field: 'peak', type: 'quantitative', axis: 'right' },
             size: { value: 5 }
+        }
+    ]
+};
+
+const spec4 = {
+    static: true,
+    layout: 'linear',
+    centerRadius: 0.2,
+    arrangement: 'parallel',
+    views: [
+        {
+            xDomain: { chromosome: 'chr1' },
+            tracks: [
+                {
+                    data: {
+                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
+                        type: 'multivec',
+                        row: 'sample',
+                        column: 'position',
+                        value: 'peak',
+                        categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+                    },
+                    mark: 'area',
+                    x: { field: 'position', type: 'genomic' },
+                    y: { field: 'peak', type: 'quantitative' },
+                    color: { field: 'sample', type: 'nominal' },
+                    width: 1000,
+                    height: 30
+                },
+                {
+                    alignment: 'overlay',
+                    data: {
+                        url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/cytogenetic_band.csv',
+                        type: 'csv',
+                        chromosomeField: 'Chr.',
+                        genomicFields: ['ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop']
+                    },
+                    tracks: [
+                        {
+                            mark: 'text',
+                            dataTransform: [
+                                {
+                                    type: 'filter',
+                                    field: 'Stain',
+                                    oneOf: ['acen-1', 'acen-2'],
+                                    not: true
+                                }
+                            ],
+                            text: { field: 'Band', type: 'nominal' },
+                            color: { value: 'black' },
+                            visibility: [
+                                {
+                                    operation: 'less-than',
+                                    measure: 'width',
+                                    threshold: '|xe-x|',
+                                    transitionPadding: 10,
+                                    target: 'mark'
+                                }
+                            ]
+                        },
+                        {
+                            mark: 'rect',
+                            dataTransform: [
+                                {
+                                    type: 'filter',
+                                    field: 'Stain',
+                                    oneOf: ['acen-1', 'acen-2'],
+                                    not: true
+                                }
+                            ],
+                            color: {
+                                field: 'Density',
+                                type: 'nominal',
+                                domain: ['', '25', '50', '75', '100'],
+                                range: ['white', '#D9D9D9', '#979797', '#636363', 'black']
+                            }
+                        },
+                        {
+                            mark: 'rect',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['gvar'] }],
+                            color: { value: '#A0A0F2' }
+                        },
+                        {
+                            mark: 'triangleRight',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-1'] }],
+                            color: { value: '#B40101' }
+                        },
+                        {
+                            mark: 'triangleLeft',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-2'] }],
+                            color: { value: '#B40101' }
+                        }
+                    ],
+                    x: { field: 'Basepair_start', type: 'genomic' },
+                    xe: { field: 'Basepair_stop', type: 'genomic' },
+                    stroke: { value: 'gray' },
+                    strokeWidth: { value: 0.5 },
+                    width: 1000,
+                    height: 20
+                }
+            ]
+        },
+        {
+            xDomain: { chromosome: 'chr2' },
+            tracks: [
+                {
+                    data: {
+                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
+                        type: 'multivec',
+                        row: 'sample',
+                        column: 'position',
+                        value: 'peak',
+                        categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+                    },
+                    mark: 'area',
+                    x: { field: 'position', type: 'genomic' },
+                    y: { field: 'peak', type: 'quantitative' },
+                    color: { field: 'sample', type: 'nominal' },
+                    width: 970,
+                    height: 30
+                },
+                {
+                    alignment: 'overlay',
+                    data: {
+                        url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/cytogenetic_band.csv',
+                        type: 'csv',
+                        chromosomeField: 'Chr.',
+                        genomicFields: ['ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop']
+                    },
+                    tracks: [
+                        {
+                            mark: 'text',
+                            dataTransform: [
+                                {
+                                    type: 'filter',
+                                    field: 'Stain',
+                                    oneOf: ['acen-1', 'acen-2'],
+                                    not: true
+                                }
+                            ],
+                            text: { field: 'Band', type: 'nominal' },
+                            color: { value: 'black' },
+                            visibility: [
+                                {
+                                    operation: 'less-than',
+                                    measure: 'width',
+                                    threshold: '|xe-x|',
+                                    transitionPadding: 10,
+                                    target: 'mark'
+                                }
+                            ]
+                        },
+                        {
+                            mark: 'rect',
+                            dataTransform: [
+                                {
+                                    type: 'filter',
+                                    field: 'Stain',
+                                    oneOf: ['acen-1', 'acen-2'],
+                                    not: true
+                                }
+                            ],
+                            color: {
+                                field: 'Density',
+                                type: 'nominal',
+                                domain: ['', '25', '50', '75', '100'],
+                                range: ['white', '#D9D9D9', '#979797', '#636363', 'black']
+                            }
+                        },
+                        {
+                            mark: 'rect',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['gvar'] }],
+                            color: { value: '#A0A0F2' }
+                        },
+                        {
+                            mark: 'triangleRight',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-1'] }],
+                            color: { value: '#B40101' }
+                        },
+                        {
+                            mark: 'triangleLeft',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-2'] }],
+                            color: { value: '#B40101' }
+                        }
+                    ],
+                    x: { field: 'Basepair_start', type: 'genomic' },
+                    xe: { field: 'Basepair_stop', type: 'genomic' },
+                    stroke: { value: 'gray' },
+                    strokeWidth: { value: 0.5 },
+                    width: 970,
+                    height: 20
+                }
+            ]
+        },
+        {
+            xDomain: { chromosome: 'chr3' },
+            tracks: [
+                {
+                    data: {
+                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
+                        type: 'multivec',
+                        row: 'sample',
+                        column: 'position',
+                        value: 'peak',
+                        categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+                    },
+                    mark: 'area',
+                    x: { field: 'position', type: 'genomic' },
+                    y: { field: 'peak', type: 'quantitative' },
+                    color: { field: 'sample', type: 'nominal' },
+                    width: 800,
+                    height: 30
+                },
+                {
+                    alignment: 'overlay',
+                    data: {
+                        url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/cytogenetic_band.csv',
+                        type: 'csv',
+                        chromosomeField: 'Chr.',
+                        genomicFields: ['ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop']
+                    },
+                    tracks: [
+                        {
+                            mark: 'text',
+                            dataTransform: [
+                                {
+                                    type: 'filter',
+                                    field: 'Stain',
+                                    oneOf: ['acen-1', 'acen-2'],
+                                    not: true
+                                }
+                            ],
+                            text: { field: 'Band', type: 'nominal' },
+                            color: { value: 'black' },
+                            visibility: [
+                                {
+                                    operation: 'less-than',
+                                    measure: 'width',
+                                    threshold: '|xe-x|',
+                                    transitionPadding: 10,
+                                    target: 'mark'
+                                }
+                            ]
+                        },
+                        {
+                            mark: 'rect',
+                            dataTransform: [
+                                {
+                                    type: 'filter',
+                                    field: 'Stain',
+                                    oneOf: ['acen-1', 'acen-2'],
+                                    not: true
+                                }
+                            ],
+                            color: {
+                                field: 'Density',
+                                type: 'nominal',
+                                domain: ['', '25', '50', '75', '100'],
+                                range: ['white', '#D9D9D9', '#979797', '#636363', 'black']
+                            }
+                        },
+                        {
+                            mark: 'rect',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['gvar'] }],
+                            color: { value: '#A0A0F2' }
+                        },
+                        {
+                            mark: 'triangleRight',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-1'] }],
+                            color: { value: '#B40101' }
+                        },
+                        {
+                            mark: 'triangleLeft',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-2'] }],
+                            color: { value: '#B40101' }
+                        }
+                    ],
+                    x: { field: 'Basepair_start', type: 'genomic' },
+                    xe: { field: 'Basepair_stop', type: 'genomic' },
+                    stroke: { value: 'gray' },
+                    strokeWidth: { value: 0.5 },
+                    width: 800,
+                    height: 20
+                }
+            ]
+        },
+        {
+            xDomain: { chromosome: 'chr4' },
+            tracks: [
+                {
+                    data: {
+                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
+                        type: 'multivec',
+                        row: 'sample',
+                        column: 'position',
+                        value: 'peak',
+                        categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+                    },
+                    mark: 'area',
+                    x: { field: 'position', type: 'genomic' },
+                    y: { field: 'peak', type: 'quantitative' },
+                    color: { field: 'sample', type: 'nominal' },
+                    width: 770,
+                    height: 30
+                },
+                {
+                    alignment: 'overlay',
+                    data: {
+                        url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/cytogenetic_band.csv',
+                        type: 'csv',
+                        chromosomeField: 'Chr.',
+                        genomicFields: ['ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop']
+                    },
+                    tracks: [
+                        {
+                            mark: 'text',
+                            dataTransform: [
+                                {
+                                    type: 'filter',
+                                    field: 'Stain',
+                                    oneOf: ['acen-1', 'acen-2'],
+                                    not: true
+                                }
+                            ],
+                            text: { field: 'Band', type: 'nominal' },
+                            color: { value: 'black' },
+                            visibility: [
+                                {
+                                    operation: 'less-than',
+                                    measure: 'width',
+                                    threshold: '|xe-x|',
+                                    transitionPadding: 10,
+                                    target: 'mark'
+                                }
+                            ]
+                        },
+                        {
+                            mark: 'rect',
+                            dataTransform: [
+                                {
+                                    type: 'filter',
+                                    field: 'Stain',
+                                    oneOf: ['acen-1', 'acen-2'],
+                                    not: true
+                                }
+                            ],
+                            color: {
+                                field: 'Density',
+                                type: 'nominal',
+                                domain: ['', '25', '50', '75', '100'],
+                                range: ['white', '#D9D9D9', '#979797', '#636363', 'black']
+                            }
+                        },
+                        {
+                            mark: 'rect',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['gvar'] }],
+                            color: { value: '#A0A0F2' }
+                        },
+                        {
+                            mark: 'triangleRight',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-1'] }],
+                            color: { value: '#B40101' }
+                        },
+                        {
+                            mark: 'triangleLeft',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-2'] }],
+                            color: { value: '#B40101' }
+                        }
+                    ],
+                    x: { field: 'Basepair_start', type: 'genomic' },
+                    xe: { field: 'Basepair_stop', type: 'genomic' },
+                    stroke: { value: 'gray' },
+                    strokeWidth: { value: 0.5 },
+                    width: 770,
+                    height: 20
+                }
+            ]
+        },
+        {
+            xDomain: { chromosome: 'chr5' },
+            tracks: [
+                {
+                    data: {
+                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
+                        type: 'multivec',
+                        row: 'sample',
+                        column: 'position',
+                        value: 'peak',
+                        categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+                    },
+                    mark: 'area',
+                    x: { field: 'position', type: 'genomic' },
+                    y: { field: 'peak', type: 'quantitative' },
+                    color: { field: 'sample', type: 'nominal' },
+                    width: 740,
+                    height: 30
+                },
+                {
+                    alignment: 'overlay',
+                    data: {
+                        url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/cytogenetic_band.csv',
+                        type: 'csv',
+                        chromosomeField: 'Chr.',
+                        genomicFields: ['ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop']
+                    },
+                    tracks: [
+                        {
+                            mark: 'text',
+                            dataTransform: [
+                                {
+                                    type: 'filter',
+                                    field: 'Stain',
+                                    oneOf: ['acen-1', 'acen-2'],
+                                    not: true
+                                }
+                            ],
+                            text: { field: 'Band', type: 'nominal' },
+                            color: { value: 'black' },
+                            visibility: [
+                                {
+                                    operation: 'less-than',
+                                    measure: 'width',
+                                    threshold: '|xe-x|',
+                                    transitionPadding: 10,
+                                    target: 'mark'
+                                }
+                            ]
+                        },
+                        {
+                            mark: 'rect',
+                            dataTransform: [
+                                {
+                                    type: 'filter',
+                                    field: 'Stain',
+                                    oneOf: ['acen-1', 'acen-2'],
+                                    not: true
+                                }
+                            ],
+                            color: {
+                                field: 'Density',
+                                type: 'nominal',
+                                domain: ['', '25', '50', '75', '100'],
+                                range: ['white', '#D9D9D9', '#979797', '#636363', 'black']
+                            }
+                        },
+                        {
+                            mark: 'rect',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['gvar'] }],
+                            color: { value: '#A0A0F2' }
+                        },
+                        {
+                            mark: 'triangleRight',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-1'] }],
+                            color: { value: '#B40101' }
+                        },
+                        {
+                            mark: 'triangleLeft',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-2'] }],
+                            color: { value: '#B40101' }
+                        }
+                    ],
+                    x: { field: 'Basepair_start', type: 'genomic' },
+                    xe: { field: 'Basepair_stop', type: 'genomic' },
+                    stroke: { value: 'gray' },
+                    strokeWidth: { value: 0.5 },
+                    width: 740,
+                    height: 20
+                }
+            ]
         }
     ]
 };
