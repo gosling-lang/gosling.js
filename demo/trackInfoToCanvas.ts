@@ -9,23 +9,50 @@ import { fakePubSub } from '@higlass/utils';
 import { BigWigDataFetcher } from '@data-fetchers';
 import { cursor, panZoom } from '@gosling-lang/interactors';
 import type { TrackInfo } from '../src/compiler/bounding-box';
-import { IsChannelDeep, IsDummyTrack, IsXAxis, type AxisPosition, type Track } from '@gosling-lang/gosling-schema';
+import {
+    IsChannelDeep,
+    IsDummyTrack,
+    IsTemplateTrack,
+    IsXAxis,
+    type AxisPosition,
+    type OverlaidTrack,
+    type SingleTrack,
+    type TemplateTrack,
+    type Track
+} from '@gosling-lang/gosling-schema';
 import type { CompleteThemeDeep } from '../src/core/utils/theme';
 import { resolveSuperposedTracks } from '../src/core/utils/overlay';
 import type { GoslingTrackOptions } from '../src/tracks/gosling-track/gosling-track';
 import { HIGLASS_AXIS_SIZE } from '../src/compiler/higlass-model';
 
-function getTextTrackOptions(spec: Track, theme: Required<CompleteThemeDeep>): TextTrackOptions {
-    return {
-        backgroundColor: theme.root.titleBackgroundColor,
-        textColor: theme.root.titleColor,
-        fontSize: theme.root.titleFontSize ?? 18,
-        fontWeight: theme.root.titleFontWeight,
-        fontFamily: theme.root.titleFontFamily,
-        offsetY: 0,
-        align: theme.root.titleAlign,
-        text: spec.title
-    };
+function getTextTrackOptions(
+    spec: Track,
+    type: 'title' | 'subtitle',
+    theme: Required<CompleteThemeDeep>
+): TextTrackOptions {
+    if (type === 'title') {
+        return {
+            backgroundColor: theme.root.titleBackgroundColor,
+            textColor: theme.root.titleColor,
+            fontSize: theme.root.titleFontSize ?? 18,
+            fontWeight: theme.root.titleFontWeight,
+            fontFamily: theme.root.titleFontFamily,
+            offsetY: 0,
+            align: theme.root.titleAlign,
+            text: spec.title
+        };
+    } else {
+        return {
+            backgroundColor: theme.root.subtitleBackgroundColor,
+            textColor: theme.root.subtitleColor,
+            fontSize: theme.root.subtitleFontSize ?? 18,
+            fontWeight: theme.root.subtitleFontWeight,
+            fontFamily: theme.root.subtitleFontFamily,
+            offsetY: 0,
+            align: theme.root.subtitleAlign,
+            text: spec.subtitle
+        };
+    }
 }
 
 function getGoslingTrackOptions(spec: Track, theme: Required<CompleteThemeDeep>): GoslingTrackOptions {
@@ -72,188 +99,275 @@ function getDummyTrackOptions(spec: Track, theme: Required<CompleteThemeDeep>): 
     return spec;
 }
 
-export function trackInfoToCanvas(
+enum TrackType {
+    Text,
+    Dummy,
+    Gosling,
+    Axis,
+    BrushLinear,
+    BrushCircular,
+    Heatmap
+}
+
+interface TrackOptionsMap {
+    [TrackType.Text]: TextTrackOptions;
+    [TrackType.Dummy]: DummyTrackOptions;
+    [TrackType.Gosling]: GoslingTrackOptions;
+    [TrackType.Axis]: AxisTrackOptions;
+    [TrackType.BrushLinear]: any;
+    [TrackType.BrushCircular]: any;
+    [TrackType.Heatmap]: any;
+}
+
+interface TrackDef<T> {
+    type: TrackType;
+    boundingBox: { x: number; y: number; width: number; height: number };
+    options: T;
+}
+
+type TrackOptions = {
+    [K in keyof TrackOptionsMap]: TrackDef<TrackOptionsMap[K]>;
+}[keyof TrackOptionsMap];
+
+function getAxisPositions(track: Track): {
+    xAxisPosition: AxisPosition | undefined;
+    yAxisPosition: AxisPosition | undefined;
+} {
+    if (IsTemplateTrack(track) || IsDummyTrack(track)) {
+        return { xAxisPosition: undefined, yAxisPosition: undefined };
+    }
+
+    const resolvedSpecs = resolveSuperposedTracks(track);
+    const firstResolvedSpec = resolvedSpecs[0];
+
+    const hasXAxis =
+        ('x' in firstResolvedSpec &&
+            firstResolvedSpec.x &&
+            'axis' in firstResolvedSpec.x &&
+            firstResolvedSpec.x.axis !== 'none' &&
+            firstResolvedSpec.x.type === 'genomic') ||
+        false;
+    const hasYAxis =
+        ('y' in firstResolvedSpec &&
+            firstResolvedSpec.y &&
+            'axis' in firstResolvedSpec.y &&
+            firstResolvedSpec.y.axis !== 'none' &&
+            firstResolvedSpec.y.type === 'genomic') ||
+        false;
+
+    const xAxisPosition =
+        hasXAxis && IsChannelDeep(firstResolvedSpec.x) ? (firstResolvedSpec.x?.axis as AxisPosition) : undefined;
+    const yAxisPosition =
+        hasYAxis && IsChannelDeep(firstResolvedSpec.y) ? (firstResolvedSpec.y?.axis as AxisPosition) : undefined;
+
+    return {
+        xAxisPosition,
+        yAxisPosition
+    };
+}
+
+/**
+ * Separate the the track with mark "_header" into title and subtitle text tracks
+ * @param track
+ * @param boundingBox
+ * @returns
+ */
+function proccessTextHeader(
+    track: Track,
+    boundingBox: { x: number; y: number; width: number; height: number },
+    theme: Required<CompleteThemeDeep>
+): TrackDef<TextTrackOptions>[] {
+    let cumHeight = 0;
+    const trackInfosProcessed: TrackDef<TextTrackOptions>[] = [];
+    if (track.title) {
+        const textTrackOptions = getTextTrackOptions(track, 'title', theme);
+        const height = textTrackOptions.fontSize + 6;
+        trackInfosProcessed.push({
+            type: TrackType.Text,
+            boundingBox: { ...boundingBox, height },
+            options: textTrackOptions
+        });
+        cumHeight += height;
+    }
+    if (track.subtitle) {
+        const textTrackOptions = getTextTrackOptions(track, 'subtitle', theme);
+        const height = textTrackOptions.fontSize + 6;
+        trackInfosProcessed.push({
+            type: TrackType.Text,
+            boundingBox: { ...boundingBox, y: boundingBox.y + cumHeight, height },
+            options: textTrackOptions
+        });
+    }
+    return trackInfosProcessed;
+}
+
+/**
+ * Generates options for the linear axis track
+ * @param boundingBox Bounding box of the track
+ * @param position "top" | "bottom" | "left" | "right
+ */
+function getAxisTrackLinearOptions(
+    boundingBox: { x: number; y: number; width: number; height: number },
+    position: AxisPosition,
+    theme: Required<CompleteThemeDeep>
+): AxisTrackOptions {
+    const narrowType = getAxisNarrowType('x', 'horizontal', boundingBox.width, boundingBox.height);
+    const options: AxisTrackOptions = {
+        innerRadius: 0,
+        outerRadius: 0,
+        width: boundingBox.width,
+        height: boundingBox.height,
+        startAngle: 0,
+        endAngle: 0,
+        layout: 'linear',
+        assembly: 'hg38',
+        stroke: 'transparent', // text outline
+        color: theme.axis.labelColor,
+        labelMargin: theme.axis.labelMargin,
+        excludeChrPrefix: theme.axis.labelExcludeChrPrefix,
+        fontSize: theme.axis.labelFontSize,
+        fontFamily: theme.axis.labelFontFamily,
+        fontWeight: theme.axis.labelFontWeight,
+        tickColor: theme.axis.tickColor,
+        tickFormat: narrowType === 'narrower' ? 'si' : 'plain',
+        tickPositions: narrowType === 'regular' ? 'even' : 'ends',
+        reverseOrientation: position === 'bottom' || position === 'right' ? true : false
+    };
+    return options;
+}
+
+function getAxisTrackCircularOptions(
+    track: SingleTrack | OverlaidTrack | TemplateTrack,
+    boundingBox: { x: number; y: number; width: number; height: number },
+    position: AxisPosition,
+    theme: Required<CompleteThemeDeep>
+): AxisTrackOptions {
+    const narrowType = getAxisNarrowType('x', 'horizontal', boundingBox.width, boundingBox.height);
+    const { startAngle, endAngle, outerRadius } = track;
+    let { innerRadius } = track;
+    if (position === 'top') {
+        innerRadius = outerRadius - 30;
+    } else if (position === 'left' || position === 'right') {
+        console.error('Axis position left or right is not supported in circular layout');
+    }
+
+    const options: AxisTrackOptions = {
+        layout: 'circular',
+        innerRadius,
+        outerRadius,
+        width: boundingBox.width,
+        height: boundingBox.height,
+        startAngle,
+        endAngle,
+        assembly: 'hg38',
+        stroke: 'transparent', // text outline
+        color: theme.axis.labelColor,
+        labelMargin: theme.axis.labelMargin,
+        excludeChrPrefix: theme.axis.labelExcludeChrPrefix,
+        fontSize: theme.axis.labelFontSize,
+        fontFamily: theme.axis.labelFontFamily,
+        fontWeight: theme.axis.labelFontWeight,
+        tickColor: theme.axis.tickColor,
+        tickFormat: narrowType === 'narrower' ? 'si' : 'plain',
+        tickPositions: narrowType === 'regular' ? 'even' : 'ends',
+        reverseOrientation: position === 'bottom' || position === 'right' ? true : false
+    };
+    return options;
+}
+
+function processGoslingTrack(
+    track: Track,
+    boundingBox: { x: number; y: number; width: number; height: number },
+    theme: Required<CompleteThemeDeep>
+): (TrackDef<GoslingTrackOptions> | TrackDef<AxisTrackOptions>)[] {
+    const trackInfosProcessed: (TrackDef<GoslingTrackOptions> | TrackDef<AxisTrackOptions>)[] = [];
+
+    const { xAxisPosition, yAxisPosition } = getAxisPositions(track);
+    if (xAxisPosition) {
+        if (track.layout === 'linear') {
+            const isHorizontal = track.orientation === 'horizontal';
+            const widthOrHeight = isHorizontal ? 'height' : 'width';
+            const axisBbox = { ...boundingBox, [widthOrHeight]: HIGLASS_AXIS_SIZE };
+            boundingBox[widthOrHeight] -= axisBbox[widthOrHeight];
+            if (xAxisPosition === 'top') {
+                boundingBox.y += axisBbox.height;
+            } else if (xAxisPosition === 'bottom') {
+                axisBbox.y = boundingBox.y + boundingBox.height;
+            } else if (xAxisPosition === 'right') {
+                axisBbox.x = boundingBox.x + boundingBox.width;
+            } else if (xAxisPosition === 'left') {
+                boundingBox.x += axisBbox.width;
+            }
+            trackInfosProcessed.push({
+                type: TrackType.Axis,
+                boundingBox: axisBbox,
+                options: getAxisTrackLinearOptions(axisBbox, xAxisPosition, theme)
+            });
+        } else if (track.layout === 'circular') {
+            trackInfosProcessed.push({
+                type: TrackType.Axis,
+                boundingBox: boundingBox,
+                options: getAxisTrackCircularOptions(track, boundingBox, xAxisPosition, theme)
+            });
+        }
+    }
+
+    const goslingTrackOptions = getGoslingTrackOptions(track, theme);
+
+    trackInfosProcessed.push({
+        type: TrackType.Gosling,
+        boundingBox: { ...boundingBox },
+        options: goslingTrackOptions
+    });
+
+    return trackInfosProcessed;
+}
+
+export function trackInfoToTracks(
     trackInfos: TrackInfo[],
     pixiManager: PixiManager,
     theme: Required<CompleteThemeDeep>
 ) {
-    const domain = signal([0, 100000000]);
+    const trackInfosProcessed: TrackOptions[] = [];
     trackInfos.forEach(trackInfo => {
         const { track, boundingBox } = trackInfo;
+        // console.warn('boundingBox', boundingBox);
+        // const div = pixiManager.makeContainer(boundingBox).overlayDiv;
+        // div.style.border = '3px solid red';
+        // div.innerHTML = track.mark || 'No mark';
+        // div.style.textAlign = 'left';
 
-        const resolvedSpecs = resolveSuperposedTracks(track);
-        const firstResolvedSpec = resolvedSpecs[0];
-
-        boundingBox.width -=
-            firstResolvedSpec.layout !== 'circular' &&
-            firstResolvedSpec.orientation === 'vertical' &&
-            IsXAxis(firstResolvedSpec)
-                ? HIGLASS_AXIS_SIZE
-                : 0;
-
-        boundingBox.height -=
-            firstResolvedSpec.layout !== 'circular' &&
-            firstResolvedSpec.orientation === 'horizontal' &&
-            IsXAxis(firstResolvedSpec)
-                ? HIGLASS_AXIS_SIZE
-                : 0;
+        // Header marks contain both the title and subtitle
         if (track.mark === '_header') {
-            const textTrackOptions = getTextTrackOptions(track, theme);
-            new TextTrack(textTrackOptions, pixiManager.makeContainer(boundingBox));
-            // subtitle
-        } else if (IsDummyTrack(track)) {
-            const options = getDummyTrackOptions(track, theme);
-            new DummyTrack(options, pixiManager.makeContainer(boundingBox).overlayDiv);
+            const trackOptions = proccessTextHeader(track, boundingBox, theme);
+            trackInfosProcessed.push(...trackOptions);
         } else {
-            const goslingTrackOptions = getGoslingTrackOptions(track, theme);
-            const datafetcher = getDataFetcher(track);
-            new GoslingTrack(goslingTrackOptions, datafetcher, pixiManager.makeContainer(boundingBox)).addInteractor(
+            const trackOptions = processGoslingTrack(track, boundingBox, theme);
+            trackInfosProcessed.push(...trackOptions);
+        }
+    });
+
+    const domain = signal<[number, number]>([0, 3088269832]);
+    trackInfosProcessed.forEach(trackInfo => {
+        const { boundingBox, type } = trackInfo;
+        // console.warn('boundingBox', boundingBox);
+        // const div = pixiManager.makeContainer(boundingBox).overlayDiv;
+        // div.style.border = '1px solid black';
+        // div.innerHTML = TrackType[type] || 'No mark';
+
+        if (type === TrackType.Text) {
+            new TextTrack(trackInfo.options, pixiManager.makeContainer(boundingBox));
+        }
+        if (type === TrackType.Gosling) {
+            const datafetcher = getDataFetcher(trackInfo.options.spec);
+            new GoslingTrack(trackInfo.options, datafetcher, pixiManager.makeContainer(boundingBox)).addInteractor(
                 plot => panZoom(plot, domain)
             );
         }
-
-        // Taken from gosling-to-higlass.ts
-        // we only look into the first resolved spec to get information, such as size of the track
-        ['x', 'y'].forEach(c => {
-            const channel = (firstResolvedSpec as any)[c];
-            if (
-                IsChannelDeep(channel) &&
-                'axis' in channel &&
-                channel.axis &&
-                channel.axis !== 'none' &&
-                channel.type === 'genomic'
-            ) {
-                const narrowType = getAxisNarrowType(
-                    c as any,
-                    track.orientation,
-                    boundingBox.width,
-                    boundingBox.height
-                );
-                const widthOrHeight = channel.axis === 'left' || channel.axis === 'right' ? 'width' : 'height';
-                const options = getAxisTrackOptions(channel.axis, narrowType, {
-                    id: `random-str`, // ${trackId}-${channel.axis}-axis`,
-                    layout: firstResolvedSpec.layout,
-                    innerRadius:
-                        channel.axis === 'top'
-                            ? (firstResolvedSpec.outerRadius as number) - 30
-                            : firstResolvedSpec.innerRadius,
-                    outerRadius:
-                        channel.axis === 'top'
-                            ? firstResolvedSpec.outerRadius
-                            : (firstResolvedSpec.innerRadius as number) + 30,
-                    width: firstResolvedSpec.width,
-                    height: firstResolvedSpec.height,
-                    startAngle: firstResolvedSpec.startAngle,
-                    endAngle: firstResolvedSpec.endAngle,
-                    theme
-                });
-                new AxisTrack(
-                    options,
-                    domain,
-                    pixiManager.makeContainer({
-                        ...boundingBox,
-                        y: channel.axis === 'bottom' ? boundingBox.y + boundingBox.height : boundingBox.y,
-                        [widthOrHeight]: 30
-                    })
-                );
-            }
-        });
+        if (type === TrackType.Axis) {
+            new AxisTrack(trackInfo.options, domain, pixiManager.makeContainer(boundingBox));
+        }
     });
-
-    // const cursorPosition = signal<number>(0);
-    // hgSpec.views.forEach(v => {
-    //     const { x, y } = v.layout;
-    //     const { initialXDomain, initialYDomain } = v;
-    //     const domain = signal<[number, number]>(initialXDomain);
-    //     let cumHeight = 0;
-    //     let cumWidth = 0;
-
-    //     for (const key in v.tracks) {
-    //         const tracks = v.tracks[key];
-    //         tracks.forEach(track => {
-    //             switch (track.type) {
-    //                 case 'text': {
-    //                     const { height, width, options } = track;
-
-    //                     const titlePos = { x, y: y + cumHeight, width, height };
-    //                     new TextTrack(options, pixiManager.makeContainer(titlePos));
-    //                     // In case there are multiple text tracks, we need to stack them
-    //                     cumHeight += height;
-    //                     break;
-    //                 }
-    //                 case 'combined': {
-    //                     const { height, width, contents } = track;
-    //                     const combinedPos = { x, y: y + cumHeight, width, height };
-    //                     contents.forEach(gosTrack => {
-    //                         if (gosTrack.type !== 'gosling-track') console.error('Not a Gosling track');
-    //                         const { options, server, tilesetUid } = gosTrack;
-    //                         const dataFetcher = new DataFetcher({ server, tilesetUid }, fakePubSub);
-
-    //                         new GoslingTrack(options, dataFetcher, pixiManager.makeContainer(combinedPos))
-    //                             .addInteractor(plot => panZoom(plot, domain))
-    //                             .addInteractor(plot => cursor(plot, cursorPosition));
-    //                     });
-    //                     // In case there are multiple combined tracks, we need to stack them
-    //                     cumHeight += height;
-    //                     break;
-    //                 }
-    //                 case 'axis-track': {
-    //                     const { options } = track;
-    //                     const { height, width } = options;
-    //                     // Axis track
-    //                     const posAxis = {
-    //                         x,
-    //                         y: y + cumHeight,
-    //                         width,
-    //                         height
-    //                     };
-    //                     new AxisTrack(options, domain, pixiManager.makeContainer(posAxis));
-    //                     break;
-    //                 }
-    //                 default:
-    //                     console.warn(track.type, 'is not supported yet');
-    //             }
-    //         });
-    //     }
-    // });
-}
-
-export function getAxisTrackOptions(
-    position: Exclude<AxisPosition, 'none'>,
-    type: 'regular' | 'narrow' | 'narrower' = 'regular',
-    options: {
-        id?: string;
-        layout?: 'circular' | 'linear';
-        innerRadius?: number;
-        outerRadius?: number;
-        width?: number;
-        height?: number;
-        startAngle?: number;
-        endAngle?: number;
-        theme: Required<CompleteThemeDeep>;
-    }
-): AxisTrackOptions {
-    const widthOrHeight = position === 'left' || position === 'right' ? 'width' : 'height';
-    let opt: AxisTrackOptions = {
-        ...options,
-        assembly: 'hg38',
-        stroke: 'transparent', // text outline
-        color: options.theme.axis.labelColor,
-        labelMargin: options.theme.axis.labelMargin,
-        excludeChrPrefix: options.theme.axis.labelExcludeChrPrefix,
-        fontSize: options.theme.axis.labelFontSize,
-        fontFamily: options.theme.axis.labelFontFamily,
-        fontWeight: options.theme.axis.labelFontWeight,
-        tickColor: options.theme.axis.tickColor,
-        tickFormat: type === 'narrower' ? 'si' : 'plain',
-        tickPositions: type === 'regular' ? 'even' : 'ends',
-        reverseOrientation: position === 'bottom' || position === 'right' ? true : false
-    };
-    if (options.layout === 'circular') {
-        // circular axis: superpose an axis track on top of the `center` track
-        opt = { ...opt, layout: 'circular' };
-    }
-    return opt;
 }
 
 // determine the compactness type of an axis considering the size of a track
