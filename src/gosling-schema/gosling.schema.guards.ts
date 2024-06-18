@@ -32,7 +32,8 @@ import type {
     TemplateTrack,
     MouseEventsDeep,
     DataTransform,
-    DummyTrack
+    DummyTrack,
+    MultipleViews
 } from './gosling.schema';
 import { SUPPORTED_CHANNELS } from '../core/mark';
 import {
@@ -129,6 +130,14 @@ export function IsOverlaidTrack(track: Partial<Track>): track is OverlaidTrack {
 
 export function IsTemplateTrack(track: Partial<Track>): track is TemplateTrack {
     return 'template' in track;
+}
+
+export function IsSingleView(view: unknown): view is SingleView {
+    return isObject(view) && 'tracks' in view;
+}
+
+export function IsMultipleViews(view: unknown): view is MultipleViews {
+    return isObject(view) && 'views' in view;
 }
 
 /**

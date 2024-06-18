@@ -4,7 +4,7 @@ import { DummyTrack, type DummyTrackOptions } from '@gosling-lang/dummy-track';
 import { GoslingTrack } from '@gosling-lang/gosling-track';
 import { AxisTrack, type AxisTrackOptions } from '@gosling-lang/genomic-axis';
 import { BrushLinearTrack, type BrushLinearTrackOptions } from '@gosling-lang/brush-linear';
-import { signal } from '@preact/signals-core';
+import { Signal, signal } from '@preact/signals-core';
 
 import { cursor, panZoom } from '@gosling-lang/interactors';
 import type { TrackInfo } from '../../src/compiler/bounding-box';
@@ -14,7 +14,7 @@ import type { GoslingTrackOptions } from '../../src/tracks/gosling-track/gosling
 import { proccessTextHeader } from './text';
 import { processGoslingTrack } from './gosling';
 import { getDataFetcher } from './dataFetcher';
-import { CsvDataFetcher } from '@data-fetchers';
+import type { LinkedEncoding } from '../App';
 
 /**
  * All the different types of tracks that can be rendered
@@ -47,6 +47,7 @@ interface TrackOptionsMap {
  */
 export interface TrackDef<T> {
     type: TrackType;
+    trackId: string;
     boundingBox: { x: number; y: number; width: number; height: number };
     options: T;
 }
@@ -97,29 +98,26 @@ export function createTrackDefs(trackInfos: TrackInfo[], theme: Required<Complet
  * @param trackOptions
  * @param pixiManager
  */
-export function renderTrackDefs(trackDefs: TrackDefs[], pixiManager: PixiManager) {
-    const domain = signal<[number, number]>([491149952, 689445510]);
-
+export function renderTrackDefs(trackDefs: TrackDefs[], linkedEncodings: LinkedEncoding[], pixiManager: PixiManager) {
     trackDefs.forEach(trackDef => {
         const { boundingBox, type, options } = trackDef;
-        // console.warn('boundingBox', boundingBox);
-        // const div = pixiManager.makeContainer(boundingBox).overlayDiv;
-        // div.style.border = '1px solid black';
-        // div.innerHTML = TrackType[type] || 'No mark';
 
         if (type === TrackType.Text) {
             new TextTrack(options, pixiManager.makeContainer(boundingBox));
         }
         if (type === TrackType.Gosling) {
+            const domain = getXDomainSignal(trackDef.trackId, linkedEncodings);
             const datafetcher = getDataFetcher(options.spec);
             new GoslingTrack(options, datafetcher, pixiManager.makeContainer(boundingBox)).addInteractor(plot =>
                 panZoom(plot, domain)
             );
         }
         if (type === TrackType.Axis) {
+            const domain = getXDomainSignal(trackDef.trackId, linkedEncodings);
             new AxisTrack(options, domain, pixiManager.makeContainer(boundingBox));
         }
         if (type === TrackType.BrushLinear) {
+            const domain = getXDomainSignal(trackDef.trackId, linkedEncodings);
             const brushDomain = signal<[number, number]>([543317951, 544039951]);
             // console.warn(options);
             new BrushLinearTrack(options, brushDomain, pixiManager.makeContainer(boundingBox).overlayDiv).addInteractor(
@@ -127,4 +125,14 @@ export function renderTrackDefs(trackDefs: TrackDefs[], pixiManager: PixiManager
             );
         }
     });
+}
+
+function getXDomainSignal(trackDefId: string, linkedEncodings: LinkedEncoding[]): Signal<[number, number]> {
+    const linkedEncoding = linkedEncodings.find(link => link.trackIds.includes(trackDefId));
+
+    if (!linkedEncoding) {
+        console.error(`No linked encoding found for track ${trackDefId}`);
+        return signal<[number, number]>([0, 30000000]);
+    }
+    return linkedEncoding!.signal;
 }

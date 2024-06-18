@@ -48,6 +48,7 @@ export function getAxisTrackDef(
                 trackBbox,
                 {
                     type: TrackType.Axis,
+                    trackId: track.id,
                     boundingBox: axisBbox,
                     options: getAxisTrackLinearOptions(axisBbox, xAxisPosition, theme)
                 }
@@ -57,6 +58,7 @@ export function getAxisTrackDef(
                 trackBbox,
                 {
                     type: TrackType.Axis,
+                    trackId: track.id,
                     boundingBox: boundingBox,
                     options: getAxisTrackCircularOptions(track, boundingBox, xAxisPosition, theme)
                 }

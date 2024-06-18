@@ -22,6 +22,7 @@ export function proccessTextHeader(
         const height = textTrackOptions.fontSize + 6;
         trackDefs.push({
             type: TrackType.Text,
+            trackId: 'title',
             boundingBox: { ...boundingBox, height },
             options: textTrackOptions
         });
@@ -32,6 +33,7 @@ export function proccessTextHeader(
         const height = textTrackOptions.fontSize + 6;
         trackDefs.push({
             type: TrackType.Text,
+            trackId: 'subtitle',
             boundingBox: { ...boundingBox, y: boundingBox.y + cumHeight, height },
             options: textTrackOptions
         });

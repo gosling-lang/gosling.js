@@ -16,6 +16,10 @@ import './App.css';
 import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
 import { createTrackDefs, renderTrackDefs, showTrackInfoPositions } from './renderer/main';
 import type { TrackInfo } from 'src/compiler/bounding-box';
+import { signal, type Signal } from '@preact/signals-core';
+import type { GoslingSpec } from 'gosling.js';
+import { IsMultipleViews, IsSingleView, type SingleView } from '@gosling-lang/gosling-schema';
+import { computeChromSizes } from '../src/core/utils/assembly';
 
 function App() {
     const [fps, setFps] = useState(120);
@@ -37,20 +41,24 @@ function App() {
         const callback = (
             hg: HiGlassSpec,
             size,
-            gs,
+            gs: GoslingSpec,
             tracksAndViews,
             idTable,
             trackInfos: TrackInfo[],
             theme: Require<ThemeDeep>
         ) => {
             console.warn(trackInfos);
+            console.warn(tracksAndViews);
+            console.warn(gs);
             // showTrackInfoPositions(trackInfos, pixiManager);
+            const linkedEncodings = getLinkedEncodings(gs);
+            console.warn(linkedEncodings);
             const trackDefs = createTrackDefs(trackInfos, theme);
-            renderTrackDefs(trackDefs, pixiManager);
+            renderTrackDefs(trackDefs, linkedEncodings, pixiManager);
         };
 
         // Compile the spec
-        compile(corces, callback, [], getTheme('light'), { containerSize: { width: 300, height: 300 } });
+        compile(spec, callback, [], getTheme('light'), { containerSize: { width: 300, height: 300 } });
     }, []);
 
     return (
@@ -62,6 +70,52 @@ function App() {
             </div>
         </>
     );
+}
+
+export interface LinkedEncoding {
+    linkingId: string;
+    encoding: 'x';
+    signal: Signal;
+    trackIds: string[];
+    brushIds: string[];
+}
+
+function getLinkedEncodings(gs: GoslingSpec) {
+    const linkedEncodings: LinkedEncoding[] = [];
+
+    // Base case: single view
+    if (IsSingleView(gs)) {
+        const newLink = getSingleViewLinkedEncoding(gs);
+        return [newLink];
+    }
+    // Recursive case: multiple views
+    if (IsMultipleViews(gs)) {
+        gs.views.forEach(view => {
+            const newLinks = getLinkedEncodings(view);
+            linkedEncodings.push(...newLinks);
+        });
+    }
+    return linkedEncodings;
+}
+
+/**
+ * Links all of the tracks in a single view together
+ */
+function getSingleViewLinkedEncoding(gs: SingleView) {
+    const { tracks } = gs;
+    const end = computeChromSizes(tracks[0].assembly).total;
+
+    const newLink: LinkedEncoding = {
+        linkingId: gs.id || 'default',
+        encoding: 'x',
+        signal: signal([0, end]),
+        trackIds: [],
+        brushIds: []
+    };
+    tracks.forEach(track => {
+        newLink.trackIds.push(track.id);
+    });
+    return newLink;
 }
 
 export default App;

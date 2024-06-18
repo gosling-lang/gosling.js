@@ -33,6 +33,7 @@ export function processGoslingTrack(
 
     trackDefs.push({
         type: TrackType.Gosling,
+        trackId: track.id,
         boundingBox: { ...boundingBox },
         options: goslingTrackOptions
     });
@@ -42,6 +43,7 @@ export function processGoslingTrack(
     brushTrackOptions.forEach(brushTrackOption => {
         trackDefs.push({
             type: TrackType.BrushLinear,
+            trackId: track.id,
             boundingBox: { ...boundingBox },
             options: brushTrackOption
         });
