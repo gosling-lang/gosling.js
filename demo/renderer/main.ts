@@ -13,6 +13,7 @@ import type { GoslingTrackOptions } from '../../src/tracks/gosling-track/gosling
 import { proccessTextHeader } from './text';
 import { processGoslingTrack } from './gosling';
 import { getDataFetcher } from './dataFetcher';
+import { CsvDataFetcher } from '@data-fetchers';
 
 /**
  * All the different types of tracks that can be rendered
@@ -56,6 +57,16 @@ type TrackDefs = {
     [K in keyof TrackOptionsMap]: TrackDef<TrackOptionsMap[K]>;
 }[keyof TrackOptionsMap];
 
+export function showTrackInfoPositions(trackInfos: TrackInfo[], pixiManager: PixiManager) {
+    trackInfos.forEach(trackInfo => {
+        const { track, boundingBox } = trackInfo;
+        const div = pixiManager.makeContainer(boundingBox).overlayDiv;
+        div.style.border = '3px solid red';
+        div.innerHTML = track.mark || 'No mark';
+        div.style.textAlign = 'left';
+    });
+}
+
 /**
  * Takes a list of TrackInfos and returns a list of TrackOptions
  * @param trackInfos
@@ -63,19 +74,10 @@ type TrackDefs = {
  * @param theme
  * @returns
  */
-export function createTrackDefs(
-    trackInfos: TrackInfo[],
-    pixiManager: PixiManager,
-    theme: Required<CompleteThemeDeep>
-): TrackDefs[] {
+export function createTrackDefs(trackInfos: TrackInfo[], theme: Required<CompleteThemeDeep>): TrackDefs[] {
     const trackDefs: TrackDefs[] = [];
     trackInfos.forEach(trackInfo => {
         const { track, boundingBox } = trackInfo;
-        // console.warn('boundingBox', boundingBox);
-        // const div = pixiManager.makeContainer(boundingBox).overlayDiv;
-        // div.style.border = '3px solid red';
-        // div.innerHTML = track.mark || 'No mark';
-        // div.style.textAlign = 'left';
 
         // Header marks contain both the title and subtitle
         if (track.mark === '_header') {
@@ -94,26 +96,27 @@ export function createTrackDefs(
  * @param trackOptions
  * @param pixiManager
  */
-export function renderTrackDefs(trackOptions: TrackDefs[], pixiManager: PixiManager) {
-    const domain = signal<[number, number]>([0, 3088269832]);
-    trackOptions.forEach(trackInfo => {
-        const { boundingBox, type } = trackInfo;
+export function renderTrackDefs(trackDefs: TrackDefs[], pixiManager: PixiManager) {
+    const domain = signal<[number, number]>([491149952, 689445510]);
+
+    trackDefs.forEach(trackDef => {
+        const { boundingBox, type, options } = trackDef;
         // console.warn('boundingBox', boundingBox);
         // const div = pixiManager.makeContainer(boundingBox).overlayDiv;
         // div.style.border = '1px solid black';
         // div.innerHTML = TrackType[type] || 'No mark';
 
         if (type === TrackType.Text) {
-            new TextTrack(trackInfo.options, pixiManager.makeContainer(boundingBox));
+            new TextTrack(options, pixiManager.makeContainer(boundingBox));
         }
         if (type === TrackType.Gosling) {
-            const datafetcher = getDataFetcher(trackInfo.options.spec);
-            new GoslingTrack(trackInfo.options, datafetcher, pixiManager.makeContainer(boundingBox)).addInteractor(
-                plot => panZoom(plot, domain)
+            const datafetcher = getDataFetcher(options.spec);
+            new GoslingTrack(options, datafetcher, pixiManager.makeContainer(boundingBox)).addInteractor(plot =>
+                panZoom(plot, domain)
             );
         }
         if (type === TrackType.Axis) {
-            new AxisTrack(trackInfo.options, domain, pixiManager.makeContainer(boundingBox));
+            new AxisTrack(options, domain, pixiManager.makeContainer(boundingBox));
         }
     });
 }
