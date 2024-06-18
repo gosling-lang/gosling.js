@@ -1,23 +1,32 @@
 import { type AxisTrackOptions } from '@gosling-lang/genomic-axis';
 
-import { type Track } from '@gosling-lang/gosling-schema';
+import { type SingleTrack, type Track } from '@gosling-lang/gosling-schema';
 import type { CompleteThemeDeep } from '../../src/core/utils/theme';
 
-import type { GoslingTrackOptions } from '../../src/tracks/gosling-track/gosling-track';
+import type { GoslingTrackOptions } from '@gosling-lang/gosling-track';
+import type { BrushLinearTrackOptions } from '@gosling-lang/brush-linear';
 
 import { getAxisTrackDef } from './axis';
 import { type TrackDef, TrackType } from './main';
+import { getBrushTrackOptions } from './brushLinear';
 
 export function processGoslingTrack(
     track: Track,
     boundingBox: { x: number; y: number; width: number; height: number },
     theme: Required<CompleteThemeDeep>
-): (TrackDef<GoslingTrackOptions> | TrackDef<AxisTrackOptions>)[] {
-    const trackDefs: (TrackDef<GoslingTrackOptions> | TrackDef<AxisTrackOptions>)[] = [];
+): (TrackDef<GoslingTrackOptions> | TrackDef<AxisTrackOptions> | TrackDef<BrushLinearTrackOptions>)[] {
+    const trackDefs: (
+        | TrackDef<GoslingTrackOptions>
+        | TrackDef<AxisTrackOptions>
+        | TrackDef<BrushLinearTrackOptions>
+    )[] = [];
 
-    const axisTrackOptions = getAxisTrackDef(track, boundingBox, theme);
-    if (axisTrackOptions) {
-        trackDefs.push(axisTrackOptions);
+    // Adds the title and subtitle tracks
+    const [newTrackBbox, axisTrackDef] = getAxisTrackDef(track, boundingBox, theme);
+    if (axisTrackDef) {
+        trackDefs.push(axisTrackDef);
+        // modify the bounding box to exclude the axis track
+        boundingBox = newTrackBbox;
     }
 
     const goslingTrackOptions = getGoslingTrackOptions(track, theme);
@@ -26,6 +35,16 @@ export function processGoslingTrack(
         type: TrackType.Gosling,
         boundingBox: { ...boundingBox },
         options: goslingTrackOptions
+    });
+
+    // Add the brush after Gosling track so that it is on top
+    const brushTrackOptions = getBrushTrackOptions(track);
+    brushTrackOptions.forEach(brushTrackOption => {
+        trackDefs.push({
+            type: TrackType.BrushLinear,
+            boundingBox: { ...boundingBox },
+            options: brushTrackOption
+        });
     });
 
     return trackDefs;

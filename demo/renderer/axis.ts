@@ -25,39 +25,48 @@ export function getAxisTrackDef(
     track: SingleTrack | OverlaidTrack | TemplateTrack,
     boundingBox: { x: number; y: number; width: number; height: number },
     theme: Required<CompleteThemeDeep>
-): TrackDef<AxisTrackOptions> | undefined {
+): [trackBbox: { x: number; y: number; width: number; height: number }, TrackDef<AxisTrackOptions> | undefined] {
     const { xAxisPosition, yAxisPosition } = getAxisPositions(track);
+    // This is a copy of the original bounding box. It will be modified if an axis is added
+    const trackBbox = { ...boundingBox };
     if (xAxisPosition) {
         if (track.layout === 'linear') {
             const isHorizontal = track.orientation === 'horizontal';
             const widthOrHeight = isHorizontal ? 'height' : 'width';
-            const axisBbox = { ...boundingBox, [widthOrHeight]: HIGLASS_AXIS_SIZE };
-            boundingBox[widthOrHeight] -= axisBbox[widthOrHeight];
+            const axisBbox = { ...trackBbox, [widthOrHeight]: HIGLASS_AXIS_SIZE };
+            trackBbox[widthOrHeight] -= axisBbox[widthOrHeight];
             if (xAxisPosition === 'top') {
-                boundingBox.y += axisBbox.height;
+                trackBbox.y += axisBbox.height;
             } else if (xAxisPosition === 'bottom') {
-                axisBbox.y = boundingBox.y + boundingBox.height;
+                axisBbox.y = trackBbox.y + trackBbox.height;
             } else if (xAxisPosition === 'right') {
-                axisBbox.x = boundingBox.x + boundingBox.width;
+                axisBbox.x = trackBbox.x + trackBbox.width;
             } else if (xAxisPosition === 'left') {
-                boundingBox.x += axisBbox.width;
+                trackBbox.x += axisBbox.width;
             }
-            return {
-                type: TrackType.Axis,
-                boundingBox: axisBbox,
-                options: getAxisTrackLinearOptions(axisBbox, xAxisPosition, theme)
-            };
+            return [
+                trackBbox,
+                {
+                    type: TrackType.Axis,
+                    boundingBox: axisBbox,
+                    options: getAxisTrackLinearOptions(axisBbox, xAxisPosition, theme)
+                }
+            ];
         } else if (track.layout === 'circular') {
-            return {
-                type: TrackType.Axis,
-                boundingBox: boundingBox,
-                options: getAxisTrackCircularOptions(track, boundingBox, xAxisPosition, theme)
-            };
+            return [
+                trackBbox,
+                {
+                    type: TrackType.Axis,
+                    boundingBox: boundingBox,
+                    options: getAxisTrackCircularOptions(track, boundingBox, xAxisPosition, theme)
+                }
+            ];
         }
     }
     if (yAxisPosition) {
         console.warn('Vertical axis is not supported yet');
     }
+    return [trackBbox, undefined];
 }
 
 /**

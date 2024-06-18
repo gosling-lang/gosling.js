@@ -3,6 +3,7 @@ import { TextTrack, type TextTrackOptions } from '@gosling-lang/text-track';
 import { DummyTrack, type DummyTrackOptions } from '@gosling-lang/dummy-track';
 import { GoslingTrack } from '@gosling-lang/gosling-track';
 import { AxisTrack, type AxisTrackOptions } from '@gosling-lang/genomic-axis';
+import { BrushLinearTrack, type BrushLinearTrackOptions } from '@gosling-lang/brush-linear';
 import { signal } from '@preact/signals-core';
 
 import { cursor, panZoom } from '@gosling-lang/interactors';
@@ -36,7 +37,7 @@ interface TrackOptionsMap {
     [TrackType.Dummy]: DummyTrackOptions;
     [TrackType.Gosling]: GoslingTrackOptions;
     [TrackType.Axis]: AxisTrackOptions;
-    [TrackType.BrushLinear]: any;
+    [TrackType.BrushLinear]: BrushLinearTrackOptions;
     [TrackType.BrushCircular]: any;
     [TrackType.Heatmap]: any;
 }
@@ -117,6 +118,13 @@ export function renderTrackDefs(trackDefs: TrackDefs[], pixiManager: PixiManager
         }
         if (type === TrackType.Axis) {
             new AxisTrack(options, domain, pixiManager.makeContainer(boundingBox));
+        }
+        if (type === TrackType.BrushLinear) {
+            const brushDomain = signal<[number, number]>([543317951, 544039951]);
+            // console.warn(options);
+            new BrushLinearTrack(options, brushDomain, pixiManager.makeContainer(boundingBox).overlayDiv).addInteractor(
+                plot => panZoom(plot, domain)
+            );
         }
     });
 }
