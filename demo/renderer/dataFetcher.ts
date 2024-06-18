@@ -6,11 +6,10 @@ export function getDataFetcher(spec: Track) {
     if (!('data' in spec)) {
         console.warn('No data in the track spec', spec);
     }
-    if (spec.data.type == 'multivec') {
+    if (spec.data.type == 'multivec' || spec.data.type == 'beddb') {
         const url = spec.data.url;
         const server = url.split('/').slice(0, -2).join('/');
         const tilesetUid = url.split('=').slice(-1)[0];
-        console.warn('server', server, 'tilesetUid', tilesetUid);
         return new DataFetcher({ server, tilesetUid }, fakePubSub);
     }
     if (spec.data.type == 'bigwig') {
