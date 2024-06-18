@@ -39,7 +39,7 @@ function getGoslingTrackOptions(spec: Track, theme: Required<CompleteThemeDeep>)
         showMousePosition: true,
         mousePositionColor: '#000000',
         name: spec.title,
-        labelPosition: 'topLeft',
+        labelPosition: spec.overlayOnPreviousTrack ? 'none' : 'topLeft',
         labelShowResolution: false,
         labelColor: 'black',
         labelBackgroundColor: 'white',
@@ -50,6 +50,6 @@ function getGoslingTrackOptions(spec: Track, theme: Required<CompleteThemeDeep>)
         labelRightMargin: 0,
         labelBottomMargin: 0,
         backgroundColor: 'transparent',
-        theme
+        theme: theme
     };
 }
