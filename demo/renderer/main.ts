@@ -118,13 +118,23 @@ export function renderTrackDefs(trackDefs: TrackDefs[], linkedEncodings: LinkedE
         }
         if (type === TrackType.BrushLinear) {
             const domain = getXDomainSignal(trackDef.trackId, linkedEncodings);
-            const brushDomain = signal<[number, number]>([543317951, 544039951]);
-            // console.warn(options);
+            const brushDomain = getBrushSignal(trackDef.trackId, linkedEncodings);
+
             new BrushLinearTrack(options, brushDomain, pixiManager.makeContainer(boundingBox).overlayDiv).addInteractor(
                 plot => panZoom(plot, domain)
             );
         }
     });
+}
+
+function getBrushSignal(trackDefId: string, linkedEncodings: LinkedEncoding[]): Signal<[number, number]> {
+    const linkedEncoding = linkedEncodings.find(link => link.brushIds.includes(trackDefId));
+
+    if (!linkedEncoding) {
+        console.error(`No linked encoding found for track ${trackDefId}`);
+        return signal<[number, number]>([0, 30000000]);
+    }
+    return linkedEncoding!.signal;
 }
 
 function getXDomainSignal(trackDefId: string, linkedEncodings: LinkedEncoding[]): Signal<[number, number]> {
