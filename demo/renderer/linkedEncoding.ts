@@ -59,7 +59,6 @@ export function getLinkedEncodings(gs: GoslingSpec) {
     // We combine the tracks and views that are linked together
     const linkedEncodings = viewLinks.map(viewLink => {
         const linkedBrushes = filterLinkedTracksByType(TrackType.BrushLinear, viewLink.linkingId, trackLinks);
-        console.warn(linkedBrushes)
         const linkedTracks = filterLinkedTracksByType(TrackType.Gosling, viewLink.linkingId, trackLinks);
         return {
             linkingId: viewLink.linkingId,
@@ -135,6 +134,10 @@ function getSingleViewLinks(gs: SingleView): ViewLink {
     };
     // Add each track to the link
     tracks.forEach(track => {
+        // If the track is already linked, we don't need to add it again
+        if ('x' in track && track.x && 'linkingId' in track.x && track.x.linkingId) {
+            return;
+        }
         newLink.trackIds.push(track.id);
     });
     return newLink;

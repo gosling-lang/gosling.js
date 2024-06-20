@@ -60,7 +60,7 @@ function getGoslingTrackOptions(spec: Track, theme: Required<CompleteThemeDeep>)
         showMousePosition: true,
         mousePositionColor: '#000000',
         name: spec.title,
-        labelPosition: spec.overlayOnPreviousTrack ? 'none' : 'topLeft',
+        labelPosition: spec.overlayOnPreviousTrack || spec.title === undefined ? 'none' : 'topLeft',
         labelShowResolution: false,
         labelColor: 'black',
         labelBackgroundColor: 'white',

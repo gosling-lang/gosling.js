@@ -971,7 +971,7 @@ const linkingTest = {
                 {
                     layout: 'linear',
                     width: 800,
-                    height: 180,
+                    height: 100,
                     data: {
                         url: 'https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ',
                         type: 'multivec',
@@ -993,7 +993,7 @@ const linkingTest = {
                 {
                     layout: 'linear',
                     width: 800,
-                    height: 180,
+                    height: 100,
                     data: {
                         url: 'https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ',
                         type: 'multivec',
@@ -1014,7 +1014,7 @@ const linkingTest = {
                 {
                     layout: 'linear',
                     width: 800,
-                    height: 180,
+                    height: 100,
                     data: {
                         url: 'https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ',
                         type: 'multivec',
@@ -1031,7 +1031,7 @@ const linkingTest = {
                 {
                     layout: 'linear',
                     width: 800,
-                    height: 180,
+                    height: 100,
                     data: {
                         url: 'https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ',
                         type: 'multivec',
