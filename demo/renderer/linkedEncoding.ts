@@ -2,6 +2,7 @@ import { IsMultipleViews, IsSingleView, type Assembly, type SingleView } from '@
 import { GenomicPositionHelper, computeChromSizes } from '../../src/core/utils/assembly';
 import { signal, type Signal } from '@preact/signals-core';
 import type { GoslingSpec } from 'gosling.js';
+import { TrackType } from './main';
 
 /**
  * This is the information needed to link tracks together
@@ -13,22 +14,40 @@ export interface LinkedEncoding {
     trackIds: string[];
     brushIds: string[];
 }
+/**
+ * This is information extracted from the Gosling spec.
+ * Is is the linking that is defined at the view level.
+ */
+export interface ViewLink {
+    linkingId?: string;
+    encoding: 'x';
+    trackIds: string[];
+    signal: Signal;
+}
 
 /**
- * Info collected from the GoslingSpec that is needed to associate brushes with tracks
+ * This is information extracted from the Gosling spec.
+ * It is the x-linking defined at the track level (opposed to the view level)
  */
-interface BrushInfo {
-    trackId: string;
+interface TrackLink {
+    encoding: 'x';
     linkingId: string;
+    trackId: string;
+    trackType: TrackType;
 }
 
 /**
  * Info collected from the GoslingSpec that is needed to link tracks together
  * The brushIds are added after the fact
  */
-interface BrushAndEncoding {
-    linkedEncodings: Omit<LinkedEncoding, 'brushIds'>[];
-    brushes: BrushInfo[];
+interface LinkInfo {
+    trackLinks: TrackLink[];
+    viewLinks: ViewLink[];
+}
+
+function filterLinkedTracksByType(trackType: TrackType, linkingId: string | undefined, trackLinks: TrackLink[]) {
+    if (!linkingId) return [];
+    return trackLinks.filter(trackLink => trackLink.linkingId === linkingId && trackLink.trackType === trackType);
 }
 
 /**
@@ -36,21 +55,19 @@ interface BrushAndEncoding {
  */
 export function getLinkedEncodings(gs: GoslingSpec) {
     // First, we traverse the gosling spec to find all the linked tracks and brushes
-    const { linkedEncodings, brushes } = getLinedFeaturesRecursive(gs) as {
-        linkedEncodings: LinkedEncoding[];
-        brushes: BrushInfo[];
-    };
-    // We need to associate the brushes with the linked encodings
-    linkedEncodings.forEach(le => {
-        le.brushIds = [];
-    });
-    brushes.forEach(brush => {
-        const { trackId, linkingId } = brush;
-        linkedEncodings.forEach(le => {
-            if (le.linkingId === linkingId) {
-                le.brushIds.push(trackId);
-            }
-        });
+    const { trackLinks, viewLinks } = getLinedFeaturesRecursive(gs);
+    // We combine the tracks and views that are linked together
+    const linkedEncodings = viewLinks.map(viewLink => {
+        const linkedBrushes = filterLinkedTracksByType(TrackType.BrushLinear, viewLink.linkingId, trackLinks);
+        console.warn(linkedBrushes)
+        const linkedTracks = filterLinkedTracksByType(TrackType.Gosling, viewLink.linkingId, trackLinks);
+        return {
+            linkingId: viewLink.linkingId,
+            encoding: viewLink.encoding,
+            signal: viewLink.signal,
+            trackIds: [...viewLink.trackIds, ...linkedTracks.map(track => track.trackId)],
+            brushIds: linkedBrushes.map(brush => brush.trackId)
+        } as LinkedEncoding;
     });
     return linkedEncodings;
 }
@@ -58,20 +75,20 @@ export function getLinkedEncodings(gs: GoslingSpec) {
 /**
  * Traverses the gosling spec to find all the linked tracks and brushes
  */
-function getLinedFeaturesRecursive(gs: GoslingSpec): BrushAndEncoding {
+function getLinedFeaturesRecursive(gs: GoslingSpec): LinkInfo {
     // Base case: single view
     if (IsSingleView(gs)) {
-        const linkedEncodings = getSingleViewLinkedEncoding(gs);
-        const brushes = getSingleViewBrushes(gs);
-        return { linkedEncodings: [linkedEncodings], brushes };
+        const viewLinks = getSingleViewLinks(gs);
+        const trackLinks = getSingleViewTrackLinks(gs);
+        return { viewLinks: [viewLinks], trackLinks };
     }
-    const linked: BrushAndEncoding = { linkedEncodings: [], brushes: [] };
+    const linked: LinkInfo = { viewLinks: [], trackLinks: [] };
     // Recursive case: multiple views
     if (IsMultipleViews(gs)) {
         gs.views.forEach(view => {
             const newLinks = getLinedFeaturesRecursive(view);
-            linked.linkedEncodings.push(...newLinks.linkedEncodings);
-            linked.brushes.push(...newLinks.brushes);
+            linked.viewLinks.push(...newLinks.viewLinks);
+            linked.trackLinks.push(...newLinks.trackLinks);
         });
     }
     return linked;
@@ -80,33 +97,43 @@ function getLinedFeaturesRecursive(gs: GoslingSpec): BrushAndEncoding {
 /**
  * Extracts the linkingId from tracks that have a brush overlay
  */
-function getSingleViewBrushes(gs: SingleView): BrushInfo[] {
+function getSingleViewTrackLinks(gs: SingleView): TrackLink[] {
     const { tracks } = gs;
-    const brushes: BrushInfo[] = [];
+    const trackLinks: TrackLink[] = [];
     tracks.forEach(track => {
+        if ('x' in track && track.x && 'linkingId' in track.x) {
+            trackLinks.push({
+                trackId: track.id,
+                linkingId: track.x.linkingId,
+                trackType: TrackType.Gosling,
+                encoding: 'x'
+            });
+        }
         if (!('_overlay' in track)) return;
         track._overlay!.forEach(overlay => {
             if (overlay.mark === 'brush') {
-                brushes.push({ trackId: track.id, linkingId: overlay.x.linkingId });
+                const trackType = gs.layout === 'linear' ? TrackType.BrushLinear : TrackType.BrushCircular;
+                trackLinks.push({ trackId: track.id, linkingId: overlay.x.linkingId, trackType, encoding: 'x' });
             }
         });
     });
-    return brushes;
+    return trackLinks;
 }
 
 /**
  * Links all of the tracks in a single view together
  */
-function getSingleViewLinkedEncoding(gs: SingleView) {
+function getSingleViewLinks(gs: SingleView): ViewLink {
     const { tracks, xDomain, assembly } = gs;
     const domain = getDomain(xDomain, assembly);
 
-    const newLink: Omit<LinkedEncoding, 'brushIds'> = {
-        linkingId: gs.linkingId || '',
+    const newLink: ViewLink = {
+        linkingId: gs.linkingId,
         encoding: 'x',
         signal: signal(domain),
         trackIds: []
     };
+    // Add each track to the link
     tracks.forEach(track => {
         newLink.trackIds.push(track.id);
     });
