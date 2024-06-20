@@ -1,2 +1,2 @@
-export { CircularBrushTrack } from './brush-circular-plot';
-export type { CircularBrushTrackOptions, CircularBrushTrackContext } from './brush-circular';
+export { BrushCircularTrack } from './brush-circular-plot';
+export type { BrushCircularTrackContext, BrushCircularTrackOptions } from './brush-circular';

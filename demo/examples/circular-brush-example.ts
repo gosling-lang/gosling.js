@@ -1,5 +1,5 @@
 import { PixiManager } from '@pixi-manager';
-import { CircularBrushTrack } from '@gosling-lang/brush-circular';
+import { BrushCircularTrack } from '@gosling-lang/brush-circular';
 import { signal } from '@preact/signals-core';
 
 export function addCircularBrush(pixiManager: PixiManager) {
@@ -20,7 +20,7 @@ export function addCircularBrush(pixiManager: PixiManager) {
         axisPositionHorizontal: 'left'
     };
 
-    new CircularBrushTrack(
+    new BrushCircularTrack(
         circularBrushTrackOptions,
         circularDomain,
         detailedDomain,

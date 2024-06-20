@@ -14,7 +14,8 @@ import type { GoslingTrackOptions } from '../../src/tracks/gosling-track/gosling
 import { proccessTextHeader } from './text';
 import { processGoslingTrack } from './gosling';
 import { getDataFetcher } from './dataFetcher';
-import type { LinkedEncoding } from '../App';
+import type { LinkedEncoding } from './linkedEncoding';
+import type { BrushCircularTrackOptions } from '@gosling-lang/brush-circular';
 
 /**
  * All the different types of tracks that can be rendered
@@ -38,7 +39,7 @@ interface TrackOptionsMap {
     [TrackType.Gosling]: GoslingTrackOptions;
     [TrackType.Axis]: AxisTrackOptions;
     [TrackType.BrushLinear]: BrushLinearTrackOptions;
-    [TrackType.BrushCircular]: any;
+    [TrackType.BrushCircular]: BrushCircularTrackOptions;
     [TrackType.Heatmap]: any;
 }
 
