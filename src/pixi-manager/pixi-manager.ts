@@ -3,9 +3,17 @@ import * as PIXI from 'pixi.js';
 /**
  * A wrapper class for PIXI.Application
  */
+
+interface BoundingBox {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
 export class PixiManager {
     app: PIXI.Application<HTMLCanvasElement>;
     containerElement: HTMLDivElement;
+    createdContainers: Map<string, HTMLDivElement> = new Map();
 
     constructor(width: number, height: number, container: HTMLDivElement, fps: (fps: number) => void) {
         this.app = new PIXI.Application<HTMLCanvasElement>({
@@ -38,7 +46,7 @@ export class PixiManager {
      * @param position
      * @returns
      */
-    makeContainer(position: { x: number; y: number; width: number; height: number }): {
+    makeContainer(position: BoundingBox): {
         pixiContainer: PIXI.Container;
         overlayDiv: HTMLDivElement;
     } {
@@ -46,8 +54,15 @@ export class PixiManager {
         pContainer.position.set(position.x, position.y);
         this.app.stage.addChild(pContainer);
 
-        const plotDiv = createOverlayElement(position);
-        this.containerElement.appendChild(plotDiv);
+        let plotDiv: HTMLDivElement;
+        const positionString = JSON.stringify(position);
+        if (this.createdContainers.has(positionString)) {
+            plotDiv = this.createdContainers.get(positionString)!;
+        } else {
+            plotDiv = createOverlayElement(position);
+            this.createdContainers.set(positionString, plotDiv);
+            this.containerElement.appendChild(plotDiv);
+        }
 
         return { pixiContainer: pContainer, overlayDiv: plotDiv };
     }

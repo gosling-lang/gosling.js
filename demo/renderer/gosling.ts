@@ -8,7 +8,7 @@ import type { BrushLinearTrackOptions } from '@gosling-lang/brush-linear';
 
 import { getAxisTrackDef } from './axis';
 import { type TrackDef, TrackType } from './main';
-import { getBrushTrackOptions } from './brushLinear';
+import { getBrushTrackDefs } from './brushLinear';
 
 export function processGoslingTrack(
     track: Track,
@@ -29,8 +29,8 @@ export function processGoslingTrack(
         boundingBox = newTrackBbox;
     }
 
+    // Add the Gosling track
     const goslingTrackOptions = getGoslingTrackOptions(track, theme);
-
     trackDefs.push({
         type: TrackType.Gosling,
         trackId: track.id,
@@ -39,14 +39,9 @@ export function processGoslingTrack(
     });
 
     // Add the brush after Gosling track so that it is on top
-    const brushTrackOptions = getBrushTrackOptions(track);
-    brushTrackOptions.forEach(brushTrackOption => {
-        trackDefs.push({
-            type: TrackType.BrushLinear,
-            trackId: track.id,
-            boundingBox: { ...boundingBox },
-            options: brushTrackOption
-        });
+    const brushTrackDefs = getBrushTrackDefs(track, boundingBox);
+    brushTrackDefs.forEach(brushTrackDef => {
+        trackDefs.push(brushTrackDef);
     });
 
     return trackDefs;

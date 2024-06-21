@@ -264,8 +264,10 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                 track._overlay = track._overlay.filter(overlayTrack => {
                     return !('type' in overlayTrack && overlayTrack.type == 'dummy-track');
                 });
+                // Add a unique ID to each overlay track
                 track._overlay.forEach(o => {
                     o.style = getStyleOverridden(track.style, o.style);
+                    o.id = `overlay-${uuid().slice(0, 8)}`;
                 });
             }
 

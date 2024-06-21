@@ -15,7 +15,7 @@ import { proccessTextHeader } from './text';
 import { processGoslingTrack } from './gosling';
 import { getDataFetcher } from './dataFetcher';
 import type { LinkedEncoding } from './linkedEncoding';
-import type { BrushCircularTrackOptions } from '@gosling-lang/brush-circular';
+import { BrushCircularTrack, type BrushCircularTrackOptions } from '@gosling-lang/brush-circular';
 
 /**
  * All the different types of tracks that can be rendered
@@ -109,9 +109,10 @@ export function renderTrackDefs(trackDefs: TrackDefs[], linkedEncodings: LinkedE
         if (type === TrackType.Gosling) {
             const domain = getXDomainSignal(trackDef.trackId, linkedEncodings);
             const datafetcher = getDataFetcher(options.spec);
-            new GoslingTrack(options, datafetcher, pixiManager.makeContainer(boundingBox)).addInteractor(plot =>
-                panZoom(plot, domain)
-            );
+            const gosPlot = new GoslingTrack(options, datafetcher, pixiManager.makeContainer(boundingBox))
+            if (!options.spec.static) {
+                gosPlot.addInteractor(plot => panZoom(plot, domain));
+            }
         }
         if (type === TrackType.Axis) {
             const domain = getXDomainSignal(trackDef.trackId, linkedEncodings);
@@ -124,6 +125,12 @@ export function renderTrackDefs(trackDefs: TrackDefs[], linkedEncodings: LinkedE
             new BrushLinearTrack(options, brushDomain, pixiManager.makeContainer(boundingBox).overlayDiv).addInteractor(
                 plot => panZoom(plot, domain)
             );
+        }
+        if (type === TrackType.BrushCircular) {
+            const domain = getXDomainSignal(trackDef.trackId, linkedEncodings);
+            const brushDomain = getBrushSignal(trackDef.trackId, linkedEncodings);
+
+            new BrushCircularTrack(options, brushDomain, pixiManager.makeContainer(boundingBox).overlayDiv);
         }
     });
 }

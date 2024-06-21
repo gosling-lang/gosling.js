@@ -50,13 +50,14 @@ function App() {
             console.warn(gs);
             // showTrackInfoPositions(trackInfos, pixiManager);
             const linkedEncodings = getLinkedEncodings(gs);
-            console.warn(linkedEncodings);
+            console.warn('linkedEncodings', linkedEncodings);
             const trackDefs = createTrackDefs(trackInfos, theme);
+            console.warn('trackDefs', trackDefs);
             renderTrackDefs(trackDefs, linkedEncodings, pixiManager);
         };
 
         // Compile the spec
-        compile(corces, callback, [], getTheme('light'), { containerSize: { width: 300, height: 300 } });
+        compile(doubleBrush, callback, [], getTheme('light'), { containerSize: { width: 300, height: 300 } });
     }, []);
 
     return (
@@ -444,524 +445,6 @@ const corces = {
     ]
 };
 
-const genes = {
-    layout: 'linear',
-    xDomain: { chromosome: 'chr3', interval: [52168000, 52890000] },
-    arrangement: 'horizontal',
-    views: [
-        {
-            arrangement: 'vertical',
-            views: [
-                {
-                    alignment: 'overlay',
-                    title: 'HiGlass',
-                    data: {
-                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=gene-annotation',
-                        type: 'beddb',
-                        genomicFields: [
-                            { index: 1, name: 'start' },
-                            { index: 2, name: 'end' }
-                        ],
-                        valueFields: [
-                            { index: 5, name: 'strand', type: 'nominal' },
-                            { index: 3, name: 'name', type: 'nominal' }
-                        ],
-                        exonIntervalFields: [
-                            { index: 12, name: 'start' },
-                            { index: 13, name: 'end' }
-                        ]
-                    },
-                    tracks: [
-                        {
-                            dataTransform: [
-                                { type: 'filter', field: 'type', oneOf: ['gene'] },
-                                { type: 'filter', field: 'strand', oneOf: ['+'] }
-                            ],
-                            mark: 'triangleRight',
-                            x: { field: 'end', type: 'genomic', axis: 'top' },
-                            size: { value: 15 }
-                        },
-                        {
-                            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
-                            mark: 'text',
-                            text: { field: 'name', type: 'nominal' },
-                            x: { field: 'start', type: 'genomic' },
-                            xe: { field: 'end', type: 'genomic' },
-                            style: { dy: -15 }
-                        },
-                        {
-                            dataTransform: [
-                                { type: 'filter', field: 'type', oneOf: ['gene'] },
-                                { type: 'filter', field: 'strand', oneOf: ['-'] }
-                            ],
-                            mark: 'triangleLeft',
-                            x: { field: 'start', type: 'genomic' },
-                            size: { value: 15 },
-                            style: { align: 'right' }
-                        },
-                        {
-                            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
-                            mark: 'rect',
-                            x: { field: 'start', type: 'genomic' },
-                            size: { value: 15 },
-                            xe: { field: 'end', type: 'genomic' }
-                        },
-                        {
-                            dataTransform: [
-                                { type: 'filter', field: 'type', oneOf: ['gene'] },
-                                { type: 'filter', field: 'strand', oneOf: ['+'] }
-                            ],
-                            mark: 'rule',
-                            x: { field: 'start', type: 'genomic' },
-                            strokeWidth: { value: 3 },
-                            xe: { field: 'end', type: 'genomic' },
-                            style: { linePattern: { type: 'triangleRight', size: 5 } }
-                        },
-                        {
-                            dataTransform: [
-                                { type: 'filter', field: 'type', oneOf: ['gene'] },
-                                { type: 'filter', field: 'strand', oneOf: ['-'] }
-                            ],
-                            mark: 'rule',
-                            x: { field: 'start', type: 'genomic' },
-                            strokeWidth: { value: 3 },
-                            xe: { field: 'end', type: 'genomic' },
-                            style: { linePattern: { type: 'triangleLeft', size: 5 } }
-                        }
-                    ],
-                    row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-                    color: {
-                        field: 'strand',
-                        type: 'nominal',
-                        domain: ['+', '-'],
-                        range: ['#7585FF', '#FF8A85']
-                    },
-                    visibility: [
-                        {
-                            operation: 'less-than',
-                            measure: 'width',
-                            threshold: '|xe-x|',
-                            transitionPadding: 10,
-                            target: 'mark'
-                        }
-                    ],
-                    opacity: { value: 0.8 },
-                    width: 350,
-                    height: 100
-                },
-                {
-                    alignment: 'overlay',
-                    title: 'Corces et al.',
-                    data: {
-                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=gene-annotation',
-                        type: 'beddb',
-                        genomicFields: [
-                            { index: 1, name: 'start' },
-                            { index: 2, name: 'end' }
-                        ],
-                        valueFields: [
-                            { index: 5, name: 'strand', type: 'nominal' },
-                            { index: 3, name: 'name', type: 'nominal' }
-                        ],
-                        exonIntervalFields: [
-                            { index: 12, name: 'start' },
-                            { index: 13, name: 'end' }
-                        ]
-                    },
-                    tracks: [
-                        {
-                            dataTransform: [
-                                { type: 'filter', field: 'type', oneOf: ['gene'] },
-                                { type: 'filter', field: 'strand', oneOf: ['+'] }
-                            ],
-                            mark: 'text',
-                            text: { field: 'name', type: 'nominal' },
-                            x: { field: 'start', type: 'genomic' },
-                            xe: { field: 'end', type: 'genomic' },
-                            size: { value: 8 },
-                            style: { textFontSize: 8, dy: -12 }
-                        },
-                        {
-                            dataTransform: [
-                                { type: 'filter', field: 'type', oneOf: ['gene'] },
-                                { type: 'filter', field: 'strand', oneOf: ['-'] }
-                            ],
-                            mark: 'text',
-                            text: { field: 'name', type: 'nominal' },
-                            x: { field: 'start', type: 'genomic' },
-                            xe: { field: 'end', type: 'genomic' },
-                            size: { value: 8 },
-                            style: { textFontSize: 8, dy: 10 }
-                        },
-                        {
-                            dataTransform: [
-                                { type: 'filter', field: 'type', oneOf: ['gene'] },
-                                { type: 'filter', field: 'strand', oneOf: ['+'] }
-                            ],
-                            mark: 'rect',
-                            x: { field: 'end', type: 'genomic' },
-                            size: { value: 7 }
-                        },
-                        {
-                            dataTransform: [
-                                { type: 'filter', field: 'type', oneOf: ['gene'] },
-                                { type: 'filter', field: 'strand', oneOf: ['-'] }
-                            ],
-                            mark: 'rect',
-                            x: { field: 'start', type: 'genomic' },
-                            size: { value: 7 }
-                        },
-                        {
-                            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
-                            mark: 'rect',
-                            x: { field: 'start', type: 'genomic' },
-                            xe: { field: 'end', type: 'genomic' },
-                            size: { value: 14 }
-                        },
-                        {
-                            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
-                            mark: 'rule',
-                            x: { field: 'start', type: 'genomic' },
-                            xe: { field: 'end', type: 'genomic' },
-                            strokeWidth: { value: 3 }
-                        }
-                    ],
-                    row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-                    color: {
-                        field: 'strand',
-                        type: 'nominal',
-                        domain: ['+', '-'],
-                        range: ['#012DB8', '#BE1E2C']
-                    },
-                    visibility: [
-                        {
-                            operation: 'less-than',
-                            measure: 'width',
-                            threshold: '|xe-x|',
-                            transitionPadding: 10,
-                            target: 'mark'
-                        }
-                    ],
-                    width: 350,
-                    height: 100
-                },
-                {
-                    alignment: 'overlay',
-                    title: 'IGV',
-                    data: {
-                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=gene-annotation',
-                        type: 'beddb',
-                        genomicFields: [
-                            { index: 1, name: 'start' },
-                            { index: 2, name: 'end' }
-                        ],
-                        valueFields: [
-                            { index: 5, name: 'strand', type: 'nominal' },
-                            { index: 3, name: 'name', type: 'nominal' }
-                        ],
-                        exonIntervalFields: [
-                            { index: 12, name: 'start' },
-                            { index: 13, name: 'end' }
-                        ]
-                    },
-                    tracks: [
-                        {
-                            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
-                            mark: 'text',
-                            text: { field: 'name', type: 'nominal' },
-                            x: { field: 'start', type: 'genomic', axis: 'top' },
-                            xe: { field: 'end', type: 'genomic' }
-                        },
-                        {
-                            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
-                            mark: 'rect',
-                            x: { field: 'start', type: 'genomic', axis: 'top' },
-                            size: { value: 15 },
-                            xe: { field: 'end', type: 'genomic' }
-                        },
-                        {
-                            dataTransform: [
-                                { type: 'filter', field: 'type', oneOf: ['gene'] },
-                                { type: 'filter', field: 'strand', oneOf: ['-'] }
-                            ],
-                            mark: 'rule',
-                            x: { field: 'start', type: 'genomic', axis: 'top' },
-                            strokeWidth: { value: 0 },
-                            xe: { field: 'end', type: 'genomic' },
-                            color: { value: 'white' },
-                            opacity: { value: 0.6 },
-                            style: { linePattern: { type: 'triangleLeft', size: 10 } }
-                        },
-                        {
-                            dataTransform: [
-                                { type: 'filter', field: 'type', oneOf: ['gene'] },
-                                { type: 'filter', field: 'strand', oneOf: ['+'] }
-                            ],
-                            mark: 'rule',
-                            x: { field: 'start', type: 'genomic', axis: 'top' },
-                            strokeWidth: { value: 0 },
-                            xe: { field: 'end', type: 'genomic' },
-                            color: { value: 'white' },
-                            opacity: { value: 0.6 },
-                            style: { linePattern: { type: 'triangleRight', size: 10 } }
-                        }
-                    ],
-                    row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-                    color: { value: '#0900B1' },
-                    visibility: [
-                        {
-                            operation: 'less-than',
-                            measure: 'width',
-                            threshold: '|xe-x|',
-                            transitionPadding: 10,
-                            target: 'mark'
-                        }
-                    ],
-                    width: 350,
-                    height: 100
-                }
-            ]
-        },
-        {
-            arrangement: 'vertical',
-            views: [
-                {
-                    alignment: 'overlay',
-                    title: 'Cyverse-QUBES',
-                    data: {
-                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=gene-annotation',
-                        type: 'beddb',
-                        genomicFields: [
-                            { index: 1, name: 'start' },
-                            { index: 2, name: 'end' }
-                        ],
-                        valueFields: [
-                            { index: 5, name: 'strand', type: 'nominal' },
-                            { index: 3, name: 'name', type: 'nominal' }
-                        ],
-                        exonIntervalFields: [
-                            { index: 12, name: 'start' },
-                            { index: 13, name: 'end' }
-                        ]
-                    },
-                    tracks: [
-                        {
-                            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
-                            mark: 'text',
-                            text: { field: 'name', type: 'nominal' },
-                            x: { field: 'start', type: 'genomic' },
-                            xe: { field: 'end', type: 'genomic' },
-                            color: { value: 'black' }
-                        },
-                        {
-                            dataTransform: [
-                                { type: 'filter', field: 'type', oneOf: ['gene'] },
-                                { type: 'filter', field: 'strand', oneOf: ['+'] }
-                            ],
-                            mark: 'triangleRight',
-                            x: { field: 'end', type: 'genomic', axis: 'top' },
-                            color: { value: '#999999' }
-                        },
-                        {
-                            dataTransform: [
-                                { type: 'filter', field: 'type', oneOf: ['gene'] },
-                                { type: 'filter', field: 'strand', oneOf: ['-'] }
-                            ],
-                            mark: 'triangleLeft',
-                            x: { field: 'start', type: 'genomic', axis: 'top' },
-                            color: { value: '#999999' },
-                            style: { align: 'right' }
-                        },
-                        {
-                            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
-                            mark: 'rect',
-                            x: { field: 'start', type: 'genomic', axis: 'top' },
-                            xe: { field: 'end', type: 'genomic' },
-                            color: { value: 'lightgray' }
-                        },
-                        {
-                            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
-                            mark: 'rule',
-                            x: { field: 'start', type: 'genomic', axis: 'top' },
-                            strokeWidth: { value: 5 },
-                            xe: { field: 'end', type: 'genomic' },
-                            color: { value: 'gray' }
-                        },
-                        {
-                            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
-                            mark: 'rect',
-                            x: { field: 'start', type: 'genomic', axis: 'top' },
-                            xe: { field: 'end', type: 'genomic' },
-                            color: { value: '#E2A6F5' },
-                            stroke: { value: '#BB57C9' },
-                            strokeWidth: { value: 1 }
-                        }
-                    ],
-                    row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-                    visibility: [
-                        {
-                            operation: 'less-than',
-                            measure: 'width',
-                            threshold: '|xe-x|',
-                            transitionPadding: 10,
-                            target: 'mark'
-                        }
-                    ],
-                    size: { value: 15 },
-                    width: 350,
-                    height: 100
-                },
-                {
-                    alignment: 'overlay',
-                    title: 'GmGDV',
-                    data: {
-                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=gene-annotation',
-                        type: 'beddb',
-                        genomicFields: [
-                            { index: 1, name: 'start' },
-                            { index: 2, name: 'end' }
-                        ],
-                        valueFields: [
-                            { index: 5, name: 'strand', type: 'nominal' },
-                            { index: 3, name: 'name', type: 'nominal' }
-                        ],
-                        exonIntervalFields: [
-                            { index: 12, name: 'start' },
-                            { index: 13, name: 'end' }
-                        ]
-                    },
-                    tracks: [
-                        {
-                            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
-                            mark: 'text',
-                            text: { field: 'name', type: 'nominal' },
-                            x: { field: 'start', type: 'genomic', axis: 'top' },
-                            xe: { field: 'end', type: 'genomic' },
-                            style: { dy: -14 }
-                        },
-                        {
-                            dataTransform: [
-                                { type: 'filter', field: 'type', oneOf: ['gene'] },
-                                { type: 'filter', field: 'strand', oneOf: ['+'] }
-                            ],
-                            mark: 'triangleRight',
-                            x: { field: 'end', type: 'genomic', axis: 'top' },
-                            size: { value: 15 }
-                        },
-                        {
-                            dataTransform: [
-                                { type: 'filter', field: 'type', oneOf: ['gene'] },
-                                { type: 'filter', field: 'strand', oneOf: ['-'] }
-                            ],
-                            mark: 'triangleLeft',
-                            x: { field: 'start', type: 'genomic', axis: 'top' },
-                            size: { value: 15 },
-                            style: { align: 'right' }
-                        },
-                        {
-                            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
-                            mark: 'rect',
-                            x: { field: 'start', type: 'genomic', axis: 'top' },
-                            size: { value: 10 },
-                            xe: { field: 'end', type: 'genomic' }
-                        },
-                        {
-                            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
-                            mark: 'rule',
-                            x: { field: 'start', type: 'genomic', axis: 'top' },
-                            strokeWidth: { value: 3 },
-                            xe: { field: 'end', type: 'genomic' }
-                        }
-                    ],
-                    row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-                    color: {
-                        field: 'strand',
-                        type: 'nominal',
-                        domain: ['+', '-'],
-                        range: ['blue', 'red']
-                    },
-                    visibility: [
-                        {
-                            operation: 'less-than',
-                            measure: 'width',
-                            threshold: '|xe-x|',
-                            transitionPadding: 10,
-                            target: 'mark'
-                        }
-                    ],
-                    width: 350,
-                    height: 100
-                },
-                {
-                    alignment: 'overlay',
-                    data: {
-                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=gene-annotation',
-                        type: 'beddb',
-                        genomicFields: [
-                            { index: 1, name: 'start' },
-                            { index: 2, name: 'end' }
-                        ],
-                        valueFields: [
-                            { index: 5, name: 'strand', type: 'nominal' },
-                            { index: 3, name: 'name', type: 'nominal' }
-                        ],
-                        exonIntervalFields: [
-                            { index: 12, name: 'start' },
-                            { index: 13, name: 'end' }
-                        ]
-                    },
-                    tracks: [
-                        {
-                            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
-                            mark: 'text',
-                            text: { field: 'name', type: 'nominal' },
-                            x: { field: 'start', type: 'genomic', axis: 'top' },
-                            color: { value: 'black' },
-                            xe: { field: 'end', type: 'genomic' }
-                        },
-                        {
-                            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
-                            mark: 'rect',
-                            x: { field: 'start', type: 'genomic', axis: 'top' },
-                            xe: { field: 'end', type: 'genomic' },
-                            color: { value: '#666666' }
-                        },
-                        {
-                            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
-                            mark: 'rect',
-                            x: { field: 'start', type: 'genomic', axis: 'top' },
-                            xe: { field: 'end', type: 'genomic' },
-                            color: { value: '#FF6666' }
-                        },
-                        {
-                            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['intron'] }],
-                            mark: 'rect',
-                            x: { field: 'start', type: 'genomic', axis: 'top' },
-                            xe: { field: 'end', type: 'genomic' },
-                            color: { value: '#99FEFF' }
-                        }
-                    ],
-                    size: { value: 30 },
-                    row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-                    stroke: { value: '#777777' },
-                    strokeWidth: { value: 1 },
-                    visibility: [
-                        {
-                            operation: 'less-than',
-                            measure: 'width',
-                            threshold: '|xe-x|',
-                            transitionPadding: 10,
-                            target: 'mark'
-                        }
-                    ],
-                    width: 350,
-                    height: 100
-                }
-            ]
-        }
-    ]
-};
-
 const linkingTest = {
     title: 'Basic Marks: line',
     subtitle: 'Tutorial Examples',
@@ -1046,6 +529,179 @@ const linkingTest = {
                     size: { value: 2 }
                 }
             ]
+        }
+    ]
+};
+
+const doubleBrush = {
+    arrangement: 'vertical',
+    views: [
+        {
+            static: true,
+            layout: 'circular',
+            alignment: 'stack',
+            tracks: [
+                {
+                    id: 'overview track',
+                    alignment: 'overlay',
+                    data: {
+                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
+                        type: 'multivec',
+                        row: 'sample',
+                        column: 'position',
+                        value: 'peak',
+                        categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4'],
+                        binSize: 4
+                    },
+                    x: { field: 'start', type: 'genomic' },
+                    xe: { field: 'end', type: 'genomic' },
+                    y: { field: 'peak', type: 'quantitative' },
+                    row: { field: 'sample', type: 'nominal' },
+                    color: { field: 'sample', type: 'nominal' },
+                    stroke: { value: 'black' },
+                    strokeWidth: { value: 0.3 },
+                    tracks: [
+                        { mark: 'bar' },
+                        {
+                            mark: 'brush',
+                            x: { linkingId: 'detail-1' },
+                            color: { value: 'blue' }
+                        },
+                        {
+                            mark: 'brush',
+                            x: { linkingId: 'detail-2' },
+                            color: { value: 'red' }
+                        }
+                    ],
+                    style: { outlineWidth: 0 },
+                    width: 500,
+                    height: 100
+                },
+                {
+                    data: {
+                        type: 'csv',
+                        url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/rearrangements.bulk.1639.simple.filtered.pub',
+                        headerNames: [
+                            'chr1',
+                            'p1s',
+                            'p1e',
+                            'chr2',
+                            'p2s',
+                            'p2e',
+                            'type',
+                            'id',
+                            'f1',
+                            'f2',
+                            'f3',
+                            'f4',
+                            'f5',
+                            'f6'
+                        ],
+                        separator: '\t',
+                        genomicFieldsToConvert: [
+                            { chromosomeField: 'chr1', genomicFields: ['p1s', 'p1e'] },
+                            { chromosomeField: 'chr2', genomicFields: ['p2s', 'p2e'] }
+                        ]
+                    },
+                    dataTransform: [
+                        {
+                            type: 'filter',
+                            field: 'chr1',
+                            oneOf: ['1', '16', '14', '9', '6', '5', '3']
+                        },
+                        {
+                            type: 'filter',
+                            field: 'chr2',
+                            oneOf: ['1', '16', '14', '9', '6', '5', '3']
+                        }
+                    ],
+                    mark: 'withinLink',
+                    x: { field: 'p1s', type: 'genomic' },
+                    xe: { field: 'p1e', type: 'genomic' },
+                    x1: { field: 'p2s', type: 'genomic' },
+                    x1e: { field: 'p2e', type: 'genomic' },
+                    stroke: {
+                        field: 'type',
+                        type: 'nominal',
+                        domain: ['deletion', 'inversion', 'translocation', 'tandem-duplication']
+                    },
+                    strokeWidth: { value: 0.8 },
+                    opacity: { value: 0.15 },
+                    width: 500,
+                    height: 100
+                }
+            ]
+        },
+        {
+            spacing: 10,
+            arrangement: 'horizontal',
+            views: [
+                {
+                    tracks: [
+                        {
+                            id: 'detail-1',
+                            data: {
+                                url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
+                                type: 'multivec',
+                                row: 'sample',
+                                column: 'position',
+                                value: 'peak',
+                                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4'],
+                                binSize: 4
+                            },
+                            mark: 'bar',
+                            x: {
+                                field: 'start',
+                                type: 'genomic',
+                                linkingId: 'detail-1',
+                                domain: { chromosome: 'chr5' }
+                            },
+                            xe: { field: 'end', type: 'genomic' },
+                            y: { field: 'peak', type: 'quantitative' },
+                            row: { field: 'sample', type: 'nominal' },
+                            color: { field: 'sample', type: 'nominal' },
+                            stroke: { value: 'black' },
+                            strokeWidth: { value: 0.3 },
+                            style: { background: 'blue' },
+                            width: 245,
+                            height: 150
+                        }
+                    ]
+                },
+                {
+                    tracks: [
+                        {
+                            id: 'detail-2',
+                            data: {
+                                url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
+                                type: 'multivec',
+                                row: 'sample',
+                                column: 'position',
+                                value: 'peak',
+                                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4'],
+                                binSize: 4
+                            },
+                            mark: 'bar',
+                            x: {
+                                field: 'start',
+                                type: 'genomic',
+                                domain: { chromosome: 'chr16' },
+                                linkingId: 'detail-2'
+                            },
+                            xe: { field: 'end', type: 'genomic' },
+                            y: { field: 'peak', type: 'quantitative' },
+                            row: { field: 'sample', type: 'nominal' },
+                            color: { field: 'sample', type: 'nominal', legend: true },
+                            stroke: { value: 'black' },
+                            strokeWidth: { value: 0.3 },
+                            style: { background: 'red' },
+                            width: 245,
+                            height: 150
+                        }
+                    ]
+                }
+            ],
+            style: { backgroundOpacity: 0.1 }
         }
     ]
 };
