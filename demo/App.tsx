@@ -57,7 +57,7 @@ function App() {
         };
 
         // Compile the spec
-        compile(doubleBrush, callback, [], getTheme('light'), { containerSize: { width: 300, height: 300 } });
+        compile(cancer, callback, [], getTheme('light'), { containerSize: { width: 300, height: 300 } });
     }, []);
 
     return (
@@ -1509,7 +1509,7 @@ const cancer = {
                                 { mark: 'rect' },
                                 {
                                     mark: 'brush',
-                                    x: { linkingId: 'mid-scale' },
+                                    x: { linkingId: 'mid-scale'},
                                     strokeWidth: { value: 1.5 },
                                     stroke: { value: '#0070DC' },
                                     color: { value: '#AFD8FF' },
@@ -2025,292 +2025,292 @@ const cancer = {
                     ]
                 }
             ]
-        },
-        {
-            arrangement: 'horizontal',
-            spacing: 100,
-            views: [
-                {
-                    static: false,
-                    layout: 'linear',
-                    centerRadius: 0.05,
-                    xDomain: { chromosome: 'chr1', interval: [205000, 207000] },
-                    spacing: 0.01,
-                    tracks: [
-                        {
-                            alignment: 'overlay',
-                            title: 'example_higlass.bam',
-                            data: {
-                                type: 'bam',
-                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam',
-                                indexUrl: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam.bai',
-                                loadMates: true
-                            },
-                            mark: 'bar',
-                            tracks: [
-                                {
-                                    dataTransform: [
-                                        {
-                                            type: 'coverage',
-                                            startField: 'start',
-                                            endField: 'end'
-                                        }
-                                    ],
-                                    x: { field: 'start', type: 'genomic' },
-                                    xe: { field: 'end', type: 'genomic' },
-                                    y: {
-                                        field: 'coverage',
-                                        type: 'quantitative',
-                                        axis: 'right'
-                                    },
-                                    color: { value: '#C6C6C6' }
-                                }
-                            ],
-                            style: { outlineWidth: 0.5 },
-                            width: 450,
-                            height: 80
-                        },
-                        {
-                            alignment: 'overlay',
-                            title: 'example_higlass.bam',
-                            data: {
-                                type: 'bam',
-                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam',
-                                indexUrl: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam.bai',
-                                loadMates: true,
-                                maxInsertSize: 300
-                            },
-                            mark: 'rect',
-                            tracks: [
-                                {
-                                    dataTransform: [
-                                        {
-                                            type: 'displace',
-                                            method: 'pile',
-                                            boundingBox: {
-                                                startField: 'start',
-                                                endField: 'end',
-                                                padding: 5,
-                                                isPaddingBP: true
-                                            },
-                                            newField: 'pileup-row'
-                                        }
-                                    ],
-                                    x: { field: 'start', type: 'genomic' },
-                                    xe: { field: 'end', type: 'genomic' },
-                                    color: {
-                                        field: 'svType',
-                                        type: 'nominal',
-                                        legend: true,
-                                        domain: [
-                                            'normal read',
-                                            'deletion (+-)',
-                                            'inversion (++)',
-                                            'inversion (--)',
-                                            'duplication (-+)',
-                                            'more than two mates',
-                                            'mates not found within chromosome',
-                                            'clipping'
-                                        ],
-                                        range: [
-                                            '#C8C8C8',
-                                            '#E79F00',
-                                            '#029F73',
-                                            '#0072B2',
-                                            '#CB7AA7',
-                                            '#57B4E9',
-                                            '#D61E2E',
-                                            '#414141'
-                                        ]
-                                    }
-                                },
-                                {
-                                    dataTransform: [
-                                        {
-                                            type: 'displace',
-                                            method: 'pile',
-                                            boundingBox: {
-                                                startField: 'start',
-                                                endField: 'end',
-                                                padding: 5,
-                                                isPaddingBP: true
-                                            },
-                                            newField: 'pileup-row'
-                                        },
-                                        {
-                                            type: 'subjson',
-                                            field: 'substitutions',
-                                            genomicField: 'pos',
-                                            baseGenomicField: 'start',
-                                            genomicLengthField: 'length'
-                                        },
-                                        { type: 'filter', field: 'type', oneOf: ['S', 'H'] }
-                                    ],
-                                    x: { field: 'pos_start', type: 'genomic' },
-                                    xe: { field: 'pos_end', type: 'genomic' },
-                                    color: { value: '#414141' }
-                                }
-                            ],
-                            tooltip: [
-                                { field: 'start', type: 'genomic' },
-                                { field: 'end', type: 'genomic' },
-                                { field: 'insertSize', type: 'quantitative' },
-                                { field: 'svType', type: 'nominal' },
-                                { field: 'strand', type: 'nominal' },
-                                { field: 'numMates', type: 'quantitative' },
-                                { field: 'mateIds', type: 'nominal' }
-                            ],
-                            row: { field: 'pileup-row', type: 'nominal', padding: 0.2 },
-                            style: {
-                                outlineWidth: 0.5,
-                                legendTitle: 'Insert Size = 300bp'
-                            },
-                            width: 450,
-                            height: 310
-                        }
-                    ]
-                },
-                {
-                    static: false,
-                    layout: 'linear',
-                    centerRadius: 0.05,
-                    xDomain: { chromosome: 'chr1', interval: [490000, 496000] },
-                    spacing: 0.01,
-                    tracks: [
-                        {
-                            alignment: 'overlay',
-                            title: 'example_higlass.bam',
-                            data: {
-                                type: 'bam',
-                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam',
-                                indexUrl: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam.bai',
-                                loadMates: true
-                            },
-                            mark: 'bar',
-                            tracks: [
-                                {
-                                    dataTransform: [
-                                        {
-                                            type: 'coverage',
-                                            startField: 'start',
-                                            endField: 'end'
-                                        }
-                                    ],
-                                    x: { field: 'start', type: 'genomic' },
-                                    xe: { field: 'end', type: 'genomic' },
-                                    y: {
-                                        field: 'coverage',
-                                        type: 'quantitative',
-                                        axis: 'right'
-                                    },
-                                    color: { value: '#C6C6C6' }
-                                }
-                            ],
-                            style: { outlineWidth: 0.5 },
-                            width: 450,
-                            height: 80
-                        },
-                        {
-                            alignment: 'overlay',
-                            title: 'example_higlass.bam',
-                            data: {
-                                type: 'bam',
-                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam',
-                                indexUrl: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam.bai',
-                                loadMates: true,
-                                maxInsertSize: 300
-                            },
-                            mark: 'rect',
-                            tracks: [
-                                {
-                                    dataTransform: [
-                                        {
-                                            type: 'displace',
-                                            method: 'pile',
-                                            boundingBox: {
-                                                startField: 'start',
-                                                endField: 'end',
-                                                padding: 5,
-                                                isPaddingBP: true
-                                            },
-                                            newField: 'pileup-row'
-                                        }
-                                    ],
-                                    x: { field: 'start', type: 'genomic' },
-                                    xe: { field: 'end', type: 'genomic' },
-                                    color: {
-                                        field: 'svType',
-                                        type: 'nominal',
-                                        legend: true,
-                                        domain: [
-                                            'normal read',
-                                            'deletion (+-)',
-                                            'inversion (++)',
-                                            'inversion (--)',
-                                            'duplication (-+)',
-                                            'more than two mates',
-                                            'mates not found within chromosome',
-                                            'clipping'
-                                        ],
-                                        range: [
-                                            '#C8C8C8',
-                                            '#E79F00',
-                                            '#029F73',
-                                            '#0072B2',
-                                            '#CB7AA7',
-                                            '#57B4E9',
-                                            '#D61E2E',
-                                            '#414141'
-                                        ]
-                                    }
-                                },
-                                {
-                                    dataTransform: [
-                                        {
-                                            type: 'displace',
-                                            method: 'pile',
-                                            boundingBox: {
-                                                startField: 'start',
-                                                endField: 'end',
-                                                padding: 5,
-                                                isPaddingBP: true
-                                            },
-                                            newField: 'pileup-row'
-                                        },
-                                        {
-                                            type: 'subjson',
-                                            field: 'substitutions',
-                                            genomicField: 'pos',
-                                            baseGenomicField: 'start',
-                                            genomicLengthField: 'length'
-                                        },
-                                        { type: 'filter', field: 'type', oneOf: ['S', 'H'] }
-                                    ],
-                                    x: { field: 'pos_start', type: 'genomic' },
-                                    xe: { field: 'pos_end', type: 'genomic' },
-                                    color: { value: '#414141' }
-                                }
-                            ],
-                            tooltip: [
-                                { field: 'start', type: 'genomic' },
-                                { field: 'end', type: 'genomic' },
-                                { field: 'insertSize', type: 'quantitative' },
-                                { field: 'svType', type: 'nominal' },
-                                { field: 'strand', type: 'nominal' },
-                                { field: 'numMates', type: 'quantitative' },
-                                { field: 'mateIds', type: 'nominal' }
-                            ],
-                            row: { field: 'pileup-row', type: 'nominal', padding: 0.2 },
-                            style: {
-                                outlineWidth: 0.5,
-                                legendTitle: 'Insert Size = 300bp'
-                            },
-                            width: 450,
-                            height: 310
-                        }
-                    ]
-                }
-            ]
         }
+        // {
+        //     arrangement: 'horizontal',
+        //     spacing: 100,
+        //     views: [
+        //         {
+        //             static: false,
+        //             layout: 'linear',
+        //             centerRadius: 0.05,
+        //             xDomain: { chromosome: 'chr1', interval: [205000, 207000] },
+        //             spacing: 0.01,
+        //             tracks: [
+        //                 {
+        //                     alignment: 'overlay',
+        //                     title: 'example_higlass.bam',
+        //                     data: {
+        //                         type: 'bam',
+        //                         url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam',
+        //                         indexUrl: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam.bai',
+        //                         loadMates: true
+        //                     },
+        //                     mark: 'bar',
+        //                     tracks: [
+        //                         {
+        //                             dataTransform: [
+        //                                 {
+        //                                     type: 'coverage',
+        //                                     startField: 'start',
+        //                                     endField: 'end'
+        //                                 }
+        //                             ],
+        //                             x: { field: 'start', type: 'genomic' },
+        //                             xe: { field: 'end', type: 'genomic' },
+        //                             y: {
+        //                                 field: 'coverage',
+        //                                 type: 'quantitative',
+        //                                 axis: 'right'
+        //                             },
+        //                             color: { value: '#C6C6C6' }
+        //                         }
+        //                     ],
+        //                     style: { outlineWidth: 0.5 },
+        //                     width: 450,
+        //                     height: 80
+        //                 },
+        //                 {
+        //                     alignment: 'overlay',
+        //                     title: 'example_higlass.bam',
+        //                     data: {
+        //                         type: 'bam',
+        //                         url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam',
+        //                         indexUrl: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam.bai',
+        //                         loadMates: true,
+        //                         maxInsertSize: 300
+        //                     },
+        //                     mark: 'rect',
+        //                     tracks: [
+        //                         {
+        //                             dataTransform: [
+        //                                 {
+        //                                     type: 'displace',
+        //                                     method: 'pile',
+        //                                     boundingBox: {
+        //                                         startField: 'start',
+        //                                         endField: 'end',
+        //                                         padding: 5,
+        //                                         isPaddingBP: true
+        //                                     },
+        //                                     newField: 'pileup-row'
+        //                                 }
+        //                             ],
+        //                             x: { field: 'start', type: 'genomic' },
+        //                             xe: { field: 'end', type: 'genomic' },
+        //                             color: {
+        //                                 field: 'svType',
+        //                                 type: 'nominal',
+        //                                 legend: true,
+        //                                 domain: [
+        //                                     'normal read',
+        //                                     'deletion (+-)',
+        //                                     'inversion (++)',
+        //                                     'inversion (--)',
+        //                                     'duplication (-+)',
+        //                                     'more than two mates',
+        //                                     'mates not found within chromosome',
+        //                                     'clipping'
+        //                                 ],
+        //                                 range: [
+        //                                     '#C8C8C8',
+        //                                     '#E79F00',
+        //                                     '#029F73',
+        //                                     '#0072B2',
+        //                                     '#CB7AA7',
+        //                                     '#57B4E9',
+        //                                     '#D61E2E',
+        //                                     '#414141'
+        //                                 ]
+        //                             }
+        //                         },
+        //                         {
+        //                             dataTransform: [
+        //                                 {
+        //                                     type: 'displace',
+        //                                     method: 'pile',
+        //                                     boundingBox: {
+        //                                         startField: 'start',
+        //                                         endField: 'end',
+        //                                         padding: 5,
+        //                                         isPaddingBP: true
+        //                                     },
+        //                                     newField: 'pileup-row'
+        //                                 },
+        //                                 {
+        //                                     type: 'subjson',
+        //                                     field: 'substitutions',
+        //                                     genomicField: 'pos',
+        //                                     baseGenomicField: 'start',
+        //                                     genomicLengthField: 'length'
+        //                                 },
+        //                                 { type: 'filter', field: 'type', oneOf: ['S', 'H'] }
+        //                             ],
+        //                             x: { field: 'pos_start', type: 'genomic' },
+        //                             xe: { field: 'pos_end', type: 'genomic' },
+        //                             color: { value: '#414141' }
+        //                         }
+        //                     ],
+        //                     tooltip: [
+        //                         { field: 'start', type: 'genomic' },
+        //                         { field: 'end', type: 'genomic' },
+        //                         { field: 'insertSize', type: 'quantitative' },
+        //                         { field: 'svType', type: 'nominal' },
+        //                         { field: 'strand', type: 'nominal' },
+        //                         { field: 'numMates', type: 'quantitative' },
+        //                         { field: 'mateIds', type: 'nominal' }
+        //                     ],
+        //                     row: { field: 'pileup-row', type: 'nominal', padding: 0.2 },
+        //                     style: {
+        //                         outlineWidth: 0.5,
+        //                         legendTitle: 'Insert Size = 300bp'
+        //                     },
+        //                     width: 450,
+        //                     height: 310
+        //                 }
+        //             ]
+        //         },
+        //         {
+        //             static: false,
+        //             layout: 'linear',
+        //             centerRadius: 0.05,
+        //             xDomain: { chromosome: 'chr1', interval: [490000, 496000] },
+        //             spacing: 0.01,
+        //             tracks: [
+        //                 {
+        //                     alignment: 'overlay',
+        //                     title: 'example_higlass.bam',
+        //                     data: {
+        //                         type: 'bam',
+        //                         url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam',
+        //                         indexUrl: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam.bai',
+        //                         loadMates: true
+        //                     },
+        //                     mark: 'bar',
+        //                     tracks: [
+        //                         {
+        //                             dataTransform: [
+        //                                 {
+        //                                     type: 'coverage',
+        //                                     startField: 'start',
+        //                                     endField: 'end'
+        //                                 }
+        //                             ],
+        //                             x: { field: 'start', type: 'genomic' },
+        //                             xe: { field: 'end', type: 'genomic' },
+        //                             y: {
+        //                                 field: 'coverage',
+        //                                 type: 'quantitative',
+        //                                 axis: 'right'
+        //                             },
+        //                             color: { value: '#C6C6C6' }
+        //                         }
+        //                     ],
+        //                     style: { outlineWidth: 0.5 },
+        //                     width: 450,
+        //                     height: 80
+        //                 },
+        //                 {
+        //                     alignment: 'overlay',
+        //                     title: 'example_higlass.bam',
+        //                     data: {
+        //                         type: 'bam',
+        //                         url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam',
+        //                         indexUrl: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam.bai',
+        //                         loadMates: true,
+        //                         maxInsertSize: 300
+        //                     },
+        //                     mark: 'rect',
+        //                     tracks: [
+        //                         {
+        //                             dataTransform: [
+        //                                 {
+        //                                     type: 'displace',
+        //                                     method: 'pile',
+        //                                     boundingBox: {
+        //                                         startField: 'start',
+        //                                         endField: 'end',
+        //                                         padding: 5,
+        //                                         isPaddingBP: true
+        //                                     },
+        //                                     newField: 'pileup-row'
+        //                                 }
+        //                             ],
+        //                             x: { field: 'start', type: 'genomic' },
+        //                             xe: { field: 'end', type: 'genomic' },
+        //                             color: {
+        //                                 field: 'svType',
+        //                                 type: 'nominal',
+        //                                 legend: true,
+        //                                 domain: [
+        //                                     'normal read',
+        //                                     'deletion (+-)',
+        //                                     'inversion (++)',
+        //                                     'inversion (--)',
+        //                                     'duplication (-+)',
+        //                                     'more than two mates',
+        //                                     'mates not found within chromosome',
+        //                                     'clipping'
+        //                                 ],
+        //                                 range: [
+        //                                     '#C8C8C8',
+        //                                     '#E79F00',
+        //                                     '#029F73',
+        //                                     '#0072B2',
+        //                                     '#CB7AA7',
+        //                                     '#57B4E9',
+        //                                     '#D61E2E',
+        //                                     '#414141'
+        //                                 ]
+        //                             }
+        //                         },
+        //                         {
+        //                             dataTransform: [
+        //                                 {
+        //                                     type: 'displace',
+        //                                     method: 'pile',
+        //                                     boundingBox: {
+        //                                         startField: 'start',
+        //                                         endField: 'end',
+        //                                         padding: 5,
+        //                                         isPaddingBP: true
+        //                                     },
+        //                                     newField: 'pileup-row'
+        //                                 },
+        //                                 {
+        //                                     type: 'subjson',
+        //                                     field: 'substitutions',
+        //                                     genomicField: 'pos',
+        //                                     baseGenomicField: 'start',
+        //                                     genomicLengthField: 'length'
+        //                                 },
+        //                                 { type: 'filter', field: 'type', oneOf: ['S', 'H'] }
+        //                             ],
+        //                             x: { field: 'pos_start', type: 'genomic' },
+        //                             xe: { field: 'pos_end', type: 'genomic' },
+        //                             color: { value: '#414141' }
+        //                         }
+        //                     ],
+        //                     tooltip: [
+        //                         { field: 'start', type: 'genomic' },
+        //                         { field: 'end', type: 'genomic' },
+        //                         { field: 'insertSize', type: 'quantitative' },
+        //                         { field: 'svType', type: 'nominal' },
+        //                         { field: 'strand', type: 'nominal' },
+        //                         { field: 'numMates', type: 'quantitative' },
+        //                         { field: 'mateIds', type: 'nominal' }
+        //                     ],
+        //                     row: { field: 'pileup-row', type: 'nominal', padding: 0.2 },
+        //                     style: {
+        //                         outlineWidth: 0.5,
+        //                         legendTitle: 'Insert Size = 300bp'
+        //                     },
+        //                     width: 450,
+        //                     height: 310
+        //                 }
+        //             ]
+        //         }
+        //     ]
+        // }
     ]
 };
