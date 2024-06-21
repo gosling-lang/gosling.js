@@ -19,12 +19,15 @@ export class BrushLinearTrack extends BrushLinearTrackClass<BrushLinearTrackOpti
     ) {
         const height = domOverlay.clientHeight;
         const width = domOverlay.clientWidth;
-        // Create a new svg element. The brush will be drawn on this element
-        const svgElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svgElement.style.width = `${width}px`;
-        svgElement.style.height = `${height}px`;
-        // Add it to the overlay div
-        domOverlay.appendChild(svgElement);
+        
+        // If there is already an svg element, use it. Otherwise, create a new one
+        const existingSvgElement = domOverlay.querySelector('svg');
+        const svgElement = existingSvgElement || document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        if (!existingSvgElement) {
+            svgElement.style.width = `${width}px`;
+            svgElement.style.height = `${height}px`;
+            domOverlay.appendChild(svgElement);
+        }
 
         // Setup the context object
         const context: BrushLinearTrackContext = {

@@ -1,11 +1,13 @@
 import { PixiManager } from '@pixi-manager';
-import { CircularBrushTrack } from '@gosling-lang/brush-circular';
+import { BrushCircularTrack } from '@gosling-lang/brush-circular';
 import { signal } from '@preact/signals-core';
+import { panZoom } from '@gosling-lang/interactors';
 
 export function addCircularBrush(pixiManager: PixiManager) {
     const pos0 = { x: 10, y: 100, width: 250, height: 250 };
     const circularDomain = signal<[number, number]>([0, 248956422]);
     const detailedDomain = signal<[number, number]>([160000000, 200000000]);
+    const detailedDomain2 = signal<[number, number]>([0, 100000000]);
 
     const circularBrushTrackOptions = {
         projectionFillColor: 'gray',
@@ -20,10 +22,17 @@ export function addCircularBrush(pixiManager: PixiManager) {
         axisPositionHorizontal: 'left'
     };
 
-    new CircularBrushTrack(
+    const overlayDiv = pixiManager.makeContainer(pos0).overlayDiv;
+
+    new BrushCircularTrack(
         circularBrushTrackOptions,
-        circularDomain,
         detailedDomain,
         pixiManager.makeContainer(pos0).overlayDiv
-    );
+    ).addInteractor(plot => panZoom(plot, circularDomain));
+
+    new BrushCircularTrack(
+        circularBrushTrackOptions,
+        detailedDomain2,
+        pixiManager.makeContainer(pos0).overlayDiv
+    ).addInteractor(plot => panZoom(plot, circularDomain));
 }

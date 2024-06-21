@@ -25,9 +25,15 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
         const { pixiContainer, overlayDiv } = containers;
         const height = overlayDiv.clientHeight;
         const width = overlayDiv.clientWidth;
-        // The colorbar svg element isn't quite working yet
-        const colorbarDiv = document.createElement('svg');
-        overlayDiv.appendChild(colorbarDiv);
+
+        // If there is already an svg element, use it. Otherwise, create a new one
+        const existingSvgElement = overlayDiv.querySelector('svg');
+        const svgElement = existingSvgElement || document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        if (!existingSvgElement) {
+            svgElement.style.width = `${width}px`;
+            svgElement.style.height = `${height}px`;
+            overlayDiv.appendChild(svgElement);
+        }
 
         // Setup the context object
         const context: GoslingTrackContext = {
@@ -45,7 +51,7 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
             onTrackOptionsChanged: () => {},
             pubSub: fakePubSub,
             isValueScaleLocked: () => false,
-            svgElement: colorbarDiv,
+            svgElement: svgElement,
             isShowGlobalMousePosition: () => false
         };
 

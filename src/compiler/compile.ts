@@ -2,7 +2,7 @@ import type { GoslingSpec, TemplateTrackDef, VisUnitApiData } from '@gosling-lan
 import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
 import { traverseToFixSpecDownstream } from './spec-preprocess';
 import { replaceTrackTemplates } from '../core/utils/template';
-import { getRelativeTrackInfo, type Size } from './bounding-box';
+import { getRelativeTrackInfo, type Size, type TrackInfo } from './bounding-box';
 import type { CompleteThemeDeep } from '../core/utils/theme';
 import type { UrlToFetchOptions } from 'src/core/gosling-component';
 import { renderHiGlass as createHiGlassModels } from './create-higlass-models';
@@ -15,7 +15,9 @@ export type CompileCallback = (
     size: Size,
     gs: GoslingSpec,
     tracksAndViews: VisUnitApiData[],
-    idTable: IdTable
+    idTable: IdTable,
+    trackInfos: TrackInfo[],
+    theme: Required<CompleteThemeDeep>
 ) => void;
 
 export function compile(

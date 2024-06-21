@@ -588,6 +588,13 @@ declare module '@higlass/tracks' {
         svgElement: SVGElement;
     }
 
+    interface ViewportTrackerHorizontalContext extends SVGTrackContext {
+        registerViewportChanged: (uid: string, callback: (viewportXScale: ScaleLinear<number, number>, viewportYScale: ScaleLinear<number, number>) => void) => void;
+        removeViewportChanged: (uid: string) => void;
+        setDomainsCallback: (xDomain: [number, number], yDomain: [number, number]) => void;
+        projectionXDomain: [number, number]; // The domain of the brush
+    }
+
     /* eslint-disable-next-line @typescript-eslint/ban-types */
     type LiteralUnion<T, U = string> = T | (U & {});
 

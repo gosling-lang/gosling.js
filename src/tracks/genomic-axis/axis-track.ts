@@ -41,7 +41,7 @@ export type AxisTrackOptions = {
     stroke: string;
     backgroundColor: string;
     showMousePosition: boolean;
-    tickColor: number;
+    tickColor: number | string;
     tickFormat?: string;
     assembly?: Assembly;
     reverseOrientation?: boolean;

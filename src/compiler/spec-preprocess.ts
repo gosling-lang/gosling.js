@@ -264,8 +264,10 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                 track._overlay = track._overlay.filter(overlayTrack => {
                     return !('type' in overlayTrack && overlayTrack.type == 'dummy-track');
                 });
+                // Add a unique ID to each overlay track
                 track._overlay.forEach(o => {
                     o.style = getStyleOverridden(track.style, o.style);
+                    o.id = `overlay-${uuid().slice(0, 8)}`;
                 });
             }
 
@@ -314,7 +316,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
              * Link tracks in a single view
              */
             if ((IsSingleTrack(track) || IsOverlaidTrack(track)) && IsChannelDeep(track.x) && !track.x.linkingId) {
-                track.x.linkingId = spec.linkingId ?? linkID;
+                track.x.linkingId = spec.linkingId;
             } else if (IsOverlaidTrack(track)) {
                 let isAdded = false;
                 track._overlay.forEach(o => {
@@ -322,7 +324,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
 
                     if (IsChannelDeep(o.x) && !o.x.linkingId) {
                         // TODO: Is this safe?
-                        o.x.linkingId = spec.linkingId ?? linkID;
+                        o.x.linkingId = spec.linkingId;
                         isAdded = true;
                     }
                 });
