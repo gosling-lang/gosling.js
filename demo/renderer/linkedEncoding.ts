@@ -3,7 +3,6 @@ import { GenomicPositionHelper, computeChromSizes } from '../../src/core/utils/a
 import { signal, type Signal } from '@preact/signals-core';
 import type { GoslingSpec } from 'gosling.js';
 import { TrackType } from './main';
-import type { Link } from 'react-router-dom';
 
 /**
  * This is the information needed to link tracks together
@@ -53,7 +52,7 @@ interface LinkInfo {
  */
 export function getLinkedEncodings(gs: GoslingSpec) {
     // First, we traverse the gosling spec to find all the linked tracks and brushes
-    const { trackLinks, viewLinks } = getLinedFeaturesRecursive(gs);
+    const { trackLinks, viewLinks } = getLinkedFeaturesRecursive(gs);
     console.warn('trackLinks', trackLinks);
     // We associate tracks the other tracks they are linked with
     const linkedEncodings = viewLinks.map(viewLink => {
@@ -138,7 +137,7 @@ function filterLinkedTracksByType(trackType: TrackType[], linkingId: string | un
 /**
  * Traverses the gosling spec to find all the linked tracks and brushes
  */
-function getLinedFeaturesRecursive(gs: GoslingSpec): LinkInfo {
+function getLinkedFeaturesRecursive(gs: GoslingSpec): LinkInfo {
     // Base case: single view
     if (IsSingleView(gs)) {
         const viewLinks = getSingleViewLinks(gs);
@@ -149,7 +148,7 @@ function getLinedFeaturesRecursive(gs: GoslingSpec): LinkInfo {
     // Recursive case: multiple views
     if (IsMultipleViews(gs)) {
         gs.views.forEach(view => {
-            const newLinks = getLinedFeaturesRecursive(view);
+            const newLinks = getLinkedFeaturesRecursive(view);
             linked.viewLinks.push(...newLinks.viewLinks);
             linked.trackLinks.push(...newLinks.trackLinks);
         });
@@ -246,11 +245,17 @@ function createDomainString(xDomain: GoslingSpec['xDomain']) {
         return xDomain;
     }
     let position = '';
+    const hasOnlyInterval = 'interval' in xDomain && !('chromosome' in xDomain);
+    const hasOnlyChromosome = 'chromosome' in xDomain && !('interval' in xDomain);
+    const hasBoth = 'chromosome' in xDomain && 'interval' in xDomain;
+
     if (typeof xDomain === 'string') {
         position = xDomain;
-    } else if (typeof xDomain === 'object' && 'chromosome' in xDomain && !('interval' in xDomain)) {
+    } else if (hasOnlyInterval) {
+        position = `chr:${xDomain.interval[0]}-${xDomain.interval[1]}`;
+    } else if (hasOnlyChromosome) {
         position = xDomain.chromosome;
-    } else if (typeof xDomain === 'object' && 'chromosome' in xDomain && 'interval' in xDomain) {
+    } else if (hasBoth) {
         position = `${xDomain.chromosome}:${xDomain.interval[0]}-${xDomain.interval[1]}`;
     }
     return position;

@@ -109,7 +109,7 @@ export function renderTrackDefs(trackDefs: TrackDefs[], linkedEncodings: LinkedE
         if (type === TrackType.Gosling) {
             const domain = getXDomainSignal(trackDef.trackId, linkedEncodings);
             const datafetcher = getDataFetcher(options.spec);
-            const gosPlot = new GoslingTrack(options, datafetcher, pixiManager.makeContainer(boundingBox))
+            const gosPlot = new GoslingTrack(options, datafetcher, pixiManager.makeContainer(boundingBox), domain);
             if (!options.spec.static) {
                 gosPlot.addInteractor(plot => panZoom(plot, domain));
             }

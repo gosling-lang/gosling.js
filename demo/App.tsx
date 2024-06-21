@@ -27,7 +27,7 @@ function App() {
         const plotElement = document.getElementById('plot') as HTMLDivElement;
         plotElement.innerHTML = '';
         // Initialize the PixiManager. This will be used to get containers and overlay divs for the plots
-        const pixiManager = new PixiManager(1000, 600, plotElement, setFps);
+        const pixiManager = new PixiManager(1000, 1200, plotElement, setFps);
         // addTextTrack(pixiManager);
         // addDummyTrack(pixiManager);
         // addCircularBrush(pixiManager);
@@ -57,7 +57,7 @@ function App() {
         };
 
         // Compile the spec
-        compile(visualLinking, callback, [], getTheme('light'), { containerSize: { width: 300, height: 300 } });
+        compile(doubleBrush, callback, [], getTheme('light'), { containerSize: { width: 300, height: 300 } });
     }, []);
 
     return (
@@ -783,6 +783,1532 @@ const visualLinking = {
                     color: { field: 'sample', type: 'nominal' },
                     width: 690,
                     height: 200
+                }
+            ]
+        }
+    ]
+};
+
+const test = {
+    static: true,
+    layout: 'linear',
+    centerRadius: 0.2,
+    arrangement: 'parallel',
+    views: [
+        {
+            xDomain: { chromosome: 'chr1' },
+            tracks: [
+                {
+                    data: {
+                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
+                        type: 'multivec',
+                        row: 'sample',
+                        column: 'position',
+                        value: 'peak',
+                        categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+                    },
+                    mark: 'area',
+                    x: { field: 'position', type: 'genomic' },
+                    y: { field: 'peak', type: 'quantitative' },
+                    color: { field: 'sample', type: 'nominal' },
+                    width: 1000,
+                    height: 30
+                },
+                {
+                    alignment: 'overlay',
+                    data: {
+                        url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/cytogenetic_band.csv',
+                        type: 'csv',
+                        chromosomeField: 'Chr.',
+                        genomicFields: ['ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop']
+                    },
+                    tracks: [
+                        {
+                            mark: 'text',
+                            dataTransform: [
+                                {
+                                    type: 'filter',
+                                    field: 'Stain',
+                                    oneOf: ['acen-1', 'acen-2'],
+                                    not: true
+                                }
+                            ],
+                            text: { field: 'Band', type: 'nominal' },
+                            color: { value: 'black' },
+                            visibility: [
+                                {
+                                    operation: 'less-than',
+                                    measure: 'width',
+                                    threshold: '|xe-x|',
+                                    transitionPadding: 10,
+                                    target: 'mark'
+                                }
+                            ]
+                        },
+                        {
+                            mark: 'rect',
+                            dataTransform: [
+                                {
+                                    type: 'filter',
+                                    field: 'Stain',
+                                    oneOf: ['acen-1', 'acen-2'],
+                                    not: true
+                                }
+                            ],
+                            color: {
+                                field: 'Density',
+                                type: 'nominal',
+                                domain: ['', '25', '50', '75', '100'],
+                                range: ['white', '#D9D9D9', '#979797', '#636363', 'black']
+                            }
+                        },
+                        {
+                            mark: 'rect',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['gvar'] }],
+                            color: { value: '#A0A0F2' }
+                        },
+                        {
+                            mark: 'triangleRight',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-1'] }],
+                            color: { value: '#B40101' }
+                        },
+                        {
+                            mark: 'triangleLeft',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-2'] }],
+                            color: { value: '#B40101' }
+                        }
+                    ],
+                    x: { field: 'Basepair_start', type: 'genomic' },
+                    xe: { field: 'Basepair_stop', type: 'genomic' },
+                    stroke: { value: 'gray' },
+                    strokeWidth: { value: 0.5 },
+                    width: 1000,
+                    height: 20
+                }
+            ]
+        },
+        {
+            xDomain: { chromosome: 'chr2' },
+            tracks: [
+                {
+                    data: {
+                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
+                        type: 'multivec',
+                        row: 'sample',
+                        column: 'position',
+                        value: 'peak',
+                        categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+                    },
+                    mark: 'area',
+                    x: { field: 'position', type: 'genomic' },
+                    y: { field: 'peak', type: 'quantitative' },
+                    color: { field: 'sample', type: 'nominal' },
+                    width: 970,
+                    height: 30
+                },
+                {
+                    alignment: 'overlay',
+                    data: {
+                        url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/cytogenetic_band.csv',
+                        type: 'csv',
+                        chromosomeField: 'Chr.',
+                        genomicFields: ['ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop']
+                    },
+                    tracks: [
+                        {
+                            mark: 'text',
+                            dataTransform: [
+                                {
+                                    type: 'filter',
+                                    field: 'Stain',
+                                    oneOf: ['acen-1', 'acen-2'],
+                                    not: true
+                                }
+                            ],
+                            text: { field: 'Band', type: 'nominal' },
+                            color: { value: 'black' },
+                            visibility: [
+                                {
+                                    operation: 'less-than',
+                                    measure: 'width',
+                                    threshold: '|xe-x|',
+                                    transitionPadding: 10,
+                                    target: 'mark'
+                                }
+                            ]
+                        },
+                        {
+                            mark: 'rect',
+                            dataTransform: [
+                                {
+                                    type: 'filter',
+                                    field: 'Stain',
+                                    oneOf: ['acen-1', 'acen-2'],
+                                    not: true
+                                }
+                            ],
+                            color: {
+                                field: 'Density',
+                                type: 'nominal',
+                                domain: ['', '25', '50', '75', '100'],
+                                range: ['white', '#D9D9D9', '#979797', '#636363', 'black']
+                            }
+                        },
+                        {
+                            mark: 'rect',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['gvar'] }],
+                            color: { value: '#A0A0F2' }
+                        },
+                        {
+                            mark: 'triangleRight',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-1'] }],
+                            color: { value: '#B40101' }
+                        },
+                        {
+                            mark: 'triangleLeft',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-2'] }],
+                            color: { value: '#B40101' }
+                        }
+                    ],
+                    x: { field: 'Basepair_start', type: 'genomic' },
+                    xe: { field: 'Basepair_stop', type: 'genomic' },
+                    stroke: { value: 'gray' },
+                    strokeWidth: { value: 0.5 },
+                    width: 970,
+                    height: 20
+                }
+            ]
+        },
+        {
+            xDomain: { chromosome: 'chr3' },
+            tracks: [
+                {
+                    data: {
+                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
+                        type: 'multivec',
+                        row: 'sample',
+                        column: 'position',
+                        value: 'peak',
+                        categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+                    },
+                    mark: 'area',
+                    x: { field: 'position', type: 'genomic' },
+                    y: { field: 'peak', type: 'quantitative' },
+                    color: { field: 'sample', type: 'nominal' },
+                    width: 800,
+                    height: 30
+                },
+                {
+                    alignment: 'overlay',
+                    data: {
+                        url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/cytogenetic_band.csv',
+                        type: 'csv',
+                        chromosomeField: 'Chr.',
+                        genomicFields: ['ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop']
+                    },
+                    tracks: [
+                        {
+                            mark: 'text',
+                            dataTransform: [
+                                {
+                                    type: 'filter',
+                                    field: 'Stain',
+                                    oneOf: ['acen-1', 'acen-2'],
+                                    not: true
+                                }
+                            ],
+                            text: { field: 'Band', type: 'nominal' },
+                            color: { value: 'black' },
+                            visibility: [
+                                {
+                                    operation: 'less-than',
+                                    measure: 'width',
+                                    threshold: '|xe-x|',
+                                    transitionPadding: 10,
+                                    target: 'mark'
+                                }
+                            ]
+                        },
+                        {
+                            mark: 'rect',
+                            dataTransform: [
+                                {
+                                    type: 'filter',
+                                    field: 'Stain',
+                                    oneOf: ['acen-1', 'acen-2'],
+                                    not: true
+                                }
+                            ],
+                            color: {
+                                field: 'Density',
+                                type: 'nominal',
+                                domain: ['', '25', '50', '75', '100'],
+                                range: ['white', '#D9D9D9', '#979797', '#636363', 'black']
+                            }
+                        },
+                        {
+                            mark: 'rect',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['gvar'] }],
+                            color: { value: '#A0A0F2' }
+                        },
+                        {
+                            mark: 'triangleRight',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-1'] }],
+                            color: { value: '#B40101' }
+                        },
+                        {
+                            mark: 'triangleLeft',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-2'] }],
+                            color: { value: '#B40101' }
+                        }
+                    ],
+                    x: { field: 'Basepair_start', type: 'genomic' },
+                    xe: { field: 'Basepair_stop', type: 'genomic' },
+                    stroke: { value: 'gray' },
+                    strokeWidth: { value: 0.5 },
+                    width: 800,
+                    height: 20
+                }
+            ]
+        },
+        {
+            xDomain: { chromosome: 'chr4' },
+            tracks: [
+                {
+                    data: {
+                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
+                        type: 'multivec',
+                        row: 'sample',
+                        column: 'position',
+                        value: 'peak',
+                        categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+                    },
+                    mark: 'area',
+                    x: { field: 'position', type: 'genomic' },
+                    y: { field: 'peak', type: 'quantitative' },
+                    color: { field: 'sample', type: 'nominal' },
+                    width: 770,
+                    height: 30
+                },
+                {
+                    alignment: 'overlay',
+                    data: {
+                        url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/cytogenetic_band.csv',
+                        type: 'csv',
+                        chromosomeField: 'Chr.',
+                        genomicFields: ['ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop']
+                    },
+                    tracks: [
+                        {
+                            mark: 'text',
+                            dataTransform: [
+                                {
+                                    type: 'filter',
+                                    field: 'Stain',
+                                    oneOf: ['acen-1', 'acen-2'],
+                                    not: true
+                                }
+                            ],
+                            text: { field: 'Band', type: 'nominal' },
+                            color: { value: 'black' },
+                            visibility: [
+                                {
+                                    operation: 'less-than',
+                                    measure: 'width',
+                                    threshold: '|xe-x|',
+                                    transitionPadding: 10,
+                                    target: 'mark'
+                                }
+                            ]
+                        },
+                        {
+                            mark: 'rect',
+                            dataTransform: [
+                                {
+                                    type: 'filter',
+                                    field: 'Stain',
+                                    oneOf: ['acen-1', 'acen-2'],
+                                    not: true
+                                }
+                            ],
+                            color: {
+                                field: 'Density',
+                                type: 'nominal',
+                                domain: ['', '25', '50', '75', '100'],
+                                range: ['white', '#D9D9D9', '#979797', '#636363', 'black']
+                            }
+                        },
+                        {
+                            mark: 'rect',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['gvar'] }],
+                            color: { value: '#A0A0F2' }
+                        },
+                        {
+                            mark: 'triangleRight',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-1'] }],
+                            color: { value: '#B40101' }
+                        },
+                        {
+                            mark: 'triangleLeft',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-2'] }],
+                            color: { value: '#B40101' }
+                        }
+                    ],
+                    x: { field: 'Basepair_start', type: 'genomic' },
+                    xe: { field: 'Basepair_stop', type: 'genomic' },
+                    stroke: { value: 'gray' },
+                    strokeWidth: { value: 0.5 },
+                    width: 770,
+                    height: 20
+                }
+            ]
+        },
+        {
+            xDomain: { chromosome: 'chr5' },
+            tracks: [
+                {
+                    data: {
+                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
+                        type: 'multivec',
+                        row: 'sample',
+                        column: 'position',
+                        value: 'peak',
+                        categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+                    },
+                    mark: 'area',
+                    x: { field: 'position', type: 'genomic' },
+                    y: { field: 'peak', type: 'quantitative' },
+                    color: { field: 'sample', type: 'nominal' },
+                    width: 740,
+                    height: 30
+                },
+                {
+                    alignment: 'overlay',
+                    data: {
+                        url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/cytogenetic_band.csv',
+                        type: 'csv',
+                        chromosomeField: 'Chr.',
+                        genomicFields: ['ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop']
+                    },
+                    tracks: [
+                        {
+                            mark: 'text',
+                            dataTransform: [
+                                {
+                                    type: 'filter',
+                                    field: 'Stain',
+                                    oneOf: ['acen-1', 'acen-2'],
+                                    not: true
+                                }
+                            ],
+                            text: { field: 'Band', type: 'nominal' },
+                            color: { value: 'black' },
+                            visibility: [
+                                {
+                                    operation: 'less-than',
+                                    measure: 'width',
+                                    threshold: '|xe-x|',
+                                    transitionPadding: 10,
+                                    target: 'mark'
+                                }
+                            ]
+                        },
+                        {
+                            mark: 'rect',
+                            dataTransform: [
+                                {
+                                    type: 'filter',
+                                    field: 'Stain',
+                                    oneOf: ['acen-1', 'acen-2'],
+                                    not: true
+                                }
+                            ],
+                            color: {
+                                field: 'Density',
+                                type: 'nominal',
+                                domain: ['', '25', '50', '75', '100'],
+                                range: ['white', '#D9D9D9', '#979797', '#636363', 'black']
+                            }
+                        },
+                        {
+                            mark: 'rect',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['gvar'] }],
+                            color: { value: '#A0A0F2' }
+                        },
+                        {
+                            mark: 'triangleRight',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-1'] }],
+                            color: { value: '#B40101' }
+                        },
+                        {
+                            mark: 'triangleLeft',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-2'] }],
+                            color: { value: '#B40101' }
+                        }
+                    ],
+                    x: { field: 'Basepair_start', type: 'genomic' },
+                    xe: { field: 'Basepair_stop', type: 'genomic' },
+                    stroke: { value: 'gray' },
+                    strokeWidth: { value: 0.5 },
+                    width: 740,
+                    height: 20
+                }
+            ]
+        }
+    ]
+};
+
+const MSA = {
+    description: 'reference: https://dash.plotly.com/dash-bio/alignmentchart',
+    zoomLimits: [1, 396],
+    xDomain: { interval: [350, 396] },
+    assembly: 'unknown',
+    style: { outline: 'lightgray' },
+    views: [
+        {
+            linkingId: '-',
+            spacing: 30,
+            tracks: [
+                {
+                    title: 'Gap',
+                    data: {
+                        url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/alignment_viewer_p53.gap.csv',
+                        type: 'csv',
+                        genomicFields: ['pos'],
+                        sampleLength: 99999
+                    },
+                    mark: 'bar',
+                    x: { field: 'start', type: 'genomic', axis: 'none' },
+                    xe: { field: 'end', type: 'genomic', axis: 'none' },
+                    y: { field: 'gap', type: 'quantitative', axis: 'right' },
+                    color: { value: 'gray' },
+                    stroke: { value: 'white' },
+                    strokeWidth: { value: 0 },
+                    width: 800,
+                    height: 100
+                },
+                {
+                    title: 'Conservation',
+                    data: {
+                        url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/alignment_viewer_p53.conservation.csv',
+                        type: 'csv',
+                        genomicFields: ['pos'],
+                        sampleLength: 99999
+                    },
+                    mark: 'bar',
+                    x: { field: 'start', type: 'genomic', axis: 'none' },
+                    xe: { field: 'end', type: 'genomic', axis: 'none' },
+                    y: {
+                        field: 'conservation',
+                        type: 'quantitative',
+                        axis: 'right'
+                    },
+                    color: { field: 'conservation', type: 'quantitative' },
+                    stroke: { value: 'white' },
+                    strokeWidth: { value: 0 },
+                    width: 800,
+                    height: 150
+                },
+                {
+                    alignment: 'overlay',
+                    data: {
+                        url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/alignment_viewer_p53.fasta.csv',
+                        type: 'csv',
+                        genomicFields: ['pos'],
+                        sampleLength: 99999
+                    },
+                    tracks: [
+                        { mark: 'rect' },
+                        {
+                            mark: 'text',
+                            x: { field: 'start', type: 'genomic' },
+                            xe: { field: 'end', type: 'genomic' },
+                            color: { value: 'black' },
+                            size: { value: 12 },
+                            visibility: [
+                                {
+                                    measure: 'zoomLevel',
+                                    target: 'track',
+                                    threshold: 10,
+                                    operation: 'LT',
+                                    transitionPadding: 100
+                                }
+                            ]
+                        }
+                    ],
+                    x: { field: 'pos', type: 'genomic', axis: 'bottom' },
+                    row: { field: 'name', type: 'nominal', legend: true },
+                    color: {
+                        field: 'base',
+                        type: 'nominal',
+                        range: [
+                            '#d60000',
+                            '#018700',
+                            '#b500ff',
+                            '#05acc6',
+                            '#97ff00',
+                            '#ffa52f',
+                            '#ff8ec8',
+                            '#79525e',
+                            '#00fdcf',
+                            '#afa5ff',
+                            '#93ac83',
+                            '#9a6900',
+                            '#366962',
+                            '#d3008c',
+                            '#fdf490',
+                            '#c86e66',
+                            '#9ee2ff',
+                            '#00c846',
+                            '#a877ac',
+                            '#b8ba01'
+                        ],
+                        legend: true
+                    },
+                    stroke: { value: 'white' },
+                    strokeWidth: { value: 0 },
+                    text: { field: 'base', type: 'nominal' },
+                    width: 800,
+                    height: 500
+                }
+            ]
+        },
+        {
+            static: true,
+            xDomain: { interval: [0, 396] },
+            alignment: 'overlay',
+            tracks: [
+                {
+                    data: {
+                        url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/alignment_viewer_p53.fasta.csv',
+                        type: 'csv',
+                        genomicFields: ['pos'],
+                        sampleLength: 99999
+                    },
+                    mark: 'rect',
+                    x: { field: 'pos', type: 'genomic', axis: 'none' },
+                    row: { field: 'name', type: 'nominal', legend: false },
+                    color: {
+                        field: 'base',
+                        type: 'nominal',
+                        range: [
+                            '#d60000',
+                            '#018700',
+                            '#b500ff',
+                            '#05acc6',
+                            '#97ff00',
+                            '#ffa52f',
+                            '#ff8ec8',
+                            '#79525e',
+                            '#00fdcf',
+                            '#afa5ff',
+                            '#93ac83',
+                            '#9a6900',
+                            '#366962',
+                            '#d3008c',
+                            '#fdf490',
+                            '#c86e66',
+                            '#9ee2ff',
+                            '#00c846',
+                            '#a877ac',
+                            '#b8ba01'
+                        ],
+                        legend: false
+                    },
+                    stroke: { value: 'white' },
+                    strokeWidth: { value: 0 },
+                    text: { field: 'base', type: 'nominal' },
+                    width: 800,
+                    height: 150
+                },
+                {
+                    data: {
+                        url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/alignment_viewer_p53.conservation.csv',
+                        type: 'csv',
+                        genomicFields: ['pos'],
+                        sampleLength: 99999
+                    },
+                    mark: 'bar',
+                    x: { field: 'start', type: 'genomic', axis: 'none' },
+                    xe: { field: 'end', type: 'genomic', axis: 'none' },
+                    y: {
+                        field: 'conservation',
+                        type: 'quantitative',
+                        axis: 'none'
+                    },
+                    color: { field: 'conservation', type: 'quantitative' },
+                    stroke: { value: 'white' },
+                    strokeWidth: { value: 0 },
+                    width: 800,
+                    height: 150
+                },
+                {
+                    data: {
+                        url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/alignment_viewer_p53.gap.csv',
+                        type: 'csv',
+                        genomicFields: ['pos'],
+                        sampleLength: 99999
+                    },
+                    mark: 'bar',
+                    x: { field: 'start', type: 'genomic', axis: 'none' },
+                    xe: { field: 'end', type: 'genomic', axis: 'none' },
+                    y: { field: 'gap', type: 'quantitative', axis: 'none' },
+                    color: { value: 'gray' },
+                    stroke: { value: 'white' },
+                    strokeWidth: { value: 0 },
+                    width: 800,
+                    height: 150
+                },
+                {
+                    mark: 'brush',
+                    x: { linkingId: '-' },
+                    color: { value: 'black' },
+                    stroke: { value: 'black' },
+                    strokeWidth: { value: 1 },
+                    opacity: { value: 0.3 }
+                }
+            ],
+            width: 800,
+            height: 150
+        }
+    ]
+};
+
+const cancer = {
+    title: 'Breast Cancer Variant (Staaf et al. 2019)',
+    subtitle: 'Genetic characteristics of RAD51C- and PALB2-altered TNBCs',
+    layout: 'linear',
+    arrangement: 'vertical',
+    centerRadius: 0.5,
+    assembly: 'hg19',
+    spacing: 40,
+    style: {
+        outlineWidth: 1,
+        outline: 'lightgray',
+        enableSmoothPath: false
+    },
+    views: [
+        {
+            arrangement: 'vertical',
+            views: [
+                {
+                    xOffset: 190,
+                    layout: 'circular',
+                    spacing: 1,
+                    tracks: [
+                        {
+                            title: 'Patient Overview (PD35930a)',
+                            alignment: 'overlay',
+                            data: {
+                                url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv',
+                                type: 'csv',
+                                chromosomeField: 'Chromosome',
+                                genomicFields: ['chromStart', 'chromEnd']
+                            },
+                            tracks: [
+                                { mark: 'rect' },
+                                {
+                                    mark: 'brush',
+                                    x: { linkingId: 'mid-scale' },
+                                    strokeWidth: { value: 1.5 },
+                                    stroke: { value: '#0070DC' },
+                                    color: { value: '#AFD8FF' },
+                                    opacity: { value: 0.5 }
+                                }
+                            ],
+                            color: {
+                                field: 'Stain',
+                                type: 'nominal',
+                                domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar', 'acen'],
+                                range: ['white', 'lightgray', 'gray', 'gray', 'black', '#7B9CC8', '#DC4542']
+                            },
+                            size: { value: 18 },
+                            x: { field: 'chromStart', type: 'genomic' },
+                            xe: { field: 'chromEnd', type: 'genomic' },
+                            stroke: { value: 'gray' },
+                            strokeWidth: { value: 0.3 },
+                            width: 500,
+                            height: 100
+                        },
+                        {
+                            title: 'Putative Driver',
+                            alignment: 'overlay',
+                            data: {
+                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/SV/driver.df.scanb.complete.csv',
+                                type: 'csv',
+                                chromosomeField: 'Chr',
+                                genomicFields: ['ChrStart', 'ChrEnd']
+                            },
+                            dataTransform: [{ type: 'filter', field: 'Sample', oneOf: ['PD35930a'] }],
+                            tracks: [{ mark: 'text' }, { mark: 'triangleBottom', size: { value: 5 } }],
+                            x: { field: 'ChrStart', type: 'genomic' },
+                            xe: { field: 'ChrEnd', type: 'genomic' },
+                            text: { field: 'Gene', type: 'nominal' },
+                            color: { value: 'black' },
+                            style: {
+                                textFontWeight: 'normal',
+                                dx: -10,
+                                outlineWidth: 0
+                            },
+                            width: 500,
+                            height: 40
+                        },
+                        {
+                            title: 'LOH',
+                            style: { background: 'lightgray', backgroundOpacity: 0.2 },
+                            alignment: 'overlay',
+                            data: {
+                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/cancer/cnv.PD35930a.csv',
+                                headerNames: [
+                                    'id',
+                                    'chr',
+                                    'start',
+                                    'end',
+                                    'total_cn_normal',
+                                    'minor_cp_normal',
+                                    'total_cn_tumor',
+                                    'minor_cn_tumor'
+                                ],
+                                type: 'csv',
+                                chromosomeField: 'chr',
+                                genomicFields: ['start', 'end']
+                            },
+                            dataTransform: [{ type: 'filter', field: 'minor_cn_tumor', oneOf: ['0'] }],
+                            tracks: [
+                                { mark: 'rect' },
+                                {
+                                    mark: 'brush',
+                                    x: { linkingId: 'mid-scale' },
+                                    strokeWidth: { value: 1 },
+                                    stroke: { value: '#94C2EF' },
+                                    color: { value: '#AFD8FF' }
+                                }
+                            ],
+                            x: { field: 'start', type: 'genomic' },
+                            xe: { field: 'end', type: 'genomic' },
+                            color: { value: '#FB6A4B' },
+                            width: 620,
+                            height: 40
+                        },
+                        {
+                            title: 'Gain',
+                            style: { background: 'lightgray', backgroundOpacity: 0.2 },
+                            alignment: 'overlay',
+                            data: {
+                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/cancer/cnv.PD35930a.csv',
+                                headerNames: [
+                                    'id',
+                                    'chr',
+                                    'start',
+                                    'end',
+                                    'total_cn_normal',
+                                    'minor_cp_normal',
+                                    'total_cn_tumor',
+                                    'minor_cn_tumor'
+                                ],
+                                type: 'csv',
+                                chromosomeField: 'chr',
+                                genomicFields: ['start', 'end']
+                            },
+                            dataTransform: [
+                                {
+                                    type: 'filter',
+                                    field: 'total_cn_tumor',
+                                    inRange: [4.5, 900]
+                                }
+                            ],
+                            tracks: [
+                                { mark: 'rect' },
+                                {
+                                    mark: 'brush',
+                                    x: { linkingId: 'mid-scale' },
+                                    strokeWidth: { value: 0 }
+                                }
+                            ],
+                            x: { field: 'start', type: 'genomic' },
+                            xe: { field: 'end', type: 'genomic' },
+                            color: { value: '#73C475' },
+                            width: 500,
+                            height: 40
+                        },
+                        {
+                            title: 'Structural Variant',
+                            data: {
+                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/cancer/rearrangement.PD35930a.csv',
+                                type: 'csv',
+                                genomicFieldsToConvert: [
+                                    {
+                                        chromosomeField: 'chr1',
+                                        genomicFields: ['start1', 'end1']
+                                    },
+                                    {
+                                        chromosomeField: 'chr2',
+                                        genomicFields: ['start2', 'end2']
+                                    }
+                                ]
+                            },
+                            mark: 'withinLink',
+                            x: { field: 'start1', type: 'genomic' },
+                            xe: { field: 'end2', type: 'genomic' },
+                            color: {
+                                field: 'svclass',
+                                type: 'nominal',
+                                legend: true,
+                                domain: ['tandem-duplication', 'translocation', 'delection', 'inversion'],
+                                range: ['#569C4D', '#4C75A2', '#DA5456', '#EA8A2A']
+                            },
+                            stroke: {
+                                field: 'svclass',
+                                type: 'nominal',
+                                domain: ['tandem-duplication', 'translocation', 'delection', 'inversion'],
+                                range: ['#569C4D', '#4C75A2', '#DA5456', '#EA8A2A']
+                            },
+                            strokeWidth: { value: 1 },
+                            opacity: { value: 0.6 },
+                            style: { legendTitle: 'SV Class' },
+                            width: 500,
+                            height: 80
+                        }
+                    ]
+                },
+                {
+                    linkingId: 'mid-scale',
+                    xDomain: { chromosome: 'chr1' },
+                    layout: 'linear',
+                    tracks: [
+                        {
+                            style: {
+                                background: '#D7EBFF',
+                                outline: '#8DC1F2',
+                                outlineWidth: 5
+                            },
+                            title: 'Ideogram',
+                            alignment: 'overlay',
+                            data: {
+                                url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv',
+                                type: 'csv',
+                                chromosomeField: 'Chromosome',
+                                genomicFields: ['chromStart', 'chromEnd']
+                            },
+                            tracks: [
+                                {
+                                    mark: 'rect',
+                                    dataTransform: [
+                                        {
+                                            type: 'filter',
+                                            field: 'Stain',
+                                            oneOf: ['acen'],
+                                            not: true
+                                        }
+                                    ]
+                                },
+                                {
+                                    mark: 'triangleRight',
+                                    dataTransform: [
+                                        { type: 'filter', field: 'Stain', oneOf: ['acen'] },
+                                        { type: 'filter', field: 'Name', include: 'q' }
+                                    ]
+                                },
+                                {
+                                    mark: 'triangleLeft',
+                                    dataTransform: [
+                                        { type: 'filter', field: 'Stain', oneOf: ['acen'] },
+                                        { type: 'filter', field: 'Name', include: 'p' }
+                                    ]
+                                },
+                                {
+                                    mark: 'text',
+                                    dataTransform: [
+                                        {
+                                            type: 'filter',
+                                            field: 'Stain',
+                                            oneOf: ['acen'],
+                                            not: true
+                                        }
+                                    ],
+                                    size: { value: 12 },
+                                    color: {
+                                        field: 'Stain',
+                                        type: 'nominal',
+                                        domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar'],
+                                        range: ['black', 'black', 'black', 'black', 'white', 'black']
+                                    },
+                                    visibility: [
+                                        {
+                                            operation: 'less-than',
+                                            measure: 'width',
+                                            threshold: '|xe-x|',
+                                            transitionPadding: 10,
+                                            target: 'mark'
+                                        }
+                                    ]
+                                }
+                            ],
+                            color: {
+                                field: 'Stain',
+                                type: 'nominal',
+                                domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar', 'acen'],
+                                range: ['white', 'lightgray', 'gray', 'gray', 'black', '#7B9CC8', '#DC4542']
+                            },
+                            size: { value: 18 },
+                            x: { field: 'chromStart', type: 'genomic' },
+                            xe: { field: 'chromEnd', type: 'genomic' },
+                            text: { field: 'Name', type: 'nominal' },
+                            stroke: { value: 'gray' },
+                            strokeWidth: { value: 0.3 },
+                            width: 500,
+                            height: 30
+                        },
+                        {
+                            title: 'Putative Driver',
+                            data: {
+                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/SV/driver.df.scanb.complete.csv',
+                                type: 'csv',
+                                chromosomeField: 'Chr',
+                                genomicFields: ['ChrStart', 'ChrEnd']
+                            },
+                            dataTransform: [{ type: 'filter', field: 'Sample', oneOf: ['PD35930a'] }],
+                            mark: 'text',
+                            x: { field: 'ChrStart', type: 'genomic' },
+                            xe: { field: 'ChrEnd', type: 'genomic' },
+                            text: { field: 'Gene', type: 'nominal' },
+                            color: { value: 'black' },
+                            style: { textFontWeight: 'normal', dx: -10 },
+                            width: 500,
+                            height: 20
+                        },
+                        {
+                            alignment: 'overlay',
+                            title: 'hg38 | Genes',
+                            data: {
+                                url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=gene-annotation',
+                                type: 'beddb',
+                                genomicFields: [
+                                    { index: 1, name: 'start' },
+                                    { index: 2, name: 'end' }
+                                ],
+                                valueFields: [
+                                    { index: 5, name: 'strand', type: 'nominal' },
+                                    { index: 3, name: 'name', type: 'nominal' }
+                                ],
+                                exonIntervalFields: [
+                                    { index: 12, name: 'start' },
+                                    { index: 13, name: 'end' }
+                                ]
+                            },
+                            tracks: [
+                                {
+                                    dataTransform: [
+                                        { type: 'filter', field: 'type', oneOf: ['gene'] },
+                                        { type: 'filter', field: 'strand', oneOf: ['+'] }
+                                    ],
+                                    mark: 'triangleRight',
+                                    x: { field: 'end', type: 'genomic' },
+                                    size: { value: 15 }
+                                },
+                                {
+                                    dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
+                                    mark: 'text',
+                                    text: { field: 'name', type: 'nominal' },
+                                    x: { field: 'start', type: 'genomic' },
+                                    xe: { field: 'end', type: 'genomic' },
+                                    style: { dy: -15, outline: 'black', outlineWidth: 0 }
+                                },
+                                {
+                                    dataTransform: [
+                                        { type: 'filter', field: 'type', oneOf: ['gene'] },
+                                        { type: 'filter', field: 'strand', oneOf: ['-'] }
+                                    ],
+                                    mark: 'triangleLeft',
+                                    x: { field: 'start', type: 'genomic' },
+                                    size: { value: 15 },
+                                    style: {
+                                        align: 'right',
+                                        outline: 'black',
+                                        outlineWidth: 0
+                                    }
+                                },
+                                {
+                                    dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
+                                    mark: 'rect',
+                                    x: { field: 'start', type: 'genomic' },
+                                    size: { value: 15 },
+                                    xe: { field: 'end', type: 'genomic' }
+                                },
+                                {
+                                    dataTransform: [
+                                        { type: 'filter', field: 'type', oneOf: ['gene'] },
+                                        { type: 'filter', field: 'strand', oneOf: ['+'] }
+                                    ],
+                                    mark: 'rule',
+                                    x: { field: 'start', type: 'genomic' },
+                                    strokeWidth: { value: 2 },
+                                    xe: { field: 'end', type: 'genomic' },
+                                    style: {
+                                        linePattern: { type: 'triangleRight', size: 3.5 },
+                                        outline: 'black',
+                                        outlineWidth: 0
+                                    }
+                                },
+                                {
+                                    dataTransform: [
+                                        { type: 'filter', field: 'type', oneOf: ['gene'] },
+                                        { type: 'filter', field: 'strand', oneOf: ['-'] }
+                                    ],
+                                    mark: 'rule',
+                                    x: { field: 'start', type: 'genomic' },
+                                    strokeWidth: { value: 2 },
+                                    xe: { field: 'end', type: 'genomic' },
+                                    style: {
+                                        linePattern: { type: 'triangleLeft', size: 3.5 },
+                                        outline: 'black',
+                                        outlineWidth: 0
+                                    }
+                                },
+                                {
+                                    mark: 'brush',
+                                    x: { linkingId: 'detail-1' },
+                                    strokeWidth: { value: 0 },
+                                    color: { value: 'gray' },
+                                    opacity: { value: 0.3 }
+                                },
+                                {
+                                    mark: 'brush',
+                                    x: { linkingId: 'detail-2' },
+                                    strokeWidth: { value: 0 },
+                                    color: { value: 'gray' },
+                                    opacity: { value: 0.3 }
+                                }
+                            ],
+                            row: {
+                                field: 'strand',
+                                type: 'nominal',
+                                domain: ['+', '-']
+                            },
+                            color: {
+                                field: 'strand',
+                                type: 'nominal',
+                                domain: ['+', '-'],
+                                range: ['#97A8B2', '#D4C6BA']
+                            },
+                            visibility: [
+                                {
+                                    operation: 'less-than',
+                                    measure: 'width',
+                                    threshold: '|xe-x|',
+                                    transitionPadding: 10,
+                                    target: 'mark'
+                                }
+                            ],
+                            width: 400,
+                            height: 100
+                        },
+                        {
+                            title: 'LOH',
+                            style: { background: 'lightgray', backgroundOpacity: 0.2 },
+                            data: {
+                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/cancer/cnv.PD35930a.csv',
+                                headerNames: [
+                                    'id',
+                                    'chr',
+                                    'start',
+                                    'end',
+                                    'total_cn_normal',
+                                    'minor_cp_normal',
+                                    'total_cn_tumor',
+                                    'minor_cn_tumor'
+                                ],
+                                type: 'csv',
+                                chromosomeField: 'chr',
+                                genomicFields: ['start', 'end']
+                            },
+                            dataTransform: [{ type: 'filter', field: 'minor_cn_tumor', oneOf: ['0'] }],
+                            mark: 'rect',
+                            x: { field: 'start', type: 'genomic' },
+                            xe: { field: 'end', type: 'genomic' },
+                            color: { value: '#FB6A4B' },
+                            width: 620,
+                            height: 20
+                        },
+                        {
+                            title: 'Gain',
+                            style: { background: 'lightgray', backgroundOpacity: 0.2 },
+                            data: {
+                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/cancer/cnv.PD35930a.csv',
+                                headerNames: [
+                                    'id',
+                                    'chr',
+                                    'start',
+                                    'end',
+                                    'total_cn_normal',
+                                    'minor_cp_normal',
+                                    'total_cn_tumor',
+                                    'minor_cn_tumor'
+                                ],
+                                type: 'csv',
+                                chromosomeField: 'chr',
+                                genomicFields: ['start', 'end']
+                            },
+                            dataTransform: [
+                                {
+                                    type: 'filter',
+                                    field: 'total_cn_tumor',
+                                    inRange: [4.5, 900]
+                                }
+                            ],
+                            mark: 'rect',
+                            x: { field: 'start', type: 'genomic' },
+                            xe: { field: 'end', type: 'genomic' },
+                            color: { value: '#73C475' },
+                            width: 500,
+                            height: 20
+                        },
+                        {
+                            title: 'Structural Variant',
+                            data: {
+                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/cancer/rearrangement.PD35930a.csv',
+                                type: 'csv',
+                                genomicFieldsToConvert: [
+                                    {
+                                        chromosomeField: 'chr1',
+                                        genomicFields: ['start1', 'end1']
+                                    },
+                                    {
+                                        chromosomeField: 'chr2',
+                                        genomicFields: ['start2', 'end2']
+                                    }
+                                ]
+                            },
+                            alignment: 'overlay',
+                            tracks: [
+                                {
+                                    mark: 'withinLink',
+                                    x: { field: 'start1', type: 'genomic' },
+                                    xe: { field: 'end2', type: 'genomic' }
+                                },
+                                {
+                                    mark: 'point',
+                                    x: { field: 'start1', type: 'genomic' },
+                                    y: { value: 400 }
+                                },
+                                {
+                                    mark: 'point',
+                                    x: { field: 'end2', type: 'genomic' },
+                                    y: { value: 400 }
+                                }
+                            ],
+                            color: {
+                                field: 'svclass',
+                                type: 'nominal',
+                                domain: ['tandem-duplication', 'translocation', 'delection', 'inversion'],
+                                range: ['#569C4D', '#4C75A2', '#DA5456', '#EA8A2A'],
+                                legend: true
+                            },
+                            stroke: {
+                                field: 'svclass',
+                                type: 'nominal',
+                                domain: ['tandem-duplication', 'translocation', 'delection', 'inversion'],
+                                range: ['#569C4D', '#4C75A2', '#DA5456', '#EA8A2A']
+                            },
+                            strokeWidth: { value: 1 },
+                            opacity: { value: 0.6 },
+                            size: { value: 4 },
+                            tooltip: [
+                                { field: 'start1', type: 'genomic' },
+                                { field: 'end2', type: 'genomic' },
+                                { field: 'svclass', type: 'nominal' }
+                            ],
+                            style: { legendTitle: 'SV Class', linkStyle: 'elliptical' },
+                            width: 1000,
+                            height: 200
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            arrangement: 'horizontal',
+            spacing: 100,
+            views: [
+                {
+                    static: false,
+                    layout: 'linear',
+                    centerRadius: 0.05,
+                    xDomain: { chromosome: 'chr1', interval: [205000, 207000] },
+                    spacing: 0.01,
+                    tracks: [
+                        {
+                            alignment: 'overlay',
+                            title: 'example_higlass.bam',
+                            data: {
+                                type: 'bam',
+                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam',
+                                indexUrl: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam.bai',
+                                loadMates: true
+                            },
+                            mark: 'bar',
+                            tracks: [
+                                {
+                                    dataTransform: [
+                                        {
+                                            type: 'coverage',
+                                            startField: 'start',
+                                            endField: 'end'
+                                        }
+                                    ],
+                                    x: { field: 'start', type: 'genomic' },
+                                    xe: { field: 'end', type: 'genomic' },
+                                    y: {
+                                        field: 'coverage',
+                                        type: 'quantitative',
+                                        axis: 'right'
+                                    },
+                                    color: { value: '#C6C6C6' }
+                                }
+                            ],
+                            style: { outlineWidth: 0.5 },
+                            width: 450,
+                            height: 80
+                        },
+                        {
+                            alignment: 'overlay',
+                            title: 'example_higlass.bam',
+                            data: {
+                                type: 'bam',
+                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam',
+                                indexUrl: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam.bai',
+                                loadMates: true,
+                                maxInsertSize: 300
+                            },
+                            mark: 'rect',
+                            tracks: [
+                                {
+                                    dataTransform: [
+                                        {
+                                            type: 'displace',
+                                            method: 'pile',
+                                            boundingBox: {
+                                                startField: 'start',
+                                                endField: 'end',
+                                                padding: 5,
+                                                isPaddingBP: true
+                                            },
+                                            newField: 'pileup-row'
+                                        }
+                                    ],
+                                    x: { field: 'start', type: 'genomic' },
+                                    xe: { field: 'end', type: 'genomic' },
+                                    color: {
+                                        field: 'svType',
+                                        type: 'nominal',
+                                        legend: true,
+                                        domain: [
+                                            'normal read',
+                                            'deletion (+-)',
+                                            'inversion (++)',
+                                            'inversion (--)',
+                                            'duplication (-+)',
+                                            'more than two mates',
+                                            'mates not found within chromosome',
+                                            'clipping'
+                                        ],
+                                        range: [
+                                            '#C8C8C8',
+                                            '#E79F00',
+                                            '#029F73',
+                                            '#0072B2',
+                                            '#CB7AA7',
+                                            '#57B4E9',
+                                            '#D61E2E',
+                                            '#414141'
+                                        ]
+                                    }
+                                },
+                                {
+                                    dataTransform: [
+                                        {
+                                            type: 'displace',
+                                            method: 'pile',
+                                            boundingBox: {
+                                                startField: 'start',
+                                                endField: 'end',
+                                                padding: 5,
+                                                isPaddingBP: true
+                                            },
+                                            newField: 'pileup-row'
+                                        },
+                                        {
+                                            type: 'subjson',
+                                            field: 'substitutions',
+                                            genomicField: 'pos',
+                                            baseGenomicField: 'start',
+                                            genomicLengthField: 'length'
+                                        },
+                                        { type: 'filter', field: 'type', oneOf: ['S', 'H'] }
+                                    ],
+                                    x: { field: 'pos_start', type: 'genomic' },
+                                    xe: { field: 'pos_end', type: 'genomic' },
+                                    color: { value: '#414141' }
+                                }
+                            ],
+                            tooltip: [
+                                { field: 'start', type: 'genomic' },
+                                { field: 'end', type: 'genomic' },
+                                { field: 'insertSize', type: 'quantitative' },
+                                { field: 'svType', type: 'nominal' },
+                                { field: 'strand', type: 'nominal' },
+                                { field: 'numMates', type: 'quantitative' },
+                                { field: 'mateIds', type: 'nominal' }
+                            ],
+                            row: { field: 'pileup-row', type: 'nominal', padding: 0.2 },
+                            style: {
+                                outlineWidth: 0.5,
+                                legendTitle: 'Insert Size = 300bp'
+                            },
+                            width: 450,
+                            height: 310
+                        }
+                    ]
+                },
+                {
+                    static: false,
+                    layout: 'linear',
+                    centerRadius: 0.05,
+                    xDomain: { chromosome: 'chr1', interval: [490000, 496000] },
+                    spacing: 0.01,
+                    tracks: [
+                        {
+                            alignment: 'overlay',
+                            title: 'example_higlass.bam',
+                            data: {
+                                type: 'bam',
+                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam',
+                                indexUrl: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam.bai',
+                                loadMates: true
+                            },
+                            mark: 'bar',
+                            tracks: [
+                                {
+                                    dataTransform: [
+                                        {
+                                            type: 'coverage',
+                                            startField: 'start',
+                                            endField: 'end'
+                                        }
+                                    ],
+                                    x: { field: 'start', type: 'genomic' },
+                                    xe: { field: 'end', type: 'genomic' },
+                                    y: {
+                                        field: 'coverage',
+                                        type: 'quantitative',
+                                        axis: 'right'
+                                    },
+                                    color: { value: '#C6C6C6' }
+                                }
+                            ],
+                            style: { outlineWidth: 0.5 },
+                            width: 450,
+                            height: 80
+                        },
+                        {
+                            alignment: 'overlay',
+                            title: 'example_higlass.bam',
+                            data: {
+                                type: 'bam',
+                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam',
+                                indexUrl: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam.bai',
+                                loadMates: true,
+                                maxInsertSize: 300
+                            },
+                            mark: 'rect',
+                            tracks: [
+                                {
+                                    dataTransform: [
+                                        {
+                                            type: 'displace',
+                                            method: 'pile',
+                                            boundingBox: {
+                                                startField: 'start',
+                                                endField: 'end',
+                                                padding: 5,
+                                                isPaddingBP: true
+                                            },
+                                            newField: 'pileup-row'
+                                        }
+                                    ],
+                                    x: { field: 'start', type: 'genomic' },
+                                    xe: { field: 'end', type: 'genomic' },
+                                    color: {
+                                        field: 'svType',
+                                        type: 'nominal',
+                                        legend: true,
+                                        domain: [
+                                            'normal read',
+                                            'deletion (+-)',
+                                            'inversion (++)',
+                                            'inversion (--)',
+                                            'duplication (-+)',
+                                            'more than two mates',
+                                            'mates not found within chromosome',
+                                            'clipping'
+                                        ],
+                                        range: [
+                                            '#C8C8C8',
+                                            '#E79F00',
+                                            '#029F73',
+                                            '#0072B2',
+                                            '#CB7AA7',
+                                            '#57B4E9',
+                                            '#D61E2E',
+                                            '#414141'
+                                        ]
+                                    }
+                                },
+                                {
+                                    dataTransform: [
+                                        {
+                                            type: 'displace',
+                                            method: 'pile',
+                                            boundingBox: {
+                                                startField: 'start',
+                                                endField: 'end',
+                                                padding: 5,
+                                                isPaddingBP: true
+                                            },
+                                            newField: 'pileup-row'
+                                        },
+                                        {
+                                            type: 'subjson',
+                                            field: 'substitutions',
+                                            genomicField: 'pos',
+                                            baseGenomicField: 'start',
+                                            genomicLengthField: 'length'
+                                        },
+                                        { type: 'filter', field: 'type', oneOf: ['S', 'H'] }
+                                    ],
+                                    x: { field: 'pos_start', type: 'genomic' },
+                                    xe: { field: 'pos_end', type: 'genomic' },
+                                    color: { value: '#414141' }
+                                }
+                            ],
+                            tooltip: [
+                                { field: 'start', type: 'genomic' },
+                                { field: 'end', type: 'genomic' },
+                                { field: 'insertSize', type: 'quantitative' },
+                                { field: 'svType', type: 'nominal' },
+                                { field: 'strand', type: 'nominal' },
+                                { field: 'numMates', type: 'quantitative' },
+                                { field: 'mateIds', type: 'nominal' }
+                            ],
+                            row: { field: 'pileup-row', type: 'nominal', padding: 0.2 },
+                            style: {
+                                outlineWidth: 0.5,
+                                legendTitle: 'Insert Size = 300bp'
+                            },
+                            width: 450,
+                            height: 310
+                        }
+                    ]
                 }
             ]
         }
