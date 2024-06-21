@@ -16,30 +16,6 @@ export interface LinkedEncoding {
     brushIds: string[];
 }
 
-const example1: LinkedEncoding = {
-    linkingId: 'detail-1',
-    encoding: 'x',
-    signal: signal([0, 100]),
-    trackIds: ['track1', 'track2', ''],
-    brushIds: ['brush1']
-};
-
-const example2: LinkedEncoding = {
-    linkingId: 'detail-2',
-    encoding: 'x',
-    signal: signal([0, 100]),
-    trackIds: ['track2'],
-    brushIds: ['brush2']
-};
-
-const example3: LinkedEncoding = {
-    linkingId: undefined,
-    encoding: 'x',
-    signal: signal([0, 100]),
-    trackIds: ['overview track', 'brush1', 'brush2'],
-    brushIds: []
-};
-
 /**
  * This is information extracted from the Gosling spec.
  * Is is the linking that is defined at the view level.
@@ -79,10 +55,14 @@ export function getLinkedEncodings(gs: GoslingSpec) {
     // First, we traverse the gosling spec to find all the linked tracks and brushes
     const { trackLinks, viewLinks } = getLinedFeaturesRecursive(gs);
     console.warn('trackLinks', trackLinks);
-    // We combine the tracks and views that are linked together
+    // We associate tracks the other tracks they are linked with
     const linkedEncodings = viewLinks.map(viewLink => {
-        const linkedBrushes = filterLinkedTracksByType(TrackType.BrushLinear, viewLink.linkingId, trackLinks);
-        const linkedTracks = filterLinkedTracksByType(TrackType.Gosling, viewLink.linkingId, trackLinks);
+        const linkedBrushes = filterLinkedTracksByType(
+            [TrackType.BrushLinear, TrackType.BrushCircular],
+            viewLink.linkingId,
+            trackLinks
+        );
+        const linkedTracks = filterLinkedTracksByType([TrackType.Gosling], viewLink.linkingId, trackLinks);
         return {
             linkingId: viewLink.linkingId,
             encoding: viewLink.encoding,
@@ -150,9 +130,9 @@ function isBrushTrack(trackType: TrackType) {
 /**
  * Helper function to filter the linked tracks by type
  */
-function filterLinkedTracksByType(trackType: TrackType, linkingId: string | undefined, trackLinks: TrackLink[]) {
+function filterLinkedTracksByType(trackType: TrackType[], linkingId: string | undefined, trackLinks: TrackLink[]) {
     if (!linkingId) return [];
-    return trackLinks.filter(trackLink => trackLink.linkingId === linkingId && trackLink.trackType === trackType);
+    return trackLinks.filter(trackLink => trackLink.linkingId === linkingId && trackType.includes(trackLink.trackType));
 }
 
 /**

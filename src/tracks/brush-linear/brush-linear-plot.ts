@@ -19,6 +19,7 @@ export class BrushLinearTrack extends BrushLinearTrackClass<BrushLinearTrackOpti
     ) {
         const height = domOverlay.clientHeight;
         const width = domOverlay.clientWidth;
+        
         // If there is already an svg element, use it. Otherwise, create a new one
         const existingSvgElement = domOverlay.querySelector('svg');
         const svgElement = existingSvgElement || document.createElementNS('http://www.w3.org/2000/svg', 'svg');

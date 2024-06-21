@@ -130,7 +130,7 @@ export function renderTrackDefs(trackDefs: TrackDefs[], linkedEncodings: LinkedE
             const domain = getXDomainSignal(trackDef.trackId, linkedEncodings);
             const brushDomain = getBrushSignal(trackDef.trackId, linkedEncodings);
 
-            new BrushCircularTrack(options, brushDomain, pixiManager.makeContainer(boundingBox).overlayDiv);
+            new BrushCircularTrack(options, brushDomain, pixiManager.makeContainer(boundingBox).overlayDiv, domain);
         }
     });
 }
