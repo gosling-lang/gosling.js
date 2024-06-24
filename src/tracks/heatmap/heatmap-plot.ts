@@ -118,4 +118,9 @@ export class HeatmapTrack extends HeatmapTiledPixiTrack<HeatmapTrackOptions> {
         this.xDomain.value = transform.rescaleX(this._refXScale).domain() as [number, number];
         this.yDomain.value = transform.rescaleY(this._refYScale).domain() as [number, number];
     }
+
+    addInteractor(interactor: (plot: HeatmapTrack) => void) {
+        interactor(this);
+        return this; // For chaining
+    }
 }
