@@ -1,14 +1,25 @@
 import { PixiManager } from '@pixi-manager';
 import { HeatmapTrack } from '@gosling-lang/heatmap';
+import { DataFetcher } from '@higlass/datafetcher';
+import { fakePubSub } from '@higlass/utils';
 
 export function addHeatmap(pixiManager: PixiManager) {
     // Let's add a heatmap
     const heatmapPosition = { x: 500, y: 30, width: 400, height: 400 };
-    const { pixiContainer: heatmapContainer, overlayDiv: heatmapOverlayDiv } =
-        pixiManager.makeContainer(heatmapPosition);
-    new HeatmapTrack(heatmapContainer, heatmapOverlayDiv, {
-        trackBorderWidth: 1,
-        trackBorderColor: 'black',
-        colorbarPosition: 'topRight'
-    });
+    const dataFetcher = new DataFetcher(
+        {
+            server: 'http://higlass.io/api/v1',
+            tilesetUid: 'CQMd6V_cRw6iCI_-Unl3PQ'
+        },
+        fakePubSub
+    );
+    new HeatmapTrack(
+        {
+            trackBorderWidth: 1,
+            trackBorderColor: 'black',
+            colorbarPosition: 'topRight'
+        },
+        dataFetcher,
+        pixiManager.makeContainer(heatmapPosition)
+    );
 }

@@ -7,6 +7,7 @@ import { scaleLinear } from 'd3-scale';
 import { type D3ZoomEvent, zoom } from 'd3-zoom';
 import { select } from 'd3-selection';
 import { zoomWheelBehavior } from '../utils';
+import { DataFetcher } from '@higlass/datafetcher';
 
 type HeatmapTrackContext = TiledPixiTrackContext & {
     svgElement: HTMLElement;
@@ -37,29 +38,38 @@ type HeatmapTrackOptions = TiledPixiTrackOptions & {
 };
 
 export class HeatmapTrack extends HeatmapTiledPixiTrack<HeatmapTrackOptions> {
-    constructor(pixiContainer: PIXI.Container, overlayDiv: HTMLElement, options: HeatmapTrackOptions) {
+    constructor(
+        options: HeatmapTrackOptions,
+        dataFetcher: DataFetcher,
+        containers: {
+            pixiContainer: PIXI.Container;
+            overlayDiv: HTMLElement;
+        }
+    ) {
+        const { pixiContainer, overlayDiv } = containers;
         const height = overlayDiv.clientHeight;
         const width = overlayDiv.clientWidth;
-        // The colorbar svg element isn't quite working yet
-        const colorbarDiv = document.createElement('svg');
-        overlayDiv.appendChild(colorbarDiv);
+        // If there is already an svg element, use it. Otherwise, create a new one
+        const existingSvgElement = overlayDiv.querySelector('svg');
+        const svgElement = existingSvgElement || document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        if (!existingSvgElement) {
+            svgElement.style.width = `${width}px`;
+            svgElement.style.height = `${height}px`;
+            overlayDiv.appendChild(svgElement);
+        }
 
         // Setup the context object
         const context: HeatmapTrackContext = {
             scene: pixiContainer,
             id: 'test',
-            dataConfig: {
-                server: 'http://higlass.io/api/v1',
-                tilesetUid: 'CQMd6V_cRw6iCI_-Unl3PQ'
-                // coordSystem: "hg19",
-            },
+            dataFetcher,
             animate: () => {},
             onValueScaleChanged: () => {},
             handleTilesetInfoReceived: (tilesetInfo: any) => {},
             onTrackOptionsChanged: () => {},
             pubSub: fakePubSub,
             isValueScaleLocked: () => false,
-            svgElement: colorbarDiv
+            svgElement: svgElement
         };
 
         super(context, options);
