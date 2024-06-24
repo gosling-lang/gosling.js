@@ -8,6 +8,7 @@ import { type D3ZoomEvent, zoom } from 'd3-zoom';
 import { select } from 'd3-selection';
 import { zoomWheelBehavior } from '../utils';
 import { DataFetcher } from '@higlass/datafetcher';
+import { signal, type Signal } from '@preact/signals-core';
 
 type HeatmapTrackContext = TiledPixiTrackContext & {
     svgElement: HTMLElement;
@@ -38,13 +39,18 @@ type HeatmapTrackOptions = TiledPixiTrackOptions & {
 };
 
 export class HeatmapTrack extends HeatmapTiledPixiTrack<HeatmapTrackOptions> {
+    xDomain: Signal<[number, number]>; // This has to be a signal because it will potentially be updated by interactors
+    domOverlay: HTMLElement;
+
     constructor(
         options: HeatmapTrackOptions,
         dataFetcher: DataFetcher,
         containers: {
             pixiContainer: PIXI.Container;
             overlayDiv: HTMLElement;
-        }
+        },
+        xDomain = signal<[number, number]>([0, 3088269832]),
+        yDomain = signal<[number, number]>([0, 3088269832])
     ) {
         const { pixiContainer, overlayDiv } = containers;
         const height = overlayDiv.clientHeight;
@@ -73,13 +79,15 @@ export class HeatmapTrack extends HeatmapTiledPixiTrack<HeatmapTrackOptions> {
         };
 
         super(context, options);
+        this.xDomain = xDomain;
+        this.domOverlay = overlayDiv;
 
         // Now we need to initialize all of the properties that would normally be set by HiGlassComponent
         this.setDimensions([width, height]);
         this.setPosition([0, 0]);
         // Create some scales which span the whole genome
-        const refXScale = scaleLinear().domain([0, 3088269832]).range([0, width]);
-        const refYScale = scaleLinear().domain([0, 3088269832]).range([0, height]);
+        const refXScale = scaleLinear().domain(xDomain.value).range([0, width]);
+        const refYScale = scaleLinear().domain(yDomain.value).range([0, height]);
         // Set the scales
         this.zoomed(refXScale, refYScale, 1, 0, 0);
         this.refScalesChanged(refXScale, refYScale);
