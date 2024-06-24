@@ -121,25 +121,45 @@ export function renderTrackDefs(trackDefs: TrackDefs[], linkedEncodings: LinkedE
         if (type === TrackType.BrushLinear) {
             const domain = getXDomainSignal(trackDef.trackId, linkedEncodings);
             const brushDomain = getBrushSignal(trackDef.trackId, linkedEncodings);
-
-            new BrushLinearTrack(options, brushDomain, pixiManager.makeContainer(boundingBox).overlayDiv).addInteractor(
-                plot => panZoom(plot, domain)
-            );
+            // We only want to add the brush track if it is linked to another track
+            if (hasLinkedTracks(trackDef.trackId, linkedEncodings)) {
+                new BrushLinearTrack(
+                    options,
+                    brushDomain,
+                    pixiManager.makeContainer(boundingBox).overlayDiv
+                ).addInteractor(plot => panZoom(plot, domain));
+            }
         }
         if (type === TrackType.BrushCircular) {
             const domain = getXDomainSignal(trackDef.trackId, linkedEncodings);
             const brushDomain = getBrushSignal(trackDef.trackId, linkedEncodings);
-
-            new BrushCircularTrack(options, brushDomain, pixiManager.makeContainer(boundingBox).overlayDiv, domain);
+            // We only want to add the brush track if it is linked to another track
+            if (hasLinkedTracks(trackDef.trackId, linkedEncodings)) {
+                new BrushCircularTrack(options, brushDomain, pixiManager.makeContainer(boundingBox).overlayDiv, domain);
+            }
         }
     });
+}
+
+/**
+ * Returns true if the brushId is linked to another track
+ * We don't want to render a brush track if it is not linked to another track
+ */
+function hasLinkedTracks(brushId: string, linkedEncodings: LinkedEncoding[]): boolean {
+    const linkedEncoding = linkedEncodings.find(link => link.brushIds.includes(brushId));
+    if (!linkedEncoding) return false;
+    return linkedEncoding?.brushIds.length > 0 && linkedEncoding?.trackIds.length > 0;
 }
 
 function getBrushSignal(trackDefId: string, linkedEncodings: LinkedEncoding[]): Signal<[number, number]> {
     const linkedEncoding = linkedEncodings.find(link => link.brushIds.includes(trackDefId));
 
     if (!linkedEncoding) {
-        console.error(`No linked encoding found for track ${trackDefId}`);
+        console.warn(`No linked encoding found for track ${trackDefId}`);
+        return signal<[number, number]>([0, 30000000]);
+    }
+    if (!linkedEncoding.signal) {
+        console.warn(`No signal found for linked encoding ${linkedEncoding.linkingId}`);
         return signal<[number, number]>([0, 30000000]);
     }
     return linkedEncoding!.signal;
@@ -149,7 +169,11 @@ function getXDomainSignal(trackDefId: string, linkedEncodings: LinkedEncoding[])
     const linkedEncoding = linkedEncodings.find(link => link.trackIds.includes(trackDefId));
 
     if (!linkedEncoding) {
-        console.error(`No linked encoding found for track ${trackDefId}`);
+        console.warn(`No linked encoding found for track ${trackDefId}`);
+        return signal<[number, number]>([0, 30000000]);
+    }
+    if (!linkedEncoding.signal) {
+        console.warn(`No signal found for linked encoding ${linkedEncoding.linkingId}`);
         return signal<[number, number]>([0, 30000000]);
     }
     return linkedEncoding!.signal;
