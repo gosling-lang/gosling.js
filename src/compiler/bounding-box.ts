@@ -337,7 +337,12 @@ function traverseAndCollectTrackInfo(
             // t.track.startAngle = ((t.boundingBox.x - dx) / cumWidth) * 360;
             // t.track.endAngle = ((t.boundingBox.x + t.boundingBox.width - dx) / cumWidth) * 360;
 
-            t.boundingBox.x = dx + (t.track.xOffset ?? 0);
+            // If this is the first track, we add the offset of the x position
+            if (i == 0) {
+                t.boundingBox.x = dx + (t.track.xOffset ?? 0);
+            } else {
+                t.boundingBox.x = dx;
+            }
             t.boundingBox.y = dy + (t.track.yOffset ?? 0);
 
             // Circular tracks share the same size and position since technically these tracks are being overlaid on top of the others
