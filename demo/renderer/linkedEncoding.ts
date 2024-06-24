@@ -182,7 +182,13 @@ function getSingleViewTrackLinks(gs: SingleView): TrackLink[] {
         track._overlay!.forEach(overlay => {
             if (overlay.mark === 'brush') {
                 const trackType = gs.layout === 'linear' ? TrackType.BrushLinear : TrackType.BrushCircular;
-                trackLinks.push({ trackId: overlay.id, linkingId: overlay.x.linkingId, trackType, encoding: 'x' });
+                const trackLink = { trackId: overlay.id, linkingId: overlay.x.linkingId, trackType, encoding: 'x' };
+                if (overlay.x.domain !== undefined) {
+                    const { assembly } = gs;
+                    const domain = getDomain(overlay.x.domain, assembly);
+                    trackLink.signal = signal(domain);
+                }
+                trackLinks.push(trackLink);
             }
         });
     });
