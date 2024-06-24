@@ -9,3 +9,19 @@ beforeAll(() => {
     };
     global.jest = vi; // Needed to mock canvas in jest
 });
+
+// Mock Worker to fix "ReferenceError: Worker is not defined" error in tests
+class WorkerMock {
+    constructor(stringUrl) {
+      this.url = stringUrl;
+      this.onmessage = () => {};
+    }
+    
+    postMessage(msg) {
+      this.onmessage({ data: msg });
+    }
+    
+    terminate() {}
+  }
+  
+  global.Worker = WorkerMock;
