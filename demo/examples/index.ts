@@ -5,3 +5,4 @@ export { addGoslingTrack } from './gosling-track-example';
 export { addAxisTrack } from './axis-track-example';
 export { addLinearBrush } from './brush-linear-example';
 export { addBigwig } from './bigwig-data-example';
+export { addHeatmap } from './heatmap-example';
