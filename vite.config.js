@@ -139,7 +139,7 @@ const testing = defineConfig({
         coverage: {
             reportsDirectory: './coverage',
             reporter: ['lcov', 'text'],
-            include: ['src', 'editor']
+            include: ['src', 'editor', 'demo']
         }
     }
 });
