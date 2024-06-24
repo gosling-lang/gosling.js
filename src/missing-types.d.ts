@@ -579,6 +579,46 @@ declare module '@higlass/tracks' {
         scene: PIXI.Container;
     }
 
+    export interface PixiTrackContext {
+        pubSub?: any;
+        scene: PIXI.Container;
+        id: string;
+    }
+
+    export interface PixiTrackOptions {
+        labelPosition?: string;
+        labelText?: string;
+        trackBorderWidth?: number;
+        trackBorderColor?: string;
+        backgroundColor?: string;
+        labelColor?: string;
+        lineStrokeColor?: string;
+        barFillColor?: string;
+        name?: string;
+        labelTextOpacity?: number;
+        labelBackgroundColor?: string;
+        labelLeftMargin?: number;
+        labelRightMargin?: number;
+        labelTopMargin?: number;
+        labelBottomMargin?: number;
+        labelBackgroundOpacity?: number;
+        labelShowAssembly?: boolean;
+        labelShowResolution?: boolean;
+        dataTransform?: string;
+    }
+
+    export type TiledPixiTrackContext = PixiTrackContext & {
+        dataFetcher?: DataFetcher;
+        dataConfig: MinimalDataConfig;
+        animate: () => void;
+        onValueScaleChanged: () => void;
+        handleTilesetInfoReceived: (tilesetInfo: any) => void;
+    };
+
+    export type TiledPixiTrackOptions = PixiTrackOptions & {
+        maxZoom?: number;
+    };
+
     interface TrackContext {
         id: string;
         pubSub?: PubSub;
@@ -589,7 +629,10 @@ declare module '@higlass/tracks' {
     }
 
     interface ViewportTrackerHorizontalContext extends SVGTrackContext {
-        registerViewportChanged: (uid: string, callback: (viewportXScale: ScaleLinear<number, number>, viewportYScale: ScaleLinear<number, number>) => void) => void;
+        registerViewportChanged: (
+            uid: string,
+            callback: (viewportXScale: ScaleLinear<number, number>, viewportYScale: ScaleLinear<number, number>) => void
+        ) => void;
         removeViewportChanged: (uid: string) => void;
         setDomainsCallback: (xDomain: [number, number], yDomain: [number, number]) => void;
         projectionXDomain: [number, number]; // The domain of the brush
