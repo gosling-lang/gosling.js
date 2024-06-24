@@ -19,7 +19,7 @@ export interface LinkedEncoding {
  * This is information extracted from the Gosling spec.
  * Is is the linking that is defined at the view level.
  */
-export interface ViewLink {
+interface ViewLink {
     linkingId?: string;
     encoding: 'x';
     trackIds: string[];
@@ -164,6 +164,7 @@ function getSingleViewTrackLinks(gs: SingleView): TrackLink[] {
     const trackLinks: TrackLink[] = [];
     tracks.forEach(track => {
         if ('x' in track && track.x && 'linkingId' in track.x) {
+            if (track.mark === 'brush') console.warn('Track with brush mark should only be used as an overlay');
             const trackLink = {
                 trackId: track.id,
                 linkingId: track.x.linkingId,
