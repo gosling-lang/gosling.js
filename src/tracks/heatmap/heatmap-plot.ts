@@ -4,11 +4,11 @@ import * as PIXI from 'pixi.js';
 import { fakePubSub } from '@higlass/utils';
 import { scaleLinear } from 'd3-scale';
 
-import { type D3ZoomEvent, zoom } from 'd3-zoom';
+import { type D3ZoomEvent, zoom, ZoomTransform } from 'd3-zoom';
 import { select } from 'd3-selection';
 import { zoomWheelBehavior } from '../utils';
 import { DataFetcher } from '@higlass/datafetcher';
-import { signal, type Signal } from '@preact/signals-core';
+import { signal, type Signal, effect } from '@preact/signals-core';
 
 type HeatmapTrackContext = TiledPixiTrackContext & {
     svgElement: HTMLElement;
@@ -40,7 +40,9 @@ type HeatmapTrackOptions = TiledPixiTrackOptions & {
 
 export class HeatmapTrack extends HeatmapTiledPixiTrack<HeatmapTrackOptions> {
     xDomain: Signal<[number, number]>; // This has to be a signal because it will potentially be updated by interactors
+    yDomain: Signal<[number, number]>;
     domOverlay: HTMLElement;
+    d3ZoomTransform: ZoomTransform;
 
     constructor(
         options: HeatmapTrackOptions,
@@ -80,6 +82,8 @@ export class HeatmapTrack extends HeatmapTiledPixiTrack<HeatmapTrackOptions> {
 
         super(context, options);
         this.xDomain = xDomain;
+        this.yDomain = yDomain;
+        this.d3ZoomTransform = new ZoomTransform(1, 0, 0);
         this.domOverlay = overlayDiv;
 
         // Now we need to initialize all of the properties that would normally be set by HiGlassComponent
@@ -97,6 +101,12 @@ export class HeatmapTrack extends HeatmapTiledPixiTrack<HeatmapTrackOptions> {
             .wheelDelta(zoomWheelBehavior)
             .on('zoom', this.handleZoom.bind(this));
         select<HTMLElement, unknown>(overlayDiv).call(zoomBehavior);
+
+        effect(() => {
+            const newXScale = scaleLinear().domain(this.xDomain.value).range([0, width]);
+            const newYScale = scaleLinear().domain(this.yDomain.value).range([0, height]);
+            this.zoomed(newXScale, newYScale, this.d3ZoomTransform.k, this.d3ZoomTransform.x, this.d3ZoomTransform.y);
+        });
     }
 
     /**
@@ -104,8 +114,8 @@ export class HeatmapTrack extends HeatmapTiledPixiTrack<HeatmapTrackOptions> {
      */
     handleZoom(event: D3ZoomEvent<HTMLElement, unknown>): void {
         const transform = event.transform;
-        const newXScale = transform.rescaleX(this._refXScale);
-        const newYScale = transform.rescaleY(this._refYScale);
-        this.zoomed(newXScale, newYScale, transform.k, transform.x + this.position[0], transform.y + this.position[1]);
+        this.d3ZoomTransform = transform;
+        this.xDomain.value = transform.rescaleX(this._refXScale).domain() as [number, number];
+        this.yDomain.value = transform.rescaleY(this._refYScale).domain() as [number, number];
     }
 }

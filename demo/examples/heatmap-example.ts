@@ -2,6 +2,7 @@ import { PixiManager } from '@pixi-manager';
 import { HeatmapTrack } from '@gosling-lang/heatmap';
 import { DataFetcher } from '@higlass/datafetcher';
 import { fakePubSub } from '@higlass/utils';
+import { signal } from '@preact/signals-core';
 
 export function addHeatmap(pixiManager: PixiManager) {
     // Let's add a heatmap
@@ -13,6 +14,7 @@ export function addHeatmap(pixiManager: PixiManager) {
         },
         fakePubSub
     );
+    const xDomain = signal<[number, number]>([0, 3088269832]);
     new HeatmapTrack(
         {
             trackBorderWidth: 1,
@@ -21,5 +23,5 @@ export function addHeatmap(pixiManager: PixiManager) {
         },
         dataFetcher,
         pixiManager.makeContainer(heatmapPosition)
-    );
+    )
 }
