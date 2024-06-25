@@ -10,15 +10,16 @@ describe('Link tracks', () => {
         expect(result).toMatchInlineSnapshot(`
           [
             {
-              "brushIds": [],
-              "encoding": "x",
               "linkingId": undefined,
               "signal": [
                 0,
                 3088269832,
               ],
-              "trackIds": [
-                "track-1",
+              "tracks": [
+                {
+                  "encoding": "x",
+                  "id": "track-1",
+                },
               ],
             },
           ]
@@ -36,16 +37,20 @@ describe('Link tracks', () => {
         expect(result).toMatchInlineSnapshot(`
           [
             {
-              "brushIds": [],
-              "encoding": "x",
               "linkingId": undefined,
               "signal": [
                 0,
                 3088269832,
               ],
-              "trackIds": [
-                "track-1",
-                "track-2",
+              "tracks": [
+                {
+                  "encoding": "x",
+                  "id": "track-1",
+                },
+                {
+                  "encoding": "x",
+                  "id": "track-2",
+                },
               ],
             },
           ]
@@ -70,27 +75,29 @@ describe('Link tracks', () => {
         expect(result).toMatchInlineSnapshot(`
           [
             {
-              "brushIds": [],
-              "encoding": "x",
               "linkingId": undefined,
               "signal": [
                 0,
                 3088269832,
               ],
-              "trackIds": [
-                "track-1",
+              "tracks": [
+                {
+                  "encoding": "x",
+                  "id": "track-1",
+                },
               ],
             },
             {
-              "brushIds": [],
-              "encoding": "x",
               "linkingId": undefined,
               "signal": [
                 0,
                 3088269832,
               ],
-              "trackIds": [
-                "track-2",
+              "tracks": [
+                {
+                  "encoding": "x",
+                  "id": "track-2",
+                },
               ],
             },
           ]
@@ -149,29 +156,37 @@ describe('Link tracks', () => {
         expect(result1).toMatchInlineSnapshot(`
           [
             {
-              "brushIds": [],
-              "encoding": "x",
               "linkingId": "test",
               "signal": [
                 0,
                 3088269832,
               ],
-              "trackIds": [
-                "track-2",
-                "track-1",
-                "overlay-1",
+              "tracks": [
+                {
+                  "encoding": "x",
+                  "id": "track-1",
+                },
+                {
+                  "encoding": "x",
+                  "id": "overlay-1",
+                },
+                {
+                  "encoding": "x",
+                  "id": "track-2",
+                },
               ],
             },
             {
-              "brushIds": [],
-              "encoding": "x",
               "linkingId": undefined,
               "signal": [
                 0,
                 3088269832,
               ],
-              "trackIds": [
-                "track-3",
+              "tracks": [
+                {
+                  "encoding": "x",
+                  "id": "track-3",
+                },
               ],
             },
           ]
@@ -195,15 +210,16 @@ describe('Link brushes', () => {
         expect(result).toMatchInlineSnapshot(`
           [
             {
-              "brushIds": [],
-              "encoding": "x",
               "linkingId": undefined,
               "signal": [
                 0,
                 3088269832,
               ],
-              "trackIds": [
-                "brush-1",
+              "tracks": [
+                {
+                  "encoding": "x",
+                  "id": "brush-1",
+                },
               ],
             },
           ]
@@ -244,30 +260,37 @@ describe('Link brushes', () => {
         expect(result).toMatchInlineSnapshot(`
           [
             {
-              "brushIds": [],
-              "encoding": "x",
               "linkingId": undefined,
               "signal": [
                 0,
                 3088269832,
               ],
-              "trackIds": [
-                "brush-1",
-                "track-1",
+              "tracks": [
+                {
+                  "encoding": "x",
+                  "id": "brush-1",
+                },
+                {
+                  "encoding": "x",
+                  "id": "track-1",
+                },
               ],
             },
             {
-              "brushIds": [
-                "brush-1",
-              ],
-              "encoding": "x",
               "linkingId": "link1",
               "signal": [
                 0,
                 3088269832,
               ],
-              "trackIds": [
-                "track-2",
+              "tracks": [
+                {
+                  "encoding": "brush",
+                  "id": "brush-1",
+                },
+                {
+                  "encoding": "x",
+                  "id": "track-2",
+                },
               ],
             },
           ]

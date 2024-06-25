@@ -36,30 +36,30 @@ function App() {
         // addAxisTrack(pixiManager);
         // addLinearBrush(pixiManager);
         // addBigwig(pixiManager);
-        addHeatmap(pixiManager);
+        // addHeatmap(pixiManager);
 
-        // const callback = (
-        //     hg: HiGlassSpec,
-        //     size,
-        //     gs: GoslingSpec,
-        //     tracksAndViews,
-        //     idTable,
-        //     trackInfos: TrackInfo[],
-        //     theme: Require<ThemeDeep>
-        // ) => {
-        //     console.warn(trackInfos);
-        //     console.warn(tracksAndViews);
-        //     console.warn(gs);
-        //     // showTrackInfoPositions(trackInfos, pixiManager);
-        //     const linkedEncodings = getLinkedEncodings(gs);
-        //     console.warn('linkedEncodings', linkedEncodings);
-        //     const trackDefs = createTrackDefs(trackInfos, theme);
-        //     console.warn('trackDefs', trackDefs);
-        //     renderTrackDefs(trackDefs, linkedEncodings, pixiManager);
-        // };
+        const callback = (
+            hg: HiGlassSpec,
+            size,
+            gs: GoslingSpec,
+            tracksAndViews,
+            idTable,
+            trackInfos: TrackInfo[],
+            theme: Require<ThemeDeep>
+        ) => {
+            console.warn(trackInfos);
+            console.warn(tracksAndViews);
+            console.warn(gs);
+            // showTrackInfoPositions(trackInfos, pixiManager);
+            const linkedEncodings = getLinkedEncodings(gs);
+            console.warn('linkedEncodings', linkedEncodings);
+            const trackDefs = createTrackDefs(trackInfos, theme);
+            console.warn('trackDefs', trackDefs);
+            renderTrackDefs(trackDefs, linkedEncodings, pixiManager);
+        };
 
-        // // Compile the spec
-        // compile(linkingTest, callback, [], getTheme('light'), { containerSize: { width: 300, height: 300 } });
+        // Compile the spec
+        compile(linkingTest, callback, [], getTheme('light'), { containerSize: { width: 300, height: 300 } });
     }, []);
 
     return (
