@@ -25,7 +25,7 @@ export interface Plot {
 /**
  * This is the interface that plots must implement for Interactors to work
  */
-export interface PlotXY {
+export interface HeatmapPlot {
     addInteractor(interactor: (plot: Plot) => void): Plot;
     domOverlay: HTMLElement;
     xDomain: Signal<[number, number]>;
