@@ -1,0 +1,35 @@
+import { type Track } from '@gosling-lang/gosling-schema';
+
+function getHeatmapOptions(spec: Track) {
+    return {
+        id: 'cb1f4560-41a3-4040-bb8f-5f27b443997d',
+        siblingIds: ['cb1f4560-41a3-4040-bb8f-5f27b443997d'],
+        showMousePosition: true,
+        mousePositionColor: '#000000',
+        name: spec.title,
+        labelPosition: 'topLeft',
+        labelShowResolution: false,
+        labelColor: 'black',
+        labelBackgroundColor: 'white',
+        labelBackgroundOpacity: 0.5,
+        labelTextOpacity: 1,
+        labelLeftMargin: 1,
+        labelTopMargin: 1,
+        labelRightMargin: 0,
+        labelBottomMargin: 0,
+        backgroundColor: 'transparent',
+        trackBorderWidth: 1,
+        trackBorderColor: 'black',
+        extent: 'full',
+        colorbarPosition: 'hidden',
+        labelShowAssembly: true,
+        colorbarBackgroundColor: '#ffffff',
+        maxZoom: null,
+        minWidth: 100,
+        minHeight: 100,
+        heatmapValueScaling: 'log',
+        showTooltip: false,
+        zeroValueColor: null,
+        data: spec.data,
+    };
+}

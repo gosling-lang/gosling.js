@@ -74,6 +74,7 @@ const alias = {
     '@gosling-lang/brush-circular': path.resolve(__dirname, './src/tracks/brush-circular/index.ts'),
     '@gosling-lang/brush-linear': path.resolve(__dirname, './src/tracks/brush-linear/index.ts'),
     '@gosling-lang/dummy-track': path.resolve(__dirname, './src/tracks/dummy-track/index.ts'),
+    '@gosling-lang/heatmap': path.resolve(__dirname, './src/tracks/heatmap/index.ts'),
     '@gosling-lang/text-track': path.resolve(__dirname, './src/tracks/text-track/index.ts'),
     '@gosling-lang/interactors': path.resolve(__dirname, './src/interactors/index.ts'),
     '@pixi-manager': path.resolve(__dirname, './src/pixi-manager/index.ts'),

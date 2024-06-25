@@ -33,6 +33,7 @@
       "@gosling-lang/brush-linear": ["src/tracks/brush-linear/index.ts"],
       "@gosling-lang/dummy-track": ["./src/tracks/dummy-track/index.ts"],
       "@gosling-lang/text-track": ["./src/tracks/text-track/index.ts"],
+      "@gosling-lang/heatmap": ["./src/tracks/heatmap/index.ts"],
       "@gosling-lang/interactors": ["./src/interactors/index.ts"],
       "@pixi-manager": ["./src/pixi-manager/index.ts"],
       "@data-fetchers": ["./src/data-fetchers/index.ts"],
