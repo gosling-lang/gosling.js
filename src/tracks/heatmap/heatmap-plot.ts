@@ -19,6 +19,7 @@ export type HeatmapTrackContext = TiledPixiTrackContext & {
 };
 
 export type HeatmapTrackOptions = TiledPixiTrackOptions & {
+    maxDomain: number;
     dataTransform?: unknown;
     extent?: string;
     reverseYAxis?: boolean;
@@ -41,6 +42,7 @@ export type HeatmapTrackOptions = TiledPixiTrackOptions & {
 export class HeatmapTrack extends HeatmapTiledPixiTrack<HeatmapTrackOptions> {
     xDomain: Signal<[number, number]>; // This has to be a signal because it will potentially be updated by interactors
     yDomain: Signal<[number, number]>;
+    maxDomain: number; // the maximum domain of the data. This is needed for zoomPanHeatmap to work properly
     domOverlay: HTMLElement;
     d3ZoomTransform: ZoomTransform;
 
@@ -83,8 +85,8 @@ export class HeatmapTrack extends HeatmapTiledPixiTrack<HeatmapTrackOptions> {
         super(context, options);
         this.xDomain = xDomain;
         this.yDomain = yDomain;
-        this.d3ZoomTransform = new ZoomTransform(1, 0, 0);
         this.domOverlay = overlayDiv;
+        this.maxDomain = options.maxDomain;
 
         // Now we need to initialize all of the properties that would normally be set by HiGlassComponent
         this.setDimensions([width, height]);
@@ -95,30 +97,7 @@ export class HeatmapTrack extends HeatmapTiledPixiTrack<HeatmapTrackOptions> {
         // Set the scales
         this.zoomed(refXScale, refYScale, 1, 0, 0);
         this.refScalesChanged(refXScale, refYScale);
-
-        // Attach zoom behavior to the canvas.
-        // const zoomBehavior = zoom<HTMLElement, unknown>()
-        //     .wheelDelta(zoomWheelBehavior)
-        //     .on('zoom', this.handleZoom.bind(this));
-        // select<HTMLElement, unknown>(overlayDiv).call(zoomBehavior);
-
-        // effect(() => {
-        //     const newXScale = scaleLinear().domain(this.xDomain.value).range([0, width]);
-        //     const newYScale = scaleLinear().domain(this.yDomain.value).range([0, height]);
-        //     console.warn(this.xDomain.value, this.yDomain.value);
-        //     this.zoomed(newXScale, newYScale, this.d3ZoomTransform.k, this.d3ZoomTransform.x, this.d3ZoomTransform.y);
-        // });
     }
-
-    /**
-     * This function is called when the user zooms in or out.
-     */
-    // handleZoom(event: D3ZoomEvent<HTMLElement, unknown>): void {
-    //     const transform = event.transform;
-    //     this.d3ZoomTransform = transform;
-    //     this.xDomain.value = transform.rescaleX(this._refXScale).domain() as [number, number];
-    //     this.yDomain.value = transform.rescaleY(this._refYScale).domain() as [number, number];
-    // }
 
     addInteractor(interactor: (plot: HeatmapTrack) => void) {
         interactor(this);

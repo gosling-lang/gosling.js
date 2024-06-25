@@ -3,6 +3,7 @@ import { GenomicPositionHelper, computeChromSizes } from '../../src/core/utils/a
 import { signal, type Signal } from '@preact/signals-core';
 import type { GoslingSpec } from 'gosling.js';
 import { TrackType } from './main';
+import { isHeatmapTrack } from './heatmap';
 
 /**
  * This is the information needed to link tracks together
@@ -32,7 +33,7 @@ interface ViewLink {
  * It is the x-linking defined at the track level (opposed to the view level)
  */
 interface TrackLink {
-    encoding: 'x' | 'brush';
+    encoding: 'x' | 'brush' | 'y';
     linkingId: string;
     trackId: string;
     trackType: TrackType;
@@ -57,11 +58,10 @@ export function getLinkedEncodings(gs: GoslingSpec) {
     console.warn('trackLinks', trackLinks);
     // We associate tracks the other tracks they are linked with
     const linkedEncodings = viewLinks.map(viewLink => {
-        const linkedTracks = filterLinkedTracksByType(
-            [TrackType.BrushLinear, TrackType.BrushCircular, TrackType.Gosling],
-            viewLink.linkingId,
-            trackLinks
-        ).map(track => ({ id: track.trackId, encoding: track.encoding }));
+        const linkedTracks = getLinkedTracks(viewLink.linkingId, trackLinks).map(track => ({
+            id: track.trackId,
+            encoding: track.encoding
+        }));
         const viewTracks = viewLink.trackIds.map(trackId => ({ id: trackId, encoding: 'x' }));
         return {
             linkingId: viewLink.linkingId,
@@ -71,7 +71,8 @@ export function getLinkedEncodings(gs: GoslingSpec) {
     });
     // Combine trackLinks that do not belong to any viewLink
     const unlinkedTracks = trackLinks.filter(
-        trackLink => !linkedEncodings.some(link => trackLink.linkingId === link.linkingId)
+        trackLink =>
+            !linkedEncodings.some(link => link.linkingId !== undefined && trackLink.linkingId === link.linkingId)
     );
     linkedEncodings.push(...combineUnlinkedTracks(unlinkedTracks));
 
@@ -86,7 +87,7 @@ function combineUnlinkedTracks(unlinkedTracks: TrackLink[]): LinkedEncoding[] {
     console.warn('unlinkedTracks', unlinkedTracks);
     const linkedEncodings: LinkedEncoding[] = [];
     unlinkedTracks.forEach(trackLink => {
-        const existingLink = linkedEncodings.find(link => link.linkingId === trackLink.linkingId);
+        const existingLink = linkedEncodings.find(link => link.linkingId && link.linkingId === trackLink.linkingId);
         if (existingLink) {
             existingLink.tracks.push({ id: trackLink.trackId, encoding: trackLink.encoding });
             if (trackLink.signal) {
@@ -113,11 +114,11 @@ function combineUnlinkedTracks(unlinkedTracks: TrackLink[]): LinkedEncoding[] {
 }
 
 /**
- * Helper function to filter the linked tracks by type
+ * Helper function to get linked tracks by linkingId
  */
-function filterLinkedTracksByType(trackType: TrackType[], linkingId: string | undefined, trackLinks: TrackLink[]) {
+function getLinkedTracks(linkingId: string | undefined, trackLinks: TrackLink[]) {
     if (!linkingId) return [];
-    return trackLinks.filter(trackLink => trackLink.linkingId === linkingId && trackType.includes(trackLink.trackType));
+    return trackLinks.filter(trackLink => trackLink.linkingId === linkingId);
 }
 
 /**
@@ -149,12 +150,28 @@ function getSingleViewTrackLinks(gs: SingleView): TrackLink[] {
     const { tracks } = gs;
     const trackLinks: TrackLink[] = [];
     tracks.forEach(track => {
-        if ('x' in track && track.x && 'linkingId' in track.x) {
+        const trackType = isHeatmapTrack(track) ? TrackType.Heatmap : TrackType.Gosling;
+
+        // Handle the y domain when we have a heatmap track
+        if (trackType === TrackType.Heatmap) {
+            const { assembly, xDomain, yDomain } = gs;
+            const trackDomain = getDomain(yDomain ?? xDomain, assembly); // default to the xDomain if no yDomain
+            const trackLink = {
+                trackId: track.id,
+                linkingId: track.y.linkingId, // we may or may not have a linkingId
+                trackType: TrackType.Heatmap,
+                encoding: 'y',
+                signal: signal(trackDomain)
+            } as TrackLink;
+            trackLinks.push(trackLink);
+        }
+        // Handle x domain
+        if ('x' in track && track.x && 'linkingId' in track.x && track.x?.linkingId !== undefined) {
             if (track.mark === 'brush') console.warn('Track with brush mark should only be used as an overlay');
             const trackLink = {
                 trackId: track.id,
                 linkingId: track.x.linkingId,
-                trackType: TrackType.Gosling,
+                trackType,
                 encoding: 'x'
             } as TrackLink;
             // If the track has a domain, we create a signal and add it to the trackLink
@@ -165,6 +182,8 @@ function getSingleViewTrackLinks(gs: SingleView): TrackLink[] {
             }
             trackLinks.push(trackLink);
         }
+
+        // Handle linking in the brushes which are defined in the overlay tracks
         if (!('_overlay' in track)) return;
         track._overlay!.forEach(overlay => {
             if (overlay.mark === 'brush') {

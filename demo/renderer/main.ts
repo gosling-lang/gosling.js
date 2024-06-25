@@ -6,13 +6,13 @@ import { AxisTrack, type AxisTrackOptions } from '@gosling-lang/genomic-axis';
 import { BrushLinearTrack, type BrushLinearTrackOptions } from '@gosling-lang/brush-linear';
 import { Signal, signal } from '@preact/signals-core';
 
-import { cursor, panZoom } from '@gosling-lang/interactors';
+import { cursor, panZoom, panZoomHeatmap } from '@gosling-lang/interactors';
 import type { TrackInfo } from '../../src/compiler/bounding-box';
 import type { CompleteThemeDeep } from '../../src/core/utils/theme';
 import type { GoslingTrackOptions } from '../../src/tracks/gosling-track/gosling-track';
 
 import { proccessTextHeader } from './text';
-import { processHeatmapTrack } from './heatmap';
+import { processHeatmapTrack, isHeatmapTrack } from './heatmap';
 import { processGoslingTrack } from './gosling';
 import { getDataFetcher } from './dataFetcher';
 import type { LinkedEncoding } from './linkedEncoding';
@@ -104,10 +104,6 @@ export function createTrackDefs(trackInfos: TrackInfo[], theme: Required<Complet
     return trackDefs;
 }
 
-function isHeatmapTrack(track: Track): boolean {
-    return track.data && track.data.type === 'matrix';
-}
-
 /**
  * Takes a list of track options and renders them on the screen
  * @param trackOptions
@@ -131,8 +127,17 @@ export function renderTrackDefs(trackDefs: TrackDefs[], linkedEncodings: LinkedE
             }
         }
         if (type === TrackType.Heatmap) {
+            const xDomain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
+            const yDomain = getEncodingSignal(trackDef.trackId, 'y', linkedEncodings);
+            console.warn('domains,', xDomain, yDomain);
+            if (!xDomain || !yDomain) return;
             const datafetcher = getDataFetcher(options.spec);
-            new HeatmapTrack(options, datafetcher, pixiManager.makeContainer(boundingBox));
+            // const xDomain = signal<[number, number]>([0, 3088269832]);
+            // const yDomain = signal<[number, number]>([0, 3088269832]);
+            console.warn('making track');
+            new HeatmapTrack(options, datafetcher, pixiManager.makeContainer(boundingBox)).addInteractor(plot =>
+                panZoomHeatmap(plot, xDomain, yDomain)
+            );
         }
         if (type === TrackType.Axis) {
             const domain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);

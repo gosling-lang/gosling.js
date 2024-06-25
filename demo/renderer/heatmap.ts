@@ -2,6 +2,7 @@ import { type Track } from '@gosling-lang/gosling-schema';
 import { type TrackDef, TrackType } from './main';
 import { type HeatmapTrackOptions } from '@gosling-lang/heatmap';
 import type { CompleteThemeDeep } from '../../src/core/utils/theme';
+import { computeChromSizes } from '../../src/core/utils/assembly';
 
 export function processHeatmapTrack(
     track: Track,
@@ -19,9 +20,15 @@ export function processHeatmapTrack(
     return trackDefs;
 }
 
+export function isHeatmapTrack(track: Track): boolean {
+    return track.data && track.data.type === 'matrix';
+}
+
 function getHeatmapOptions(spec: Track, theme: Required<CompleteThemeDeep>): HeatmapTrackOptions {
+    const { assembly } = spec;
     return {
         spec: spec,
+        maxDomain: computeChromSizes(assembly).total,
         showMousePosition: false,
         mousePositionColor: '#000000',
         name: spec.title,

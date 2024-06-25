@@ -19,8 +19,7 @@ export function panZoomHeatmap(
     const zoomStartXScale = scaleLinear();
     const zoomStartYScale = scaleLinear();
 
-    const origXDomain = xDomain.value;
-    const origYDomain = yDomain.value;
+    const maxDomain = plot.maxDomain; // used to calculate k, the scaling factor
     const width = plot.domOverlay.clientWidth;
     const height = plot.domOverlay.clientHeight;
     const baseXScale = scaleLinear().range([0, width]);
@@ -69,12 +68,12 @@ export function panZoomHeatmap(
         // since after every zoom event, we reset the transform object to new ZoomTransform(1, 0, 0);
         // This lets us change the xDomain and yDomain signals without having to update the transform object
 
-        const k = (origXDomain[1] - origXDomain[0]) / (xDomain.value[1] - xDomain.value[0]);
-        const scalingXFactor = width / (origXDomain[1] - origXDomain[0]);
-        const tx = -(xDomain.value[0] * k - origXDomain[0]) * scalingXFactor;
+        const k = maxDomain / (xDomain.value[1] - xDomain.value[0]);
+        const scalingXFactor = width / maxDomain;
+        const tx = -(xDomain.value[0] * k) * scalingXFactor;
 
-        const scalingYFactor = height / (origYDomain[1] - origYDomain[0]);
-        const ty = -(yDomain.value[0] * k - origYDomain[0]) * scalingYFactor;
+        const scalingYFactor = height / maxDomain;
+        const ty = -(yDomain.value[0] * k) * scalingYFactor;
 
         plot.zoomed(newXScale, newYScale, k, tx, ty);
     });

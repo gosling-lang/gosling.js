@@ -297,3 +297,61 @@ describe('Link brushes', () => {
         `);
     });
 });
+
+describe('Heatmap', () => {
+    it('one track, one view', () => {
+        const matrix = {
+            xDomain: { chromosome: 'chr7', interval: [77700000, 81000000] },
+            tracks: [
+                {
+                    id: 'matrix-1',
+                    data: {
+                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=hffc6-microc-hg38',
+                        type: 'matrix'
+                    },
+                    mark: 'bar',
+                    x: { field: 'xs', type: 'genomic', axis: 'none' },
+                    xe: { field: 'xe', type: 'genomic', axis: 'none' },
+                    y: { field: 'ys', type: 'genomic', axis: 'none' },
+                    ye: { field: 'ye', type: 'genomic', axis: 'none' },
+                    color: { field: 'value', type: 'quantitative', range: 'warm' },
+                    width: 600,
+                    height: 600
+                }
+            ]
+        };
+
+        const result = getLinkedEncodings(matrix);
+
+        expect(result).toMatchInlineSnapshot(`
+          [
+            {
+              "linkingId": undefined,
+              "signal": [
+                0,
+                3088269832,
+              ],
+              "tracks": [
+                {
+                  "encoding": "x",
+                  "id": "matrix-1",
+                },
+              ],
+            },
+            {
+              linkingId: undefined,
+              signal: [
+                0,
+                3088269832
+              ],
+              tracks: [
+                {
+                  encoding: "y",
+                  id: "matrix-1"
+                }
+              ]
+            }
+          ]
+        `);
+    });
+});

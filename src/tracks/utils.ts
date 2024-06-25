@@ -30,6 +30,7 @@ export interface HeatmapPlot {
     domOverlay: HTMLElement;
     xDomain: Signal<[number, number]>;
     yDomain: Signal<[number, number]>;
+    maxDomain: number;
     zoomed(
         xScale: ScaleLinear<number, number>,
         yScale: ScaleLinear<number, number>,
