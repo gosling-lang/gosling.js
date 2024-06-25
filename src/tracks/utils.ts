@@ -21,3 +21,20 @@ export interface Plot {
     xDomain: Signal<[number, number]>;
     zoomed(xScale: ScaleLinear<number, number>, yScale: ScaleLinear<number, number>): void;
 }
+
+/**
+ * This is the interface that plots must implement for Interactors to work
+ */
+export interface PlotXY {
+    addInteractor(interactor: (plot: Plot) => void): Plot;
+    domOverlay: HTMLElement;
+    xDomain: Signal<[number, number]>;
+    yDomain: Signal<[number, number]>;
+    zoomed(
+        xScale: ScaleLinear<number, number>,
+        yScale: ScaleLinear<number, number>,
+        k: number,
+        tx: number,
+        ty: number
+    ): void;
+}
