@@ -97,27 +97,28 @@ export class HeatmapTrack extends HeatmapTiledPixiTrack<HeatmapTrackOptions> {
         this.refScalesChanged(refXScale, refYScale);
 
         // Attach zoom behavior to the canvas.
-        const zoomBehavior = zoom<HTMLElement, unknown>()
-            .wheelDelta(zoomWheelBehavior)
-            .on('zoom', this.handleZoom.bind(this));
-        select<HTMLElement, unknown>(overlayDiv).call(zoomBehavior);
+        // const zoomBehavior = zoom<HTMLElement, unknown>()
+        //     .wheelDelta(zoomWheelBehavior)
+        //     .on('zoom', this.handleZoom.bind(this));
+        // select<HTMLElement, unknown>(overlayDiv).call(zoomBehavior);
 
-        effect(() => {
-            const newXScale = scaleLinear().domain(this.xDomain.value).range([0, width]);
-            const newYScale = scaleLinear().domain(this.yDomain.value).range([0, height]);
-            this.zoomed(newXScale, newYScale, this.d3ZoomTransform.k, this.d3ZoomTransform.x, this.d3ZoomTransform.y);
-        });
+        // effect(() => {
+        //     const newXScale = scaleLinear().domain(this.xDomain.value).range([0, width]);
+        //     const newYScale = scaleLinear().domain(this.yDomain.value).range([0, height]);
+        //     console.warn(this.xDomain.value, this.yDomain.value);
+        //     this.zoomed(newXScale, newYScale, this.d3ZoomTransform.k, this.d3ZoomTransform.x, this.d3ZoomTransform.y);
+        // });
     }
 
     /**
      * This function is called when the user zooms in or out.
      */
-    handleZoom(event: D3ZoomEvent<HTMLElement, unknown>): void {
-        const transform = event.transform;
-        this.d3ZoomTransform = transform;
-        this.xDomain.value = transform.rescaleX(this._refXScale).domain() as [number, number];
-        this.yDomain.value = transform.rescaleY(this._refYScale).domain() as [number, number];
-    }
+    // handleZoom(event: D3ZoomEvent<HTMLElement, unknown>): void {
+    //     const transform = event.transform;
+    //     this.d3ZoomTransform = transform;
+    //     this.xDomain.value = transform.rescaleX(this._refXScale).domain() as [number, number];
+    //     this.yDomain.value = transform.rescaleY(this._refYScale).domain() as [number, number];
+    // }
 
     addInteractor(interactor: (plot: HeatmapTrack) => void) {
         interactor(this);

@@ -3,6 +3,7 @@ import { HeatmapTrack } from '@gosling-lang/heatmap';
 import { DataFetcher } from '@higlass/datafetcher';
 import { fakePubSub } from '@higlass/utils';
 import { signal } from '@preact/signals-core';
+import { panZoomXY } from '@gosling-lang/interactors';
 
 export function addHeatmap(pixiManager: PixiManager) {
     // Let's add a heatmap
@@ -15,7 +16,8 @@ export function addHeatmap(pixiManager: PixiManager) {
         fakePubSub
     );
     const xDomain = signal<[number, number]>([0, 3088269832]);
-    new HeatmapTrack(
+    const yDomain = signal<[number, number]>([0, 3088269832]);
+    const heatmap = new HeatmapTrack(
         {
             trackBorderWidth: 1,
             trackBorderColor: 'black',
@@ -23,5 +25,6 @@ export function addHeatmap(pixiManager: PixiManager) {
         },
         dataFetcher,
         pixiManager.makeContainer(heatmapPosition)
-    )
+    );
+    heatmap.addInteractor((plot) => panZoomXY(plot, xDomain, yDomain));
 }
