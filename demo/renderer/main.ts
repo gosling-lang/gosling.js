@@ -60,6 +60,9 @@ type TrackDefs = {
     [K in keyof TrackOptionsMap]: TrackDef<TrackOptionsMap[K]>;
 }[keyof TrackOptionsMap];
 
+/**
+ * This function is for internal testing. It will render a red border around each track
+ */
 export function showTrackInfoPositions(trackInfos: TrackInfo[], pixiManager: PixiManager) {
     trackInfos.forEach(trackInfo => {
         const { track, boundingBox } = trackInfo;
@@ -71,7 +74,7 @@ export function showTrackInfoPositions(trackInfos: TrackInfo[], pixiManager: Pix
 }
 
 /**
- * Takes a list of TrackInfos and returns a list of TrackOptions
+ * Takes a list of TrackInfos and returns a list of TrackDefs
  * @param trackInfos
  * @param pixiManager
  * @param theme
@@ -107,7 +110,9 @@ export function renderTrackDefs(trackDefs: TrackDefs[], linkedEncodings: LinkedE
             new TextTrack(options, pixiManager.makeContainer(boundingBox));
         }
         if (type === TrackType.Gosling) {
-            const domain = getXDomainSignal(trackDef.trackId, linkedEncodings);
+            const domain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
+            if (!domain) return;
+
             const datafetcher = getDataFetcher(options.spec);
             const gosPlot = new GoslingTrack(options, datafetcher, pixiManager.makeContainer(boundingBox), domain);
             if (!options.spec.static) {
@@ -115,66 +120,58 @@ export function renderTrackDefs(trackDefs: TrackDefs[], linkedEncodings: LinkedE
             }
         }
         if (type === TrackType.Axis) {
-            const domain = getXDomainSignal(trackDef.trackId, linkedEncodings);
+            const domain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
+            if (!domain) return;
+
             new AxisTrack(options, domain, pixiManager.makeContainer(boundingBox));
         }
         if (type === TrackType.BrushLinear) {
-            const domain = getXDomainSignal(trackDef.trackId, linkedEncodings);
-            const brushDomain = getBrushSignal(trackDef.trackId, linkedEncodings);
+            const domain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
+            const brushDomain = getEncodingSignal(trackDef.trackId, 'brush', linkedEncodings);
+            if (!domain || !brushDomain || !hasLinkedTracks(trackDef.trackId, linkedEncodings)) return;
             // We only want to add the brush track if it is linked to another track
-            if (hasLinkedTracks(trackDef.trackId, linkedEncodings)) {
-                new BrushLinearTrack(
-                    options,
-                    brushDomain,
-                    pixiManager.makeContainer(boundingBox).overlayDiv
-                ).addInteractor(plot => panZoom(plot, domain));
-            }
+            new BrushLinearTrack(options, brushDomain, pixiManager.makeContainer(boundingBox).overlayDiv).addInteractor(
+                plot => panZoom(plot, domain)
+            );
         }
         if (type === TrackType.BrushCircular) {
-            const domain = getXDomainSignal(trackDef.trackId, linkedEncodings);
-            const brushDomain = getBrushSignal(trackDef.trackId, linkedEncodings);
+            const domain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
+            const brushDomain = getEncodingSignal(trackDef.trackId, 'brush', linkedEncodings);
+            if (!domain || !brushDomain || !hasLinkedTracks(trackDef.trackId, linkedEncodings)) return;
             // We only want to add the brush track if it is linked to another track
-            if (hasLinkedTracks(trackDef.trackId, linkedEncodings)) {
-                new BrushCircularTrack(options, brushDomain, pixiManager.makeContainer(boundingBox).overlayDiv, domain);
-            }
+            new BrushCircularTrack(options, brushDomain, pixiManager.makeContainer(boundingBox).overlayDiv, domain);
         }
     });
 }
 
 /**
- * Returns true if the brushId is linked to another track
+ * Returns true if the brush track is linked to non-brush tracks
  * We don't want to render a brush track if it is not linked to another track
  */
 function hasLinkedTracks(brushId: string, linkedEncodings: LinkedEncoding[]): boolean {
-    const linkedEncoding = linkedEncodings.find(link => link.brushIds.includes(brushId));
+    const linkedEncoding = linkedEncodings.find(link =>
+        link.tracks.find(t => t.id === brushId && t.encoding === 'brush')
+    );
     if (!linkedEncoding) return false;
-    return linkedEncoding?.brushIds.length > 0 && linkedEncoding?.trackIds.length > 0;
+    const nonBrushTracks = linkedEncoding.tracks.filter(t => t.encoding !== 'brush');
+    return nonBrushTracks.length > 0;
 }
 
-function getBrushSignal(trackDefId: string, linkedEncodings: LinkedEncoding[]): Signal<[number, number]> {
-    const linkedEncoding = linkedEncodings.find(link => link.brushIds.includes(trackDefId));
-
+function getEncodingSignal(
+    trackDefId: string,
+    encodingType: string,
+    linkedEncodings: LinkedEncoding[]
+): Signal | undefined {
+    const linkedEncoding = linkedEncodings.find(link =>
+        link.tracks.find(t => t.id === trackDefId && t.encoding === encodingType)
+    );
     if (!linkedEncoding) {
         console.warn(`No linked encoding found for track ${trackDefId}`);
-        return signal<[number, number]>([0, 30000000]);
+        return undefined;
     }
     if (!linkedEncoding.signal) {
         console.warn(`No signal found for linked encoding ${linkedEncoding.linkingId}`);
-        return signal<[number, number]>([0, 30000000]);
-    }
-    return linkedEncoding!.signal;
-}
-
-function getXDomainSignal(trackDefId: string, linkedEncodings: LinkedEncoding[]): Signal<[number, number]> {
-    const linkedEncoding = linkedEncodings.find(link => link.trackIds.includes(trackDefId));
-
-    if (!linkedEncoding) {
-        console.warn(`No linked encoding found for track ${trackDefId}`);
-        return signal<[number, number]>([0, 30000000]);
-    }
-    if (!linkedEncoding.signal) {
-        console.warn(`No signal found for linked encoding ${linkedEncoding.linkingId}`);
-        return signal<[number, number]>([0, 30000000]);
+        return undefined;
     }
     return linkedEncoding!.signal;
 }

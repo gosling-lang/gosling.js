@@ -9,10 +9,11 @@ import { TrackType } from './main';
  */
 export interface LinkedEncoding {
     linkingId: string;
-    encoding: 'x';
     signal: Signal;
-    trackIds: string[];
-    brushIds: string[];
+    tracks: {
+        id: string;
+        encoding: 'x' | 'brush';
+    }[];
 }
 
 /**
@@ -31,7 +32,7 @@ interface ViewLink {
  * It is the x-linking defined at the track level (opposed to the view level)
  */
 interface TrackLink {
-    encoding: 'x';
+    encoding: 'x' | 'brush';
     linkingId: string;
     trackId: string;
     trackType: TrackType;
@@ -56,18 +57,16 @@ export function getLinkedEncodings(gs: GoslingSpec) {
     console.warn('trackLinks', trackLinks);
     // We associate tracks the other tracks they are linked with
     const linkedEncodings = viewLinks.map(viewLink => {
-        const linkedBrushes = filterLinkedTracksByType(
-            [TrackType.BrushLinear, TrackType.BrushCircular],
+        const linkedTracks = filterLinkedTracksByType(
+            [TrackType.BrushLinear, TrackType.BrushCircular, TrackType.Gosling],
             viewLink.linkingId,
             trackLinks
-        );
-        const linkedTracks = filterLinkedTracksByType([TrackType.Gosling], viewLink.linkingId, trackLinks);
+        ).map(track => ({ id: track.trackId, encoding: track.encoding }));
+        const viewTracks = viewLink.trackIds.map(trackId => ({ id: trackId, encoding: 'x' }));
         return {
             linkingId: viewLink.linkingId,
-            encoding: viewLink.encoding,
             signal: viewLink.signal,
-            trackIds: [...viewLink.trackIds, ...linkedTracks.map(track => track.trackId)],
-            brushIds: linkedBrushes.map(brush => brush.trackId)
+            tracks: [...linkedTracks, ...viewTracks]
         } as LinkedEncoding;
     });
     // Combine trackLinks that do not belong to any viewLink
@@ -76,7 +75,7 @@ export function getLinkedEncodings(gs: GoslingSpec) {
     );
     linkedEncodings.push(...combineUnlinkedTracks(unlinkedTracks));
 
-    return linkedEncodings.filter(link => link.trackIds.length > 0 || link.brushIds.length > 0);
+    return linkedEncodings.filter(link => link.tracks.length > 0);
 }
 
 /**
@@ -89,27 +88,20 @@ function combineUnlinkedTracks(unlinkedTracks: TrackLink[]): LinkedEncoding[] {
     unlinkedTracks.forEach(trackLink => {
         const existingLink = linkedEncodings.find(link => link.linkingId === trackLink.linkingId);
         if (existingLink) {
-            if (isBrushTrack(trackLink.trackType)) {
-                existingLink.brushIds.push(trackLink.trackId);
-            } else {
-                existingLink.trackIds.push(trackLink.trackId);
-            }
+            existingLink.tracks.push({ id: trackLink.trackId, encoding: trackLink.encoding });
             if (trackLink.signal) {
                 existingLink.signal = trackLink.signal;
             }
         } else {
+            // TODO: handle default domain better.
+            // We might just want to remove this link all together if it doesn't have a domain
+            const DEFAULT_DOMAIN = [0, 3088269832];
             const newLink = {
                 linkingId: trackLink.linkingId,
-                encoding: trackLink.encoding
+                tracks: [],
+                signal: signal(DEFAULT_DOMAIN) // this signal will get replaced if the track has a domain
             } as LinkedEncoding;
-
-            if (isBrushTrack(trackLink.trackType)) {
-                newLink.brushIds = [trackLink.trackId];
-                newLink.trackIds = [];
-            } else {
-                newLink.trackIds = [trackLink.trackId];
-                newLink.brushIds = [];
-            }
+            newLink.tracks.push({ id: trackLink.trackId, encoding: trackLink.encoding });
             if (trackLink.signal) {
                 newLink.signal = trackLink.signal;
             }
@@ -120,12 +112,6 @@ function combineUnlinkedTracks(unlinkedTracks: TrackLink[]): LinkedEncoding[] {
     return linkedEncodings;
 }
 
-/**
- * Helper function to determine if a track is a brush track
- */
-function isBrushTrack(trackType: TrackType) {
-    return trackType === TrackType.BrushLinear || trackType === TrackType.BrushCircular;
-}
 /**
  * Helper function to filter the linked tracks by type
  */
@@ -183,7 +169,12 @@ function getSingleViewTrackLinks(gs: SingleView): TrackLink[] {
         track._overlay!.forEach(overlay => {
             if (overlay.mark === 'brush') {
                 const trackType = gs.layout === 'linear' ? TrackType.BrushLinear : TrackType.BrushCircular;
-                const trackLink = { trackId: overlay.id, linkingId: overlay.x.linkingId, trackType, encoding: 'x' };
+                const trackLink = {
+                    trackId: overlay.id,
+                    linkingId: overlay.x.linkingId,
+                    trackType,
+                    encoding: 'brush'
+                };
                 if (overlay.x.domain !== undefined) {
                     const { assembly } = gs;
                     const domain = getDomain(overlay.x.domain, assembly);
