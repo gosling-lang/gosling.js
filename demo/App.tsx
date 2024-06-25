@@ -59,7 +59,7 @@ function App() {
         };
 
         // Compile the spec
-        compile(linkingTest, callback, [], getTheme('light'), { containerSize: { width: 300, height: 300 } });
+        compile(matrix, callback, [], getTheme('light'), { containerSize: { width: 300, height: 300 } });
     }, []);
 
     return (
@@ -74,6 +74,27 @@ function App() {
 }
 
 export default App;
+
+const matrix = {
+    xDomain: { chromosome: 'chr7', interval: [77700000, 81000000] },
+    tracks: [
+        {
+            title: 'HFFc6_Micro-C',
+            data: {
+                url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=hffc6-microc-hg38',
+                type: 'matrix'
+            },
+            mark: 'bar',
+            x: { field: 'xs', type: 'genomic', axis: 'none' },
+            xe: { field: 'xe', type: 'genomic', axis: 'none' },
+            y: { field: 'ys', type: 'genomic', axis: 'none' },
+            ye: { field: 'ye', type: 'genomic', axis: 'none' },
+            color: { field: 'value', type: 'quantitative', range: 'warm' },
+            width: 600,
+            height: 600
+        }
+    ]
+};
 
 const spec = {
     title: 'Basic Marks: line',

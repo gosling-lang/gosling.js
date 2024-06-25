@@ -10,7 +10,7 @@ import { zoomWheelBehavior } from '../utils';
 import { DataFetcher } from '@higlass/datafetcher';
 import { signal, type Signal, effect } from '@preact/signals-core';
 
-type HeatmapTrackContext = TiledPixiTrackContext & {
+export type HeatmapTrackContext = TiledPixiTrackContext & {
     svgElement: HTMLElement;
     onTrackOptionsChanged: () => void;
     onMouseMoveZoom?: (event: any) => void;
@@ -18,7 +18,7 @@ type HeatmapTrackContext = TiledPixiTrackContext & {
     isValueScaleLocked: () => boolean;
 };
 
-type HeatmapTrackOptions = TiledPixiTrackOptions & {
+export type HeatmapTrackOptions = TiledPixiTrackOptions & {
     dataTransform?: unknown;
     extent?: string;
     reverseYAxis?: boolean;

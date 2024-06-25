@@ -12,10 +12,12 @@ import type { CompleteThemeDeep } from '../../src/core/utils/theme';
 import type { GoslingTrackOptions } from '../../src/tracks/gosling-track/gosling-track';
 
 import { proccessTextHeader } from './text';
+import { processHeatmapTrack } from './heatmap';
 import { processGoslingTrack } from './gosling';
 import { getDataFetcher } from './dataFetcher';
 import type { LinkedEncoding } from './linkedEncoding';
 import { BrushCircularTrack, type BrushCircularTrackOptions } from '@gosling-lang/brush-circular';
+import { type HeatmapTrackOptions, HeatmapTrack } from '@gosling-lang/heatmap';
 
 /**
  * All the different types of tracks that can be rendered
@@ -40,7 +42,7 @@ interface TrackOptionsMap {
     [TrackType.Axis]: AxisTrackOptions;
     [TrackType.BrushLinear]: BrushLinearTrackOptions;
     [TrackType.BrushCircular]: BrushCircularTrackOptions;
-    [TrackType.Heatmap]: any;
+    [TrackType.Heatmap]: HeatmapTrackOptions;
 }
 
 /**
@@ -85,16 +87,25 @@ export function createTrackDefs(trackInfos: TrackInfo[], theme: Required<Complet
     trackInfos.forEach(trackInfo => {
         const { track, boundingBox } = trackInfo;
 
-        // Header marks contain both the title and subtitle
         if (track.mark === '_header') {
+            // Header marks contain both the title and subtitle
             const textTrackDefs = proccessTextHeader(track, boundingBox, theme);
             trackDefs.push(...textTrackDefs);
+        } else if (isHeatmapTrack(track)) {
+            // We have a heatmap track
+            const heatmapTrackDefs = processHeatmapTrack(track, boundingBox, theme);
+            trackDefs.push(...heatmapTrackDefs);
         } else {
+            // We have a gosling track
             const goslingAxisDefs = processGoslingTrack(track, boundingBox, theme);
             trackDefs.push(...goslingAxisDefs);
         }
     });
     return trackDefs;
+}
+
+function isHeatmapTrack(track: Track): boolean {
+    return track.data && track.data.type === 'matrix';
 }
 
 /**
@@ -118,6 +129,10 @@ export function renderTrackDefs(trackDefs: TrackDefs[], linkedEncodings: LinkedE
             if (!options.spec.static) {
                 gosPlot.addInteractor(plot => panZoom(plot, domain));
             }
+        }
+        if (type === TrackType.Heatmap) {
+            const datafetcher = getDataFetcher(options.spec);
+            new HeatmapTrack(options, datafetcher, pixiManager.makeContainer(boundingBox));
         }
         if (type === TrackType.Axis) {
             const domain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
