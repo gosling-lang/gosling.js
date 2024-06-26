@@ -8,7 +8,8 @@ import {
     addAxisTrack,
     addLinearBrush,
     addBigwig,
-    addHeatmap
+    addHeatmap,
+    addLeftAxisTrack
 } from './examples';
 import { compile } from '../src/compiler/compile';
 import { getTheme } from '../src/core/utils/theme';
@@ -37,29 +38,30 @@ function App() {
         // addLinearBrush(pixiManager);
         // addBigwig(pixiManager);
         // addHeatmap(pixiManager);
+        addLeftAxisTrack(pixiManager);
 
-        const callback = (
-            hg: HiGlassSpec,
-            size,
-            gs: GoslingSpec,
-            tracksAndViews,
-            idTable,
-            trackInfos: TrackInfo[],
-            theme: Require<ThemeDeep>
-        ) => {
-            console.warn(trackInfos);
-            console.warn(tracksAndViews);
-            console.warn(gs);
-            // showTrackInfoPositions(trackInfos, pixiManager);
-            const linkedEncodings = getLinkedEncodings(gs);
-            console.warn('linkedEncodings', linkedEncodings);
-            const trackDefs = createTrackDefs(trackInfos, theme);
-            console.warn('trackDefs', trackDefs);
-            renderTrackDefs(trackDefs, linkedEncodings, pixiManager);
-        };
+        // const callback = (
+        //     hg: HiGlassSpec,
+        //     size,
+        //     gs: GoslingSpec,
+        //     tracksAndViews,
+        //     idTable,
+        //     trackInfos: TrackInfo[],
+        //     theme: Require<ThemeDeep>
+        // ) => {
+        //     console.warn(trackInfos);
+        //     console.warn(tracksAndViews);
+        //     console.warn(gs);
+        //     // showTrackInfoPositions(trackInfos, pixiManager);
+        //     const linkedEncodings = getLinkedEncodings(gs);
+        //     console.warn('linkedEncodings', linkedEncodings);
+        //     const trackDefs = createTrackDefs(trackInfos, theme);
+        //     console.warn('trackDefs', trackDefs);
+        //     renderTrackDefs(trackDefs, linkedEncodings, pixiManager);
+        // };
 
-        // Compile the spec
-        compile(matrix, callback, [], getTheme('light'), { containerSize: { width: 300, height: 300 } });
+        // // Compile the spec
+        // compile(simple, callback, [], getTheme('light'), { containerSize: { width: 300, height: 300 } });
     }, []);
 
     return (
@@ -74,6 +76,46 @@ function App() {
 }
 
 export default App;
+
+const matrix2 = {
+    xDomain: { chromosome: 'chr7', interval: [77700000, 81000000] },
+    tracks: [
+        {
+            layout: 'linear',
+            width: 600,
+            height: 180,
+            data: {
+                url: 'https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ',
+                type: 'multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
+                categories: ['sample 1'],
+                binSize: 5
+            },
+            mark: 'bar',
+            x: { field: 'start', type: 'genomic', axis: 'bottom' },
+            xe: { field: 'end', type: 'genomic' },
+            y: { field: 'peak', type: 'quantitative', axis: 'right' },
+            size: { value: 5 }
+        },
+        {
+            title: 'HFFc6_Micro-C',
+            data: {
+                url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=hffc6-microc-hg38',
+                type: 'matrix'
+            },
+            mark: 'bar',
+            x: { field: 'xs', type: 'genomic', axis: 'none' },
+            xe: { field: 'xe', type: 'genomic', axis: 'none' },
+            y: { field: 'ys', type: 'genomic', axis: 'left' },
+            ye: { field: 'ye', type: 'genomic', axis: 'none' },
+            color: { field: 'value', type: 'quantitative', range: 'warm' },
+            width: 600,
+            height: 600
+        }
+    ]
+};
 
 const matrix = {
     xDomain: { chromosome: 'chr7', interval: [77700000, 81000000] },
@@ -96,10 +138,36 @@ const matrix = {
     ]
 };
 
+const simple = {
+    orientation: 'vertical',
+    tracks: [
+        {
+            layout: 'linear',
+            width: 800,
+            height: 180,
+            data: {
+                url: 'https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ',
+                type: 'multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
+                categories: ['sample 1'],
+                binSize: 5
+            },
+            mark: 'bar',
+            x: { field: 'start', type: 'genomic', axis: 'bottom' },
+            xe: { field: 'end', type: 'genomic' },
+            y: { field: 'peak', type: 'quantitative', axis: 'right' },
+            size: { value: 5 }
+        }
+    ]
+};
+
 const spec = {
     title: 'Basic Marks: line',
     subtitle: 'Tutorial Examples',
     layout: 'linear',
+    orientation: 'vertical',
     tracks: [
         {
             layout: 'circular',
