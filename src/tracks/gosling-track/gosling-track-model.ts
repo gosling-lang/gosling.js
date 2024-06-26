@@ -139,11 +139,11 @@ export class GoslingTrackModel {
         }
 
         // If this is vertical track, switch them.
-        if (spec.orientation === 'vertical') {
-            const width = spec.width;
-            spec.width = spec.height;
-            spec.height = width;
-        }
+        // if (spec.orientation === 'vertical') {
+        //     const width = spec.width;
+        //     spec.width = spec.height;
+        //     spec.height = width;
+        // }
 
         // If axis presents, reserve a space to show axis
         const xOrY = this.getGenomicChannelKey();

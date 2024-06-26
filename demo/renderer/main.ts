@@ -121,7 +121,13 @@ export function renderTrackDefs(trackDefs: TrackDefs[], linkedEncodings: LinkedE
             if (!domain) return;
 
             const datafetcher = getDataFetcher(options.spec);
-            const gosPlot = new GoslingTrack(options, datafetcher, pixiManager.makeContainer(boundingBox), domain);
+            const gosPlot = new GoslingTrack(
+                options,
+                datafetcher,
+                pixiManager.makeContainer(boundingBox),
+                domain,
+                options.spec.orientation
+            );
             if (!options.spec.static) {
                 gosPlot.addInteractor(plot => panZoom(plot, domain));
             }
@@ -141,7 +147,9 @@ export function renderTrackDefs(trackDefs: TrackDefs[], linkedEncodings: LinkedE
             const domain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
             if (!domain) return;
 
-            new AxisTrack(options, domain, pixiManager.makeContainer(boundingBox));
+            new AxisTrack(options, domain, pixiManager.makeContainer(boundingBox), 'vertical').addInteractor(plot =>
+                panZoom(plot, domain)
+            );
         }
         if (type === TrackType.BrushLinear) {
             const domain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
