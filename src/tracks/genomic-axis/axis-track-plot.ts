@@ -20,7 +20,7 @@ function wheelDelta(event: WheelEvent) {
 }
 
 export class AxisTrack extends AxisTrackClass {
-    xDomain: Signal<number[]>;
+    xDomain: Signal<[number, number]>;
     zoomStartScale = scaleLinear();
     domOverlay: HTMLElement;
     width: number;
@@ -29,7 +29,7 @@ export class AxisTrack extends AxisTrackClass {
 
     constructor(
         options: AxisTrackOptions,
-        xDomain: Signal<number[]>,
+        xDomain: Signal<[number, number]>,
         containers: {
             pixiContainer: PIXI.Container;
             overlayDiv: HTMLElement;
@@ -68,8 +68,10 @@ export class AxisTrack extends AxisTrackClass {
             // The width and height are swapped because the scene is rotated
             this.width = overlayDiv.clientHeight;
             this.height = overlayDiv.clientWidth;
+            // We rotate the scene 90 degrees to the left
             this.scene.rotation = Math.PI / 2 + Math.PI;
             const position = this.scene.position;
+            // We move the scene down because the rotation point is the top left corner
             this.scene.position.set(position.x, position.y + this.width);
         }
 
@@ -86,7 +88,12 @@ export class AxisTrack extends AxisTrackClass {
         this.refScalesChanged(refXScale, refYScale);
 
         // Add the zoom
-        this.#addZoom();
+        // this.#addZoom();
+    }
+
+    addInteractor(interactor: (plot: AxisTrack) => void) {
+        interactor(this);
+        return this; // For chaining
     }
 
     #addZoom(): void {

@@ -2,6 +2,7 @@ import { PixiManager } from '@pixi-manager';
 import { signal } from '@preact/signals-core';
 import { AxisTrack } from '@gosling-lang/genomic-axis';
 import { LeftTrackModifier } from '../../src/tracks/utils';
+import { panZoom } from '@gosling-lang/interactors';
 
 export function addLeftAxisTrack(pixiManager: PixiManager) {
     const view1Domain = signal<[number, number]>([0, 3000000000]);
@@ -9,12 +10,13 @@ export function addLeftAxisTrack(pixiManager: PixiManager) {
     const posAxis = {
         x: 150,
         y: 300,
-        width: 200,
-        height: 800
+        width: 800,
+        height: 200
     };
     const { pixiContainer, overlayDiv } = pixiManager.makeContainer(posAxis);
     overlayDiv.style.border = '1px solid black';
     const axis = new AxisTrack(axisTrack, view1Domain, { pixiContainer, overlayDiv }, 'vertical');
+    axis.addInteractor(plot => panZoom(plot, view1Domain));
 }
 
 export const axisTrack = {
