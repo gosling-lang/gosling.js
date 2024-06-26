@@ -63,7 +63,7 @@ function App() {
         };
 
         // Compile the spec
-        compile(simple, callback, [], getTheme('light'), { containerSize: { width: 300, height: 300 } });
+        compile(matrix2, callback, [], getTheme('light'), { containerSize: { width: 300, height: 300 } });
     }, []);
 
     return (
@@ -110,7 +110,7 @@ const matrix2 = {
             mark: 'bar',
             x: { field: 'xs', type: 'genomic', axis: 'none' },
             xe: { field: 'xe', type: 'genomic', axis: 'none' },
-            y: { field: 'ys', type: 'genomic', axis: 'left' },
+            y: { field: 'ys', type: 'genomic', axis: 'none' },
             ye: { field: 'ye', type: 'genomic', axis: 'none' },
             color: { field: 'value', type: 'quantitative', range: 'warm' },
             width: 600,

@@ -1,4 +1,4 @@
-import { type Signal, effect } from '@preact/signals-core';
+import { type Signal, effect, batch } from '@preact/signals-core';
 import { scaleLinear } from 'd3-scale';
 import { ZoomTransform, type D3ZoomEvent, zoom } from 'd3-zoom';
 import { select } from 'd3-selection';
@@ -29,9 +29,12 @@ export function panZoomHeatmap(
     const zoomed = (event: D3ZoomEvent<HTMLElement, unknown>) => {
         const { transform } = event;
         const newXDomain = transform.rescaleX(zoomStartXScale).domain();
-        xDomain.value = newXDomain as [number, number];
         const newYDomain = transform.rescaleY(zoomStartYScale).domain();
-        yDomain.value = newYDomain as [number, number];
+
+        batch(() => {
+            xDomain.value = newXDomain as [number, number];
+            yDomain.value = newYDomain as [number, number];
+        });
     };
     // Create the zoom behavior
     const zoomBehavior = zoom<HTMLElement, unknown>()
@@ -72,9 +75,17 @@ export function panZoomHeatmap(
         const scalingXFactor = width / maxDomain;
         const tx = -(xDomain.value[0] * k) * scalingXFactor;
 
+        const ky = maxDomain / (yDomain.value[1] - yDomain.value[0]);
         const scalingYFactor = height / maxDomain;
         const ty = -(yDomain.value[0] * k) * scalingYFactor;
 
-        plot.zoomed(newXScale, newYScale, k, tx, ty);
+        if (ky.toPrecision(3) !== k.toPrecision(3)) {
+            // If there is a mismatch between the x and y scaling factors, we need to adjust the yDomain
+            // TODO: This is a temporary fix. We need to find a better way to handle this
+            const diff = maxDomain / k;
+            yDomain.value = [yDomain.value[0], yDomain.value[0] + diff];
+        } else {
+            plot.zoomed(newXScale, newYScale, k, tx, ty);
+        }
     });
 }
