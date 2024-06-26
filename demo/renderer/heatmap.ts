@@ -3,13 +3,24 @@ import { type TrackDef, TrackType } from './main';
 import { type HeatmapTrackOptions } from '@gosling-lang/heatmap';
 import type { CompleteThemeDeep } from '../../src/core/utils/theme';
 import { computeChromSizes } from '../../src/core/utils/assembly';
+import { getAxisTrackDef } from './axis';
+import { type AxisTrackOptions } from '@gosling-lang/genomic-axis';
 
 export function processHeatmapTrack(
     track: Track,
     boundingBox: { x: number; y: number; width: number; height: number },
     theme: Required<CompleteThemeDeep>
-): TrackDef<HeatmapTrackOptions>[] {
-    const trackDefs: TrackDef<HeatmapTrackOptions>[] = [];
+): (TrackDef<HeatmapTrackOptions> | TrackDef<AxisTrackOptions>)[] {
+    const trackDefs: (TrackDef<HeatmapTrackOptions> | TrackDef<AxisTrackOptions>)[] = [];
+
+    // Adds the axis tracks if needed
+    const [newTrackBbox, axisTrackDef] = getAxisTrackDef(track, boundingBox, theme);
+    if (axisTrackDef) {
+        trackDefs.push(axisTrackDef);
+        // modify the bounding box to exclude the axis track
+        boundingBox = newTrackBbox;
+    }
+
     const heatmapOptions = getHeatmapOptions(track, theme);
     trackDefs.push({
         type: TrackType.Heatmap,

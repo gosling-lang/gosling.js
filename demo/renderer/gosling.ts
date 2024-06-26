@@ -21,7 +21,7 @@ export function processGoslingTrack(
         | TrackDef<BrushLinearTrackOptions>
     )[] = [];
 
-    // Adds the title and subtitle tracks
+    // Adds the axis tracks
     const [newTrackBbox, axisTrackDef] = getAxisTrackDef(track, boundingBox, theme);
     if (axisTrackDef) {
         trackDefs.push(axisTrackDef);

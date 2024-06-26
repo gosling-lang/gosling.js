@@ -131,10 +131,8 @@ export function renderTrackDefs(trackDefs: TrackDefs[], linkedEncodings: LinkedE
             const yDomain = getEncodingSignal(trackDef.trackId, 'y', linkedEncodings);
             console.warn('domains,', xDomain, yDomain);
             if (!xDomain || !yDomain) return;
+
             const datafetcher = getDataFetcher(options.spec);
-            // const xDomain = signal<[number, number]>([0, 3088269832]);
-            // const yDomain = signal<[number, number]>([0, 3088269832]);
-            console.warn('making track');
             new HeatmapTrack(options, datafetcher, pixiManager.makeContainer(boundingBox)).addInteractor(plot =>
                 panZoomHeatmap(plot, xDomain, yDomain)
             );
