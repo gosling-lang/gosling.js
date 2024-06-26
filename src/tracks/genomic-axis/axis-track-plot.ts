@@ -22,7 +22,10 @@ function wheelDelta(event: WheelEvent) {
 export class AxisTrack extends AxisTrackClass {
     xDomain: Signal<number[]>;
     zoomStartScale = scaleLinear();
-    #element: HTMLElement;
+    domOverlay: HTMLElement;
+    width: number;
+    height: number;
+    orientation: 'horizontal' | 'vertical';
 
     constructor(
         options: AxisTrackOptions,
@@ -30,15 +33,14 @@ export class AxisTrack extends AxisTrackClass {
         containers: {
             pixiContainer: PIXI.Container;
             overlayDiv: HTMLElement;
-        }
+        },
+        orientation: 'horizontal' | 'vertical' = 'horizontal'
     ) {
         const { pixiContainer, overlayDiv } = containers;
-        const height = overlayDiv.clientHeight;
-        const width = overlayDiv.clientWidth;
         // Create a new svg element. The brush will be drawn on this element
         const svgElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svgElement.style.width = `${width}px`;
-        svgElement.style.height = `${height}px`;
+        svgElement.style.width = `${overlayDiv.clientWidth}px`;
+        svgElement.style.height = `${overlayDiv.clientHeight}px`;
         // Add it to the overlay div
         overlayDiv.appendChild(svgElement);
 
@@ -58,13 +60,26 @@ export class AxisTrack extends AxisTrackClass {
 
         super(context, options);
 
+        this.orientation = orientation;
+        if (this.orientation === 'horizontal') {
+            this.width = overlayDiv.clientWidth;
+            this.height = overlayDiv.clientHeight;
+        } else {
+            // The width and height are swapped because the scene is rotated
+            this.width = overlayDiv.clientHeight;
+            this.height = overlayDiv.clientWidth;
+            this.scene.rotation = Math.PI / 2 + Math.PI;
+            const position = this.scene.position;
+            this.scene.position.set(position.x, position.y + this.width);
+        }
+
         this.xDomain = xDomain;
-        this.#element = overlayDiv;
+        this.domOverlay = overlayDiv;
         // Now we need to initialize all of the properties that would normally be set by HiGlassComponent
-        this.setDimensions([width, height]);
+        this.setDimensions([this.width, this.height]);
         this.setPosition([0, 0]);
         // Create some scales which span the whole genome
-        const refXScale = scaleLinear().domain(xDomain.value).range([0, width]);
+        const refXScale = scaleLinear().domain(xDomain.value).range([0, this.width]);
         const refYScale = scaleLinear(); // This doesn't get used anywhere but we need to pass it in
         // Set the scales
         this.zoomed(refXScale, refYScale);
@@ -75,26 +90,35 @@ export class AxisTrack extends AxisTrackClass {
     }
 
     #addZoom(): void {
-        const baseScale = scaleLinear().domain(this.xDomain.value).range([0, this.#element.clientWidth]);
+        const baseScale = scaleLinear().domain(this.xDomain.value).range([0, this.width]);
 
         // This function will be called every time the user zooms
         const zoomed = (event: D3ZoomEvent<HTMLElement, unknown>) => {
-            const newXDomain = event.transform.rescaleX(this.zoomStartScale).domain();
-            this.xDomain.value = newXDomain;
+            if (this.orientation === 'vertical') {
+                const newXDomain = event.transform.rescaleY(this.zoomStartScale).domain();
+                this.xDomain.value = newXDomain;
+            }
+            if (this.orientation === 'horizontal') {
+                const newXDomain = event.transform.rescaleX(this.zoomStartScale).domain();
+                this.xDomain.value = newXDomain;
+            }
         };
 
         // Create the zoom behavior
         const zoomBehavior = zoom<HTMLElement, unknown>()
             .wheelDelta(wheelDelta)
             // @ts-expect-error We need to reset the transform when the user stops zooming
-            .on('end', () => (this.#element.__zoom = new ZoomTransform(1, 0, 0)))
+            .on('end', () => (this.domOverlay.__zoom = new ZoomTransform(1, 0, 0)))
             .on('start', () => {
-                this.zoomStartScale.domain(this.xDomain.value).range([0, this.#element.clientWidth]);
+                if (this.orientation === 'horizontal')
+                    this.zoomStartScale.domain(this.xDomain.value).range([0, this.width]);
+                if (this.orientation === 'vertical')
+                    this.zoomStartScale.domain(this.xDomain.value).range([this.width, 0]);
             })
             .on('zoom', zoomed.bind(this));
 
         // Apply the zoom behavior to the overlay div
-        select<HTMLElement, unknown>(this.#element).call(zoomBehavior);
+        select<HTMLElement, unknown>(this.domOverlay).call(zoomBehavior);
 
         // Every time the domain gets changed we want to update the zoom
         effect(() => {
