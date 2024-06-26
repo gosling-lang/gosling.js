@@ -39,8 +39,8 @@ function App() {
         // addLinearBrush(pixiManager);
         // addBigwig(pixiManager);
         // addHeatmap(pixiManager);
-        // addLeftAxisTrack(pixiManager);
-        addGoslingVertical(pixiManager);
+        addLeftAxisTrack(pixiManager);
+        // addGoslingVertical(pixiManager);
 
         // const callback = (
         //     hg: HiGlassSpec,
@@ -63,7 +63,7 @@ function App() {
         // };
 
         // // Compile the spec
-        // compile(simple, callback, [], getTheme('light'), { containerSize: { width: 300, height: 300 } });
+        // compile(doubleBrush, callback, [], getTheme('light'), { containerSize: { width: 300, height: 300 } });
     }, []);
 
     return (

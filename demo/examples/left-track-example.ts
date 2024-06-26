@@ -10,8 +10,8 @@ export function addLeftAxisTrack(pixiManager: PixiManager) {
     const posAxis = {
         x: 150,
         y: 300,
-        width: 800,
-        height: 200
+        width: 200,
+        height: 800
     };
     const { pixiContainer, overlayDiv } = pixiManager.makeContainer(posAxis);
     overlayDiv.style.border = '1px solid black';

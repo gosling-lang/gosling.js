@@ -10,6 +10,8 @@ export class BrushLinearTrack extends BrushLinearTrackClass<BrushLinearTrackOpti
     xDomain: Signal<[number, number]>;
     xBrushDomain: Signal<[number, number]>;
     domOverlay: HTMLElement;
+    width: number;
+    height: number;
 
     constructor(
         options: BrushLinearTrackOptions,
@@ -17,15 +19,12 @@ export class BrushLinearTrack extends BrushLinearTrackClass<BrushLinearTrackOpti
         domOverlay: HTMLElement,
         xDomain = signal<[number, number]>([0, 3088269832]) // Default domain
     ) {
-        const height = domOverlay.clientHeight;
-        const width = domOverlay.clientWidth;
-        
         // If there is already an svg element, use it. Otherwise, create a new one
         const existingSvgElement = domOverlay.querySelector('svg');
         const svgElement = existingSvgElement || document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         if (!existingSvgElement) {
-            svgElement.style.width = `${width}px`;
-            svgElement.style.height = `${height}px`;
+            svgElement.style.width = `${domOverlay.clientWidth}px`;
+            svgElement.style.height = `${domOverlay.clientHeight}px`;
             domOverlay.appendChild(svgElement);
         }
 
@@ -41,15 +40,17 @@ export class BrushLinearTrack extends BrushLinearTrackClass<BrushLinearTrackOpti
         };
 
         super(context, options);
+        this.width = domOverlay.clientWidth;
+        this.height = domOverlay.clientHeight;
 
         this.xDomain = xDomain;
         this.xBrushDomain = xBrushDomain;
         this.domOverlay = domOverlay;
         // Now we need to initialize all of the properties that would normally be set by HiGlassComponent
-        this.setDimensions([width, height]);
+        this.setDimensions([this.width, this.height]);
         this.setPosition([0, 0]);
         // Create some scales to pass in
-        const refXScale = scaleLinear().domain(xDomain.value).range([0, width]);
+        const refXScale = scaleLinear().domain(xDomain.value).range([0, this.width]);
         const refYScale = scaleLinear(); // This doesn't get used anywhere but we need to pass it in
         // Set the scales
         this.zoomed(refXScale, refYScale);
