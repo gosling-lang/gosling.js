@@ -9,7 +9,8 @@ import {
     addLinearBrush,
     addBigwig,
     addHeatmap,
-    addLeftAxisTrack
+    addLeftAxisTrack,
+    addGoslingVertical
 } from './examples';
 import { compile } from '../src/compiler/compile';
 import { getTheme } from '../src/core/utils/theme';
@@ -38,7 +39,8 @@ function App() {
         // addLinearBrush(pixiManager);
         // addBigwig(pixiManager);
         // addHeatmap(pixiManager);
-        addLeftAxisTrack(pixiManager);
+        // addLeftAxisTrack(pixiManager);
+        addGoslingVertical(pixiManager);
 
         // const callback = (
         //     hg: HiGlassSpec,
