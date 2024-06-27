@@ -144,11 +144,14 @@ export function renderTrackDefs(trackDefs: TrackDefs[], linkedEncodings: LinkedE
             );
         }
         if (type === TrackType.Axis) {
-            const domain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
-            if (!domain) return;
+            const domain = getEncodingSignal(trackDef.trackId, options.encoding, linkedEncodings);
+            if (!domain) {
+                console.warn(`No domain found for track ${trackDef.trackId}`);
+                return;
+            }
 
-            new AxisTrack(options, domain, pixiManager.makeContainer(boundingBox), options.orientation).addInteractor(plot =>
-                panZoom(plot, domain)
+            new AxisTrack(options, domain, pixiManager.makeContainer(boundingBox), options.orientation).addInteractor(
+                plot => panZoom(plot, domain)
             );
         }
         if (type === TrackType.BrushLinear) {

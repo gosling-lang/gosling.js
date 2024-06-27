@@ -14,9 +14,9 @@ export function processHeatmapTrack(
     const trackDefs: (TrackDef<HeatmapTrackOptions> | TrackDef<AxisTrackOptions>)[] = [];
 
     // Adds the axis tracks if needed
-    const [newTrackBbox, axisTrackDef] = getAxisTrackDef(track, boundingBox, theme);
-    if (axisTrackDef) {
-        trackDefs.push(axisTrackDef);
+    const [newTrackBbox, axisTrackDefs] = getAxisTrackDef(track, boundingBox, theme);
+    if (axisTrackDefs) {
+        trackDefs.push(...axisTrackDefs);
         // modify the bounding box to exclude the axis track
         boundingBox = newTrackBbox;
     }

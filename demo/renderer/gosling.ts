@@ -22,9 +22,9 @@ export function processGoslingTrack(
     )[] = [];
 
     // Adds the axis tracks
-    const [newTrackBbox, axisTrackDef] = getAxisTrackDef(track, boundingBox, theme);
-    if (axisTrackDef) {
-        trackDefs.push(axisTrackDef);
+    const [newTrackBbox, axisTrackDefs] = getAxisTrackDef(track, boundingBox, theme);
+    if (axisTrackDefs) {
+        trackDefs.push(...axisTrackDefs);
         // modify the bounding box to exclude the axis track
         boundingBox = newTrackBbox;
     }

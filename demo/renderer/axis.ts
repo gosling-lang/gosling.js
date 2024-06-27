@@ -25,11 +25,21 @@ export function getAxisTrackDef(
     track: SingleTrack | OverlaidTrack | TemplateTrack,
     boundingBox: { x: number; y: number; width: number; height: number },
     theme: Required<CompleteThemeDeep>
-): [trackBbox: { x: number; y: number; width: number; height: number }, TrackDef<AxisTrackOptions> | undefined] {
+): [trackBbox: { x: number; y: number; width: number; height: number }, TrackDef<AxisTrackOptions>[] | undefined] {
     const { xAxisPosition, yAxisPosition } = getAxisPositions(track);
+    console.warn('xAxisPosition', xAxisPosition, 'yAxisPosition', yAxisPosition);
     // This is a copy of the original bounding box. It will be modified if an axis is added
     const trackBbox = { ...boundingBox };
+    const trackDefs: TrackDef<AxisTrackOptions>[] = [];
     if (xAxisPosition) {
+        if (track.layout === 'circular') {
+            trackDefs.push({
+                type: TrackType.Axis,
+                trackId: track.id,
+                boundingBox: boundingBox,
+                options: getAxisTrackCircularOptions(track, boundingBox, xAxisPosition, theme)
+            });
+        }
         if (track.layout === 'linear') {
             const isHorizontal = track.orientation === 'horizontal';
             const widthOrHeight = isHorizontal ? 'height' : 'width';
@@ -44,31 +54,40 @@ export function getAxisTrackDef(
             } else if (xAxisPosition === 'left') {
                 trackBbox.x += axisBbox.width;
             }
-            return [
-                trackBbox,
-                {
-                    type: TrackType.Axis,
-                    trackId: track.id,
-                    boundingBox: axisBbox,
-                    options: getAxisTrackLinearOptions(track, axisBbox, xAxisPosition, theme)
-                }
-            ];
-        } else if (track.layout === 'circular') {
-            return [
-                trackBbox,
-                {
-                    type: TrackType.Axis,
-                    trackId: track.id,
-                    boundingBox: boundingBox,
-                    options: getAxisTrackCircularOptions(track, boundingBox, xAxisPosition, theme)
-                }
-            ];
+            trackDefs.push({
+                type: TrackType.Axis,
+                trackId: track.id,
+                boundingBox: axisBbox,
+                options: getAxisTrackLinearOptions('x', track, axisBbox, xAxisPosition, theme)
+            });
         }
     }
     if (yAxisPosition) {
-        console.warn('Vertical axis is not supported yet');
+        if (track.layout === 'circular') {
+            console.warn('Error: Circular layout does not support y-axis');
+        }
+        if (track.layout === 'linear') {
+            if (yAxisPosition === 'top' || yAxisPosition === 'bottom') {
+                console.warn('Error: Bottom y-axis is not supported. Defaulting to left.');
+            }
+            const isHorizontal = track.orientation === 'horizontal';
+            const widthOrHeight = isHorizontal ? 'width' : 'height';
+            const axisBbox = { ...trackBbox, [widthOrHeight]: HIGLASS_AXIS_SIZE };
+            trackBbox[widthOrHeight] -= axisBbox[widthOrHeight];
+            if (yAxisPosition === 'right') {
+                axisBbox.x = trackBbox.x + trackBbox.width;
+            } else if (yAxisPosition === 'left' || yAxisPosition === 'bottom' || yAxisPosition === 'top') {
+                trackBbox.x += axisBbox.width;
+            }
+            trackDefs.push({
+                type: TrackType.Axis,
+                trackId: track.id,
+                boundingBox: axisBbox,
+                options: getAxisTrackLinearOptions('y', track, axisBbox, yAxisPosition, theme)
+            });
+        }
     }
-    return [trackBbox, undefined];
+    return [trackBbox, trackDefs];
 }
 
 /**
@@ -77,14 +96,16 @@ export function getAxisTrackDef(
  * @param position "top" | "bottom" | "left" | "right
  */
 function getAxisTrackLinearOptions(
+    encoding: 'x' | 'y',
     track: SingleTrack | OverlaidTrack | TemplateTrack,
     boundingBox: { x: number; y: number; width: number; height: number },
     position: AxisPosition,
     theme: Required<CompleteThemeDeep>
 ): AxisTrackOptions {
-    const narrowType = getAxisNarrowType('x', track.orientation, boundingBox.width, boundingBox.height);
+    const narrowType = getAxisNarrowType(encoding, track.orientation, boundingBox.width, boundingBox.height);
     const options: AxisTrackOptions = {
-        orientation: track.orientation,
+        orientation: getAxisOrientation(encoding, track.orientation),
+        encoding: encoding,
         innerRadius: 0,
         outerRadius: 0,
         width: boundingBox.width,
@@ -106,6 +127,20 @@ function getAxisTrackLinearOptions(
         reverseOrientation: position === 'bottom' || position === 'right' ? true : false
     };
     return options;
+}
+
+/**
+ * Determines the orientation of the axis
+ */
+function getAxisOrientation(encoding: 'x' | 'y', trackOrientation: 'horizontal' | 'vertical') {
+    if (encoding === 'x') {
+        return trackOrientation === 'horizontal' ? 'horizontal' : 'vertical';
+    }
+    if (encoding === 'y') {
+        return trackOrientation === 'horizontal' ? 'vertical' : 'horizontal';
+    }
+    console.warn('Invalid track orientation. Defaulting to horizontal');
+    return 'horizontal';
 }
 
 /**

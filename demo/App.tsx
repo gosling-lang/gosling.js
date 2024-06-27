@@ -159,9 +159,9 @@ const matrix = {
                 type: 'matrix'
             },
             mark: 'bar',
-            x: { field: 'xs', type: 'genomic', axis: 'none' },
+            x: { field: 'xs', type: 'genomic', axis: 'top' },
             xe: { field: 'xe', type: 'genomic', axis: 'none' },
-            y: { field: 'ys', type: 'genomic', axis: 'none' },
+            y: { field: 'ys', type: 'genomic', axis: 'right' },
             ye: { field: 'ye', type: 'genomic', axis: 'none' },
             color: { field: 'value', type: 'quantitative', range: 'warm' },
             width: 600,
