@@ -6,7 +6,7 @@ export function getDataFetcher(spec: Track) {
     if (!('data' in spec)) {
         console.warn('No data in the track spec', spec);
     }
-    if (spec.data.type == 'multivec' || spec.data.type == 'beddb') {
+    if (spec.data.type == 'multivec' || spec.data.type == 'beddb' || spec.data.type == 'matrix') {
         const url = spec.data.url;
         const server = url.split('/').slice(0, -2).join('/');
         const tilesetUid = url.split('=').slice(-1)[0];

@@ -1,4 +1,4 @@
-import { type Signal, effect } from '@preact/signals-core';
+import { type Signal, effect, batch } from '@preact/signals-core';
 import { scaleLinear } from 'd3-scale';
 import { ZoomTransform, type D3ZoomEvent, zoom } from 'd3-zoom';
 import { select } from 'd3-selection';
@@ -19,8 +19,7 @@ export function panZoomHeatmap(
     const zoomStartXScale = scaleLinear();
     const zoomStartYScale = scaleLinear();
 
-    const origXDomain = xDomain.value;
-    const origYDomain = yDomain.value;
+    const maxDomain = plot.maxDomain; // used to calculate k, the scaling factor
     const width = plot.domOverlay.clientWidth;
     const height = plot.domOverlay.clientHeight;
     const baseXScale = scaleLinear().range([0, width]);
@@ -30,9 +29,12 @@ export function panZoomHeatmap(
     const zoomed = (event: D3ZoomEvent<HTMLElement, unknown>) => {
         const { transform } = event;
         const newXDomain = transform.rescaleX(zoomStartXScale).domain();
-        xDomain.value = newXDomain as [number, number];
         const newYDomain = transform.rescaleY(zoomStartYScale).domain();
-        yDomain.value = newYDomain as [number, number];
+
+        batch(() => {
+            xDomain.value = newXDomain as [number, number];
+            yDomain.value = newYDomain as [number, number];
+        });
     };
     // Create the zoom behavior
     const zoomBehavior = zoom<HTMLElement, unknown>()
@@ -69,13 +71,21 @@ export function panZoomHeatmap(
         // since after every zoom event, we reset the transform object to new ZoomTransform(1, 0, 0);
         // This lets us change the xDomain and yDomain signals without having to update the transform object
 
-        const k = (origXDomain[1] - origXDomain[0]) / (xDomain.value[1] - xDomain.value[0]);
-        const scalingXFactor = width / (origXDomain[1] - origXDomain[0]);
-        const tx = -(xDomain.value[0] * k - origXDomain[0]) * scalingXFactor;
+        const k = maxDomain / (xDomain.value[1] - xDomain.value[0]);
+        const scalingXFactor = width / maxDomain;
+        const tx = -(xDomain.value[0] * k) * scalingXFactor;
 
-        const scalingYFactor = height / (origYDomain[1] - origYDomain[0]);
-        const ty = -(yDomain.value[0] * k - origYDomain[0]) * scalingYFactor;
+        const ky = maxDomain / (yDomain.value[1] - yDomain.value[0]);
+        const scalingYFactor = height / maxDomain;
+        const ty = -(yDomain.value[0] * k) * scalingYFactor;
 
-        plot.zoomed(newXScale, newYScale, k, tx, ty);
+        if (ky.toPrecision(3) !== k.toPrecision(3)) {
+            // If there is a mismatch between the x and y scaling factors, we need to adjust the yDomain
+            // TODO: This is a temporary fix. We need to find a better way to handle this
+            const diff = maxDomain / k;
+            yDomain.value = [yDomain.value[0], yDomain.value[0] + diff];
+        } else {
+            plot.zoomed(newXScale, newYScale, k, tx, ty);
+        }
     });
 }

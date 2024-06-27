@@ -21,10 +21,10 @@ export function processGoslingTrack(
         | TrackDef<BrushLinearTrackOptions>
     )[] = [];
 
-    // Adds the title and subtitle tracks
-    const [newTrackBbox, axisTrackDef] = getAxisTrackDef(track, boundingBox, theme);
-    if (axisTrackDef) {
-        trackDefs.push(axisTrackDef);
+    // Adds the axis tracks
+    const [newTrackBbox, axisTrackDefs] = getAxisTrackDef(track, boundingBox, theme);
+    if (axisTrackDefs) {
+        trackDefs.push(...axisTrackDefs);
         // modify the bounding box to exclude the axis track
         boundingBox = newTrackBbox;
     }

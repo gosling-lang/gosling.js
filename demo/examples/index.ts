@@ -6,3 +6,5 @@ export { addAxisTrack } from './axis-track-example';
 export { addLinearBrush } from './brush-linear-example';
 export { addBigwig } from './bigwig-data-example';
 export { addHeatmap } from './heatmap-example';
+export { addLeftAxisTrack } from './left-track-example';
+export { addGoslingVertical } from './gosling-track-vertical';

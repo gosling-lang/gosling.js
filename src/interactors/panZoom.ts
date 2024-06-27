@@ -10,13 +10,19 @@ import { zoomWheelBehavior, type Plot } from '../tracks/utils';
 
 export function panZoom(plot: Plot, xDomain: Signal<[number, number]>) {
     plot.xDomain = xDomain; // Update the xDomain with the signal
-    const baseScale = scaleLinear().range([0, plot.domOverlay.clientWidth]);
+    const baseScale = scaleLinear().range([0, plot.width]);
     // This will store the xDomain when the user starts zooming
     const zoomStartScale = scaleLinear();
     // This function will be called every time the user zooms
     const zoomed = (event: D3ZoomEvent<HTMLElement, unknown>) => {
-        const newXDomain = event.transform.rescaleX(zoomStartScale).domain();
-        xDomain.value = newXDomain as [number, number];
+        if (plot.orientation === undefined || plot.orientation === 'horizontal') {
+            const newXDomain = event.transform.rescaleX(zoomStartScale).domain();
+            xDomain.value = newXDomain as [number, number];
+        }
+        if (plot.orientation === 'vertical') {
+            const newXDomain = event.transform.rescaleY(zoomStartScale).domain();
+            xDomain.value = newXDomain as [number, number];
+        }
     };
     // Create the zoom behavior
     const zoomBehavior = zoom<HTMLElement, unknown>()
@@ -34,7 +40,7 @@ export function panZoom(plot: Plot, xDomain: Signal<[number, number]>) {
         // @ts-expect-error We need to reset the transform when the user stops zooming
         .on('end', () => (plot.domOverlay.__zoom = new ZoomTransform(1, 0, 0)))
         .on('start', () => {
-            zoomStartScale.domain(xDomain.value).range([0, plot.domOverlay.clientWidth]);
+            zoomStartScale.domain(xDomain.value).range([0, plot.width]);
         })
         .on('zoom', zoomed);
 

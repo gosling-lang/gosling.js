@@ -8,7 +8,9 @@ import {
     addAxisTrack,
     addLinearBrush,
     addBigwig,
-    addHeatmap
+    addHeatmap,
+    addLeftAxisTrack,
+    addGoslingVertical
 } from './examples';
 import { compile } from '../src/compiler/compile';
 import { getTheme } from '../src/core/utils/theme';
@@ -37,6 +39,8 @@ function App() {
         // addLinearBrush(pixiManager);
         // addBigwig(pixiManager);
         // addHeatmap(pixiManager);
+        // addLeftAxisTrack(pixiManager);
+        // addGoslingVertical(pixiManager);
 
         const callback = (
             hg: HiGlassSpec,
@@ -59,7 +63,7 @@ function App() {
         };
 
         // Compile the spec
-        compile(linkingTest, callback, [], getTheme('light'), { containerSize: { width: 300, height: 300 } });
+        compile(cancer, callback, [], getTheme('light'), { containerSize: { width: 300, height: 300 } });
     }, []);
 
     return (
@@ -75,10 +79,127 @@ function App() {
 
 export default App;
 
+const matrix2 = {
+    xDomain: { chromosome: 'chr7', interval: [77700000, 81000000] },
+    arrangement: 'serial',
+    views: [
+        {
+            orientation: 'vertical',
+            yOffset: 210,
+            tracks: [
+                {
+                    layout: 'linear',
+                    width: 180,
+                    height: 600,
+                    data: {
+                        url: 'https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ',
+                        type: 'multivec',
+                        row: 'sample',
+                        column: 'position',
+                        value: 'peak',
+                        categories: ['sample 1'],
+                        binSize: 5
+                    },
+                    mark: 'bar',
+                    x: { field: 'start', type: 'genomic', axis: 'bottom', linkingId: 'test' },
+                    xe: { field: 'end', type: 'genomic' },
+                    y: { field: 'peak', type: 'quantitative', axis: 'right' },
+                    size: { value: 5 }
+                }
+            ]
+        },
+        {
+            tracks: [
+                {
+                    layout: 'linear',
+                    width: 600,
+                    height: 180,
+                    data: {
+                        url: 'https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ',
+                        type: 'multivec',
+                        row: 'sample',
+                        column: 'position',
+                        value: 'peak',
+                        categories: ['sample 1'],
+                        binSize: 5
+                    },
+                    mark: 'bar',
+                    x: { field: 'start', type: 'genomic', axis: 'bottom' },
+                    xe: { field: 'end', type: 'genomic' },
+                    y: { field: 'peak', type: 'quantitative', axis: 'right' },
+                    size: { value: 5 }
+                },
+                {
+                    title: 'HFFc6_Micro-C',
+                    data: {
+                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=hffc6-microc-hg38',
+                        type: 'matrix'
+                    },
+                    mark: 'bar',
+                    x: { field: 'xs', type: 'genomic', axis: 'none' },
+                    xe: { field: 'xe', type: 'genomic', axis: 'none' },
+                    y: { field: 'ys', type: 'genomic', axis: 'none', linkingId: 'test' },
+                    ye: { field: 'ye', type: 'genomic', axis: 'none' },
+                    color: { field: 'value', type: 'quantitative', range: 'warm' },
+                    width: 600,
+                    height: 600
+                }
+            ]
+        }
+    ]
+};
+
+const matrix = {
+    xDomain: { chromosome: 'chr7', interval: [77700000, 81000000] },
+    tracks: [
+        {
+            title: 'HFFc6_Micro-C',
+            data: {
+                url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=hffc6-microc-hg38',
+                type: 'matrix'
+            },
+            mark: 'bar',
+            x: { field: 'xs', type: 'genomic', axis: 'top' },
+            xe: { field: 'xe', type: 'genomic', axis: 'none' },
+            y: { field: 'ys', type: 'genomic', axis: 'right' },
+            ye: { field: 'ye', type: 'genomic', axis: 'none' },
+            color: { field: 'value', type: 'quantitative', range: 'warm' },
+            width: 600,
+            height: 600
+        }
+    ]
+};
+
+const simple = {
+    orientation: 'vertical',
+    tracks: [
+        {
+            layout: 'linear',
+            width: 800,
+            height: 180,
+            data: {
+                url: 'https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ',
+                type: 'multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
+                categories: ['sample 1'],
+                binSize: 5
+            },
+            mark: 'bar',
+            x: { field: 'start', type: 'genomic', axis: 'bottom' },
+            xe: { field: 'end', type: 'genomic' },
+            y: { field: 'peak', type: 'quantitative', axis: 'right' },
+            size: { value: 5 }
+        }
+    ]
+};
+
 const spec = {
     title: 'Basic Marks: line',
     subtitle: 'Tutorial Examples',
     layout: 'linear',
+    orientation: 'vertical',
     tracks: [
         {
             layout: 'circular',

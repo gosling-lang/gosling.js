@@ -12,6 +12,9 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
     xDomain: Signal<[number, number]>; // This has to be a signal because it will potentially be updated by interactors
     zoomStartScale = scaleLinear();
     domOverlay: HTMLElement;
+    width: number;
+    height: number;
+    orientation: 'horizontal' | 'vertical';
 
     constructor(
         options: GoslingTrackOptions,
@@ -20,18 +23,17 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
             pixiContainer: PIXI.Container;
             overlayDiv: HTMLElement;
         },
-        xDomain = signal<[number, number]>([0, 3088269832])
+        xDomain = signal<[number, number]>([0, 3088269832]),
+        orientation: 'horizontal' | 'vertical' = 'horizontal'
     ) {
         const { pixiContainer, overlayDiv } = containers;
-        const height = overlayDiv.clientHeight;
-        const width = overlayDiv.clientWidth;
 
         // If there is already an svg element, use it. Otherwise, create a new one
         const existingSvgElement = overlayDiv.querySelector('svg');
         const svgElement = existingSvgElement || document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         if (!existingSvgElement) {
-            svgElement.style.width = `${width}px`;
-            svgElement.style.height = `${height}px`;
+            svgElement.style.width = `${overlayDiv.clientWidth}px`;
+            svgElement.style.height = `${overlayDiv.clientHeight}px`;
             overlayDiv.appendChild(svgElement);
         }
 
@@ -56,14 +58,30 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
         };
 
         super(context, options);
+        this.orientation = orientation;
+        if (this.orientation === 'horizontal') {
+            this.width = overlayDiv.clientWidth;
+            this.height = overlayDiv.clientHeight;
+        } else {
+            // The width and height are swapped because the scene is rotated
+            this.width = overlayDiv.clientHeight;
+            this.height = overlayDiv.clientWidth;
+            // We rotate the scene 90 degrees to the left
+
+            this.scene.scale.y *= -1;
+            this.scene.rotation = Math.PI / 2;
+            const position = this.scene.position;
+            // We move the scene down because the rotation point is the top left corner
+            this.scene.position.set(position.x, position.y);
+        }
 
         this.xDomain = xDomain;
         this.domOverlay = overlayDiv;
         // Now we need to initialize all of the properties that would normally be set by HiGlassComponent
-        this.setDimensions([width, height]);
+        this.setDimensions([this.width, this.height]);
         this.setPosition([0, 0]);
         // Create some scales which span the whole genome
-        const refXScale = scaleLinear().domain(xDomain.value).range([0, width]);
+        const refXScale = scaleLinear().domain(xDomain.value).range([0, this.width]);
         const refYScale = scaleLinear(); // This doesn't get used anywhere but we need to pass it in
         // Set the scales
         this.zoomed(refXScale, refYScale);
