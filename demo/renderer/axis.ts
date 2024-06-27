@@ -50,7 +50,7 @@ export function getAxisTrackDef(
                     type: TrackType.Axis,
                     trackId: track.id,
                     boundingBox: axisBbox,
-                    options: getAxisTrackLinearOptions(axisBbox, xAxisPosition, theme)
+                    options: getAxisTrackLinearOptions(track, axisBbox, xAxisPosition, theme)
                 }
             ];
         } else if (track.layout === 'circular') {
@@ -77,12 +77,14 @@ export function getAxisTrackDef(
  * @param position "top" | "bottom" | "left" | "right
  */
 function getAxisTrackLinearOptions(
+    track: SingleTrack | OverlaidTrack | TemplateTrack,
     boundingBox: { x: number; y: number; width: number; height: number },
     position: AxisPosition,
     theme: Required<CompleteThemeDeep>
 ): AxisTrackOptions {
-    const narrowType = getAxisNarrowType('x', 'horizontal', boundingBox.width, boundingBox.height);
+    const narrowType = getAxisNarrowType('x', track.orientation, boundingBox.width, boundingBox.height);
     const options: AxisTrackOptions = {
+        orientation: track.orientation,
         innerRadius: 0,
         outerRadius: 0,
         width: boundingBox.width,

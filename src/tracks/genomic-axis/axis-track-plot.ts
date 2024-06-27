@@ -68,11 +68,13 @@ export class AxisTrack extends AxisTrackClass {
             // The width and height are swapped because the scene is rotated
             this.width = overlayDiv.clientHeight;
             this.height = overlayDiv.clientWidth;
-            // We rotate the scene 90 degrees to the left
-            this.scene.rotation = Math.PI / 2 + Math.PI;
+            // We rotate the scene 90 degrees to the left and flip it
+            this.scene.scale.y *= -1;
+            this.scene.rotation = Math.PI / 2;
             const position = this.scene.position;
+            this.flipText = true;
             // We move the scene down because the rotation point is the top left corner
-            this.scene.position.set(position.x, position.y + this.width);
+            this.scene.position.set(position.x, position.y);
         }
 
         this.xDomain = xDomain;
@@ -94,43 +96,5 @@ export class AxisTrack extends AxisTrackClass {
     addInteractor(interactor: (plot: AxisTrack) => void) {
         interactor(this);
         return this; // For chaining
-    }
-
-    #addZoom(): void {
-        const baseScale = scaleLinear().domain(this.xDomain.value).range([0, this.width]);
-
-        // This function will be called every time the user zooms
-        const zoomed = (event: D3ZoomEvent<HTMLElement, unknown>) => {
-            if (this.orientation === 'vertical') {
-                const newXDomain = event.transform.rescaleY(this.zoomStartScale).domain();
-                this.xDomain.value = newXDomain;
-            }
-            if (this.orientation === 'horizontal') {
-                const newXDomain = event.transform.rescaleX(this.zoomStartScale).domain();
-                this.xDomain.value = newXDomain;
-            }
-        };
-
-        // Create the zoom behavior
-        const zoomBehavior = zoom<HTMLElement, unknown>()
-            .wheelDelta(wheelDelta)
-            // @ts-expect-error We need to reset the transform when the user stops zooming
-            .on('end', () => (this.domOverlay.__zoom = new ZoomTransform(1, 0, 0)))
-            .on('start', () => {
-                if (this.orientation === 'horizontal')
-                    this.zoomStartScale.domain(this.xDomain.value).range([0, this.width]);
-                if (this.orientation === 'vertical')
-                    this.zoomStartScale.domain(this.xDomain.value).range([this.width, 0]);
-            })
-            .on('zoom', zoomed.bind(this));
-
-        // Apply the zoom behavior to the overlay div
-        select<HTMLElement, unknown>(this.domOverlay).call(zoomBehavior);
-
-        // Every time the domain gets changed we want to update the zoom
-        effect(() => {
-            const newScale = baseScale.domain(this.xDomain.value);
-            this.zoomed(newScale, this._refYScale);
-        });
     }
 }

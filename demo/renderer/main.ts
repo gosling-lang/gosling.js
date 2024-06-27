@@ -147,7 +147,7 @@ export function renderTrackDefs(trackDefs: TrackDefs[], linkedEncodings: LinkedE
             const domain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
             if (!domain) return;
 
-            new AxisTrack(options, domain, pixiManager.makeContainer(boundingBox), 'horizontal').addInteractor(plot =>
+            new AxisTrack(options, domain, pixiManager.makeContainer(boundingBox), options.orientation).addInteractor(plot =>
                 panZoom(plot, domain)
             );
         }

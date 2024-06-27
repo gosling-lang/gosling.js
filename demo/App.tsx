@@ -81,40 +81,70 @@ export default App;
 
 const matrix2 = {
     xDomain: { chromosome: 'chr7', interval: [77700000, 81000000] },
-    tracks: [
+    arrangement: 'serial',
+    views: [
         {
-            layout: 'linear',
-            width: 600,
-            height: 180,
-            data: {
-                url: 'https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ',
-                type: 'multivec',
-                row: 'sample',
-                column: 'position',
-                value: 'peak',
-                categories: ['sample 1'],
-                binSize: 5
-            },
-            mark: 'bar',
-            x: { field: 'start', type: 'genomic', axis: 'bottom' },
-            xe: { field: 'end', type: 'genomic' },
-            y: { field: 'peak', type: 'quantitative', axis: 'right' },
-            size: { value: 5 }
+            orientation: 'vertical',
+            yOffset: 210,
+            tracks: [
+                {
+                    layout: 'linear',
+                    width: 180,
+                    height: 600,
+                    data: {
+                        url: 'https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ',
+                        type: 'multivec',
+                        row: 'sample',
+                        column: 'position',
+                        value: 'peak',
+                        categories: ['sample 1'],
+                        binSize: 5
+                    },
+                    mark: 'bar',
+                    x: { field: 'start', type: 'genomic', axis: 'bottom', linkingId: 'test' },
+                    xe: { field: 'end', type: 'genomic' },
+                    y: { field: 'peak', type: 'quantitative', axis: 'right' },
+                    size: { value: 5 }
+                }
+            ]
         },
         {
-            title: 'HFFc6_Micro-C',
-            data: {
-                url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=hffc6-microc-hg38',
-                type: 'matrix'
-            },
-            mark: 'bar',
-            x: { field: 'xs', type: 'genomic', axis: 'none' },
-            xe: { field: 'xe', type: 'genomic', axis: 'none' },
-            y: { field: 'ys', type: 'genomic', axis: 'none' },
-            ye: { field: 'ye', type: 'genomic', axis: 'none' },
-            color: { field: 'value', type: 'quantitative', range: 'warm' },
-            width: 600,
-            height: 600
+            tracks: [
+                {
+                    layout: 'linear',
+                    width: 600,
+                    height: 180,
+                    data: {
+                        url: 'https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ',
+                        type: 'multivec',
+                        row: 'sample',
+                        column: 'position',
+                        value: 'peak',
+                        categories: ['sample 1'],
+                        binSize: 5
+                    },
+                    mark: 'bar',
+                    x: { field: 'start', type: 'genomic', axis: 'bottom' },
+                    xe: { field: 'end', type: 'genomic' },
+                    y: { field: 'peak', type: 'quantitative', axis: 'right' },
+                    size: { value: 5 }
+                },
+                {
+                    title: 'HFFc6_Micro-C',
+                    data: {
+                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=hffc6-microc-hg38',
+                        type: 'matrix'
+                    },
+                    mark: 'bar',
+                    x: { field: 'xs', type: 'genomic', axis: 'none' },
+                    xe: { field: 'xe', type: 'genomic', axis: 'none' },
+                    y: { field: 'ys', type: 'genomic', axis: 'none', linkingId: 'test' },
+                    ye: { field: 'ye', type: 'genomic', axis: 'none' },
+                    color: { field: 'value', type: 'quantitative', range: 'warm' },
+                    width: 600,
+                    height: 600
+                }
+            ]
         }
     ]
 };

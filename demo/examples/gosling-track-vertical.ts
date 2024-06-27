@@ -69,7 +69,7 @@ export const circularTrackOptions = {
         width: 250,
         height: 250,
         assembly: 'hg38',
-        orientation: 'horizontal',
+        orientation: 'vertical',
         zoomLimits: [1, null],
         centerRadius: 0.4,
         xOffset: 0,

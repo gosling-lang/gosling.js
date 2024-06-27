@@ -40,11 +40,7 @@ export function panZoom(plot: Plot, xDomain: Signal<[number, number]>) {
         // @ts-expect-error We need to reset the transform when the user stops zooming
         .on('end', () => (plot.domOverlay.__zoom = new ZoomTransform(1, 0, 0)))
         .on('start', () => {
-            if (plot.orientation === undefined || plot.orientation === 'horizontal') {
-                zoomStartScale.domain(xDomain.value).range([0, plot.width]);
-            } else if (plot.orientation === 'vertical') {
-                zoomStartScale.domain(xDomain.value).range([plot.width, 0]);
-            }
+            zoomStartScale.domain(xDomain.value).range([0, plot.width]);
         })
         .on('zoom', zoomed);
 

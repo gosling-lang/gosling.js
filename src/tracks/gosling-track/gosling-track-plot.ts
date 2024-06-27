@@ -67,10 +67,12 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
             this.width = overlayDiv.clientHeight;
             this.height = overlayDiv.clientWidth;
             // We rotate the scene 90 degrees to the left
-            this.scene.rotation = Math.PI / 2 + Math.PI;
+
+            this.scene.scale.y *= -1;
+            this.scene.rotation = Math.PI / 2;
             const position = this.scene.position;
             // We move the scene down because the rotation point is the top left corner
-            this.scene.position.set(position.x, position.y + this.width);
+            this.scene.position.set(position.x, position.y);
         }
 
         this.xDomain = xDomain;

@@ -137,10 +137,10 @@ export function drawLinearYAxis(
             textGraphic.position.y = dy + rowHeight - y;
 
             // Flip labels when orientation is vertical
-            // if (spec.orientation === 'vertical') {
-            //     textGraphic.anchor.x = isLeft ? 1 : 0;
-            //     textGraphic.scale.x *= -1;
-            // }
+            if (spec.orientation === 'vertical') {
+                textGraphic.anchor.x = isLeft ? 1 : 0;
+                textGraphic.scale.x *= -1;
+            }
             graphics.addChild(textGraphic);
         });
     });
