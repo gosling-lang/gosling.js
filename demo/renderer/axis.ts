@@ -27,7 +27,6 @@ export function getAxisTrackDef(
     theme: Required<CompleteThemeDeep>
 ): [trackBbox: { x: number; y: number; width: number; height: number }, TrackDef<AxisTrackOptions>[] | undefined] {
     const { xAxisPosition, yAxisPosition } = getAxisPositions(track);
-    console.warn('xAxisPosition', xAxisPosition, 'yAxisPosition', yAxisPosition);
     // This is a copy of the original bounding box. It will be modified if an axis is added
     const trackBbox = { ...boundingBox };
     const trackDefs: TrackDef<AxisTrackOptions>[] = [];
@@ -106,6 +105,7 @@ function getAxisTrackLinearOptions(
     const options: AxisTrackOptions = {
         orientation: getAxisOrientation(encoding, track.orientation),
         encoding: encoding,
+        static: track.static,
         innerRadius: 0,
         outerRadius: 0,
         width: boundingBox.width,
@@ -163,6 +163,8 @@ function getAxisTrackCircularOptions(
 
     const options: AxisTrackOptions = {
         layout: 'circular',
+        encoding: 'x',
+        static: track.static,
         innerRadius,
         outerRadius,
         width: boundingBox.width,

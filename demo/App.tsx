@@ -63,7 +63,7 @@ function App() {
         };
 
         // Compile the spec
-        compile(matrix2, callback, [], getTheme('light'), { containerSize: { width: 300, height: 300 } });
+        compile(cancer, callback, [], getTheme('light'), { containerSize: { width: 300, height: 300 } });
     }, []);
 
     return (

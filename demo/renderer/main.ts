@@ -135,7 +135,6 @@ export function renderTrackDefs(trackDefs: TrackDefs[], linkedEncodings: LinkedE
         if (type === TrackType.Heatmap) {
             const xDomain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
             const yDomain = getEncodingSignal(trackDef.trackId, 'y', linkedEncodings);
-            console.warn('domains,', xDomain, yDomain);
             if (!xDomain || !yDomain) return;
 
             const datafetcher = getDataFetcher(options.spec);
@@ -146,7 +145,7 @@ export function renderTrackDefs(trackDefs: TrackDefs[], linkedEncodings: LinkedE
         if (type === TrackType.Axis) {
             const domain = getEncodingSignal(trackDef.trackId, options.encoding, linkedEncodings);
             if (!domain) {
-                console.warn(`No domain found for track ${trackDef.trackId}`);
+                console.warn(`No domain found for axis ${trackDef.trackId}. Skipping...`);
                 return;
             }
 
@@ -168,7 +167,15 @@ export function renderTrackDefs(trackDefs: TrackDefs[], linkedEncodings: LinkedE
             const brushDomain = getEncodingSignal(trackDef.trackId, 'brush', linkedEncodings);
             if (!domain || !brushDomain || !hasLinkedTracks(trackDef.trackId, linkedEncodings)) return;
             // We only want to add the brush track if it is linked to another track
-            new BrushCircularTrack(options, brushDomain, pixiManager.makeContainer(boundingBox).overlayDiv, domain);
+            const brush = new BrushCircularTrack(
+                options,
+                brushDomain,
+                pixiManager.makeContainer(boundingBox).overlayDiv,
+                domain
+            );
+            if (!options.static) {
+                brush.addInteractor(plot => panZoom(plot, domain));
+            }
         }
     });
 }
@@ -195,7 +202,7 @@ function getEncodingSignal(
         link.tracks.find(t => t.id === trackDefId && t.encoding === encodingType)
     );
     if (!linkedEncoding) {
-        console.warn(`No linked encoding found for track ${trackDefId}`);
+        console.warn(`No linked encoding "${encodingType}" found for track ${trackDefId}`);
         return undefined;
     }
     if (!linkedEncoding.signal) {

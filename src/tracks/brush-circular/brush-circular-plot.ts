@@ -13,6 +13,7 @@ export class BrushCircularTrack extends CircularBrushTrackClass {
     domOverlay: HTMLElement; // This is the div that we're going to apply the zoom behavior to
     width: number;
     height: number;
+    orientation: 'horizontal';
 
     constructor(
         options: BrushCircularTrackOptions,
@@ -41,6 +42,7 @@ export class BrushCircularTrack extends CircularBrushTrackClass {
         };
 
         super(context, options);
+        this.orientation = 'horizontal'; // always horizontal for now
         this.width = domOverlay.clientWidth;
         this.height = domOverlay.clientHeight;
         this.xDomain = xDomain;
