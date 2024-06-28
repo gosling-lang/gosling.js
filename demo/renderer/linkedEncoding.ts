@@ -182,9 +182,14 @@ function getSingleViewTrackLinks(gs: SingleView): TrackLink[] {
             } as TrackLink;
             trackLinks.push(trackLink);
         }
+        const hasLinkingId = 'x' in track && track.x && 'linkingId' in track.x && track.x?.linkingId !== undefined;
+        const hasXDomain = 'x' in track && track.x && 'domain' in track.x && track.x?.domain !== undefined;
         // Handle x domain
-        if ('x' in track && track.x && 'linkingId' in track.x && track.x?.linkingId !== undefined) {
-            if (track.mark === 'brush') console.warn('Track with brush mark should only be used as an overlay');
+        if (hasLinkingId || hasXDomain) {
+            if (track.mark === 'brush') {
+                console.warn('Track with brush mark should only be used as an overlay');
+                return;
+            }
             const trackLink = createXTrackLink(track.id, track, trackType, gs);
             trackLinks.push(trackLink);
         }
@@ -237,9 +242,10 @@ function getSingleViewLinks(gs: SingleView): ViewLink {
     tracks.forEach(track => {
         const hasXEncoding = 'x' in track;
         const hasLinkingId = hasXEncoding && track.x && 'linkingId' in track.x && track.x?.linkingId;
+        const hasXDomain = 'x' in track && track.x && 'domain' in track.x && track.x?.domain !== undefined;
 
         // If the track is already linked to something else, we don't need to add it again
-        if (!hasXEncoding || hasLinkingId) return;
+        if (!hasXEncoding || hasLinkingId || hasXDomain) return;
 
         // Add overlaid brush tracks to the link
         if ('_overlay' in track) {
