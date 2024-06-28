@@ -192,6 +192,47 @@ describe('Link tracks', () => {
           ]
         `);
     });
+    it('track has no x-encoding, but the overlay does', () => {
+      const spec = {
+          views: [
+              {
+                  tracks: [
+                      {
+                          id: 'track-1',
+                          // no x, must use the x in overlay
+                          y: { field: 'b', type: 'quantitative' },
+                          _overlay: [
+                              {
+                                  mark: 'line',
+                                  id: 'overlay-1',
+                                  x: { field: 'a', type: 'genomic', linkingId: 'link1' },
+                                  y: { field: 'b', type: 'quantitative' }
+                              }
+                          ]
+                      },
+                  ]
+              }
+          ]
+      };
+      const result = getLinkedEncodings(spec);
+      expect(result).toMatchInlineSnapshot(`
+        [
+          {
+            "linkingId": "link1",
+            "signal": [
+              0,
+              3088269832,
+            ],
+            "tracks": [
+              {
+                "encoding": "x",
+                "id": "track-1",
+              },
+            ],
+          },
+        ]
+      `);
+    });
 });
 
 describe('Link brushes', () => {
@@ -328,8 +369,8 @@ describe('Heatmap', () => {
             {
               "linkingId": undefined,
               "signal": [
-                0,
-                3088269832,
+                1309704303,
+                1313004303,
               ],
               "tracks": [
                 {
@@ -339,18 +380,18 @@ describe('Heatmap', () => {
               ],
             },
             {
-              linkingId: undefined,
-              signal: [
-                0,
-                3088269832
+              "linkingId": undefined,
+              "signal": [
+                1309704303,
+                1313004303,
               ],
-              tracks: [
+              "tracks": [
                 {
-                  encoding: "y",
-                  id: "matrix-1"
-                }
-              ]
-            }
+                  "encoding": "y",
+                  "id": "matrix-1",
+                },
+              ],
+            },
           ]
         `);
     });

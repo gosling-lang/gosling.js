@@ -24,7 +24,8 @@ export function processGoslingTrack(
     // Adds the axis tracks
     const [newTrackBbox, axisTrackDefs] = getAxisTrackDef(track, boundingBox, theme);
     if (axisTrackDefs) {
-        trackDefs.push(...axisTrackDefs);
+        // Only add the axis track if it is not overlayed on top of the Gosling track
+        if (!track.overlayOnPreviousTrack) trackDefs.push(...axisTrackDefs);
         // modify the bounding box to exclude the axis track
         boundingBox = newTrackBbox;
     }

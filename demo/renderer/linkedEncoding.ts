@@ -147,6 +147,23 @@ function getLinkedFeaturesRecursive(gs: GoslingSpec): LinkInfo {
  * Extracts the linkingId from tracks that have a brush overlay
  */
 function getSingleViewTrackLinks(gs: SingleView): TrackLink[] {
+    // Helper function to create a track link for the x encoding
+    function createXTrackLink(trackId: string, track: Track, trackType: TrackType, gs: SingleView) {
+        const trackLink = {
+            trackId: trackId,
+            linkingId: track.x.linkingId,
+            trackType,
+            encoding: 'x'
+        } as TrackLink;
+        // If the track has a domain, we create a signal and add it to the trackLink
+        if (track.x.domain !== undefined) {
+            const { assembly } = gs;
+            const domain = getDomain(track.x.domain, assembly);
+            trackLink.signal = signal(domain);
+        }
+        return trackLink;
+    }
+
     const { tracks } = gs;
     const trackLinks: TrackLink[] = [];
     tracks.forEach(track => {
@@ -159,7 +176,7 @@ function getSingleViewTrackLinks(gs: SingleView): TrackLink[] {
             const trackLink = {
                 trackId: track.id,
                 linkingId: track.y.linkingId, // we may or may not have a linkingId
-                trackType: TrackType.Heatmap,
+                trackType,
                 encoding: 'y',
                 signal: signal(trackDomain)
             } as TrackLink;
@@ -168,23 +185,20 @@ function getSingleViewTrackLinks(gs: SingleView): TrackLink[] {
         // Handle x domain
         if ('x' in track && track.x && 'linkingId' in track.x && track.x?.linkingId !== undefined) {
             if (track.mark === 'brush') console.warn('Track with brush mark should only be used as an overlay');
-            const trackLink = {
-                trackId: track.id,
-                linkingId: track.x.linkingId,
-                trackType,
-                encoding: 'x'
-            } as TrackLink;
-            // If the track has a domain, we create a signal and add it to the trackLink
-            if (track.x.domain !== undefined) {
-                const { assembly } = gs;
-                const domain = getDomain(track.x.domain, assembly);
-                trackLink.signal = signal(domain);
-            }
+            const trackLink = createXTrackLink(track.id, track, trackType, gs);
             trackLinks.push(trackLink);
         }
 
         // Handle linking in the brushes which are defined in the overlay tracks
         if (!('_overlay' in track)) return;
+        // Handle special case where we have a single overlay track that is not a brush
+        if (track._overlay.length === 1 && track._overlay[0].mark !== 'brush') {
+            const firstOverlay = track._overlay[0];
+            const trackLink = createXTrackLink(track.id, firstOverlay, trackType, gs);
+            trackLinks.push(trackLink);
+            return;
+        }
+        // Handle case where we have multiple overlay tracks (we only care about the brushes)
         track._overlay!.forEach(overlay => {
             if (overlay.mark === 'brush') {
                 const trackType = gs.layout === 'linear' ? TrackType.BrushLinear : TrackType.BrushCircular;
@@ -221,10 +235,12 @@ function getSingleViewLinks(gs: SingleView): ViewLink {
     };
     // Add each track to the link
     tracks.forEach(track => {
-        // If the track is already linked, we don't need to add it again
-        if ('x' in track && track.x && 'linkingId' in track.x && track.x?.linkingId) {
-            return;
-        }
+        const hasXEncoding = 'x' in track;
+        const hasLinkingId = hasXEncoding && track.x && 'linkingId' in track.x && track.x?.linkingId;
+
+        // If the track is already linked to something else, we don't need to add it again
+        if (!hasXEncoding || hasLinkingId) return;
+
         // Add overlaid brush tracks to the link
         if ('_overlay' in track) {
             track._overlay?.forEach(overlay => {
