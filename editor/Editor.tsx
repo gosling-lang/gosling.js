@@ -25,6 +25,7 @@ import { traverseTracksAndViews } from '../src/compiler/spec-preprocess';
 import { examples, type Example } from './example';
 import EditorPanel, { type EditorLangauge } from './EditorPanel';
 import EditorExamples from './EditorExamples';
+import { GoslingComponent } from '../demo/GoslingComponent';
 
 import './Editor.css';
 import { uuid } from '../src/core/utils/uuid';
@@ -1211,19 +1212,7 @@ function Editor(props: RouteComponentProps) {
                                             background: isResponsive ? 'white' : 'none'
                                         }}
                                     >
-                                        <gosling.GoslingComponent
-                                            ref={gosRef}
-                                            spec={goslingSpec}
-                                            theme={theme}
-                                            padding={60}
-                                            margin={0}
-                                            border={'none'}
-                                            id={'goslig-component-root'}
-                                            className={'goslig-component'}
-                                            compiled={(_, h) => {
-                                                setHg(h);
-                                            }}
-                                        />
+                                        <GoslingComponent spec={goslingSpec} width={1000} height={2000} />
                                         {showViews && !isResponsive ? VisHierarchy : null}
                                     </div>
                                     {/* {expertMode && false ? (

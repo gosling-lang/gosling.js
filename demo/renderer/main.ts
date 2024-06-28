@@ -149,9 +149,10 @@ export function renderTrackDefs(trackDefs: TrackDefs[], linkedEncodings: LinkedE
                 return;
             }
 
-            new AxisTrack(options, domain, pixiManager.makeContainer(boundingBox), options.orientation).addInteractor(
-                plot => panZoom(plot, domain)
-            );
+            const axisTrack = new AxisTrack(options, domain, pixiManager.makeContainer(boundingBox), options.orientation);
+            if (!options.static) {
+                axisTrack.addInteractor(plot => panZoom(plot, domain));
+            }
         }
         if (type === TrackType.BrushLinear) {
             const domain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
