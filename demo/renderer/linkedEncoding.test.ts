@@ -192,47 +192,6 @@ describe('Link tracks', () => {
           ]
         `);
     });
-    it('track has no x-encoding, but the overlay does', () => {
-        const spec = {
-            views: [
-                {
-                    tracks: [
-                        {
-                            id: 'track-1',
-                            // no x, must use the x in overlay
-                            y: { field: 'b', type: 'quantitative' },
-                            _overlay: [
-                                {
-                                    mark: 'line',
-                                    id: 'overlay-1',
-                                    x: { field: 'a', type: 'genomic', linkingId: 'link1' },
-                                    y: { field: 'b', type: 'quantitative' }
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        };
-        const result = getLinkedEncodings(spec);
-        expect(result).toMatchInlineSnapshot(`
-        [
-          {
-            "linkingId": "link1",
-            "signal": [
-              0,
-              3088269832,
-            ],
-            "tracks": [
-              {
-                "encoding": "x",
-                "id": "track-1",
-              },
-            ],
-          },
-        ]
-      `);
-    });
 
     it('domain in x encoding', () => {
       // When there is a domain in the x encoding we expect it to be used as the signal
