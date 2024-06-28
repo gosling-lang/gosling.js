@@ -8,9 +8,9 @@ export { GoslingTemplates } from './core/utils/template';
 export type { Theme } from './core/utils/theme';
 export { Themes, isThereTheme, getTheme } from '@gosling-lang/gosling-theme';
 
-export { init } from './core/init';
+// export { init } from './core/init';
 export { compile } from './compiler/compile';
 export { validateGoslingSpec } from '@gosling-lang/gosling-schema';
-export { GoslingComponent } from './core/gosling-component';
+// export { GoslingComponent } from './core/gosling-component';
 export type { GoslingRef } from './core/gosling-component';
-export { embed } from './core/gosling-embed';
+// export { embed } from './core/gosling-embed';

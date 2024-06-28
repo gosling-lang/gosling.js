@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { PixiManager } from '@pixi-manager';
 
 import { compile } from '../src/compiler/compile';
@@ -11,7 +11,7 @@ import type { GoslingSpec } from 'gosling.js';
 import { getLinkedEncodings } from './renderer/linkedEncoding';
 
 interface GoslingComponentProps {
-    spec: GoslingSpec;
+    spec: GoslingSpec | undefined;
     width: number;
     height: number;
 }
@@ -19,21 +19,13 @@ export function GoslingComponent({ spec, width, height }: GoslingComponentProps)
     const [fps, setFps] = useState(120);
 
     useEffect(() => {
-        // Create the new plot
+        console.warn('got spec', spec);
+        if (!spec) return;
+
         const plotElement = document.getElementById('plot') as HTMLDivElement;
         plotElement.innerHTML = '';
         // Initialize the PixiManager. This will be used to get containers and overlay divs for the plots
         const pixiManager = new PixiManager(width, height, plotElement, setFps);
-        // addTextTrack(pixiManager);
-        // addDummyTrack(pixiManager);
-        // addCircularBrush(pixiManager);
-        // addGoslingTrack(pixiManager);
-        // addAxisTrack(pixiManager);
-        // addLinearBrush(pixiManager);
-        // addBigwig(pixiManager);
-        // addHeatmap(pixiManager);
-        // addLeftAxisTrack(pixiManager);
-        // addGoslingVertical(pixiManager);
 
         const callback = (
             hg: HiGlassSpec,
@@ -57,7 +49,11 @@ export function GoslingComponent({ spec, width, height }: GoslingComponentProps)
 
         // Compile the spec
         compile(spec, callback, [], getTheme('light'), { containerSize: { width: width, height: height } });
-    }, []);
+    }, [spec]);
 
-    return <div id="plot" style={{ width: width, height: height }}></div>;
+    return (
+        <div style={{ padding: 50, backgroundColor: 'white' }}>
+            <div id="plot" style={{ width: width, height: height, position: 'relative' }}></div>
+        </div>
+    );
 }
