@@ -63,7 +63,7 @@ function App() {
         };
 
         // Compile the spec
-        compile(cancer, callback, [], getTheme('light'), { containerSize: { width: 300, height: 300 } });
+        compile(matrix2, callback, [], getTheme('light'), { containerSize: { width: 300, height: 300 } });
     }, []);
 
     return (
@@ -78,6 +78,247 @@ function App() {
 }
 
 export default App;
+
+const doubleMatrix = {
+    arrangement: 'horizontal',
+    xDomain: { chromosome: 'chr7', interval: [77700000, 81000000] },
+    spacing: 1,
+    linkingId: '-',
+    views: [
+        {
+            spacing: 30,
+            views: [
+                {
+                    spacing: 0,
+                    arrangement: 'vertical',
+                    views: [
+                        {
+                            tracks: [
+                                {
+                                    alignment: 'overlay',
+                                    tracks: [
+                                        {
+                                            data: {
+                                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/HFFC6_CTCF.mRp.clN.bigWig',
+                                                type: 'bigwig',
+                                                column: 'position',
+                                                value: 'peak',
+                                                binSize: 8
+                                            },
+                                            mark: 'bar',
+                                            x: { field: 'start', type: 'genomic' },
+                                            xe: { field: 'end', type: 'genomic' },
+                                            y: {
+                                                field: 'peak',
+                                                type: 'quantitative',
+                                                axis: 'none'
+                                            },
+                                            color: { value: '#0072B2' }
+                                        },
+                                        {
+                                            style: { backgroundOpacity: 0 },
+                                            data: {
+                                                url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=gene-annotation',
+                                                type: 'beddb',
+                                                genomicFields: [
+                                                    { index: 1, name: 'start' },
+                                                    { index: 2, name: 'end' }
+                                                ],
+                                                valueFields: [
+                                                    { index: 5, name: 'strand', type: 'nominal' },
+                                                    { index: 3, name: 'name', type: 'nominal' }
+                                                ]
+                                            },
+                                            dataTransform: [{ type: 'filter', field: 'strand', oneOf: ['+'] }],
+                                            mark: 'triangleRight',
+                                            x: { field: 'start', type: 'genomic' },
+                                            size: { value: 13 },
+                                            stroke: { value: 'white' },
+                                            strokeWidth: { value: 1 },
+                                            row: {
+                                                field: 'strand',
+                                                type: 'nominal',
+                                                domain: ['+', '-']
+                                            },
+                                            color: { value: '#CB7AA7' }
+                                        },
+                                        {
+                                            style: { backgroundOpacity: 0 },
+                                            title: 'HFFC6_CTCF',
+                                            data: {
+                                                url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=gene-annotation',
+                                                type: 'beddb',
+                                                genomicFields: [
+                                                    { index: 1, name: 'start' },
+                                                    { index: 2, name: 'end' }
+                                                ],
+                                                valueFields: [
+                                                    { index: 5, name: 'strand', type: 'nominal' },
+                                                    { index: 3, name: 'name', type: 'nominal' }
+                                                ]
+                                            },
+                                            dataTransform: [{ type: 'filter', field: 'strand', oneOf: ['-'] }],
+                                            mark: 'triangleLeft',
+                                            x: { field: 'start', type: 'genomic' },
+                                            stroke: { value: 'white' },
+                                            strokeWidth: { value: 1 },
+                                            size: { value: 13 },
+                                            row: {
+                                                field: 'strand',
+                                                type: 'nominal',
+                                                domain: ['+', '-']
+                                            },
+                                            color: { value: '#029F73' }
+                                        }
+                                    ],
+                                    width: 600,
+                                    height: 40
+                                }
+                            ]
+                        },
+                        {
+                            tracks: [
+                                {
+                                    title: 'HFFc6_Micro-C',
+                                    data: {
+                                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=hffc6-microc-hg38',
+                                        type: 'matrix'
+                                    },
+                                    mark: 'bar',
+                                    x: { field: 'xs', type: 'genomic', axis: 'none' },
+                                    xe: { field: 'xe', type: 'genomic', axis: 'none' },
+                                    y: { field: 'ys', type: 'genomic', axis: 'none' },
+                                    ye: { field: 'ye', type: 'genomic', axis: 'none' },
+                                    color: {
+                                        field: 'value',
+                                        type: 'quantitative',
+                                        range: 'warm'
+                                    },
+                                    width: 600,
+                                    height: 600
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    arrangement: 'vertical',
+                    spacing: 0,
+                    views: [
+                        {
+                            tracks: [
+                                {
+                                    alignment: 'overlay',
+                                    tracks: [
+                                        {
+                                            data: {
+                                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/HFFC6_CTCF.mRp.clN.bigWig',
+                                                type: 'bigwig',
+                                                column: 'position',
+                                                value: 'peak',
+                                                binSize: 8
+                                            },
+                                            mark: 'bar',
+                                            x: { field: 'start', type: 'genomic' },
+                                            xe: { field: 'end', type: 'genomic' },
+                                            y: {
+                                                field: 'peak',
+                                                type: 'quantitative',
+                                                axis: 'none'
+                                            },
+                                            color: { value: '#0072B2' }
+                                        },
+                                        {
+                                            style: { backgroundOpacity: 0 },
+                                            data: {
+                                                url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=gene-annotation',
+                                                type: 'beddb',
+                                                genomicFields: [
+                                                    { index: 1, name: 'start' },
+                                                    { index: 2, name: 'end' }
+                                                ],
+                                                valueFields: [
+                                                    { index: 5, name: 'strand', type: 'nominal' },
+                                                    { index: 3, name: 'name', type: 'nominal' }
+                                                ]
+                                            },
+                                            dataTransform: [{ type: 'filter', field: 'strand', oneOf: ['+'] }],
+                                            mark: 'triangleRight',
+                                            x: { field: 'start', type: 'genomic' },
+                                            size: { value: 13 },
+                                            stroke: { value: 'white' },
+                                            strokeWidth: { value: 1 },
+                                            row: {
+                                                field: 'strand',
+                                                type: 'nominal',
+                                                domain: ['+', '-']
+                                            },
+                                            color: { value: '#CB7AA7' }
+                                        },
+                                        {
+                                            style: { backgroundOpacity: 0 },
+                                            title: 'HFFC6_CTCF',
+                                            data: {
+                                                url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=gene-annotation',
+                                                type: 'beddb',
+                                                genomicFields: [
+                                                    { index: 1, name: 'start' },
+                                                    { index: 2, name: 'end' }
+                                                ],
+                                                valueFields: [
+                                                    { index: 5, name: 'strand', type: 'nominal' },
+                                                    { index: 3, name: 'name', type: 'nominal' }
+                                                ]
+                                            },
+                                            dataTransform: [{ type: 'filter', field: 'strand', oneOf: ['-'] }],
+                                            mark: 'triangleLeft',
+                                            x: { field: 'start', type: 'genomic' },
+                                            size: { value: 13 },
+                                            stroke: { value: 'white' },
+                                            strokeWidth: { value: 1 },
+                                            row: {
+                                                field: 'strand',
+                                                type: 'nominal',
+                                                domain: ['+', '-']
+                                            },
+                                            color: { value: '#029F73' }
+                                        }
+                                    ],
+                                    width: 600,
+                                    height: 40
+                                }
+                            ]
+                        },
+                        {
+                            tracks: [
+                                {
+                                    title: 'HFFc6_Hi-C',
+                                    data: {
+                                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=hffc6-hic-hg38',
+                                        type: 'matrix'
+                                    },
+                                    mark: 'bar',
+                                    x: { field: 'xs', type: 'genomic', axis: 'none' },
+                                    xe: { field: 'xe', type: 'genomic', axis: 'none' },
+                                    y: { field: 'ys', type: 'genomic', axis: 'none' },
+                                    ye: { field: 'ye', type: 'genomic', axis: 'none' },
+                                    color: {
+                                        field: 'value',
+                                        type: 'quantitative',
+                                        range: 'warm'
+                                    },
+                                    width: 600,
+                                    height: 600
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    style: { outlineWidth: 0, background: '#F6F6F6' }
+};
 
 const matrix2 = {
     xDomain: { chromosome: 'chr7', interval: [77700000, 81000000] },

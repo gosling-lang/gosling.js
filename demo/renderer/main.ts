@@ -1,12 +1,12 @@
 import type { PixiManager } from '@pixi-manager';
 import { TextTrack, type TextTrackOptions } from '@gosling-lang/text-track';
-import { DummyTrack, type DummyTrackOptions } from '@gosling-lang/dummy-track';
+import { type DummyTrackOptions } from '@gosling-lang/dummy-track';
 import { GoslingTrack } from '@gosling-lang/gosling-track';
 import { AxisTrack, type AxisTrackOptions } from '@gosling-lang/genomic-axis';
 import { BrushLinearTrack, type BrushLinearTrackOptions } from '@gosling-lang/brush-linear';
-import { Signal, signal } from '@preact/signals-core';
+import { Signal } from '@preact/signals-core';
 
-import { cursor, panZoom, panZoomHeatmap } from '@gosling-lang/interactors';
+import { panZoom, panZoomHeatmap } from '@gosling-lang/interactors';
 import type { TrackInfo } from '../../src/compiler/bounding-box';
 import type { CompleteThemeDeep } from '../../src/core/utils/theme';
 import type { GoslingTrackOptions } from '../../src/tracks/gosling-track/gosling-track';

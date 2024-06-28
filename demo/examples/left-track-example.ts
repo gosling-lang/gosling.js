@@ -1,7 +1,6 @@
 import { PixiManager } from '@pixi-manager';
 import { signal } from '@preact/signals-core';
 import { AxisTrack } from '@gosling-lang/genomic-axis';
-import { LeftTrackModifier } from '../../src/tracks/utils';
 import { panZoom } from '@gosling-lang/interactors';
 
 export function addLeftAxisTrack(pixiManager: PixiManager) {
