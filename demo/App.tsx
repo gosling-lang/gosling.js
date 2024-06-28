@@ -21,57 +21,16 @@ import { createTrackDefs, renderTrackDefs, showTrackInfoPositions } from './rend
 import type { TrackInfo } from 'src/compiler/bounding-box';
 import type { GoslingSpec } from 'gosling.js';
 import { getLinkedEncodings } from './renderer/linkedEncoding';
+import { GoslingComponent } from './GoslingComponent';
 
 function App() {
     const [fps, setFps] = useState(120);
-
-    useEffect(() => {
-        // Create the new plot
-        const plotElement = document.getElementById('plot') as HTMLDivElement;
-        plotElement.innerHTML = '';
-        // Initialize the PixiManager. This will be used to get containers and overlay divs for the plots
-        const pixiManager = new PixiManager(2000, 1500, plotElement, setFps);
-        // addTextTrack(pixiManager);
-        // addDummyTrack(pixiManager);
-        // addCircularBrush(pixiManager);
-        // addGoslingTrack(pixiManager);
-        // addAxisTrack(pixiManager);
-        // addLinearBrush(pixiManager);
-        // addBigwig(pixiManager);
-        // addHeatmap(pixiManager);
-        // addLeftAxisTrack(pixiManager);
-        // addGoslingVertical(pixiManager);
-
-        const callback = (
-            hg: HiGlassSpec,
-            size,
-            gs: GoslingSpec,
-            tracksAndViews,
-            idTable,
-            trackInfos: TrackInfo[],
-            theme: Require<ThemeDeep>
-        ) => {
-            console.warn(trackInfos);
-            console.warn(tracksAndViews);
-            console.warn(gs);
-            // showTrackInfoPositions(trackInfos, pixiManager);
-            const linkedEncodings = getLinkedEncodings(gs);
-            console.warn('linkedEncodings', linkedEncodings);
-            const trackDefs = createTrackDefs(trackInfos, theme);
-            console.warn('trackDefs', trackDefs);
-            renderTrackDefs(trackDefs, linkedEncodings, pixiManager);
-        };
-
-        // Compile the spec
-        compile(fullMatrix, callback, [], getTheme('light'), { containerSize: { width: 300, height: 300 } });
-    }, []);
-
     return (
         <>
             <h1>HiGlass/Gosling tracks with new renderer</h1>
 
             <div className="card">
-                <div className="card" id="plot"></div>
+                <GoslingComponent spec={fullMatrix} width={2000} height={1500} />
             </div>
         </>
     );
