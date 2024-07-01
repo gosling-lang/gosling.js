@@ -16,6 +16,28 @@ export function getDataFetcher(spec: Track) {
         return new BigWigDataFetcher(spec.data);
     }
     if (spec.data.type == 'csv') {
-        return new CsvDataFetcher(spec.data);
+        console.warn('csv', spec.data);
+        const fields = getFields(spec);
+        return new CsvDataFetcher({ ...spec.data, ...fields });
     }
+}
+
+/**
+ * Some datafetchers need to know which encoding corresponds to which field
+ */
+function getFields(spec: Track) {
+    const fields: { x?: string; xe?: string; y?: string; ye?: string } = {};
+    if ('x' in spec && spec.x && 'field' in spec.x) {
+        fields.x = spec.x.field;
+    }
+    if ('xe' in spec && spec.xe && 'field' in spec.xe) {
+        fields.xe = spec.xe.field;
+    }
+    if ('y' in spec && spec.y && 'field' in spec.y) {
+        fields.y = spec.y.field;
+    }
+    if ('ye' in spec && spec.ye && 'field' in spec.ye) {
+        fields.ye = spec.ye.field;
+    }
+    return fields;
 }
