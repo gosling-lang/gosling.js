@@ -27,6 +27,7 @@ export function processGoslingTrack(
         // Only add the axis track if it is not overlayed on top of the Gosling track
         if (!track.overlayOnPreviousTrack) trackDefs.push(...axisTrackDefs);
         // modify the bounding box to exclude the axis track
+        // warning: there could be some weirdness around overlayOnPreviousTrack here that needs to be tested
         boundingBox = newTrackBbox;
     }
 
