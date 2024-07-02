@@ -16,7 +16,6 @@ export function getDataFetcher(spec: Track) {
         return new BigWigDataFetcher(spec.data);
     }
     if (spec.data.type == 'csv') {
-        console.warn('csv', spec.data);
         const fields = getFields(spec);
         return new CsvDataFetcher({ ...spec.data, ...fields });
     }
