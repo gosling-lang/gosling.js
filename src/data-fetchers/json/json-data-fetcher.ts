@@ -3,25 +3,24 @@ import { sampleSize } from 'lodash-es';
 import type { Assembly, JsonData } from '@gosling-lang/gosling-schema';
 import { type CommonDataConfig, filterUsingGenoPos, sanitizeChrName } from '../utils';
 
-type CsvDataConfig = JsonData & CommonDataConfig;
+type JsonDataConfig = JsonData & CommonDataConfig;
 
 /**
  * HiGlass data fetcher specific for Gosling which ultimately will accept any types of data other than JSON values.
  */
 export class JsonDataFetcherClass {
-    private dataConfig: CsvDataConfig;
+    private dataConfig: JsonDataConfig;
     // @ts-ignore
     private tilesetInfoLoading: boolean;
     private chromSizes: any;
     private values: any;
     private assembly: Assembly;
 
-    constructor(params: any[]) {
-        const [dataConfig] = params;
+    constructor(params: JsonDataConfig) {
+        const dataConfig = params;
         this.dataConfig = dataConfig;
         this.tilesetInfoLoading = false;
         this.assembly = this.dataConfig.assembly;
-
         if (!dataConfig.values) {
             console.error('Please provide `values` of the JSON data');
             return;
@@ -52,7 +51,6 @@ export class JsonDataFetcherClass {
             totalLength: prevEndPosition,
             chromLengths: chromosomeSizes
         };
-
         const { chromosomeField, genomicFields, genomicFieldsToConvert } = this.dataConfig;
         this.values = dataConfig.values.map((row: any) => {
             try {
