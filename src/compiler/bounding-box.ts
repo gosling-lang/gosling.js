@@ -216,26 +216,26 @@ function traverseAndCollectTrackInfo(
             cumWidth = Math.max(...tracks.map(d => d.width)); //forceWidth ? forceWidth : spec.tracks[0]?.width;
             tracks.forEach((track, i, array) => {
                 // let scaledHeight = track.height;
-
                 if (getNumOfXAxes([track]) === 1) {
                     track.height += HIGLASS_AXIS_SIZE;
                 }
+                const boundingBox = {
+                    x: dx,
+                    y: dy + cumHeight,
+                    width: cumWidth,
+                    height: track.height
+                };
                 const singleTrack = resolveSuperposedTracks(track);
                 if (singleTrack.length > 0 && Is2DTrack(singleTrack[0]) && getNumOfYAxes([track]) === 1) {
                     // If this is a 2D track (e.g., matrix), we need to reserve a space for the y-axis track
-                    cumWidth += HIGLASS_AXIS_SIZE;
+                    boundingBox.width += HIGLASS_AXIS_SIZE;
                 }
 
-                track.width = cumWidth;
+                track.width = boundingBox.width;
 
                 output.push({
                     track,
-                    boundingBox: {
-                        x: dx,
-                        y: dy + cumHeight,
-                        width: cumWidth,
-                        height: track.height
-                    },
+                    boundingBox,
                     layout: { x: 0, y: 0, w: 0, h: 0 } // Just put a dummy info here, this should be added after entire bounding box has been determined
                 });
 
@@ -248,6 +248,7 @@ function traverseAndCollectTrackInfo(
                     }
                 }
             });
+            adjustOverlaidTrackPosition(output);
         }
     } else {
         // We did not reach a track definition, so continue traversing.
@@ -371,6 +372,24 @@ function traverseAndCollectTrackInfo(
     spec._assignedHeight = cumHeight;
 
     return { x: dx, y: dy, width: cumWidth, height: cumHeight };
+}
+
+/**
+ * Adjusts the x and y position of the overlaid tracks
+ * Problem: Some overlaid tracks have an axis. Some do not. If an overlaid track does not have an axis
+ * then the (x, y) position of the bounding box is possibly incorrect.
+ */
+function adjustOverlaidTrackPosition(output) {
+    const overlaidTracks = output.filter(t => t.track.overlayOnPreviousTrack);
+    const hasOverlaidTracks = overlaidTracks.length > 0;
+    if (!hasOverlaidTracks) return output;
+    console.warn('overlaidTracks', overlaidTracks);
+    const baseTrack = output.filter(t => !t.track.overlayOnPreviousTrack)[0];
+    // overlaidTracks[0].boundingBox.x += 30;
+    // overlaidTracks[0].boundingBox.y += 30;
+    // if (baseTrack.boundingBox.width > overlaidTracks[0].boundingBox.width) {
+    //     overlaidTracks[0].boundingBox.x += 30;
+    // }
 }
 
 export function getNumOfXAxes(tracks: Track[]): number {
