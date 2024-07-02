@@ -6,7 +6,7 @@ import { type Signal } from '@preact/signals-core';
 import { DataFetcher } from '@higlass/datafetcher';
 
 import { type Plot } from '../utils';
-import { signal } from '@preact/signals-core';
+import { signal, effect } from '@preact/signals-core';
 
 export class GoslingTrack extends GoslingTrackClass implements Plot {
     xDomain: Signal<[number, number]>; // This has to be a signal because it will potentially be updated by interactors
@@ -86,6 +86,12 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
         // Set the scales
         this.zoomed(refXScale, refYScale);
         this.refScalesChanged(refXScale, refYScale);
+
+        // Every time the domain gets changed we want to update the zoom
+        effect(() => {
+            const newScale = this._refXScale.domain(this.xDomain.value);
+            this.zoomed(newScale, scaleLinear());
+        });
     }
 
     addInteractor(interactor: (plot: GoslingTrack) => void) {

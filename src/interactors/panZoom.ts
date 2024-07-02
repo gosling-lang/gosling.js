@@ -46,10 +46,4 @@ export function panZoom(plot: Plot, xDomain: Signal<[number, number]>) {
 
     // Apply the zoom behavior to the overlay div
     select<HTMLElement, unknown>(plot.domOverlay).call(zoomBehavior);
-
-    // Every time the domain gets changed we want to update the zoom
-    effect(() => {
-        const newScale = baseScale.domain(plot.xDomain.value);
-        plot.zoomed(newScale, scaleLinear());
-    });
 }

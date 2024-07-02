@@ -89,8 +89,11 @@ export class AxisTrack extends AxisTrackClass {
         this.zoomed(refXScale, refYScale);
         this.refScalesChanged(refXScale, refYScale);
 
-        // Add the zoom
-        // this.#addZoom();
+        // Every time the domain gets changed we want to update the zoom
+        effect(() => {
+            const newScale = this._refXScale.domain(this.xDomain.value);
+            this.zoomed(newScale, scaleLinear());
+        });
     }
 
     addInteractor(interactor: (plot: AxisTrack) => void) {
