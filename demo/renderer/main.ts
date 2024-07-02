@@ -128,7 +128,9 @@ export function renderTrackDefs(trackDefs: TrackDefs[], linkedEncodings: LinkedE
                 domain,
                 options.spec.orientation
             );
-            if (!options.spec.static) {
+            const isOverlayedOnPrevious =
+                'overlayOnPreviousTrack' in options.spec && options.spec.overlayOnPreviousTrack;
+            if (!options.spec.static && !isOverlayedOnPrevious) {
                 gosPlot.addInteractor(plot => panZoom(plot, domain));
             }
         }
@@ -149,7 +151,12 @@ export function renderTrackDefs(trackDefs: TrackDefs[], linkedEncodings: LinkedE
                 return;
             }
 
-            const axisTrack = new AxisTrack(options, domain, pixiManager.makeContainer(boundingBox), options.orientation);
+            const axisTrack = new AxisTrack(
+                options,
+                domain,
+                pixiManager.makeContainer(boundingBox),
+                options.orientation
+            );
             if (!options.static) {
                 axisTrack.addInteractor(plot => panZoom(plot, domain));
             }
