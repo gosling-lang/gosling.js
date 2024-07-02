@@ -1,6 +1,6 @@
 import { DataFetcher } from '@higlass/datafetcher';
 import { fakePubSub } from '@higlass/utils';
-import { BigWigDataFetcher, CsvDataFetcher } from '@data-fetchers';
+import { BigWigDataFetcher, CsvDataFetcher, JsonDataFetcher } from '@data-fetchers';
 
 export function getDataFetcher(spec: Track) {
     if (!('data' in spec)) {
@@ -18,6 +18,10 @@ export function getDataFetcher(spec: Track) {
     if (spec.data.type == 'csv') {
         const fields = getFields(spec);
         return new CsvDataFetcher({ ...spec.data, ...fields });
+    }
+    if (spec.data.type == 'json') {
+        const fields = getFields(spec);
+        return new JsonDataFetcher({ ...spec.data, ...fields, assembly: spec.assembly });
     }
 }
 
