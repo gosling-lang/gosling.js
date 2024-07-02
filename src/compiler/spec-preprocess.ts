@@ -121,12 +121,19 @@ export function convertToFlatTracks(spec: SingleView): Track[] {
                 }
             });
     } else {
-        newTracks.push({
+        const overlays = [...spec.tracks.filter(track => !track._invalidTrack)];
+        let newTrack = {
             ...spec,
-            _overlay: [...spec.tracks.filter(track => !track._invalidTrack)],
             tracks: undefined,
-            alignment: undefined
-        } as Track);
+            alignment: undefined,
+        } as any;
+        if (overlays.length === 1) {
+            // If there is only a single overlay, we just merge it with the track.
+            newTrack = { ...newTrack, ...overlays[0] };
+        } else {
+            newTrack._overlay = overlays;
+        }
+        newTracks.push(newTrack as Track);
     }
 
     return JSON.parse(JSON.stringify(newTracks));

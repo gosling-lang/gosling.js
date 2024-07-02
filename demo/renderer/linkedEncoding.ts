@@ -173,14 +173,16 @@ function getSingleViewTrackLinks(gs: SingleView): TrackLink[] {
         // Handle the y domain when we have a heatmap track
         if (trackType === TrackType.Heatmap) {
             const trackYDomain = getDomain(yDomain ?? xDomain, assembly); // default to the xDomain if no yDomain
+            const linkingId = track.y && 'linkingId' in track.y ? track.y.linkingId : undefined;
             const trackLink = {
                 trackId: track.id,
-                linkingId: track.y.linkingId, // we may or may not have a linkingId
+                linkingId,
                 trackType,
                 encoding: 'y',
                 signal: signal(trackYDomain)
             } as TrackLink;
             trackLinks.push(trackLink);
+            console.warn('pushed');
         }
         // Handle x domain
         if (hasDiffXDomainThanView(track, assembly, viewXDomain)) {
@@ -283,8 +285,13 @@ function hasDiffXDomainThanView(track: Track, assembly: Assembly | undefined, vi
  */
 function getDomain(xDomain: GoslingSpec['xDomain'], assembly?: Assembly): [number, number] {
     let domain = [0, 0] as [number, number];
+    const hasOnlyInterval = xDomain && 'interval' in xDomain && !('chromosome' in xDomain);
     if (!xDomain) {
         domain = [0, computeChromSizes(assembly).total];
+    } else if (hasOnlyInterval) {
+        // If we are only given the interval, then we assume that the interval is already in absolute coordinates
+        const { interval } = xDomain;
+        domain = interval;
     } else {
         const position = createDomainString(xDomain);
         const manager = GenomicPositionHelper.fromString(position);
