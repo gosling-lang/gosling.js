@@ -192,6 +192,72 @@ describe('Link tracks', () => {
           ]
         `);
     });
+    it('same linkingId across multiple views', () => {
+      const linkingTest = {
+          views: [
+              {
+                  linkingId: "link",
+                  tracks: [
+                      {
+                          id: 'track-1',
+                          mark: 'line',
+                          x: { field: 'position', type: 'genomic', axis: 'bottom' },
+                          y: { field: 'peak', type: 'quantitative', axis: 'right' }
+                      }
+                  ]
+              },
+              {
+                  linkingId: "link",
+                  tracks: [
+                      {
+                          id: 'track-2',
+                          mark: 'line',
+                          x: { field: 'position', type: 'genomic', axis: 'bottom' },
+                          y: { field: 'peak', type: 'quantitative', axis: 'right' }
+                      }
+                  ]
+              },
+              {
+                  linkingId: "link",
+                  tracks: [
+                      {
+                          id: 'track-3',
+                          mark: 'line',
+                          x: { field: 'position', type: 'genomic', axis: 'bottom' },
+                          y: { field: 'peak', type: 'quantitative', axis: 'right' }
+                      },
+                  ]
+              }
+          ]
+      };
+      // Test case 1
+      const result1 = getLinkedEncodings(linkingTest);
+      expect(result1).toMatchInlineSnapshot(`
+        [
+          {
+            "linkingId": "link",
+            "signal": [
+              0,
+              3088269832,
+            ],
+            "tracks": [
+              {
+                "encoding": "x",
+                "id": "track-1",
+              },
+              {
+                "encoding": "x",
+                "id": "track-2",
+              },
+              {
+                "encoding": "x",
+                "id": "track-3",
+              },
+            ],
+          },
+        ]
+      `);
+  });
 
     it('domain in x encoding', () => {
       // When there is a domain in the x encoding we expect it to be used as the signal

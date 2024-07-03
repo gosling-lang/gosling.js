@@ -126,6 +126,20 @@ function getLinkedTracks(linkingId: string | undefined, trackLinks: TrackLink[])
  * Traverses the gosling spec to find all the linked tracks and brushes
  */
 function getLinkedFeaturesRecursive(gs: GoslingSpec): LinkInfo {
+    // Helper function to merge view links which have the same linkingId
+    function mergeViewLinks(existing: ViewLink[], newLinks: ViewLink[]) {
+        newLinks.forEach(newLink => {
+            const existingLink = existing.find(
+                link => link.linkingId !== undefined && link.linkingId === newLink.linkingId
+            );
+            if (existingLink) {
+                existingLink.trackIds.push(...newLink.trackIds);
+            } else {
+                existing.push(newLink);
+            }
+        });
+        return existing;
+    }
     // Base case: single view
     if (IsSingleView(gs)) {
         const viewLinks = getSingleViewLinks(gs);
@@ -137,7 +151,7 @@ function getLinkedFeaturesRecursive(gs: GoslingSpec): LinkInfo {
     if (IsMultipleViews(gs)) {
         gs.views.forEach(view => {
             const newLinks = getLinkedFeaturesRecursive(view);
-            linked.viewLinks.push(...newLinks.viewLinks);
+            linked.viewLinks = mergeViewLinks(linked.viewLinks, newLinks.viewLinks);
             linked.trackLinks.push(...newLinks.trackLinks);
         });
     }
@@ -191,7 +205,7 @@ function getSingleViewTrackLinks(gs: SingleView): TrackLink[] {
             trackLinks.push(trackLink);
         }
         // Handle x domain
-        if (hasDiffXDomainThanView(track, assembly, viewXDomain)) {
+        if (hasDiffXDomainThanView(gs, track, assembly, viewXDomain)) {
             if (track.mark === 'brush') {
                 console.warn('Track with brush mark should only be used as an overlay');
                 return;
@@ -228,6 +242,7 @@ function getSingleViewTrackLinks(gs: SingleView): TrackLink[] {
  * Links all of the tracks in a single view together
  */
 function getSingleViewLinks(gs: SingleView): ViewLink[] {
+    console.warn('got single view', gs);
     function addLinkY(tracks: Track[], viewYDomain: [number, number]): ViewLink {
         const viewLinkY: ViewLink = {
             linkingId: undefined,
@@ -260,7 +275,7 @@ function getSingleViewLinks(gs: SingleView): ViewLink[] {
         // Add each track to the link
         tracks.forEach(track => {
             // If the track is already linked to something else, we don't need to add it again
-            if (hasDiffXDomainThanView(track, assembly, viewXDomain)) return;
+            if (hasDiffXDomainThanView(gs, track, assembly, viewXDomain)) return;
             const hasOverlaidTracks = '_overlay' in track;
             // Add overlaid brush tracks to the link
             if (hasOverlaidTracks) {
@@ -280,14 +295,20 @@ function getSingleViewLinks(gs: SingleView): ViewLink[] {
 
     const xLink = addLinkX(tracks, assembly, viewXDomain);
     const yLink = addLinkY(tracks, viewYDomain);
-    console.warn('ylink', yLink);
     return [xLink, yLink].filter(link => link.trackIds.length > 0);
 }
 
-function hasDiffXDomainThanView(track: Track, assembly: Assembly | undefined, viewXDomain: [number, number]) {
-    // If the track has a linkingId, it def has a different domain than the view
+function hasDiffXDomainThanView(
+    view: SingleView,
+    track: Track,
+    assembly: Assembly | undefined,
+    viewXDomain: [number, number]
+) {
+    // If the track x has a linkingId which is different from the viewLinkingId, then it has a different domain
     const hasLinkingId = 'x' in track && track.x && 'linkingId' in track.x && track.x?.linkingId !== undefined;
-    if (hasLinkingId) return true;
+    const viewLinkingId = view.linkingId;
+    const trackLinkingId = track.x?.linkingId;
+    if (hasLinkingId && viewLinkingId !== trackLinkingId) return true;
 
     // If the x encoding as a domain, we need to check whether it is different than the view
     const hasXEncodingDomain = 'x' in track && track.x && 'domain' in track.x && track.x?.domain !== undefined;
