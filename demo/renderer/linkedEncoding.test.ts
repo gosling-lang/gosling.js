@@ -349,9 +349,6 @@ describe('Heatmap', () => {
                     xe: { field: 'xe', type: 'genomic', axis: 'none' },
                     y: { field: 'ys', type: 'genomic', axis: 'none' },
                     ye: { field: 'ye', type: 'genomic', axis: 'none' },
-                    color: { field: 'value', type: 'quantitative', range: 'warm' },
-                    width: 600,
-                    height: 600
                 }
             ]
         };
@@ -389,4 +386,66 @@ describe('Heatmap', () => {
           ]
         `);
     });
+    it('multiple y linking', () => {
+      const matrix = {
+          xDomain: { chromosome: 'chr7', interval: [77700000, 81000000] },
+          tracks: [
+              {
+                  id: 'matrix-1',
+                  mark: 'bar',
+                  x: { field: 'xs', type: 'genomic', axis: 'none' },
+                  xe: { field: 'xe', type: 'genomic', axis: 'none' },
+                  y: { field: 'ys', type: 'genomic', axis: 'none' },
+                  ye: { field: 'ye', type: 'genomic', axis: 'none' },
+              },
+              {
+                id: 'matrix-2',
+                mark: 'bar',
+                x: { field: 'xs', type: 'genomic', axis: 'none' },
+                y: { field: 'ys', type: 'genomic', axis: 'none' },
+            }
+          ]
+      };
+
+      const result = getLinkedEncodings(matrix);
+
+      expect(result).toMatchInlineSnapshot(`
+        [
+          {
+            "linkingId": undefined,
+            "signal": [
+              1309704303,
+              1313004303,
+            ],
+            "tracks": [
+              {
+                "encoding": "x",
+                "id": "matrix-1",
+              },
+              {
+                "encoding": "x",
+                "id": "matrix-2",
+              },
+            ],
+          },
+          {
+            "linkingId": undefined,
+            "signal": [
+              1309704303,
+              1313004303,
+            ],
+            "tracks": [
+              {
+                "encoding": "y",
+                "id": "matrix-1",
+              },
+              {
+                "encoding": "y",
+                "id": "matrix-2",
+              },
+            ],
+          },
+        ]
+      `);
+  });
 });
