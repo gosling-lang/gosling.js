@@ -22,6 +22,7 @@ export interface Plot {
     width: number;
     height: number;
     xDomain: Signal<[number, number]>;
+    yDomain?: Signal<[number, number]>;
     zoomed(xScale: ScaleLinear<number, number>, yScale: ScaleLinear<number, number>): void;
 }
 
