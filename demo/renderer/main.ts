@@ -117,21 +117,23 @@ export function renderTrackDefs(trackDefs: TrackDefs[], linkedEncodings: LinkedE
             new TextTrack(options, pixiManager.makeContainer(boundingBox));
         }
         if (type === TrackType.Gosling) {
-            const domain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
-            if (!domain) return;
+            const xDomain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
+            const yDomain = getEncodingSignal(trackDef.trackId, 'y', linkedEncodings);
+            if (!xDomain) return;
 
             const datafetcher = getDataFetcher(options.spec);
             const gosPlot = new GoslingTrack(
                 options,
                 datafetcher,
                 pixiManager.makeContainer(boundingBox),
-                domain,
+                xDomain,
+                yDomain,
                 options.spec.orientation
             );
             const isOverlayedOnPrevious =
                 'overlayOnPreviousTrack' in options.spec && options.spec.overlayOnPreviousTrack;
             if (!options.spec.static && !isOverlayedOnPrevious) {
-                gosPlot.addInteractor(plot => panZoom(plot, domain));
+                gosPlot.addInteractor(plot => panZoom(plot, xDomain, yDomain));
             }
         }
         if (type === TrackType.Heatmap) {
@@ -166,9 +168,13 @@ export function renderTrackDefs(trackDefs: TrackDefs[], linkedEncodings: LinkedE
             const brushDomain = getEncodingSignal(trackDef.trackId, 'brush', linkedEncodings);
             if (!domain || !brushDomain || !hasLinkedTracks(trackDef.trackId, linkedEncodings)) return;
             // We only want to add the brush track if it is linked to another track
-            new BrushLinearTrack(options, brushDomain, pixiManager.makeContainer(boundingBox).overlayDiv).addInteractor(
-                plot => panZoom(plot, domain)
+            const brush = new BrushLinearTrack(
+                options,
+                brushDomain,
+                pixiManager.makeContainer(boundingBox).overlayDiv,
+                domain
             );
+            if (!options.static) brush.addInteractor(plot => panZoom(plot, domain));
         }
         if (type === TrackType.BrushCircular) {
             const domain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
@@ -210,7 +216,6 @@ function getEncodingSignal(
         link.tracks.find(t => t.id === trackDefId && t.encoding === encodingType)
     );
     if (!linkedEncoding) {
-        console.warn(`No linked encoding "${encodingType}" found for track ${trackDefId}`);
         return undefined;
     }
     if (!linkedEncoding.signal) {

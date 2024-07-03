@@ -25,6 +25,7 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
             overlayDiv: HTMLElement;
         },
         xDomain = signal<[number, number]>([0, 3088269832]),
+        yDomain?: Signal<[number, number]>,
         orientation: 'horizontal' | 'vertical' = 'horizontal'
     ) {
         const { pixiContainer, overlayDiv } = containers;
@@ -78,7 +79,7 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
         }
 
         this.xDomain = xDomain;
-        this.yDomain = signal<[number, number]>(xDomain.value);
+        this.yDomain = yDomain ?? signal<[number, number]>(xDomain.value);
         this.domOverlay = overlayDiv;
         // Now we need to initialize all of the properties that would normally be set by HiGlassComponent
         this.setDimensions([this.width, this.height]);

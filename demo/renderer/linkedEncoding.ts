@@ -23,7 +23,7 @@ export interface LinkedEncoding {
  */
 interface ViewLink {
     linkingId?: string;
-    encoding: 'x';
+    encoding: 'x' | 'y';
     trackIds: string[];
     signal: Signal;
 }
@@ -62,7 +62,7 @@ export function getLinkedEncodings(gs: GoslingSpec) {
             id: track.trackId,
             encoding: track.encoding
         }));
-        const viewTracks = viewLink.trackIds.map(trackId => ({ id: trackId, encoding: 'x' }));
+        const viewTracks = viewLink.trackIds.map(trackId => ({ id: trackId, encoding: viewLink.encoding }));
         return {
             linkingId: viewLink.linkingId,
             signal: viewLink.signal,
@@ -130,7 +130,7 @@ function getLinkedFeaturesRecursive(gs: GoslingSpec): LinkInfo {
     if (IsSingleView(gs)) {
         const viewLinks = getSingleViewLinks(gs);
         const trackLinks = getSingleViewTrackLinks(gs);
-        return { viewLinks: [viewLinks], trackLinks };
+        return { viewLinks: viewLinks, trackLinks };
     }
     const linked: LinkInfo = { viewLinks: [], trackLinks: [] };
     // Recursive case: multiple views
@@ -149,7 +149,7 @@ function getLinkedFeaturesRecursive(gs: GoslingSpec): LinkInfo {
  */
 function getSingleViewTrackLinks(gs: SingleView): TrackLink[] {
     // Helper function to create a track link for the x encoding
-    function createXTrackLink(trackId: string, track: Track, trackType: TrackType, gs: SingleView) {
+    function createTrackLinkX(trackId: string, track: Track, trackType: TrackType, gs: SingleView) {
         const trackLink = {
             trackId: trackId,
             linkingId: track.x.linkingId,
@@ -164,25 +164,31 @@ function getSingleViewTrackLinks(gs: SingleView): TrackLink[] {
         }
         return trackLink;
     }
+    function createTrackLinkY(trackId: string, track: Track, trackType: TrackType, gs: SingleView) {
+        const { assembly } = gs;
+        const trackLink = {
+            trackId: trackId,
+            linkingId: track.y.linkingId,
+            trackType,
+            encoding: 'y'
+        } as TrackLink;
+        // If the track has a domain, we create a signal and add it to the trackLink
+        if (track.y.domain !== undefined) {
+            const domain = getDomain(track.y.domain, assembly);
+            trackLink.signal = signal(domain);
+        }
+        return trackLink;
+    }
 
     const { assembly, xDomain, yDomain, tracks } = gs;
     const viewXDomain = getDomain(xDomain, assembly);
     const trackLinks: TrackLink[] = [];
     tracks.forEach(track => {
         const trackType = isHeatmapTrack(track) ? TrackType.Heatmap : TrackType.Gosling;
-        // Handle the y domain when we have a heatmap track
-        if (trackType === TrackType.Heatmap) {
-            const trackYDomain = getDomain(yDomain ?? xDomain, assembly); // default to the xDomain if no yDomain
-            const linkingId = track.y && 'linkingId' in track.y ? track.y.linkingId : undefined;
-            const trackLink = {
-                trackId: track.id,
-                linkingId,
-                trackType,
-                encoding: 'y',
-                signal: signal(trackYDomain)
-            } as TrackLink;
+        // Handle the y domain
+        if (isGenomicEncoding(track, 'y') && hasDiffYDomainThanView(track)) {
+            const trackLink = createTrackLinkY(track.id, track, trackType, gs);
             trackLinks.push(trackLink);
-            console.warn('pushed');
         }
         // Handle x domain
         if (hasDiffXDomainThanView(track, assembly, viewXDomain)) {
@@ -190,19 +196,12 @@ function getSingleViewTrackLinks(gs: SingleView): TrackLink[] {
                 console.warn('Track with brush mark should only be used as an overlay');
                 return;
             }
-            const trackLink = createXTrackLink(track.id, track, trackType, gs);
+            const trackLink = createTrackLinkX(track.id, track, trackType, gs);
             trackLinks.push(trackLink);
         }
 
         // Handle linking in the brushes which are defined in the overlay tracks
         if (!('_overlay' in track)) return;
-        // // Handle special case where we have a single overlay track that is not a brush
-        // if (track._overlay.length === 1 && track._overlay[0].mark !== 'brush') {
-        //     const firstOverlay = track._overlay[0];
-        //     const trackLink = createXTrackLink(track.id, firstOverlay, trackType, gs);
-        //     trackLinks.push(trackLink);
-        //     return;
-        // }
         // Handle case where we have multiple overlay tracks (we only care about the brushes)
         track._overlay!.forEach(overlay => {
             if (overlay.mark === 'brush') {
@@ -228,41 +227,61 @@ function getSingleViewTrackLinks(gs: SingleView): TrackLink[] {
 /**
  * Links all of the tracks in a single view together
  */
-function getSingleViewLinks(gs: SingleView): ViewLink {
-    const { tracks, xDomain, assembly } = gs;
+function getSingleViewLinks(gs: SingleView): ViewLink[] {
+    function addLinkY(tracks: Track[], viewYDomain: [number, number]): ViewLink {
+        const viewLinkY: ViewLink = {
+            linkingId: undefined,
+            encoding: 'y',
+            signal: signal(viewYDomain),
+            trackIds: []
+        };
+        // Add each track to the link
+        tracks.forEach(track => {
+            // Edge case: The first track in a view with "alignment": "overlay" can
+            // sometimes not have a y encoding but it has a single overlay track which contains the y encoding
+            const missingX = !('x' in track) || track.x === undefined;
+            const missingY = !('y' in track) || track.y === undefined;
+            const hasOverlay = '_overlay' in track && track._overlay.length == 1;
+            if (missingX && missingY && hasOverlay) track = { ...track, y: track._overlay[0].y };
+            // Continue as usual
+            if (isGenomicEncoding(track, 'y') && !hasDiffYDomainThanView(track)) {
+                viewLinkY.trackIds.push(track.id);
+            }
+        });
+        return viewLinkY;
+    }
+    function addLinkX(tracks: Track[], assembly: Assembly | undefined, viewXDomain: [number, number]): ViewLink {
+        const viewLinkX: ViewLink = {
+            linkingId: gs.linkingId,
+            encoding: 'x',
+            signal: signal(viewXDomain),
+            trackIds: []
+        };
+        // Add each track to the link
+        tracks.forEach(track => {
+            // If the track is already linked to something else, we don't need to add it again
+            if (hasDiffXDomainThanView(track, assembly, viewXDomain)) return;
+            const hasOverlaidTracks = '_overlay' in track;
+            // Add overlaid brush tracks to the link
+            if (hasOverlaidTracks) {
+                track._overlay?.forEach(overlay => {
+                    if (overlay.mark === 'brush') {
+                        viewLinkX.trackIds.push(overlay.id);
+                    }
+                });
+            }
+            viewLinkX.trackIds.push(track.id);
+        });
+        return viewLinkX;
+    }
+    const { tracks, xDomain, yDomain, assembly } = gs;
     const viewXDomain = getDomain(xDomain, assembly);
+    const viewYDomain = getDomain(yDomain ?? xDomain, assembly);
 
-    const newLink: ViewLink = {
-        linkingId: gs.linkingId,
-        encoding: 'x',
-        signal: signal(viewXDomain),
-        trackIds: []
-    };
-    console.warn('single view', gs);
-    // Add each track to the link
-    tracks.forEach(track => {
-        // If the track is already linked to something else, we don't need to add it again
-        console.warn(hasDiffXDomainThanView(track, assembly, viewXDomain));
-        if (hasDiffXDomainThanView(track, assembly, viewXDomain)) return;
-
-        // Some tracks don't have any encodings but they do have overlaid tracks
-        // const hasXEncoding = 'x' in track;
-        const hasOverlaidTracks = '_overlay' in track;
-        // if (!hasXEncoding && hasOverlaidTracks) {
-        //     newLink.trackIds.push(track.id);
-        // }
-        // Add overlaid brush tracks to the link
-        if (hasOverlaidTracks) {
-            track._overlay?.forEach(overlay => {
-                if (overlay.mark === 'brush') {
-                    newLink.trackIds.push(overlay.id);
-                }
-            });
-        }
-
-        newLink.trackIds.push(track.id);
-    });
-    return newLink;
+    const xLink = addLinkX(tracks, assembly, viewXDomain);
+    const yLink = addLinkY(tracks, viewYDomain);
+    console.warn('ylink', yLink);
+    return [xLink, yLink].filter(link => link.trackIds.length > 0);
 }
 
 function hasDiffXDomainThanView(track: Track, assembly: Assembly | undefined, viewXDomain: [number, number]) {
@@ -278,6 +297,17 @@ function hasDiffXDomainThanView(track: Track, assembly: Assembly | undefined, vi
         return !viewXDomain.every((val, index) => val === xEncodingDomain[index]);
     }
     return false;
+}
+
+function isGenomicEncoding(track: Track, encoding: 'x' | 'y') {
+    const isGenomic =
+        encoding in track && track[encoding] && 'type' in track[encoding] && track[encoding].type === 'genomic';
+    return isGenomic;
+}
+
+function hasDiffYDomainThanView(track: Track) {
+    const hasLinkingId = 'y' in track && track.y && 'linkingId' in track.y && track.y?.linkingId !== undefined;
+    return hasLinkingId;
 }
 
 /**
