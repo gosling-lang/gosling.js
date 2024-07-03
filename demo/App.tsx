@@ -17,10 +17,10 @@ import { getTheme } from '../src/core/utils/theme';
 
 import './App.css';
 import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
-import { createTrackDefs, renderTrackDefs, showTrackInfoPositions } from './renderer/main';
+import { createTrackDefs, renderTrackDefs, showTrackInfoPositions } from './track-def/main';
 import type { TrackInfo } from 'src/compiler/bounding-box';
 import type { GoslingSpec } from 'gosling.js';
-import { getLinkedEncodings } from './renderer/linkedEncoding';
+import { getLinkedEncodings } from './linking/linkedEncoding';
 import { GoslingComponent } from './GoslingComponent';
 
 function App() {

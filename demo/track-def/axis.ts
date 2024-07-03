@@ -3,7 +3,6 @@ import {
     IsChannelDeep,
     IsDummyTrack,
     IsTemplateTrack,
-    IsXAxis,
     type AxisPosition,
     type OverlaidTrack,
     type SingleTrack,

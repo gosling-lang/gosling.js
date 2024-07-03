@@ -5,10 +5,11 @@ import { compile } from '../src/compiler/compile';
 import { getTheme } from '../src/core/utils/theme';
 
 import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
-import { createTrackDefs, renderTrackDefs, showTrackInfoPositions } from './renderer/main';
+import { createTrackDefs } from './track-def/main';
+import { renderTrackDefs } from './renderer/main';
 import type { TrackInfo } from 'src/compiler/bounding-box';
 import type { GoslingSpec } from 'gosling.js';
-import { getLinkedEncodings } from './renderer/linkedEncoding';
+import { getLinkedEncodings } from './linking/linkedEncoding';
 
 interface GoslingComponentProps {
     spec: GoslingSpec | undefined;

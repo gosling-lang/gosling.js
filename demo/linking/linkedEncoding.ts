@@ -2,8 +2,8 @@ import { IsMultipleViews, IsSingleView, type Assembly, type SingleView } from '@
 import { GenomicPositionHelper, computeChromSizes } from '../../src/core/utils/assembly';
 import { signal, type Signal } from '@preact/signals-core';
 import type { GoslingSpec } from 'gosling.js';
-import { TrackType } from './main';
-import { isHeatmapTrack } from './heatmap';
+import { TrackType } from '../track-def/main';
+import { isHeatmapTrack } from '../track-def/heatmap';
 
 /**
  * This is the information needed to link tracks together

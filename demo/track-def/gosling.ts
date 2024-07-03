@@ -1,6 +1,6 @@
 import { type AxisTrackOptions } from '@gosling-lang/genomic-axis';
 
-import { type SingleTrack, type Track } from '@gosling-lang/gosling-schema';
+import { type Track } from '@gosling-lang/gosling-schema';
 import type { CompleteThemeDeep } from '../../src/core/utils/theme';
 
 import type { GoslingTrackOptions } from '@gosling-lang/gosling-track';

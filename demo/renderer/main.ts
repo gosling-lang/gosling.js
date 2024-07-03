@@ -1,111 +1,19 @@
-import type { PixiManager } from '@pixi-manager';
-import { TextTrack, type TextTrackOptions } from '@gosling-lang/text-track';
-import { type DummyTrackOptions } from '@gosling-lang/dummy-track';
 import { GoslingTrack } from '@gosling-lang/gosling-track';
-import { AxisTrack, type AxisTrackOptions } from '@gosling-lang/genomic-axis';
-import { BrushLinearTrack, type BrushLinearTrackOptions } from '@gosling-lang/brush-linear';
+import { AxisTrack } from '@gosling-lang/genomic-axis';
+import { BrushLinearTrack } from '@gosling-lang/brush-linear';
 import { Signal } from '@preact/signals-core';
+import { TextTrack } from '@gosling-lang/text-track';
 
 import { panZoom, panZoomHeatmap } from '@gosling-lang/interactors';
-import type { TrackInfo } from '../../src/compiler/bounding-box';
-import type { CompleteThemeDeep } from '../../src/core/utils/theme';
-import type { GoslingTrackOptions } from '../../src/tracks/gosling-track/gosling-track';
-
-import { proccessTextHeader } from './text';
-import { processHeatmapTrack, isHeatmapTrack } from './heatmap';
-import { processGoslingTrack } from './gosling';
+import { type TrackDefs, TrackType } from '../track-def/main';
 import { getDataFetcher } from './dataFetcher';
-import type { LinkedEncoding } from './linkedEncoding';
-import { BrushCircularTrack, type BrushCircularTrackOptions } from '@gosling-lang/brush-circular';
-import { type HeatmapTrackOptions, HeatmapTrack } from '@gosling-lang/heatmap';
+import type { LinkedEncoding } from '../linking/linkedEncoding';
+import { BrushCircularTrack } from '@gosling-lang/brush-circular';
+import { HeatmapTrack } from '@gosling-lang/heatmap';
+import type { PixiManager } from '@pixi-manager';
 
 /**
- * All the different types of tracks that can be rendered
- */
-export enum TrackType {
-    Text,
-    Dummy,
-    Gosling,
-    Axis,
-    BrushLinear,
-    BrushCircular,
-    Heatmap
-}
-
-/**
- * Associate options to each track type
- */
-interface TrackOptionsMap {
-    [TrackType.Text]: TextTrackOptions;
-    [TrackType.Dummy]: DummyTrackOptions;
-    [TrackType.Gosling]: GoslingTrackOptions;
-    [TrackType.Axis]: AxisTrackOptions;
-    [TrackType.BrushLinear]: BrushLinearTrackOptions;
-    [TrackType.BrushCircular]: BrushCircularTrackOptions;
-    [TrackType.Heatmap]: HeatmapTrackOptions;
-}
-
-/**
- *  This interface contains all of the information needed to render each track type.
- */
-export interface TrackDef<T> {
-    type: TrackType;
-    trackId: string;
-    boundingBox: { x: number; y: number; width: number; height: number };
-    options: T;
-}
-
-/**
- * This is a union of all the different TrackDefs
- */
-type TrackDefs = {
-    [K in keyof TrackOptionsMap]: TrackDef<TrackOptionsMap[K]>;
-}[keyof TrackOptionsMap];
-
-/**
- * This function is for internal testing. It will render a red border around each track
- */
-export function showTrackInfoPositions(trackInfos: TrackInfo[], pixiManager: PixiManager) {
-    trackInfos.forEach(trackInfo => {
-        const { track, boundingBox } = trackInfo;
-        const div = pixiManager.makeContainer(boundingBox).overlayDiv;
-        div.style.border = '3px solid red';
-        div.innerHTML = track.mark || 'No mark';
-        div.style.textAlign = 'left';
-    });
-}
-
-/**
- * Takes a list of TrackInfos and returns a list of TrackDefs
- * @param trackInfos
- * @param pixiManager
- * @param theme
- * @returns
- */
-export function createTrackDefs(trackInfos: TrackInfo[], theme: Required<CompleteThemeDeep>): TrackDefs[] {
-    const trackDefs: TrackDefs[] = [];
-    trackInfos.forEach(trackInfo => {
-        const { track, boundingBox } = trackInfo;
-
-        if (track.mark === '_header') {
-            // Header marks contain both the title and subtitle
-            const textTrackDefs = proccessTextHeader(track, boundingBox, theme);
-            trackDefs.push(...textTrackDefs);
-        } else if (isHeatmapTrack(track)) {
-            // We have a heatmap track
-            const heatmapTrackDefs = processHeatmapTrack(track, boundingBox, theme);
-            trackDefs.push(...heatmapTrackDefs);
-        } else {
-            // We have a gosling track
-            const goslingAxisDefs = processGoslingTrack(track, boundingBox, theme);
-            trackDefs.push(...goslingAxisDefs);
-        }
-    });
-    return trackDefs;
-}
-
-/**
- * Takes a list of track options and renders them on the screen
+ * Takes a list of track definitions and linkedEncodings and renders them
  * @param trackOptions
  * @param pixiManager
  */
