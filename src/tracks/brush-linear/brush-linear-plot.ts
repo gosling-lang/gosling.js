@@ -63,6 +63,11 @@ export class BrushLinearTrack extends BrushLinearTrackClass<BrushLinearTrackOpti
             const newXDomain = scaleLinear().domain(this.xBrushDomain.value);
             this.viewportChanged(newXDomain, scaleLinear());
         });
+        // Every time the domain gets changed we want to update the zoom
+        effect(() => {
+            const newScale = this._refXScale.domain(this.xDomain.value);
+            this.zoomed(newScale, scaleLinear());
+        });
     }
 
     addInteractor(interactor: (plot: BrushLinearTrack) => void) {

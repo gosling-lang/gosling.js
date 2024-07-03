@@ -43,7 +43,7 @@ function getHeatmapOptions(spec: Track, theme: Required<CompleteThemeDeep>): Hea
         showMousePosition: false,
         mousePositionColor: '#000000',
         name: spec.title,
-        labelPosition: 'topLeft',
+        labelPosition: 'none',
         labelShowResolution: false,
         labelColor: 'black',
         labelBackgroundColor: 'white',

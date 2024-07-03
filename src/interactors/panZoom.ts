@@ -1,4 +1,4 @@
-import { type Signal, effect } from '@preact/signals-core';
+import { type Signal, batch, signal } from '@preact/signals-core';
 import { scaleLinear } from 'd3-scale';
 import { ZoomTransform, type D3ZoomEvent, zoom } from 'd3-zoom';
 import { select } from 'd3-selection';
@@ -8,20 +8,30 @@ import { zoomWheelBehavior, type Plot } from '../tracks/utils';
  * This interactor allows the user to pan and zoom the plot
  */
 
-export function panZoom(plot: Plot, xDomain: Signal<[number, number]>) {
+export function panZoom(plot: Plot, xDomain: Signal<[number, number]>, yDomain?: Signal<[number, number]>) {
     plot.xDomain = xDomain; // Update the xDomain with the signal
-    const baseScale = scaleLinear().range([0, plot.width]);
+    if ('yDomain' in plot && yDomain !== undefined) plot.yDomain = yDomain;
+
     // This will store the xDomain when the user starts zooming
-    const zoomStartScale = scaleLinear();
+    const zoomStartScaleX = scaleLinear();
+    const zoomStartScaleY = scaleLinear();
     // This function will be called every time the user zooms
     const zoomed = (event: D3ZoomEvent<HTMLElement, unknown>) => {
         if (plot.orientation === undefined || plot.orientation === 'horizontal') {
-            const newXDomain = event.transform.rescaleX(zoomStartScale).domain();
-            xDomain.value = newXDomain as [number, number];
+            const newXDomain = event.transform.rescaleX(zoomStartScaleX).domain();
+            const newYDomain = event.transform.rescaleY(zoomStartScaleY).domain();
+            batch(() => {
+                xDomain.value = newXDomain as [number, number];
+                if (yDomain) yDomain.value = newYDomain as [number, number];
+            });
         }
         if (plot.orientation === 'vertical') {
-            const newXDomain = event.transform.rescaleY(zoomStartScale).domain();
-            xDomain.value = newXDomain as [number, number];
+            const newXDomain = event.transform.rescaleY(zoomStartScaleX).domain();
+            const newYDomain = event.transform.rescaleX(zoomStartScaleY).domain();
+            batch(() => {
+                xDomain.value = newXDomain as [number, number];
+                if (yDomain) yDomain.value = newYDomain as [number, number];
+            });
         }
     };
     // Create the zoom behavior
@@ -40,16 +50,11 @@ export function panZoom(plot: Plot, xDomain: Signal<[number, number]>) {
         // @ts-expect-error We need to reset the transform when the user stops zooming
         .on('end', () => (plot.domOverlay.__zoom = new ZoomTransform(1, 0, 0)))
         .on('start', () => {
-            zoomStartScale.domain(xDomain.value).range([0, plot.width]);
+            zoomStartScaleX.domain(xDomain.value).range([0, plot.width]);
+            if (yDomain) zoomStartScaleY.domain(yDomain.value).range([0, plot.height]);
         })
         .on('zoom', zoomed);
 
     // Apply the zoom behavior to the overlay div
     select<HTMLElement, unknown>(plot.domOverlay).call(zoomBehavior);
-
-    // Every time the domain gets changed we want to update the zoom
-    effect(() => {
-        const newScale = baseScale.domain(plot.xDomain.value);
-        plot.zoomed(newScale, scaleLinear());
-    });
 }
