@@ -10,7 +10,7 @@ import { zoomWheelBehavior, type Plot } from '../tracks/utils';
 
 export function panZoom(plot: Plot, xDomain: Signal<[number, number]>, yDomain?: Signal<[number, number]>) {
     plot.xDomain = xDomain; // Update the xDomain with the signal
-    if (plot.yDomain) yDomain = plot.yDomain;
+    if ('yDomain' in plot && yDomain !== undefined) plot.yDomain = yDomain;
 
     // This will store the xDomain when the user starts zooming
     const zoomStartScaleX = scaleLinear();
