@@ -29,6 +29,7 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
         orientation: 'horizontal' | 'vertical' = 'horizontal'
     ) {
         const { pixiContainer, overlayDiv } = containers;
+        if (!overlayDiv.clientWidth) throw new Error('Container does not have width');
 
         // If there is already an svg element, use it. Otherwise, create a new one
         // If we do not reuse the same SVG element, we cannot have multiple brushes on the same track.
@@ -77,7 +78,6 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
             // We move the scene down because the rotation point is the top left corner
             this.scene.position.set(position.x, position.y);
         }
-
         this.xDomain = xDomain;
         this.yDomain = yDomain ?? signal<[number, number]>(xDomain.value);
         this.domOverlay = overlayDiv;

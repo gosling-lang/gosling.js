@@ -12,7 +12,11 @@ interface BoundingBox {
 }
 export class PixiManager {
     app: PIXI.Application<HTMLCanvasElement>;
-    containerElement: HTMLDivElement;
+    // This contains both the canvas and the overlay container
+    rootDiv: HTMLDivElement;
+    // Div which contains all overlay divs
+    overlayContainer: HTMLDivElement;
+    // Mapping between position and overlay div so we can reuse overlay divs
     createdContainers: Map<string, HTMLDivElement> = new Map();
 
     constructor(width: number, height: number, container: HTMLDivElement, fps: (fps: number) => void) {
@@ -33,8 +37,10 @@ export class PixiManager {
             }
         });
 
-        this.containerElement = container;
+        this.rootDiv = container;
         container.appendChild(this.app.view);
+        this.overlayContainer = document.createElement('div');
+        container.appendChild(this.overlayContainer);
         // Add FPS counter
         this.app.ticker.add(() => {
             fps(this.app.ticker.FPS);
@@ -61,10 +67,22 @@ export class PixiManager {
         } else {
             plotDiv = createOverlayElement(position);
             this.createdContainers.set(positionString, plotDiv);
-            this.containerElement.appendChild(plotDiv);
+            this.overlayContainer.appendChild(plotDiv);
         }
 
         return { pixiContainer: pContainer, overlayDiv: plotDiv };
+    }
+
+    clearAll(): void {
+        const children = this.app.stage.removeChildren();
+        children.forEach(child => {
+            child.destroy();
+        });
+        this.createdContainers.forEach(div => {
+            div.remove();
+        });
+        this.createdContainers.clear();
+        this.overlayContainer.innerHTML = '';
     }
 
     destroy(): void {
