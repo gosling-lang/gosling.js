@@ -1,17 +1,19 @@
 import { type AxisTrackOptions } from '@gosling-lang/genomic-axis';
-
-import { type Track } from '@gosling-lang/gosling-schema';
 import type { CompleteThemeDeep } from '../../src/core/utils/theme';
-
 import type { GoslingTrackOptions } from '@gosling-lang/gosling-track';
 import type { BrushLinearTrackOptions } from '@gosling-lang/brush-linear';
-
 import { getAxisTrackDef } from './axis';
 import { type TrackDef, TrackType } from './main';
-import { getBrushTrackDefs } from './brushLinear';
+import { getBrushTrackDefs } from './brush';
+import type { ProcessedTrack } from './types';
 
+/**
+ * A Gosling track, as defined in the schema, can be composed of multiple tracks:
+ * A GoslingTrack, an AxisTrack, and a BrushTrack. This function processes the spec of a single Gosling track
+ * and returns the corresponding track definitions.
+ */
 export function processGoslingTrack(
-    track: Track,
+    track: ProcessedTrack,
     boundingBox: { x: number; y: number; width: number; height: number },
     theme: Required<CompleteThemeDeep>
 ): (TrackDef<GoslingTrackOptions> | TrackDef<AxisTrackOptions> | TrackDef<BrushLinearTrackOptions>)[] {
@@ -49,11 +51,11 @@ export function processGoslingTrack(
     return trackDefs;
 }
 
-function getGoslingTrackOptions(spec: Track, theme: Required<CompleteThemeDeep>): GoslingTrackOptions {
+function getGoslingTrackOptions(spec: ProcessedTrack, theme: Required<CompleteThemeDeep>): GoslingTrackOptions {
     return {
         spec: spec,
-        id: '9f4abc56-cb8d-4494-a9ca-56086ab28de2',
-        siblingIds: ['9f4abc56-cb8d-4494-a9ca-56086ab28de2'],
+        id: spec.id,
+        siblingIds: [],
         showMousePosition: true,
         mousePositionColor: '#000000',
         name: spec.title,

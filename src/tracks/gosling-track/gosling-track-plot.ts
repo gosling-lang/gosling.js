@@ -8,11 +8,16 @@ import { DataFetcher } from '@higlass/datafetcher';
 import { type Plot } from '../utils';
 import { signal, effect } from '@preact/signals-core';
 
+/**
+ * A wrapper around the GoslingTrackClass that allows for use with signals
+ */
 export class GoslingTrack extends GoslingTrackClass implements Plot {
-    xDomain: Signal<[number, number]>; // Stores the genomic x-domain
-    yDomain: Signal<[number, number]>; // Stores the genomic y-domain
-    zoomStartScale = scaleLinear();
-    domOverlay: HTMLElement; // This is the HTML element that covers the plot. Zoom behavior gets attached to this
+    /** A signal containing the genomic x-domain [start, end] */
+    xDomain: Signal<[number, number]>;
+    /** A signal containing the genomic y-domain [start, end]. Note that this is only used when the y encoding has type "genomic" */
+    yDomain: Signal<[number, number]>;
+    /** The div element the zoom behavior will get attached to */
+    domOverlay: HTMLElement;
     width: number;
     height: number;
     orientation: 'horizontal' | 'vertical';

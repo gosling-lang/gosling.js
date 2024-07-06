@@ -10,6 +10,10 @@ interface BoundingBox {
     width: number;
     height: number;
 }
+/**
+ * A wrapper class for PIXI.Application.
+ * It manages the creation of PIXI containers and overlay divs.
+ */
 export class PixiManager {
     app: PIXI.Application<HTMLCanvasElement>;
     /** Contains the canvas and the overlayContainer */

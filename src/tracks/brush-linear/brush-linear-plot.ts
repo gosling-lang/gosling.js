@@ -6,9 +6,15 @@ import {
 import { scaleLinear } from 'd3-scale';
 import { type Signal, effect, signal } from '@preact/signals-core';
 
+/**
+ * A wrapper around the BrushLinearTrackClass that allows for use with signals
+ */
 export class BrushLinearTrack extends BrushLinearTrackClass<BrushLinearTrackOptions> {
+    /** A signal containing the genomic x-domain [start, end] */
     xDomain: Signal<[number, number]>;
+    /** A signal containing the brush x-domain [start, end] */
     xBrushDomain: Signal<[number, number]>;
+    /** The div element the zoom behavior will get attached to */
     domOverlay: HTMLElement;
     width: number;
     height: number;
