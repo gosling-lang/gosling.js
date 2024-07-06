@@ -10,6 +10,7 @@ import type { ModuleThread } from 'threads';
 import type { Assembly, GffData } from '@gosling-lang/gosling-schema';
 import type { WorkerApi, TilesetInfo, GffTile, EmptyTile } from './gff-worker';
 import type { TabularDataFetcher } from '../utils';
+import { uuid } from '../../core/utils/uuid';
 
 const DEBOUNCE_TIME = 200;
 
@@ -26,8 +27,8 @@ class GffDataFetcher implements TabularDataFetcher<GffTile> {
     private fetchTimeout?: ReturnType<typeof setTimeout>;
     private worker: Promise<ModuleThread<WorkerApi>>;
 
-    constructor(HGC: import('@higlass/types').HGC, config: GFFDataConfig) {
-        this.uid = HGC.libraries.slugid.nice();
+    constructor(config: GFFDataConfig) {
+        this.uid = uuid();
         this.prevRequestTime = 0;
         this.toFetch = new Set();
         const { url, indexUrl, assembly, ...options } = config;

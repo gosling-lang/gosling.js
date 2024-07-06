@@ -1,6 +1,14 @@
 import { DataFetcher } from '@higlass/datafetcher';
 import { fakePubSub } from '@higlass/utils';
-import { BigWigDataFetcher, CsvDataFetcher, JsonDataFetcher } from '@data-fetchers';
+import {
+    BigWigDataFetcher,
+    CsvDataFetcher,
+    GffDataFetcher,
+    JsonDataFetcher,
+    BamDataFetcher,
+    BedDataFetcher,
+    VcfDataFetcher
+} from '@data-fetchers';
 import type { ProcessedTrack } from 'demo/track-def/types';
 
 export function getDataFetcher(spec: ProcessedTrack) {
@@ -23,6 +31,18 @@ export function getDataFetcher(spec: ProcessedTrack) {
     if (spec.data.type == 'json') {
         const fields = getFields(spec);
         return new JsonDataFetcher({ ...spec.data, ...fields, assembly: spec.assembly });
+    }
+    if (spec.data.type == 'gff') {
+        return new GffDataFetcher({ ...spec.data, assembly: spec.assembly });
+    }
+    if (spec.data.type == 'bam') {
+        return new BamDataFetcher({ ...spec.data, assembly: spec.assembly });
+    }
+    if (spec.data.type == 'bed') {
+        return new BedDataFetcher({ ...spec.data, assembly: spec.assembly });
+    }
+    if (spec.data.type == 'vcf') {
+        return new VcfDataFetcher({ ...spec.data, assembly: spec.assembly });
     }
 }
 

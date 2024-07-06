@@ -10,6 +10,7 @@ import type { ModuleThread } from 'threads';
 import type { WorkerApi, TilesetInfo, Tiles, Segment, Junction, SegmentWithMate } from './bam-worker';
 import { computeChromSizes } from '../../core/utils/assembly';
 import type { TabularDataFetcher } from '../utils';
+import { uuid } from '../../core/utils/uuid';
 
 const DEBOUNCE_TIME = 200;
 
@@ -35,8 +36,8 @@ class BamDataFetcher<Config extends BamData> implements TabularDataFetcher<Infer
         fetching: { delete(id: string): void };
     };
 
-    constructor(HGC: import('@higlass/types').HGC, config: Config & { assembly: Assembly }) {
-        this.uid = HGC.libraries.slugid.nice();
+    constructor(config: Config & { assembly: Assembly }) {
+        this.uid = uuid();
         this.toFetch = new Set();
         const { url, indexUrl, assembly, ...options } = config;
         this.worker = spawn<WorkerApi>(new Worker()).then(async worker => {

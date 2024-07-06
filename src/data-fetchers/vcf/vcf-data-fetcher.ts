@@ -12,6 +12,7 @@ import type { Assembly, VcfData } from '@gosling-lang/gosling-schema';
 import type { WorkerApi, TilesetInfo } from './vcf-worker';
 import type { TabularDataFetcher } from '../utils';
 import { getSubstitutionType, getMutationType } from './utils';
+import { uuid } from '../../core/utils/uuid';
 
 const DEBOUNCE_TIME = 200;
 
@@ -51,8 +52,8 @@ class VcfDataFetcher implements TabularDataFetcher<VcfTile> {
     private fetchTimeout?: ReturnType<typeof setTimeout>;
     private worker: Promise<ModuleThread<WorkerApi>>;
 
-    constructor(HGC: import('@higlass/types').HGC, config: VcfData & { assembly: Assembly }) {
-        this.uid = HGC.libraries.slugid.nice();
+    constructor(config: VcfData & { assembly: Assembly }) {
+        this.uid = uuid();
         this.prevRequestTime = 0;
         this.toFetch = new Set();
         const { url, indexUrl, assembly, ...options } = config;
