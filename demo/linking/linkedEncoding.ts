@@ -242,7 +242,6 @@ function getSingleViewTrackLinks(gs: SingleView): TrackLink[] {
  * Links all of the tracks in a single view together
  */
 function getSingleViewLinks(gs: SingleView): ViewLink[] {
-    console.warn('got single view', gs);
     function addLinkY(tracks: Track[], viewYDomain: [number, number]): ViewLink {
         const viewLinkY: ViewLink = {
             linkingId: undefined,

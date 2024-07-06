@@ -4,7 +4,6 @@ import { PixiManager } from '@pixi-manager';
 import { compile } from '../src/compiler/compile';
 import { getTheme } from '../src/core/utils/theme';
 
-import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
 import { createTrackDefs } from './track-def/main';
 import { renderTrackDefs } from './renderer/main';
 import type { TrackInfo } from 'src/compiler/bounding-box';
@@ -18,20 +17,17 @@ interface GoslingComponentProps {
 }
 export function GoslingComponent({ spec, width, height }: GoslingComponentProps) {
     const [fps, setFps] = useState(120);
+    const prevSpec = useMemo(() => spec, [spec]);
 
     useEffect(() => {
         if (!spec) return;
 
         const plotElement = document.getElementById('plot') as HTMLDivElement;
         plotElement.innerHTML = '';
-        renderGosling(spec, plotElement, width, height);
+        renderGosling(spec, plotElement);
     }, [spec]);
 
-    return (
-        <div style={{ padding: 50, backgroundColor: 'white' }}>
-            <div id="plot" style={{ position: 'relative' }}></div>
-        </div>
-    );
+    return <div id="plot" style={{ height: '100%' }}></div>;
 }
 /**
  * This is the main function. It takes a Gosling spec and renders it to the container.
@@ -40,9 +36,11 @@ export function GoslingComponent({ spec, width, height }: GoslingComponentProps)
  * @param width
  * @param height
  */
-function renderGosling(gs: GoslingSpec, container: HTMLDivElement, width: number, height: number) {
+function renderGosling(gs: GoslingSpec, container: HTMLDivElement) {
     // Initialize the PixiManager. This will be used to get containers and overlay divs for the plots
-    const pixiManager = new PixiManager(width, height, container, () => {});
+    const canvasWidth = 1000,
+        canvasHeight = 1000; // These initial sizes don't matter because the size will be updated
+    const pixiManager = new PixiManager(canvasWidth, canvasHeight, container, () => {});
 
     // Compile the spec
     const compileResult = compile(gs, [], getTheme('light'), { containerSize: { width: 0, height: 0 } });
@@ -56,19 +54,22 @@ function renderGosling(gs: GoslingSpec, container: HTMLDivElement, width: number
     if (isResponsiveWidth || isResponsiveHeight) {
         const resizeObserver = new ResizeObserver(
             debounce(entries => {
-                const { width, height } = entries[0].contentRect;
-                console.warn('Resizing to', width, height);
+                const { width: containerWidth, height: containerHeight } = entries[0].contentRect;
+                console.warn('Resizing to', containerWidth, containerHeight);
                 // Remove all of the previously drawn overlay divs and tracks
                 pixiManager.clearAll();
                 const rescaledTracks = rescaleTrackInfos(
                     trackInfos,
-                    width,
-                    height,
+                    containerWidth - 100, // minus 100 to account for the padding
+                    containerHeight - 100,
                     isResponsiveWidth,
                     isResponsiveHeight
                 );
                 const trackDefs = createTrackDefs(rescaledTracks, theme);
                 renderTrackDefs(trackDefs, linkedEncodings, pixiManager);
+                // Resize the canvas to make sure it fits the tracks
+                const { width, height } = calculateWidthHeight(rescaledTracks);
+                pixiManager.resize(width, height);
             }, 300)
         );
         resizeObserver.observe(container);
@@ -76,9 +77,9 @@ function renderGosling(gs: GoslingSpec, container: HTMLDivElement, width: number
         // If the spec is not responsive, we can just render the tracks
         const trackDefs = createTrackDefs(trackInfos, theme);
         renderTrackDefs(trackDefs, linkedEncodings, pixiManager);
-        const maxWidth = Math.max(...trackInfos.map(ti => ti.boundingBox.x + ti.boundingBox.width));
-        const maxHeight = Math.max(...trackInfos.map(ti => ti.boundingBox.y + ti.boundingBox.height));
-        pixiManager.resize(maxWidth, maxHeight);
+        // Resize the canvas to make sure it fits the tracks
+        const { width, height } = calculateWidthHeight(trackInfos);
+        pixiManager.resize(width, height);
     }
 }
 
@@ -105,6 +106,13 @@ function checkResponsiveSpec(spec: GoslingSpec) {
     };
 }
 
+/** Helper function which calculates the maximum width and height of the bounding boxes of the trackInfos */
+function calculateWidthHeight(trackInfos: TrackInfo[]) {
+    const width = Math.max(...trackInfos.map(ti => ti.boundingBox.x + ti.boundingBox.width));
+    const height = Math.max(...trackInfos.map(ti => ti.boundingBox.y + ti.boundingBox.height));
+    return { width, height };
+}
+
 /**
  * This function rescales the bounding boxes of the trackInfos so that they fit within the width and height
  */
@@ -115,9 +123,9 @@ function rescaleTrackInfos(
     isResponsiveWidth: boolean,
     isResponsiveHeight: boolean
 ): TrackInfo[] {
+    const { width: origWidth, height: origHeight } = calculateWidthHeight(trackInfos);
     if (isResponsiveWidth) {
-        const maxWidth = Math.max(...trackInfos.map(ti => ti.boundingBox.x + ti.boundingBox.width));
-        const scalingFactor = width / maxWidth;
+        const scalingFactor = width / origWidth;
         trackInfos = trackInfos.map(ti => {
             return {
                 ...ti,
@@ -131,8 +139,7 @@ function rescaleTrackInfos(
         });
     }
     if (isResponsiveHeight) {
-        const maxHeight = Math.max(...trackInfos.map(ti => ti.boundingBox.y + ti.boundingBox.height));
-        const scalingFactor = height / maxHeight;
+        const scalingFactor = height / origHeight;
         trackInfos = trackInfos.map(ti => {
             return {
                 ...ti,

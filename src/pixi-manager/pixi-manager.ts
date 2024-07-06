@@ -12,11 +12,11 @@ interface BoundingBox {
 }
 export class PixiManager {
     app: PIXI.Application<HTMLCanvasElement>;
-    // This contains both the canvas and the overlay container
+    /** Contains the canvas and the overlayContainer */
     rootDiv: HTMLDivElement;
-    // Div which contains all overlay divs
+    /** This contains all of the overlay divs */
     overlayContainer: HTMLDivElement;
-    // Mapping between position and overlay div so we can reuse overlay divs
+    /** Mapping between the position and the overlay div */
     createdContainers: Map<string, HTMLDivElement> = new Map();
 
     constructor(width: number, height: number, container: HTMLDivElement, fps: (fps: number) => void) {
@@ -36,15 +36,28 @@ export class PixiManager {
                 wheel: false
             }
         });
+        // The wrapper div is used to add padding around the canvas
+        const wrapper = document.createElement('div');
+        wrapper.style.padding = '50px';
+        wrapper.style.backgroundColor = 'white';
+        container.appendChild(wrapper);
 
-        this.rootDiv = container;
-        container.appendChild(this.app.view);
+        // Canvas and overlay container will be added to the root div
+        const rootDiv = document.createElement('div');
+        rootDiv.style.position = 'relative';
+        wrapper.appendChild(rootDiv);
+        this.rootDiv = rootDiv;
+        this.rootDiv.appendChild(this.app.view);
+
+        // Overlays will be added to the overlay container
         this.overlayContainer = document.createElement('div');
-        container.appendChild(this.overlayContainer);
+        this.rootDiv.appendChild(this.overlayContainer);
         // Add FPS counter
         this.app.ticker.add(() => {
             fps(this.app.ticker.FPS);
         });
+
+        console.warn('created new pixi manager');
     }
 
     /**
@@ -87,6 +100,8 @@ export class PixiManager {
 
     resize(width: number, height: number): void {
         this.app.renderer.resize(width, height);
+        this.rootDiv.style.width = `${width}px`;
+        this.rootDiv.style.height = `${height}px`;
     }
 
     destroy(): void {
