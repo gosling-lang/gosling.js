@@ -11,6 +11,7 @@ import type { LinkedEncoding } from '../linking/linkedEncoding';
 import { BrushCircularTrack } from '@gosling-lang/brush-circular';
 import { HeatmapTrack } from '@gosling-lang/heatmap';
 import type { PixiManager } from '@pixi-manager';
+import { DummyTrack } from '@gosling-lang/dummy-track';
 
 /**
  * Takes a list of track definitions and linkedEncodings and renders them
@@ -98,6 +99,9 @@ export function renderTrackDefs(trackDefs: TrackDefs[], linkedEncodings: LinkedE
             if (!options.static) {
                 brush.addInteractor(plot => panZoom(plot, domain));
             }
+        }
+        if (type === TrackType.Dummy) {
+            new DummyTrack(options, pixiManager.makeContainer(boundingBox).overlayDiv);
         }
     });
 }

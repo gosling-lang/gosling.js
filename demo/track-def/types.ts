@@ -1,4 +1,4 @@
-import type { DataDeep, Assembly } from '@gosling-lang/gosling-schema';
+import type { DataDeep, Assembly, DummyTrackStyle } from '@gosling-lang/gosling-schema';
 
 /**
  * After the Gosling spec is compiled, it is a "processed spec".
@@ -13,13 +13,14 @@ import type { DataDeep, Assembly } from '@gosling-lang/gosling-schema';
  */
 
 /** A Track after it has been compiled */
-export type ProcessedTrack = ProcessedLinearTrack | ProcessedCircularTrack;
+export type ProcessedTrack = ProcessedLinearTrack | ProcessedCircularTrack | ProcessedDummyTrack;
 /** All tracks potentially have these properties */
 export interface ProcessedTrackBase {
     id: string;
     height: number;
     width: number;
     static: boolean;
+    mark?: string;
     orientation: 'horizontal' | 'vertical';
     title?: string;
     subtitle?: string;
@@ -44,6 +45,11 @@ export type ProcessedCircularTrack = ProcessedTrackBase & {
     endAngle: number;
     outerRadius: number;
     innerRadius: number;
+};
+
+export type ProcessedDummyTrack = ProcessedTrackBase & {
+    type?: string;
+    style?: DummyTrackStyle;
 };
 
 /** Tracks in the _overlay */
