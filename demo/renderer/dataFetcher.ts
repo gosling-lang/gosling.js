@@ -1,8 +1,9 @@
 import { DataFetcher } from '@higlass/datafetcher';
 import { fakePubSub } from '@higlass/utils';
 import { BigWigDataFetcher, CsvDataFetcher, JsonDataFetcher } from '@data-fetchers';
+import type { ProcessedTrack } from 'demo/track-def/types';
 
-export function getDataFetcher(spec: Track) {
+export function getDataFetcher(spec: ProcessedTrack) {
     if (!('data' in spec)) {
         console.warn('No data in the track spec', spec);
     }
@@ -13,11 +14,11 @@ export function getDataFetcher(spec: Track) {
         return new DataFetcher({ server, tilesetUid }, fakePubSub);
     }
     if (spec.data.type == 'bigwig') {
-        return new BigWigDataFetcher(spec.data);
+        return new BigWigDataFetcher({ ...spec.data, assembly: spec.assembly });
     }
     if (spec.data.type == 'csv') {
         const fields = getFields(spec);
-        return new CsvDataFetcher({ ...spec.data, ...fields });
+        return new CsvDataFetcher({ ...spec.data, ...fields, assembly: spec.assembly });
     }
     if (spec.data.type == 'json') {
         const fields = getFields(spec);
