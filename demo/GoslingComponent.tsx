@@ -50,25 +50,30 @@ function renderGosling(gs: GoslingSpec, container: HTMLDivElement, width: number
 
     // Extract all of the linking information from the spec
     const linkedEncodings = getLinkedEncodings(processedSpec);
-    const isResponsiveWidth =
-        processedSpec.responsiveSize &&
-        typeof processedSpec.responsiveSize === 'object' &&
-        processedSpec.responsiveSize.width;
 
-    if (isResponsiveWidth) {
+    // If the spec is responsive, we need to add a resize observer to the container
+    const { isResponsiveWidth, isResponsiveHeight } = checkResponsiveSpec(processedSpec);
+    if (isResponsiveWidth || isResponsiveHeight) {
         const resizeObserver = new ResizeObserver(
             debounce(entries => {
                 const { width, height } = entries[0].contentRect;
+                console.warn('Resizing to', width, height);
                 // Remove all of the previously drawn overlay divs and tracks
                 pixiManager.clearAll();
-                const rescaledTracks = rescaleTrackInfos(trackInfos, width, height);
+                const rescaledTracks = rescaleTrackInfos(
+                    trackInfos,
+                    width,
+                    height,
+                    isResponsiveWidth,
+                    isResponsiveHeight
+                );
                 const trackDefs = createTrackDefs(rescaledTracks, theme);
                 renderTrackDefs(trackDefs, linkedEncodings, pixiManager);
-                // pixiManager.resize(width, height);
             }, 300)
         );
         resizeObserver.observe(container);
     } else {
+        // If the spec is not responsive, we can just render the tracks
         const trackDefs = createTrackDefs(trackInfos, theme);
         renderTrackDefs(trackDefs, linkedEncodings, pixiManager);
         const maxWidth = Math.max(...trackInfos.map(ti => ti.boundingBox.x + ti.boundingBox.width));
@@ -86,22 +91,59 @@ function debounce(f: (arg0: unknown) => unknown, delay: number) {
     };
 }
 
+/** Checks whether the input spec has responsive width or height */
+function checkResponsiveSpec(spec: GoslingSpec) {
+    const isResponsiveWidth =
+        (spec.responsiveSize && typeof spec.responsiveSize === 'object' && spec.responsiveSize.width) || false;
+
+    const isResponsiveHeight =
+        (spec.responsiveSize && typeof spec.responsiveSize === 'object' && spec.responsiveSize.height) || false;
+
+    return {
+        isResponsiveWidth,
+        isResponsiveHeight
+    };
+}
+
 /**
  * This function rescales the bounding boxes of the trackInfos so that they fit within the width and height
  */
-function rescaleTrackInfos(trackInfos: TrackInfo[], width: number, height: number): TrackInfo[] {
-    const maxWidth = Math.max(...trackInfos.map(ti => ti.boundingBox.x + ti.boundingBox.width));
-    const scalingFactor = width / maxWidth;
-    const scaledTrackInfos = trackInfos.map(ti => {
-        return {
-            ...ti,
-            boundingBox: {
-                x: ti.boundingBox.x * scalingFactor,
-                y: ti.boundingBox.y * scalingFactor,
-                width: ti.boundingBox.width * scalingFactor,
-                height: ti.boundingBox.height * scalingFactor
-            }
-        };
-    });
-    return scaledTrackInfos;
+function rescaleTrackInfos(
+    trackInfos: TrackInfo[],
+    width: number,
+    height: number,
+    isResponsiveWidth: boolean,
+    isResponsiveHeight: boolean
+): TrackInfo[] {
+    if (isResponsiveWidth) {
+        const maxWidth = Math.max(...trackInfos.map(ti => ti.boundingBox.x + ti.boundingBox.width));
+        const scalingFactor = width / maxWidth;
+        trackInfos = trackInfos.map(ti => {
+            return {
+                ...ti,
+                boundingBox: {
+                    x: ti.boundingBox.x * scalingFactor,
+                    y: ti.boundingBox.y,
+                    width: ti.boundingBox.width * scalingFactor,
+                    height: ti.boundingBox.height
+                }
+            };
+        });
+    }
+    if (isResponsiveHeight) {
+        const maxHeight = Math.max(...trackInfos.map(ti => ti.boundingBox.y + ti.boundingBox.height));
+        const scalingFactor = height / maxHeight;
+        trackInfos = trackInfos.map(ti => {
+            return {
+                ...ti,
+                boundingBox: {
+                    x: ti.boundingBox.x,
+                    y: ti.boundingBox.y * scalingFactor,
+                    width: ti.boundingBox.width,
+                    height: ti.boundingBox.height * scalingFactor
+                }
+            };
+        });
+    }
+    return trackInfos;
 }
