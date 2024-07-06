@@ -17,14 +17,23 @@ interface GoslingComponentProps {
 }
 export function GoslingComponent({ spec, width, height }: GoslingComponentProps) {
     const [fps, setFps] = useState(120);
-    const prevSpec = useMemo(() => spec, [spec]);
+    const [pixiManager, setPixiManager] = useState<PixiManager | null>(null);
 
     useEffect(() => {
         if (!spec) return;
-
         const plotElement = document.getElementById('plot') as HTMLDivElement;
-        plotElement.innerHTML = '';
-        renderGosling(spec, plotElement);
+        // Initialize the PixiManager. This will be used to get containers and overlay divs for the plots
+        const canvasWidth = 1000,
+            canvasHeight = 1000; // These initial sizes don't matter because the size will be updated
+        if (!pixiManager) {
+            const pixiManager = new PixiManager(canvasWidth, canvasHeight, plotElement, () => {});
+            renderGosling(spec, plotElement, pixiManager);
+            setPixiManager(pixiManager);
+        } else {
+            console.warn('pixi manager found');
+            pixiManager.clearAll();
+            renderGosling(spec, plotElement, pixiManager);
+        }
     }, [spec]);
 
     return <div id="plot" style={{ height: '100%' }}></div>;
@@ -36,12 +45,7 @@ export function GoslingComponent({ spec, width, height }: GoslingComponentProps)
  * @param width
  * @param height
  */
-function renderGosling(gs: GoslingSpec, container: HTMLDivElement) {
-    // Initialize the PixiManager. This will be used to get containers and overlay divs for the plots
-    const canvasWidth = 1000,
-        canvasHeight = 1000; // These initial sizes don't matter because the size will be updated
-    const pixiManager = new PixiManager(canvasWidth, canvasHeight, container, () => {});
-
+function renderGosling(gs: GoslingSpec, container: HTMLDivElement, pixiManager: PixiManager) {
     // Compile the spec
     const compileResult = compile(gs, [], getTheme('light'), { containerSize: { width: 0, height: 0 } });
     const { trackInfos, gs: processedSpec, theme } = compileResult;
@@ -76,6 +80,7 @@ function renderGosling(gs: GoslingSpec, container: HTMLDivElement) {
     } else {
         // If the spec is not responsive, we can just render the tracks
         const trackDefs = createTrackDefs(trackInfos, theme);
+        console.warn('Rendering tracks');
         renderTrackDefs(trackDefs, linkedEncodings, pixiManager);
         // Resize the canvas to make sure it fits the tracks
         const { width, height } = calculateWidthHeight(trackInfos);
