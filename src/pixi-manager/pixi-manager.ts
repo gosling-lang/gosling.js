@@ -14,7 +14,7 @@ export class PixiManager {
     app: PIXI.Application<HTMLCanvasElement>;
     /** Contains the canvas and the overlayContainer */
     rootDiv: HTMLDivElement;
-    /** This contains all of the overlay divs */
+    /** Element which contains all of the overlay divs */
     overlayContainer: HTMLDivElement;
     /** Mapping between the position and the overlay div */
     createdContainers: Map<string, HTMLDivElement> = new Map();
