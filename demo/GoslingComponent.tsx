@@ -38,41 +38,24 @@ function renderGosling(gs: GoslingSpec, container: HTMLDivElement, width: number
     // Initialize the PixiManager. This will be used to get containers and overlay divs for the plots
     const pixiManager = new PixiManager(width, height, container, () => {});
 
-    const callback = (
-        hg: HiGlassSpec,
-        size,
-        gs: GoslingSpec,
-        tracksAndViews,
-        idTable,
-        trackInfos: TrackInfo[],
-        theme: Require<ThemeDeep>
-    ) => {
-        console.warn(trackInfos);
-        console.warn(tracksAndViews);
-        console.warn(gs);
-        // showTrackInfoPositions(trackInfos, pixiManager);
-        const linkedEncodings = getLinkedEncodings(gs);
-        console.warn('linkedEncodings', linkedEncodings);
-
-        const resizeObserver = new ResizeObserver(
-            debounce(entries => {
-                const { width, height } = entries[0].contentRect;
-                // Remove all of the previously drawn overlay divs and tracks
-                pixiManager.clearAll();
-                const rescaledTracks = rescaleTrackInfos(trackInfos, width, height);
-                const trackDefs = createTrackDefs(rescaledTracks, theme);
-                renderTrackDefs(trackDefs, linkedEncodings, pixiManager);
-                // pixiManager.resize(width, height);
-            }, 300)
-        );
-        resizeObserver.observe(container);
-        // const trackDefs = createTrackDefs([...trackInfos], theme);
-        // console.warn('trackDefs', trackDefs);
-        // renderTrackDefs(trackDefs, linkedEncodings, pixiManager);
-    };
-
     // Compile the spec
-    compile(gs, callback, [], getTheme('light'), { containerSize: { width: 0, height: 0 } });
+    const compileResult = compile(gs, [], getTheme('light'), { containerSize: { width: 0, height: 0 } });
+    const { trackInfos, gs: processedSpec, theme } = compileResult;
+
+    // Extract all of the linking information from the spec
+    const linkedEncodings = getLinkedEncodings(processedSpec);
+    const resizeObserver = new ResizeObserver(
+        debounce(entries => {
+            const { width, height } = entries[0].contentRect;
+            // Remove all of the previously drawn overlay divs and tracks
+            pixiManager.clearAll();
+            const rescaledTracks = rescaleTrackInfos(trackInfos, width, height);
+            const trackDefs = createTrackDefs(rescaledTracks, theme);
+            renderTrackDefs(trackDefs, linkedEncodings, pixiManager);
+            // pixiManager.resize(width, height);
+        }, 300)
+    );
+    resizeObserver.observe(container);
 }
 
 /** Debounces the resize observer */
