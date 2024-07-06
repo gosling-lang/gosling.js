@@ -12,7 +12,11 @@ interface BoundingBox {
 }
 export class PixiManager {
     app: PIXI.Application<HTMLCanvasElement>;
-    containerElement: HTMLDivElement;
+    /** Contains the canvas and the overlayContainer */
+    rootDiv: HTMLDivElement;
+    /** This contains all of the overlay divs */
+    overlayContainer: HTMLDivElement;
+    /** Mapping between the position and the overlay div */
     createdContainers: Map<string, HTMLDivElement> = new Map();
 
     constructor(width: number, height: number, container: HTMLDivElement, fps: (fps: number) => void) {
@@ -32,13 +36,28 @@ export class PixiManager {
                 wheel: false
             }
         });
+        // The wrapper div is used to add padding around the canvas
+        const wrapper = document.createElement('div');
+        wrapper.style.padding = '50px';
+        wrapper.style.backgroundColor = 'white';
+        container.appendChild(wrapper);
 
-        this.containerElement = container;
-        container.appendChild(this.app.view);
+        // Canvas and overlay container will be added to the root div
+        const rootDiv = document.createElement('div');
+        rootDiv.style.position = 'relative';
+        wrapper.appendChild(rootDiv);
+        this.rootDiv = rootDiv;
+        this.rootDiv.appendChild(this.app.view);
+
+        // Overlays will be added to the overlay container
+        this.overlayContainer = document.createElement('div');
+        this.rootDiv.appendChild(this.overlayContainer);
         // Add FPS counter
         this.app.ticker.add(() => {
             fps(this.app.ticker.FPS);
         });
+
+        console.warn('created new pixi manager');
     }
 
     /**
@@ -61,10 +80,28 @@ export class PixiManager {
         } else {
             plotDiv = createOverlayElement(position);
             this.createdContainers.set(positionString, plotDiv);
-            this.containerElement.appendChild(plotDiv);
+            this.overlayContainer.appendChild(plotDiv);
         }
 
         return { pixiContainer: pContainer, overlayDiv: plotDiv };
+    }
+
+    clearAll(): void {
+        const children = this.app.stage.removeChildren();
+        children.forEach(child => {
+            child.destroy();
+        });
+        this.createdContainers.forEach(div => {
+            div.remove();
+        });
+        this.createdContainers.clear();
+        this.overlayContainer.innerHTML = '';
+    }
+
+    resize(width: number, height: number): void {
+        this.app.renderer.resize(width, height);
+        this.rootDiv.style.width = `${width}px`;
+        this.rootDiv.style.height = `${height}px`;
     }
 
     destroy(): void {

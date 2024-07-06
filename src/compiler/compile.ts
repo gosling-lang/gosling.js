@@ -9,20 +9,19 @@ import { renderHiGlass as createHiGlassModels } from './create-higlass-models';
 import { manageResponsiveSpecs } from './responsive';
 import type { IdTable } from '../api/track-and-view-ids';
 
-/** The callback function called everytime after the spec has been compiled */
-export type CompileCallback = (
-    hg: HiGlassSpec,
-    size: Size,
-    gs: GoslingSpec,
-    tracksAndViews: VisUnitApiData[],
-    idTable: IdTable,
-    trackInfos: TrackInfo[],
-    theme: Required<CompleteThemeDeep>
-) => void;
+
+interface CompileResult {
+    hg: HiGlassSpec;
+    size: Size;
+    gs: GoslingSpec;
+    tracksAndViews: VisUnitApiData[];
+    idTable: IdTable;
+    trackInfos: TrackInfo[];
+    theme: Required<CompleteThemeDeep>;
+}
 
 export function compile(
     spec: GoslingSpec,
-    callback: CompileCallback,
     templates: TemplateTrackDef[],
     theme: Required<CompleteThemeDeep>,
     containerStatus: {
@@ -30,7 +29,7 @@ export function compile(
         containerParentSize?: { width: number; height: number };
     },
     urlToFetchOptions?: UrlToFetchOptions
-) {
+): CompileResult {
     // Make sure to keep the original spec as-is
     const specCopy = JSON.parse(JSON.stringify(spec));
 
@@ -69,5 +68,6 @@ export function compile(
     }
 
     // Make HiGlass models for individual tracks
-    createHiGlassModels(specCopy, trackInfos, callback, theme, urlToFetchOptions);
+    const compileResult = createHiGlassModels(specCopy, trackInfos, theme, urlToFetchOptions);
+    return compileResult;
 }
