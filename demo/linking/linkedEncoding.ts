@@ -55,7 +55,6 @@ interface LinkInfo {
 export function getLinkedEncodings(gs: GoslingSpec) {
     // First, we traverse the gosling spec to find all the linked tracks and brushes
     const { trackLinks, viewLinks } = getLinkedFeaturesRecursive(gs);
-    console.warn('trackLinks', trackLinks);
     // We associate tracks the other tracks they are linked with
     const linkedEncodings = viewLinks.map(viewLink => {
         const linkedTracks = getLinkedTracks(viewLink.linkingId, trackLinks).map(track => ({
@@ -69,7 +68,6 @@ export function getLinkedEncodings(gs: GoslingSpec) {
             tracks: [...linkedTracks, ...viewTracks]
         } as LinkedEncoding;
     });
-    console.warn('linked Encodings from view', [...linkedEncodings]);
     // Combine trackLinks that do not belong to any viewLink
     const unlinkedTracks = trackLinks.filter(
         trackLink =>
@@ -85,7 +83,6 @@ export function getLinkedEncodings(gs: GoslingSpec) {
  * This can happen when a track uses the "domain" property
  */
 function combineUnlinkedTracks(unlinkedTracks: TrackLink[]): LinkedEncoding[] {
-    console.warn('unlinkedTracks', unlinkedTracks);
     const linkedEncodings: LinkedEncoding[] = [];
     unlinkedTracks.forEach(trackLink => {
         const existingLink = linkedEncodings.find(link => link.linkingId && link.linkingId === trackLink.linkingId);
@@ -110,7 +107,6 @@ function combineUnlinkedTracks(unlinkedTracks: TrackLink[]): LinkedEncoding[] {
             linkedEncodings.push(newLink);
         }
     });
-    console.warn('linkedEncodings from unlinked', linkedEncodings);
     return linkedEncodings;
 }
 

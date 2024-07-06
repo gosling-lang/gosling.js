@@ -248,7 +248,6 @@ function traverseAndCollectTrackInfo(
                     }
                 }
             });
-            adjustOverlaidTrackPosition(output);
         }
     } else {
         // We did not reach a track definition, so continue traversing.
@@ -372,24 +371,6 @@ function traverseAndCollectTrackInfo(
     spec._assignedHeight = cumHeight;
 
     return { x: dx, y: dy, width: cumWidth, height: cumHeight };
-}
-
-/**
- * Adjusts the x and y position of the overlaid tracks
- * Problem: Some overlaid tracks have an axis. Some do not. If an overlaid track does not have an axis
- * then the (x, y) position of the bounding box is possibly incorrect.
- */
-function adjustOverlaidTrackPosition(output) {
-    const overlaidTracks = output.filter(t => t.track.overlayOnPreviousTrack);
-    const hasOverlaidTracks = overlaidTracks.length > 0;
-    if (!hasOverlaidTracks) return output;
-    console.warn('overlaidTracks', overlaidTracks);
-    const baseTrack = output.filter(t => !t.track.overlayOnPreviousTrack)[0];
-    // overlaidTracks[0].boundingBox.x += 30;
-    // overlaidTracks[0].boundingBox.y += 30;
-    // if (baseTrack.boundingBox.width > overlaidTracks[0].boundingBox.width) {
-    //     overlaidTracks[0].boundingBox.x += 30;
-    // }
 }
 
 export function getNumOfXAxes(tracks: Track[]): number {
