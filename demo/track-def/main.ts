@@ -12,6 +12,8 @@ import { processHeatmapTrack, isHeatmapTrack } from './heatmap';
 import { processGoslingTrack } from './gosling';
 import { type BrushCircularTrackOptions } from '@gosling-lang/brush-circular';
 import { type HeatmapTrackOptions } from '@gosling-lang/heatmap';
+import { processDummyTrack } from './dummy';
+import { IsDummyTrack } from '@gosling-lang/gosling-schema';
 
 /**
  * All the different types of tracks that can be rendered
@@ -30,9 +32,9 @@ export enum TrackType {
  * Associate options to each track type
  */
 interface TrackOptionsMap {
+    [TrackType.Gosling]: GoslingTrackOptions;
     [TrackType.Text]: TextTrackOptions;
     [TrackType.Dummy]: DummyTrackOptions;
-    [TrackType.Gosling]: GoslingTrackOptions;
     [TrackType.Axis]: AxisTrackOptions;
     [TrackType.BrushLinear]: BrushLinearTrackOptions;
     [TrackType.BrushCircular]: BrushCircularTrackOptions;
@@ -65,6 +67,7 @@ export type TrackDefs = {
  */
 export function createTrackDefs(trackInfos: TrackInfo[], theme: Required<CompleteThemeDeep>): TrackDefs[] {
     const trackDefs: TrackDefs[] = [];
+    console.warn('trackinfos', trackInfos);
     trackInfos.forEach(trackInfo => {
         const { track, boundingBox } = trackInfo;
 
@@ -76,6 +79,10 @@ export function createTrackDefs(trackInfos: TrackInfo[], theme: Required<Complet
             // We have a heatmap track
             const heatmapTrackDefs = processHeatmapTrack(track, boundingBox, theme);
             trackDefs.push(...heatmapTrackDefs);
+        } else if (IsDummyTrack(track)) {
+            // We have a dummy track
+            const dummyTrackDefs = processDummyTrack(track, boundingBox);
+            trackDefs.push(...dummyTrackDefs);
         } else {
             // We have a gosling track
             const goslingAxisDefs = processGoslingTrack(track, boundingBox, theme);

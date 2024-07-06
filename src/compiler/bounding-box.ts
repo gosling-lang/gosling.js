@@ -10,7 +10,7 @@ import {
 import { resolveSuperposedTracks } from '../core/utils/overlay';
 import { traverseTracksAndViews, traverseViewArrangements } from './spec-preprocess';
 import type { CompleteThemeDeep } from '../core/utils/theme';
-
+import type { ProcessedTrack } from '../../demo/track-def/types';
 export interface Size {
     width: number;
     height: number;
@@ -38,7 +38,7 @@ export interface RelativePosition {
  * Track information for its arrangement.
  */
 export interface TrackInfo {
-    track: Track;
+    track: ProcessedTrack;
     boundingBox: BoundingBox;
     layout: RelativePosition;
 }

@@ -1,4 +1,4 @@
-import { IsMultipleViews, IsSingleView, type Assembly, type SingleView } from '@gosling-lang/gosling-schema';
+import { IsDummyTrack, IsMultipleViews, IsSingleView, type Assembly, type SingleView } from '@gosling-lang/gosling-schema';
 import { GenomicPositionHelper, computeChromSizes } from '../../src/core/utils/assembly';
 import { signal, type Signal } from '@preact/signals-core';
 import type { GoslingSpec } from 'gosling.js';
@@ -270,7 +270,8 @@ function getSingleViewLinks(gs: SingleView): ViewLink[] {
         // Add each track to the link
         tracks.forEach(track => {
             // If the track is already linked to something else, we don't need to add it again
-            if (hasDiffXDomainThanView(gs, track, assembly, viewXDomain)) return;
+            // Or if the track is a dummy track, we don't need to add it
+            if (hasDiffXDomainThanView(gs, track, assembly, viewXDomain) || IsDummyTrack(track)) return;
             const hasOverlaidTracks = '_overlay' in track;
             // Add overlaid brush tracks to the link
             if (hasOverlaidTracks) {
