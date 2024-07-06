@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PixiManager } from '@pixi-manager';
 
 import { compile } from '../src/compiler/compile';
@@ -39,22 +39,18 @@ export function GoslingComponent({ spec, width, height }: GoslingComponentProps)
     return <div id="plot" style={{ height: '100%' }}></div>;
 }
 /**
- * This is the main function. It takes a Gosling spec and renders it to the container.
- * @param gs
- * @param container
- * @param width
- * @param height
+ * This is the main function. It takes a Gosling spec and renders it using the PixiManager
  */
 function renderGosling(gs: GoslingSpec, container: HTMLDivElement, pixiManager: PixiManager) {
-    // Compile the spec
+    // 1. Compile the spec
     const compileResult = compile(gs, [], getTheme('light'), { containerSize: { width: 0, height: 0 } });
     const { trackInfos, gs: processedSpec, theme } = compileResult;
-
-    // Extract all of the linking information from the spec
+    console.warn('Spec', processedSpec);
+    // 2. Extract all of the linking information from the spec
     const linkedEncodings = getLinkedEncodings(processedSpec);
     console.warn('Linked encodings', linkedEncodings);
 
-    // If the spec is responsive, we need to add a resize observer to the container
+    // 3. If the spec is responsive, we need to add a resize observer to the container
     const { isResponsiveWidth, isResponsiveHeight } = checkResponsiveSpec(processedSpec);
     if (isResponsiveWidth || isResponsiveHeight) {
         const resizeObserver = new ResizeObserver(
@@ -70,6 +66,7 @@ function renderGosling(gs: GoslingSpec, container: HTMLDivElement, pixiManager: 
                     isResponsiveWidth,
                     isResponsiveHeight
                 );
+                // 4. Render the tracks
                 const trackDefs = createTrackDefs(rescaledTracks, theme);
                 renderTrackDefs(trackDefs, linkedEncodings, pixiManager);
                 // Resize the canvas to make sure it fits the tracks
@@ -79,7 +76,7 @@ function renderGosling(gs: GoslingSpec, container: HTMLDivElement, pixiManager: 
         );
         resizeObserver.observe(container);
     } else {
-        // If the spec is not responsive, we can just render the tracks
+        // 4. If the spec is not responsive, we can just render the tracks
         const trackDefs = createTrackDefs(trackInfos, theme);
         console.warn('Rendering tracks');
         renderTrackDefs(trackDefs, linkedEncodings, pixiManager);

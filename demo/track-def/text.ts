@@ -1,8 +1,7 @@
 import { type TextTrackOptions } from '@gosling-lang/text-track';
-
-import { type Track } from '@gosling-lang/gosling-schema';
 import type { CompleteThemeDeep } from '../../src/core/utils/theme';
 import { TrackType, type TrackDef } from './main';
+import type { ProcessedTrack } from './types';
 
 /**
  * Separate the the track with mark "_header" into title and subtitle text tracks
@@ -11,7 +10,7 @@ import { TrackType, type TrackDef } from './main';
  * @returns
  */
 export function proccessTextHeader(
-    track: Track,
+    track: ProcessedTrack,
     boundingBox: { x: number; y: number; width: number; height: number },
     theme: Required<CompleteThemeDeep>
 ): TrackDef<TextTrackOptions>[] {
@@ -42,7 +41,7 @@ export function proccessTextHeader(
 }
 
 function getTextTrackOptions(
-    spec: Track,
+    spec: ProcessedTrack,
     type: 'title' | 'subtitle',
     theme: Required<CompleteThemeDeep>
 ): TextTrackOptions {

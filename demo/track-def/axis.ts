@@ -1,18 +1,10 @@
 import { type AxisTrackOptions } from '@gosling-lang/genomic-axis';
-import {
-    IsChannelDeep,
-    IsDummyTrack,
-    IsTemplateTrack,
-    type AxisPosition,
-    type OverlaidTrack,
-    type SingleTrack,
-    type TemplateTrack,
-    type Track
-} from '@gosling-lang/gosling-schema';
+import { IsChannelDeep, IsDummyTrack, IsTemplateTrack, type AxisPosition } from '@gosling-lang/gosling-schema';
 import type { CompleteThemeDeep } from '../../src/core/utils/theme';
 import { resolveSuperposedTracks } from '../../src/core/utils/overlay';
 import { HIGLASS_AXIS_SIZE } from '../../src/compiler/higlass-model';
 import { TrackType, type TrackDef } from './main';
+import type { ProcessedCircularTrack, ProcessedTrack } from './types';
 
 /**
  * Generates the track definition for the axis track
@@ -21,7 +13,7 @@ import { TrackType, type TrackDef } from './main';
  * @param theme
  */
 export function getAxisTrackDef(
-    track: SingleTrack | OverlaidTrack | TemplateTrack,
+    track: ProcessedTrack,
     boundingBox: { x: number; y: number; width: number; height: number },
     theme: Required<CompleteThemeDeep>
 ): [trackBbox: { x: number; y: number; width: number; height: number }, TrackDef<AxisTrackOptions>[] | undefined] {
@@ -95,7 +87,7 @@ export function getAxisTrackDef(
  */
 function getAxisTrackLinearOptions(
     encoding: 'x' | 'y',
-    track: SingleTrack | OverlaidTrack | TemplateTrack,
+    track: ProcessedTrack,
     boundingBox: { x: number; y: number; width: number; height: number },
     position: AxisPosition,
     theme: Required<CompleteThemeDeep>
@@ -131,7 +123,10 @@ function getAxisTrackLinearOptions(
 /**
  * Determines the orientation of the axis
  */
-function getAxisOrientation(encoding: 'x' | 'y', trackOrientation: 'horizontal' | 'vertical') {
+function getAxisOrientation(
+    encoding: 'x' | 'y',
+    trackOrientation: 'horizontal' | 'vertical'
+): 'horizontal' | 'vertical' {
     if (encoding === 'x') {
         return trackOrientation === 'horizontal' ? 'horizontal' : 'vertical';
     }
@@ -146,7 +141,7 @@ function getAxisOrientation(encoding: 'x' | 'y', trackOrientation: 'horizontal' 
  * Generates options for the circular axis track
  */
 function getAxisTrackCircularOptions(
-    track: SingleTrack | OverlaidTrack | TemplateTrack,
+    track: ProcessedCircularTrack,
     boundingBox: { x: number; y: number; width: number; height: number },
     position: AxisPosition,
     theme: Required<CompleteThemeDeep>
@@ -191,7 +186,7 @@ function getAxisTrackCircularOptions(
  * @param track
  * @returns
  */
-function getAxisPositions(track: Track): {
+function getAxisPositions(track: ProcessedTrack): {
     xAxisPosition: AxisPosition | undefined;
     yAxisPosition: AxisPosition | undefined;
 } {
