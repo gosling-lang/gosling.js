@@ -85,6 +85,10 @@ export class PixiManager {
         this.overlayContainer.innerHTML = '';
     }
 
+    resize(width: number, height: number): void {
+        this.app.renderer.resize(width, height);
+    }
+
     destroy(): void {
         this.app.destroy();
     }

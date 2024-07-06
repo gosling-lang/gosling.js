@@ -29,11 +29,17 @@ export function GoslingComponent({ spec, width, height }: GoslingComponentProps)
 
     return (
         <div style={{ padding: 50, backgroundColor: 'white' }}>
-            <div id="plot" style={{ width: '100%', height: '100%', position: 'relative' }}></div>
+            <div id="plot" style={{ position: 'relative' }}></div>
         </div>
     );
 }
-
+/**
+ * This is the main function. It takes a Gosling spec and renders it to the container.
+ * @param gs
+ * @param container
+ * @param width
+ * @param height
+ */
 function renderGosling(gs: GoslingSpec, container: HTMLDivElement, width: number, height: number) {
     // Initialize the PixiManager. This will be used to get containers and overlay divs for the plots
     const pixiManager = new PixiManager(width, height, container, () => {});
@@ -44,18 +50,31 @@ function renderGosling(gs: GoslingSpec, container: HTMLDivElement, width: number
 
     // Extract all of the linking information from the spec
     const linkedEncodings = getLinkedEncodings(processedSpec);
-    const resizeObserver = new ResizeObserver(
-        debounce(entries => {
-            const { width, height } = entries[0].contentRect;
-            // Remove all of the previously drawn overlay divs and tracks
-            pixiManager.clearAll();
-            const rescaledTracks = rescaleTrackInfos(trackInfos, width, height);
-            const trackDefs = createTrackDefs(rescaledTracks, theme);
-            renderTrackDefs(trackDefs, linkedEncodings, pixiManager);
-            // pixiManager.resize(width, height);
-        }, 300)
-    );
-    resizeObserver.observe(container);
+    const isResponsiveWidth =
+        processedSpec.responsiveSize &&
+        typeof processedSpec.responsiveSize === 'object' &&
+        processedSpec.responsiveSize.width;
+
+    if (isResponsiveWidth) {
+        const resizeObserver = new ResizeObserver(
+            debounce(entries => {
+                const { width, height } = entries[0].contentRect;
+                // Remove all of the previously drawn overlay divs and tracks
+                pixiManager.clearAll();
+                const rescaledTracks = rescaleTrackInfos(trackInfos, width, height);
+                const trackDefs = createTrackDefs(rescaledTracks, theme);
+                renderTrackDefs(trackDefs, linkedEncodings, pixiManager);
+                // pixiManager.resize(width, height);
+            }, 300)
+        );
+        resizeObserver.observe(container);
+    } else {
+        const trackDefs = createTrackDefs(trackInfos, theme);
+        renderTrackDefs(trackDefs, linkedEncodings, pixiManager);
+        const maxWidth = Math.max(...trackInfos.map(ti => ti.boundingBox.x + ti.boundingBox.width));
+        const maxHeight = Math.max(...trackInfos.map(ti => ti.boundingBox.y + ti.boundingBox.height));
+        pixiManager.resize(maxWidth, maxHeight);
+    }
 }
 
 /** Debounces the resize observer */
