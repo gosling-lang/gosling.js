@@ -3,12 +3,8 @@ import type { TiledPixiTrackContext, TiledPixiTrackOptions } from '@higlass/trac
 import * as PIXI from 'pixi.js';
 import { fakePubSub } from '@higlass/utils';
 import { scaleLinear } from 'd3-scale';
-
-import { type D3ZoomEvent, zoom, ZoomTransform } from 'd3-zoom';
-import { select } from 'd3-selection';
-import { zoomWheelBehavior } from '../utils';
 import { DataFetcher } from '@higlass/datafetcher';
-import { signal, type Signal, effect } from '@preact/signals-core';
+import { signal, type Signal } from '@preact/signals-core';
 
 export type HeatmapTrackContext = TiledPixiTrackContext & {
     svgElement: HTMLElement;
@@ -40,11 +36,14 @@ export type HeatmapTrackOptions = TiledPixiTrackOptions & {
 };
 
 export class HeatmapTrack extends HeatmapTiledPixiTrack<HeatmapTrackOptions> {
-    xDomain: Signal<[number, number]>; // This has to be a signal because it will potentially be updated by interactors
+    /** A signal containing the genomic x-domain [start, end] */
+    xDomain: Signal<[number, number]>;
+    /** A signal containing the genomic y-domain [start, end] */
     yDomain: Signal<[number, number]>;
-    maxDomain: number; // the maximum domain of the data. This is needed for zoomPanHeatmap to work properly
+    /** The maximum domain of the data. This is needed for zoomPanHeatmap to work properly */
+    maxDomain: number;
+    /** The div element the zoom behavior will get attached to */
     domOverlay: HTMLElement;
-    d3ZoomTransform: ZoomTransform;
 
     constructor(
         options: HeatmapTrackOptions,

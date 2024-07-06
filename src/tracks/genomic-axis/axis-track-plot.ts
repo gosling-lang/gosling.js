@@ -2,26 +2,15 @@ import { AxisTrackClass, type AxisTrackContext, type AxisTrackOptions } from './
 import * as PIXI from 'pixi.js';
 import { fakePubSub } from '@higlass/utils';
 import { scaleLinear } from 'd3-scale';
-import { ZoomTransform } from 'd3-zoom';
-
-import { type D3ZoomEvent, zoom } from 'd3-zoom';
-import { select } from 'd3-selection';
 import { type Signal, effect } from '@preact/signals-core';
 
-// Default d3 zoom feels slow so we use this instead
-// https://d3js.org/d3-zoom#zoom_wheelDelta
-function wheelDelta(event: WheelEvent) {
-    const defaultMultiplier = 5;
-    return (
-        -event.deltaY *
-        (event.deltaMode === 1 ? 0.05 : event.deltaMode ? 1 : 0.002) *
-        (event.ctrlKey ? 10 : defaultMultiplier)
-    );
-}
-
+/**
+ * A wrapper around the AxisTrackClass that allows for use with signals
+ */
 export class AxisTrack extends AxisTrackClass {
+    /** A signal containing the genomic x-domain [start, end] */
     xDomain: Signal<[number, number]>;
-    zoomStartScale = scaleLinear();
+    /** The div element the zoom behavior will get attached to */
     domOverlay: HTMLElement;
     width: number;
     height: number;

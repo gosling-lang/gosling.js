@@ -6,13 +6,21 @@ import {
 import { scaleLinear } from 'd3-scale';
 import { type Signal, effect, signal } from '@preact/signals-core';
 
+/**
+ * A wrapper around the BrushCircularTrackClass that allows for use with signals
+ */
 export class BrushCircularTrack extends CircularBrushTrackClass {
+    /** A signal containing the genomic x-domain [start, end] */
     xDomain: Signal<number[]>;
+    /** A signal containing the brush x-domain [start, end] */
     xBrushDomain: Signal<number[]>;
-    zoomStartScale = scaleLinear(); // This is the scale that we use to store the domain when the user starts zooming
-    domOverlay: HTMLElement; // This is the div that we're going to apply the zoom behavior to
+    /** The div element the zoom behavior will get attached to */
+    domOverlay: HTMLElement;
+    /** Width of the track */
     width: number;
+    /** Height of the track */
     height: number;
+    /** Circular brush tracks cannot be vertical for now */
     orientation: 'horizontal';
 
     constructor(
