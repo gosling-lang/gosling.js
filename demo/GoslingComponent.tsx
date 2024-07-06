@@ -17,20 +17,20 @@ interface GoslingComponentProps {
 }
 export function GoslingComponent({ spec, width, height }: GoslingComponentProps) {
     const [fps, setFps] = useState(120);
+    // Pixi manager should persist between render calls. Otherwise performance degrades greatly.
     const [pixiManager, setPixiManager] = useState<PixiManager | null>(null);
 
     useEffect(() => {
         if (!spec) return;
         const plotElement = document.getElementById('plot') as HTMLDivElement;
-        // Initialize the PixiManager. This will be used to get containers and overlay divs for the plots
-        const canvasWidth = 1000,
-            canvasHeight = 1000; // These initial sizes don't matter because the size will be updated
+        // If the pixiManager doesn't exist, create a new one
         if (!pixiManager) {
+            const canvasWidth = 1000,
+                canvasHeight = 1000; // These initial sizes don't matter because the size will be updated
             const pixiManager = new PixiManager(canvasWidth, canvasHeight, plotElement, () => {});
             renderGosling(spec, plotElement, pixiManager);
             setPixiManager(pixiManager);
         } else {
-            console.warn('pixi manager found');
             pixiManager.clearAll();
             renderGosling(spec, plotElement, pixiManager);
         }
@@ -52,6 +52,7 @@ function renderGosling(gs: GoslingSpec, container: HTMLDivElement, pixiManager: 
 
     // Extract all of the linking information from the spec
     const linkedEncodings = getLinkedEncodings(processedSpec);
+    console.warn('Linked encodings', linkedEncodings);
 
     // If the spec is responsive, we need to add a resize observer to the container
     const { isResponsiveWidth, isResponsiveHeight } = checkResponsiveSpec(processedSpec);
