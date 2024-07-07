@@ -107,36 +107,57 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
 
     /** When the tooltip option is used, the tooltip div will be populated sample information  */
     addTooltip() {
-        const div = document.createElement('tooltip');
-        div.style.position = 'absolute';
-        div.style.pointerEvents = 'none';
-        div.style.backgroundColor = 'white';
-        div.style.borderRadius = '5px';
-        div.style.border = '1px solid #dddddd';
-        div.style.boxSizing = 'border-box';
-        div.style.fontSize = '10px';
-        this.domOverlay.appendChild(div);
+        /** Helper function to get the position relative to the overlay div */
+        function getRelativePosition(element: HTMLElement, e: MouseEvent) {
+            const rect = element.getBoundingClientRect();
+            return {
+                x: e.clientX - rect.left,
+                y: e.clientY - rect.top
+            };
+        }
+        const tooltipDiv = document.createElement('tooltip');
+        const tooltipStyles = {
+            position: 'absolute',
+            pointerEvents: 'none',
+            backgroundColor: 'white',
+            borderRadius: '5px',
+            border: '1px solid #dddddd',
+            boxSizing: 'border-box',
+            fontSize: '10px'
+        };
+        Object.assign(tooltipDiv.style, tooltipStyles);
+        this.domOverlay.appendChild(tooltipDiv);
 
+        // When the mouse moves over the overlay div, update the tooltip position
         this.domOverlay.addEventListener('mousemove', (e: MouseEvent) => {
-            const rect = this.domOverlay.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            div.style.left = `${x}px`;
-            div.style.top = `${y}px`;
+            const { x, y } = getRelativePosition(this.domOverlay, e);
+            this.onMouseMove(x);
+            // Update the tooltip position
+            tooltipDiv.style.left = `${x}px`;
+            tooltipDiv.style.top = `${y}px`;
             const tooltip = this.getMouseOverHtml(x, y);
-            if (tooltip === '') {
-                div.innerHTML = '';
-                div.style.display = 'none';
+            if (tooltip === '' || this.isRangeBrushActivated) {
+                tooltipDiv.innerHTML = '';
+                tooltipDiv.style.display = 'none';
             } else {
-                div.innerHTML = tooltip;
-                div.style.display = 'block';
+                tooltipDiv.innerHTML = tooltip;
+                tooltipDiv.style.display = 'block';
             }
         });
+        // When the mouse leaves the overlay div, clear the tooltip
         this.domOverlay.addEventListener('mouseleave', () => {
-            div.innerHTML = '';
+            this.onMouseOut();
+            tooltipDiv.innerHTML = '';
         });
-        this.domOverlay.addEventListener('mousedown', () => {
-            div.style.display = 'none';
+        // When the mouse is clicked, hide the tooltip. Likely dragging a brush
+        this.domOverlay.addEventListener('mousedown', e => {
+            tooltipDiv.style.display = 'none';
+            const { x, y } = getRelativePosition(this.domOverlay, e);
+            this.onMouseDown(x, y, e.altKey);
+        });
+        this.domOverlay.addEventListener('mouseup', e => {
+            const { x, y } = getRelativePosition(this.domOverlay, e);
+            this.onMouseUp(x, y);
         });
     }
 
