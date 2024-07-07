@@ -102,6 +102,42 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
             const newScaleY = this._refYScale.domain(this.yDomain.value);
             this.zoomed(newScaleX, newScaleY);
         });
+        this.addTooltip();
+    }
+
+    /** When the tooltip option is used, the tooltip div will be populated sample information  */
+    addTooltip() {
+        const div = document.createElement('tooltip');
+        div.style.position = 'absolute';
+        div.style.pointerEvents = 'none';
+        div.style.backgroundColor = 'white';
+        div.style.borderRadius = '5px';
+        div.style.border = '1px solid #dddddd';
+        div.style.boxSizing = 'border-box';
+        div.style.fontSize = '10px';
+        this.domOverlay.appendChild(div);
+
+        this.domOverlay.addEventListener('mousemove', (e: MouseEvent) => {
+            const rect = this.domOverlay.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            div.style.left = `${x}px`;
+            div.style.top = `${y}px`;
+            const tooltip = this.getMouseOverHtml(x, y);
+            if (tooltip === '') {
+                div.innerHTML = '';
+                div.style.display = 'none';
+            } else {
+                div.innerHTML = tooltip;
+                div.style.display = 'block';
+            }
+        });
+        this.domOverlay.addEventListener('mouseleave', () => {
+            div.innerHTML = '';
+        });
+        this.domOverlay.addEventListener('mousedown', () => {
+            div.style.display = 'none';
+        });
     }
 
     addInteractor(interactor: (plot: GoslingTrack) => void) {

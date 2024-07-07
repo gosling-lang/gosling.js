@@ -203,23 +203,25 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
         this.pMain.addChild(this.pMouseSelection);
 
         // Enable click event
-        this.pMask.interactive = true;
         this.mRangeBrush = new LinearBrushModel(this.#gBrush, this.options.spec.style?.brush);
         this.mRangeBrush.on('brush', this.#onRangeBrush.bind(this));
 
-        this.pMask.on('mousedown', (e: PIXI.InteractionEvent) => {
-            const { x, y } = e.data.getLocalPosition(this.pMain);
-            this.#onMouseDown(x, y, e.data.originalEvent.altKey);
-        });
-        this.pMask.on('mouseup', (e: PIXI.InteractionEvent) => {
+        this.pMain.onmousedown = e => {
+            const { x, y } = e.getLocalPosition(this.pMain);
+            this.#onMouseDown(x, y, e.originalEvent.altKey);
+        };
+        this.pMain.onmouseup = e => {
             const { x, y } = e.data.getLocalPosition(this.pMain);
             this.#onMouseUp(x, y);
-        });
-        this.pMask.on('mousemove', (e: PIXI.InteractionEvent) => {
-            const { x } = e.data.getLocalPosition(this.pMain);
+        };
+        this.pMain.onmousemove = e => {
+            const { x } = e.getLocalPosition(this.pMain);
+            // console.warn(x);
+            // const html = this.getMouseOverHtml(x, y);
+            // console.warn(html);
             this.#onMouseMove(x);
-        });
-        this.pMask.on('mouseout', this.#onMouseOut.bind(this));
+        };
+        this.pMain.onmouseout = () => this.#onMouseOut();
         this.flipText = this.options.spec.orientation === 'vertical';
 
         // We do not use HiGlass' trackNotFoundText
@@ -1110,7 +1112,6 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
             // TODO: We do not yet support range selection on circular tracks
             return;
         }
-
         if (this.#isRangeBrushActivated) {
             this.mRangeBrush.updateRange([mouseX, this.#mouseDownX]).drawBrush().visible().disable();
         }
