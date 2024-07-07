@@ -98,8 +98,8 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
 
         // Every time the domain gets changed we want to update the zoom
         effect(() => {
-            const newScaleX = this._refXScale.domain(this.xDomain.value);
-            const newScaleY = this._refYScale.domain(this.yDomain.value);
+            const newScaleX = scaleLinear().range(this._refXScale.range()).domain(this.xDomain.value);
+            const newScaleY = scaleLinear().range(this._refYScale.range()).domain(this.yDomain.value);
             this.zoomed(newScaleX, newScaleY);
         });
         this.addTooltip();
@@ -158,6 +158,10 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
         this.domOverlay.addEventListener('mouseup', e => {
             const { x, y } = getRelativePosition(this.domOverlay, e);
             this.onMouseUp(x, y);
+        });
+        this.domOverlay.addEventListener('click', e => {
+            const { x, y } = getRelativePosition(this.domOverlay, e);
+            this.onMouseClick(x, y);
         });
     }
 

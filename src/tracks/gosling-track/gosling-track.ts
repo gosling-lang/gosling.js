@@ -1157,6 +1157,15 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
         document.body.style.cursor = 'default';
         this.pMouseHover.clear();
     }
+
+    onMouseClick(mouseX: number, mouseY: number) {
+        const isDrag = Math.sqrt((this.#mouseDownX - mouseX) ** 2 + (this.#mouseDownY - mouseY) ** 2) > 1;
+        // Clear the brush if we are not dragging
+        if (!isDrag) {
+            this.mRangeBrush.clear();
+            this.pMouseSelection.clear();
+        }
+    }
     /**
      * From all tiles and overlaid tracks, collect element(s) that are withing a mouse position.
      */
