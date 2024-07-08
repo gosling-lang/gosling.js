@@ -34,9 +34,9 @@ export class PixiManager {
             backgroundColor: 0xffffff,
             eventMode: 'static',
             eventFeatures: {
-                move: false,
+                move: true,
                 globalMove: false,
-                click: false,
+                click: true,
                 wheel: false
             }
         });

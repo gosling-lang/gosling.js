@@ -151,7 +151,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
     pMouseSelection = new PIXI.Graphics();
     #mouseDownX = 0;
     #mouseDownY = 0;
-    #isRangeBrushActivated = false;
+    isRangeBrushActivated = false;
     #gBrush: Selection<SVGGElement, unknown, null, undefined>;
     #loadingTextStyleObj = new PIXI.TextStyle(loadingTextStyle);
     #loadingTextBg = new PIXI.Graphics();
@@ -203,23 +203,15 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
         this.pMain.addChild(this.pMouseSelection);
 
         // Enable click event
-        this.pMask.interactive = true;
         this.mRangeBrush = new LinearBrushModel(this.#gBrush, this.options.spec.style?.brush);
         this.mRangeBrush.on('brush', this.#onRangeBrush.bind(this));
-
-        this.pMask.on('mousedown', (e: PIXI.InteractionEvent) => {
-            const { x, y } = e.data.getLocalPosition(this.pMain);
-            this.#onMouseDown(x, y, e.data.originalEvent.altKey);
-        });
-        this.pMask.on('mouseup', (e: PIXI.InteractionEvent) => {
-            const { x, y } = e.data.getLocalPosition(this.pMain);
-            this.#onMouseUp(x, y);
-        });
-        this.pMask.on('mousemove', (e: PIXI.InteractionEvent) => {
-            const { x } = e.data.getLocalPosition(this.pMain);
-            this.#onMouseMove(x);
-        });
-        this.pMask.on('mouseout', this.#onMouseOut.bind(this));
+        // this.pMain.onmousemove = e => {
+        //     const { x } = e.getLocalPosition(this.pMain);
+        //     this.onMouseMove(x);
+        // };
+        // this.pMain.onmouseout = () => {
+        //     this.#onMouseOut();
+        // };
         this.flipText = this.options.spec.orientation === 'vertical';
 
         // We do not use HiGlass' trackNotFoundText
@@ -1092,7 +1084,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
         return;
     }
 
-    #onMouseDown(mouseX: number, mouseY: number, isAltPressed: boolean) {
+    onMouseDown(mouseX: number, mouseY: number, isAltPressed: boolean) {
         // Record these so that we do not triger click event when dragged.
         this.#mouseDownX = mouseX;
         this.#mouseDownY = mouseY;
@@ -1100,23 +1092,23 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
         // Determine whether to activate a range brush
         const mouseEvents = this.options.spec.mouseEvents;
         const rangeSelectEnabled = !!mouseEvents || (IsMouseEventsDeep(mouseEvents) && !!mouseEvents.rangeSelect);
-        this.#isRangeBrushActivated = rangeSelectEnabled && isAltPressed;
+        this.isRangeBrushActivated = rangeSelectEnabled && isAltPressed;
 
         this.pMouseHover.clear();
     }
 
-    #onMouseMove(mouseX: number) {
+    onMouseMove(mouseX: number) {
         if (this.options.spec.layout === 'circular') {
             // TODO: We do not yet support range selection on circular tracks
             return;
         }
-
-        if (this.#isRangeBrushActivated) {
+        if (this.isRangeBrushActivated) {
             this.mRangeBrush.updateRange([mouseX, this.#mouseDownX]).drawBrush().visible().disable();
         }
     }
 
-    #onMouseUp(mouseX: number, mouseY: number) {
+    /** Used for range selections */
+    onMouseUp(mouseX: number, mouseY: number) {
         // `trackClick` API
         this.#publishTrackEvents('trackClick', mouseX, mouseY);
 
@@ -1124,7 +1116,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
         const clickEnabled = !!mouseEvents || (IsMouseEventsDeep(mouseEvents) && !!mouseEvents.click);
         const isDrag = Math.sqrt((this.#mouseDownX - mouseX) ** 2 + (this.#mouseDownY - mouseY) ** 2) > 1;
 
-        if (!this.#isRangeBrushActivated && !isDrag) {
+        if (!this.isRangeBrushActivated && !isDrag) {
             // Clicking outside the brush should remove the brush and the selection.
             this.mRangeBrush.clear();
             this.pMouseSelection.clear();
@@ -1133,7 +1125,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
             this.mRangeBrush.enable();
         }
 
-        this.#isRangeBrushActivated = false;
+        this.isRangeBrushActivated = false;
 
         if (!this.tilesetInfo) {
             // Do not have enough information
@@ -1160,10 +1152,19 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
         }
     }
 
-    #onMouseOut() {
-        this.#isRangeBrushActivated = false;
+    onMouseOut() {
+        this.isRangeBrushActivated = false;
         document.body.style.cursor = 'default';
         this.pMouseHover.clear();
+    }
+
+    onMouseClick(mouseX: number, mouseY: number) {
+        const isDrag = Math.sqrt((this.#mouseDownX - mouseX) ** 2 + (this.#mouseDownY - mouseY) ** 2) > 1;
+        // Clear the brush if we are not dragging
+        if (!isDrag) {
+            this.mRangeBrush.clear();
+            this.pMouseSelection.clear();
+        }
     }
     /**
      * From all tiles and overlaid tracks, collect element(s) that are withing a mouse position.
@@ -1361,7 +1362,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
         // `trackMouseOver` API
         this.#publishTrackEvents('trackMouseOver', mouseX, mouseY);
 
-        if (this.#isRangeBrushActivated) {
+        if (this.isRangeBrushActivated) {
             // In the middle of drawing range brush.
             return '';
         }

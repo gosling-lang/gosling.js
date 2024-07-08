@@ -42,10 +42,11 @@ export function panZoom(plot: Plot, xDomain: Signal<[number, number]>, yDomain?:
             const isRect = event.target.tagName === 'rect';
             const isMousedown = event.type === 'mousedown';
             const isDraggingBrush = isRect && isMousedown;
+            const isAltPressed = event.altKey;
             // Here are the default filters
             const defaultFilter = (!event.ctrlKey || event.type === 'wheel') && !event.button;
             // Use the default filter and our custom filter
-            return defaultFilter && !isDraggingBrush;
+            return defaultFilter && !isDraggingBrush && !isAltPressed;
         })
         // @ts-expect-error We need to reset the transform when the user stops zooming
         .on('end', () => (plot.domOverlay.__zoom = new ZoomTransform(1, 0, 0)))

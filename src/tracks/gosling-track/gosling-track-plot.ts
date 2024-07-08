@@ -98,9 +98,70 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
 
         // Every time the domain gets changed we want to update the zoom
         effect(() => {
-            const newScaleX = this._refXScale.domain(this.xDomain.value);
-            const newScaleY = this._refYScale.domain(this.yDomain.value);
+            const newScaleX = scaleLinear().range(this._refXScale.range()).domain(this.xDomain.value);
+            const newScaleY = scaleLinear().range(this._refYScale.range()).domain(this.yDomain.value);
             this.zoomed(newScaleX, newScaleY);
+        });
+        this.addTooltip();
+    }
+
+    /** When the tooltip option is used, the tooltip div will be populated sample information  */
+    addTooltip() {
+        /** Helper function to get the position relative to the overlay div */
+        function getRelativePosition(element: HTMLElement, e: MouseEvent) {
+            const rect = element.getBoundingClientRect();
+            return {
+                x: e.clientX - rect.left,
+                y: e.clientY - rect.top
+            };
+        }
+        const tooltipDiv = document.createElement('tooltip');
+        const tooltipStyles = {
+            position: 'absolute',
+            pointerEvents: 'none',
+            backgroundColor: 'white',
+            borderRadius: '5px',
+            border: '1px solid #dddddd',
+            boxSizing: 'border-box',
+            fontSize: '10px'
+        };
+        Object.assign(tooltipDiv.style, tooltipStyles);
+        this.domOverlay.appendChild(tooltipDiv);
+
+        // When the mouse moves over the overlay div, update the tooltip position
+        this.domOverlay.addEventListener('mousemove', (e: MouseEvent) => {
+            const { x, y } = getRelativePosition(this.domOverlay, e);
+            this.onMouseMove(x);
+            // Update the tooltip position
+            tooltipDiv.style.left = `${x}px`;
+            tooltipDiv.style.top = `${y}px`;
+            const tooltip = this.getMouseOverHtml(x, y);
+            if (tooltip === '' || this.isRangeBrushActivated) {
+                tooltipDiv.innerHTML = '';
+                tooltipDiv.style.display = 'none';
+            } else {
+                tooltipDiv.innerHTML = tooltip;
+                tooltipDiv.style.display = 'block';
+            }
+        });
+        // When the mouse leaves the overlay div, clear the tooltip
+        this.domOverlay.addEventListener('mouseleave', () => {
+            this.onMouseOut();
+            tooltipDiv.innerHTML = '';
+        });
+        // When the mouse is clicked, hide the tooltip. Likely dragging a brush
+        this.domOverlay.addEventListener('mousedown', e => {
+            tooltipDiv.style.display = 'none';
+            const { x, y } = getRelativePosition(this.domOverlay, e);
+            this.onMouseDown(x, y, e.altKey);
+        });
+        this.domOverlay.addEventListener('mouseup', e => {
+            const { x, y } = getRelativePosition(this.domOverlay, e);
+            this.onMouseUp(x, y);
+        });
+        this.domOverlay.addEventListener('click', e => {
+            const { x, y } = getRelativePosition(this.domOverlay, e);
+            this.onMouseClick(x, y);
         });
     }
 
