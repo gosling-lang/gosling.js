@@ -13,7 +13,7 @@ export interface LinkedEncoding {
     signal: Signal;
     tracks: {
         id: string;
-        encoding: 'x' | 'brush';
+        encoding: 'x' | 'y' | 'brush';
     }[];
 }
 
