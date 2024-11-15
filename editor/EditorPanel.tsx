@@ -2,26 +2,26 @@ import React, { useRef, useState, useEffect } from 'react'; // eslint-disable-li
 import MonacoEditor from 'react-monaco-editor';
 
 import ReactResizeDetector from 'react-resize-detector';
-import { GoslingSchema } from 'gosling.js';
+import { GoslingSchema, ThemeSchema } from 'gosling.js';
 import goslingSpec from '../src/gosling-schema/gosling.schema?raw';
 
 export * from './monaco_worker';
 import * as Monaco from 'monaco-editor';
 
-export type EditorLangauge = 'json' | 'typescript';
+export type EditorCodeType = 'gosling-json' | 'gosling-ts' | 'gosling-theme' | 'higlass';
 
 function EditorPanel(props: {
     code: string;
+    codeType: EditorCodeType;
     readOnly?: boolean;
     openFindBox?: boolean;
     fontZoomIn?: boolean;
     fontZoomOut?: boolean;
-    onChange?: (code: string, language: EditorLangauge) => void;
+    onChange?: (code: string, codeType: EditorCodeType) => void;
     hide?: boolean;
     isDarkTheme?: boolean;
-    language: EditorLangauge;
 }) {
-    const { code: templateCode, readOnly, openFindBox, fontZoomIn, fontZoomOut, isDarkTheme, language } = props;
+    const { code: templateCode, codeType, readOnly, openFindBox, fontZoomIn, fontZoomOut, isDarkTheme } = props;
     const editor = useRef<Monaco.editor.IStandaloneCodeEditor | null>(null);
     const [code, setCode] = useState(templateCode);
 
@@ -114,6 +114,11 @@ function EditorPanel(props: {
                     uri: 'https://raw.githubusercontent.com/gosling-lang/gosling.js/main/schema/gosling.schema.json',
                     fileMatch: ['*'],
                     schema: GoslingSchema
+                },
+                // TODO: How to support using either of schemas dynamically?
+                {
+                    uri: 'https://raw.githubusercontent.com/gosling-lang/gosling.js/main/schema/gosling.schema.json',
+                    schema: ThemeSchema
                 }
             ]
         });
@@ -133,7 +138,7 @@ function EditorPanel(props: {
 
     function onChangeHandle(newCode: string) {
         setCode(newCode);
-        if (props.onChange) props.onChange(newCode, language);
+        if (props.onChange) props.onChange(newCode, codeType);
     }
 
     return (
@@ -147,7 +152,7 @@ function EditorPanel(props: {
             ></ReactResizeDetector>
             <MonacoEditor
                 // Refer to https://github.com/react-monaco-editor/react-monaco-editor
-                language={language}
+                language={codeType === 'gosling-ts' ? 'typescript' : 'json'}
                 value={code}
                 theme={'gosling'}
                 options={{

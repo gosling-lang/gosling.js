@@ -23,7 +23,7 @@ import { getHtmlTemplate } from './html-template';
 import ErrorBoundary from './error-boundary';
 import { traverseTracksAndViews } from '../src/compiler/spec-preprocess';
 import { examples, type Example } from './example';
-import EditorPanel, { type EditorLangauge } from './EditorPanel';
+import EditorPanel, { type EditorCodeType } from './EditorPanel';
 import EditorExamples from './EditorExamples';
 
 import './Editor.css';
@@ -131,6 +131,8 @@ const validateExampleId = (id: string): boolean => {
 
 const getDescPanelDefultWidth = () => Math.min(500, window.innerWidth);
 
+const isDarkTheme = (t: gosling.Theme) => (typeof t !== 'string' && 'base' in t ? t.base === 'dark' : t === 'dark');
+
 /**
  * Convert relative CSV data URLs to absolute URLs.
  * (e.g., './example.csv' => 'https://gist.githubusercontent.com/{urlGist}/raw/example.csv')
@@ -237,7 +239,7 @@ function Editor(props: RouteComponentProps) {
         examples[urlExampleId] ? { id: urlExampleId, ...examples[urlExampleId] } : INIT_DEMO
     );
     const [isImportDemo, setIsImportDemo] = useState<boolean>(false);
-    const [theme, setTheme] = useState<gosling.Theme>('light'); // or `{ base: 'light', axis: { labelMargin: -1 } }`
+    const [theme, setTheme] = useState<gosling.Theme>({ base: 'light' }); // 'light' or `{ base: 'light', axis: { labelMargin: -1 } }`
     const [hg, setHg] = useState<HiGlassSpec>();
     const [code, setCode] = useState(defaultCode);
     const [jsCode, setJsCode] = useState(defaultJsCode); //[TO-DO: more js format examples]
@@ -300,9 +302,11 @@ function Editor(props: RouteComponentProps) {
     const gosRef = useRef<gosling.GoslingRef>(null);
 
     const debounceCodeEdit = useRef(
-        debounce((code: string, language: EditorLangauge) => {
-            if (language == 'json') {
+        debounce((code: string, codeType: EditorCodeType) => {
+            if (codeType == 'gosling-json') {
                 setCode(code);
+            } else if (codeType == 'gosling-theme') {
+                setTheme(JSON.parse(code));
             } else {
                 setJsCode(code);
             }
@@ -744,7 +748,7 @@ function Editor(props: RouteComponentProps) {
     return (
         <>
             <div
-                className={`demo-navbar ${theme === 'dark' ? 'dark' : ''}`}
+                className={`demo-navbar ${isDarkTheme(theme) ? 'dark' : ''}`}
                 // To test APIs, uncomment the following code.
                 // onClick={() => {
                 //     if (!gosRef.current) return;
@@ -849,10 +853,10 @@ function Editor(props: RouteComponentProps) {
                 ) : null}
             </div>
             {/* ------------------------ Main View ------------------------ */}
-            <div className={`editor ${theme === 'dark' ? 'dark' : ''}`}>
+            <div className={`editor ${isDarkTheme(theme) ? 'dark' : ''}`}>
                 <Allotment vertical={false}>
                     <Allotment.Pane minSize={50} maxSize={50}>
-                        <div className={`side-panel ${theme === 'dark' ? 'dark' : ''}`}>
+                        <div className={`side-panel ${isDarkTheme(theme) ? 'dark' : ''}`}>
                             <button
                                 title="Example Gallery"
                                 className="side-panel-button"
@@ -1149,30 +1153,58 @@ function Editor(props: RouteComponentProps) {
                                                     </span>
                                                 </span>
                                             </button>
+                                            <button
+                                                className={`tablinks ${language == 'theme' && 'active'}`}
+                                                onClick={() => {
+                                                    changeLanguage('theme');
+                                                    setLog({ message: '', state: 'success' });
+                                                }}
+                                            >
+                                                Theme{` `}
+                                                <span className="tooltip">
+                                                    {getIconSVG(ICONS.INFO_CIRCLE, 10, 10)}
+                                                    <span className="tooltiptext">
+                                                        Change the style of Gosling visualizations, such as background
+                                                        color.
+                                                    </span>
+                                                </span>
+                                            </button>
                                         </div>
 
                                         <div className={`tabContent ${language == 'json' ? 'show' : 'hide'}`}>
                                             <EditorPanel
                                                 code={code}
+                                                codeType={'gosling-json'}
                                                 readOnly={readOnly}
                                                 openFindBox={isFindCode}
                                                 fontZoomIn={isFontZoomIn}
                                                 fontZoomOut={isFontZoomOut}
                                                 onChange={debounceCodeEdit.current}
-                                                isDarkTheme={theme === 'dark'}
-                                                language="json"
+                                                isDarkTheme={isDarkTheme(theme)}
                                             />
                                         </div>
                                         <div className={`tabContent ${language == 'typescript' ? 'show' : 'hide'}`}>
                                             <EditorPanel
                                                 code={jsCode}
+                                                codeType={'gosling-ts'}
                                                 readOnly={readOnly}
                                                 openFindBox={isFindCode}
                                                 fontZoomIn={isFontZoomIn}
                                                 fontZoomOut={isFontZoomOut}
                                                 onChange={debounceCodeEdit.current}
-                                                isDarkTheme={theme === 'dark'}
-                                                language="typescript"
+                                                isDarkTheme={isDarkTheme(theme)}
+                                            />
+                                        </div>
+                                        <div className={`tabContent ${language == 'theme' ? 'show' : 'hide'}`}>
+                                            <EditorPanel
+                                                code={JSON.stringify(theme)}
+                                                codeType={'gosling-theme'}
+                                                readOnly={readOnly}
+                                                openFindBox={isFindCode}
+                                                fontZoomIn={isFontZoomIn}
+                                                fontZoomOut={isFontZoomOut}
+                                                onChange={debounceCodeEdit.current}
+                                                isDarkTheme={isDarkTheme(theme)}
                                             />
                                         </div>
                                     </div>
@@ -1180,15 +1212,15 @@ function Editor(props: RouteComponentProps) {
                                 </>
                                 {/* HiGlass View Config */}
                                 <Allotment.Pane preferredSize={BOTTOM_PANEL_HEADER_HEIGHT}>
-                                    <div className={`editor-header ${theme === 'dark' ? 'dark' : ''}`}>
+                                    <div className={`editor-header ${isDarkTheme(theme) ? 'dark' : ''}`}>
                                         Compiled HiGlass ViewConfig (Read Only)
                                     </div>
                                     <div style={{ height: '100%', visibility: showVC ? 'visible' : 'hidden' }}>
                                         <EditorPanel
                                             code={stringify(hg)}
+                                            codeType={'higlass'}
                                             readOnly={true}
-                                            isDarkTheme={theme === 'dark'}
-                                            language="json"
+                                            isDarkTheme={isDarkTheme(theme)}
                                         />
                                     </div>
                                 </Allotment.Pane>
@@ -1198,7 +1230,7 @@ function Editor(props: RouteComponentProps) {
                             <Allotment ref={displayPanelRef} vertical={true}>
                                 <div
                                     id="preview-container"
-                                    className={`preview-container ${theme === 'dark' ? 'dark' : ''}`}
+                                    className={`preview-container ${isDarkTheme(theme) ? 'dark' : ''}`}
                                 >
                                     {isResponsive && !IS_SMALL_SCREEN ? ResponsiveWidget : null}
                                     <div
@@ -1261,7 +1293,7 @@ function Editor(props: RouteComponentProps) {
                                     minSize={BOTTOM_PANEL_HEADER_HEIGHT}
                                 >
                                     <button
-                                        className={`editor-header ${theme === 'dark' ? 'dark' : ''}`}
+                                        className={`editor-header ${isDarkTheme(theme) ? 'dark' : ''}`}
                                         style={{ cursor: 'pointer' }}
                                     >
                                         Data Preview (~100 Rows, Data Before Transformation)
@@ -1341,7 +1373,7 @@ function Editor(props: RouteComponentProps) {
                 <div
                     className={`description ${hideDescription ? '' : 'description-shadow '}${
                         isDescResizing ? '' : 'description-transition'
-                    } ${theme === 'dark' ? 'dark' : ''}`}
+                    } ${isDarkTheme(theme) ? 'dark' : ''}`}
                     style={{ width: !description || hideDescription ? 0 : descPanelWidth }}
                 >
                     <div
