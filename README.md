@@ -6,9 +6,6 @@
 
 <img width="1549" alt="teaser" src="https://user-images.githubusercontent.com/9922882/109852545-e05f3400-7c22-11eb-90f3-7371e4ddeb42.png">
 
-> [!WARNING]
-> Please be aware that the grammar of Gosling.js is subject to change before the v1.0.0 release.
-
 ## Why Gosling?
 
 The Gosling's key features compared to existing visualization libraries and grammars are as follows:
@@ -23,7 +20,6 @@ The Gosling's key features compared to existing visualization libraries and gram
 
 -   [Documentation](http://gosling-lang.org/)
 -   [Gosling.js Editor](https://gosling.js.org/)
--   [Roadmap](https://github.com/gosling-lang/gosling.js/projects/1)
 
 ## Contributing to Gosling.js
 
