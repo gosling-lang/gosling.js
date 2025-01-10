@@ -29,14 +29,6 @@ We welcome and greatly appreciate your contribution to this project! Please read
 
 -   Open [Github Issues](https://github.com/gosling-lang/gosling.js/issues/) to ask questions or request features.
 
-## Team
-
--   Sehi L'Yi ([@sehi_lyi](https://twitter.com/sehi_lyi) | <sehi_lyi@hms.harvard.edu>)
--   Qianwen Wang ([@WangQianwenToo](https://twitter.com/WangQianwenToo) | <qianwen_wang@hms.harvard.edu>)
--   Fritz Lekschas ([@flekschas](https://twitter.com/flekschas) | [lekschas.de](https://lekschas.de))
--   Trevor Manz ([@trevmanz](https://twitter.com/trevmanz) | <trevor_manz@g.harvard.edu>)
--   Nils Gehlenborg ([@ngehlenborg](https://twitter.com/ngehlenborg) | <nils@hms.harvard.edu>)
-
 ## Citation
 
 [L'Yi et al., 2021. “Gosling: A Grammar-based Toolkit for Scalable and Interactive Genomics Data Visualization.”](https://osf.io/6evmb)
