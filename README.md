@@ -6,9 +6,6 @@
 
 <img width="1549" alt="teaser" src="https://user-images.githubusercontent.com/9922882/109852545-e05f3400-7c22-11eb-90f3-7371e4ddeb42.png">
 
-> [!WARNING]
-> Please be aware that the grammar of Gosling.js is subject to change before the v1.0.0 release.
-
 ## Why Gosling?
 
 The Gosling's key features compared to existing visualization libraries and grammars are as follows:
@@ -23,27 +20,20 @@ The Gosling's key features compared to existing visualization libraries and gram
 
 -   [Documentation](http://gosling-lang.org/)
 -   [Gosling.js Editor](https://gosling.js.org/)
--   [Roadmap](https://github.com/gosling-lang/gosling.js/projects/1)
+-   [Gallery Examples](https://gosling-lang.org/examples/)
+-   [How-to & Tutorials](https://gosling-lang.org/tutorials/)
 
-## Contributing to Gosling.js
+## Contribute to Gosling.js
 
 We welcome and greatly appreciate your contribution to this project! Please read [CONTRIBUTING.md](/CONTRIBUTING.md) to find guidelines.
 
 ## Contact
 
--   Open [Github Issues](https://github.com/gosling-lang/gosling.js/issues/) to ask questions or request features.
-
-## Team
-
--   Sehi L'Yi ([@sehi_lyi](https://twitter.com/sehi_lyi) | <sehi_lyi@hms.harvard.edu>)
--   Qianwen Wang ([@WangQianwenToo](https://twitter.com/WangQianwenToo) | <qianwen_wang@hms.harvard.edu>)
--   Fritz Lekschas ([@flekschas](https://twitter.com/flekschas) | [lekschas.de](https://lekschas.de))
--   Trevor Manz ([@trevmanz](https://twitter.com/trevmanz) | <trevor_manz@g.harvard.edu>)
--   Nils Gehlenborg ([@ngehlenborg](https://twitter.com/ngehlenborg) | <nils@hms.harvard.edu>)
+Open [Github Issues](https://github.com/gosling-lang/gosling.js/issues/) to ask questions or request features.
 
 ## Citation
 
-[L'Yi et al., 2021. “Gosling: A Grammar-based Toolkit for Scalable and Interactive Genomics Data Visualization.”](https://osf.io/6evmb)
+[L'Yi et al., 2021. “Gosling: A Grammar-based Toolkit for Scalable and Interactive Genomics Data Visualization.”](https://pmc.ncbi.nlm.nih.gov/articles/PMC8826597/)
 
 ```bib
 @article{lyi2021gosling,
