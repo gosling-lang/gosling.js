@@ -124,7 +124,6 @@
     "ajv": "^6.12.2",
     "c8": "^7.11.2",
     "conventional-changelog-cli": "^2.1.1",
-    "d3-drag": "^2.0.0",
     "esbuild": "^0.12.25",
     "eslint": "^8.19.0",
     "eslint-config-prettier": "^8.5.0",
