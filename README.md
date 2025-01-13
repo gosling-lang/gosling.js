@@ -20,6 +20,8 @@ The Gosling's key features compared to existing visualization libraries and gram
 
 -   [Documentation](http://gosling-lang.org/)
 -   [Gosling.js Editor](https://gosling.js.org/)
+-   [Gallery Examples](https://gosling-lang.org/examples/)
+-   [How-to & Tutorials](https://gosling-lang.org/tutorials/)
 
 ## Contributing to Gosling.js
 
