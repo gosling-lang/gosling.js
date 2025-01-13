@@ -33,7 +33,7 @@ Open [Github Issues](https://github.com/gosling-lang/gosling.js/issues/) to ask 
 
 ## Citation
 
-[L'Yi et al., 2021. “Gosling: A Grammar-based Toolkit for Scalable and Interactive Genomics Data Visualization.”](https://osf.io/6evmb)
+[L'Yi et al., 2021. “Gosling: A Grammar-based Toolkit for Scalable and Interactive Genomics Data Visualization.”](https://pmc.ncbi.nlm.nih.gov/articles/PMC8826597/)
 
 ```bib
 @article{lyi2021gosling,
