@@ -29,7 +29,7 @@ We welcome and greatly appreciate your contribution to this project! Please read
 
 ## Contact
 
--   Open [Github Issues](https://github.com/gosling-lang/gosling.js/issues/) to ask questions or request features.
+Open [Github Issues](https://github.com/gosling-lang/gosling.js/issues/) to ask questions or request features.
 
 ## Citation
 
