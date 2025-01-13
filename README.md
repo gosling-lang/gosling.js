@@ -23,7 +23,7 @@ The Gosling's key features compared to existing visualization libraries and gram
 -   [Gallery Examples](https://gosling-lang.org/examples/)
 -   [How-to & Tutorials](https://gosling-lang.org/tutorials/)
 
-## Contributing to Gosling.js
+## Contribute to Gosling.js
 
 We welcome and greatly appreciate your contribution to this project! Please read [CONTRIBUTING.md](/CONTRIBUTING.md) to find guidelines.
 
