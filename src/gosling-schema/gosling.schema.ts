@@ -200,6 +200,7 @@ export interface CommonTrackDef extends CommonViewDef {
 export interface ChromospaceTrack
     extends Pick<CommonTrackDef, 'width' | 'height' | 'id' | 'title' | '_invalidTrack' | 'orientation' | 'static' | 'assembly'> {
     type: '3D';
+    color: string; //~ just testing
 };
 
 /**

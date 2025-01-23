@@ -29,6 +29,11 @@ export enum TrackType {
     Spatial
 }
 
+
+type SpatialTrackOptions = {
+    color: string | undefined;
+};
+
 /**
  * Associate options to each track type
  */
@@ -40,7 +45,7 @@ interface TrackOptionsMap {
     [TrackType.BrushLinear]: BrushLinearTrackOptions;
     [TrackType.BrushCircular]: BrushCircularTrackOptions;
     [TrackType.Heatmap]: HeatmapTrackOptions;
-    [TrackType.Spatial]: Record<string, never>; //~ TODO: add actual options
+    [TrackType.Spatial]: SpatialTrackOptions; //~ TODO: add actual options
 }
 
 /**
@@ -88,11 +93,14 @@ export function createTrackDefs(trackInfos: TrackInfo[], theme: Required<Complet
         } else if ('type' in track && track.type === '3D') {
             // We have a 3D track
             console.warn('got 3D track', track);
-            const trackDef: TrackDef<Record<string, never>> = {
+            //const trackDef: TrackDef<Record<string, never>> = {
+            const trackDef: TrackDef<SpatialTrackOptions> = {
                 type: TrackType.Spatial,
                 trackId: track.id,
                 boundingBox,
-                options: {}
+                options: {
+                    color: track.color ? track.color.value : undefined,
+                }
             };
             trackDefs.push(trackDef);
         } else {

@@ -107,13 +107,17 @@ export function renderTrackDefs(trackDefs: TrackDefs[], linkedEncodings: LinkedE
         }
         // Add a new track type for Chromospace
         if (type === TrackType.Spatial) {
+            const color = options.color;
             const viewConfig = {
                 scale: 0.01,
-                color: "red"
+                color: color,
+                //color: "purple"
             };
             let chromatinScene = chs.initScene();
             //~ https://chspace.xyz/?source=https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/refs/heads/main/dros.3.arrow
-            const s = chs.loadFromURL("https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/refs/heads/main/dros.3.arrow", { center: true, normalize: true });
+            // https://pub-5c3f8ce35c924114a178c6e929fc3ac7.r2.dev/Tan-2018_GSM3271353_gm12878_07.arrow
+            const s = chs.loadFromURL("https://pub-5c3f8ce35c924114a178c6e929fc3ac7.r2.dev/Tan-2018_GSM3271353_gm12878_07.arrow", { center: true, normalize: true });
+            //const s = chs.loadFromURL("https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/refs/heads/main/dros.3.arrow", { center: true, normalize: true });
             s.then(result => {
 
                 if (!result) {
