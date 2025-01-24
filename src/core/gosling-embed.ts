@@ -1,7 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 
-import type { GoslingSpec } from '@gosling-lang/gosling-schema';
+import type { GoslingSpec, VisUnitApiData } from '@gosling-lang/gosling-schema';
 import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
 
 import { validateGoslingSpec } from '@gosling-lang/gosling-schema';
@@ -16,6 +16,7 @@ import {
     HiGlassComponentWrapper,
     type HiGlassComponentWrapperProps
 } from './higlass-component-wrapper';
+import type { IdTable } from 'src/api/track-and-view-ids';
 
 export type GoslingEmbedOptions = Omit<HiGlassComponentWrapperProps['options'], 'background'> & {
     id?: string;
@@ -88,7 +89,12 @@ export function embed(element: HTMLElement, spec: GoslingSpec, opts: GoslingEmbe
 
         compile(
             spec,
-            async (hsSpec, size, _, trackInfos, idTable) => {
+            async (
+                hsSpec: HiGlassSpec,
+                size: { width: number; height: number },
+                _: GoslingSpec,
+                trackInfos: VisUnitApiData[],
+                idTable: IdTable) => {
                 const hg = await launchHiglass(element, hsSpec, size, options);
                 const api = createApi(hg, hsSpec, trackInfos, theme, idTable);
                 resolve(api);
