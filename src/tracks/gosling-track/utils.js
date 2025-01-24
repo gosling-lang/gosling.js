@@ -11,7 +11,7 @@ import { tileProxy } from '@higlass/services';
  * @param  {number} maxZoom     The maximum zoom level allowed by the track.
  * @return {number}                The current zoom level of the track.
  */
-const calculate1DZoomLevel = (tilesetInfo, xScale, maxZoom: number) => {
+const calculate1DZoomLevel = (tilesetInfo, xScale, maxZoom) => {
     if (typeof maxZoom === 'undefined') {
         maxZoom = Number.MAX_SAFE_INTEGER;
     }
