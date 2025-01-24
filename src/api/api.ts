@@ -100,7 +100,7 @@ export function createApi(
             resolution
         });
 
-        renderer.render(hg.pixiStage, renderTexture);
+        renderer.render(hg.pixiStage, { renderTexture: renderTexture });
 
         const canvas = renderer.plugins.extract.canvas(renderTexture);
 
