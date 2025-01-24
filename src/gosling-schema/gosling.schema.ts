@@ -80,7 +80,7 @@ export type ResponsiveSpecOfMultipleViews = {
     }[];
 };
 
-export type Layout = 'linear' | 'circular';
+export type Layout = 'linear' | 'circular' | 'spatial';
 export type Orientation = 'horizontal' | 'vertical';
 
 /** Custom chromosome sizes, e.g., [["foo", 1000], ["bar", 300], ["baz", 240]] */
