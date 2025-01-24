@@ -5,6 +5,20 @@ import { getValueUsingChannel } from '@gosling-lang/gosling-schema';
 import colorToHex from '../utils/color-to-hex';
 import { cartesianToPolar } from '../utils/polar';
 import type { PIXIVisualProperty } from '../visual-property.schema';
+import { uuid } from '../utils/uuid';
+
+function calculateOpacity(
+    model: GoslingTrackModel,
+    datum: {
+        [k: string]: string | number;
+    },
+    radius: number,
+    zoomLevel: number
+) {
+    const opacity = model.encodedPIXIProperty('opacity', datum);
+    const alphaTransition = model.markVisibility(datum, { width: radius, zoomLevel });
+    return Math.min(alphaTransition, opacity);
+}
 
 export function drawPoint(track: any, g: PIXI.Graphics, model: GoslingTrackModel) {
     /* track spec */
@@ -36,7 +50,6 @@ export function drawPoint(track: any, g: PIXI.Graphics, model: GoslingTrackModel
     /* row separation */
     const rowCategories = (model.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
     const rowHeight = trackHeight / rowCategories.length;
-
     /* render */
     rowCategories.forEach(rowCategory => {
         const rowPosition = model.encodedValue('row', rowCategory);
@@ -46,16 +59,24 @@ export function drawPoint(track: any, g: PIXI.Graphics, model: GoslingTrackModel
                 !getValueUsingChannel(d, spec.row as Channel) ||
                 (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
         ).forEach(d => {
+            // const cx = model.xScale(d.position);
             const cx = model.encodedPIXIProperty('x-center', d);
-            const cy = model.encodedPIXIProperty('y-center', d);
-            const color = model.encodedPIXIProperty('color', d);
-            const radius = model.encodedPIXIProperty('p-size', d);
-            const strokeWidth = model.encodedPIXIProperty('strokeWidth', d);
-            const stroke = model.encodedPIXIProperty('stroke', d);
-            const opacity = model.encodedPIXIProperty('opacity', d);
+            const cy = d.cy ?? model.encodedPIXIProperty('y-center', d);
+            const color = (d.color as number) ?? (colorToHex(model.encodedPIXIProperty('color', d)) as number);
+            const radius = d.radius ?? model.encodedPIXIProperty('p-size', d);
+            const strokeWidth = d.strokeWidth ?? model.encodedPIXIProperty('strokeWidth', d);
+            const strokeColor = d.stroke ?? colorToHex(model.encodedPIXIProperty('stroke', d));
+            const actualOpacity = d.opacity ?? calculateOpacity(model, d, radius, zoomLevel);
 
-            const alphaTransition = model.markVisibility(d, { width: radius, zoomLevel });
-            const actualOpacity = Math.min(alphaTransition, opacity);
+            if (!d.radius) {
+                d.cy = cy;
+                d.color = color;
+                d.radius = radius;
+                d.strokeWidth = strokeWidth;
+                d.stroke = strokeColor;
+                d.opacity = actualOpacity;
+                d.uuid = uuid();
+            }
 
             if (radius <= 0.1 || actualOpacity === 0 || cx + radius < 0 || cx - radius > trackWidth) {
                 // Don't draw invisible marks
@@ -65,26 +86,25 @@ export function drawPoint(track: any, g: PIXI.Graphics, model: GoslingTrackModel
             // stroke
             g.lineStyle(
                 strokeWidth,
-                colorToHex(stroke),
+                strokeColor,
                 actualOpacity, // alpha
                 1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
             );
 
+            let pos: { x: number; y: number };
             if (circular) {
                 const r = trackOuterRadius - ((rowPosition + rowHeight - cy) / trackHeight) * trackRingSize;
-                const pos = cartesianToPolar(cx, trackWidth, r, tcx, tcy, startAngle, endAngle);
-                g.beginFill(colorToHex(color), actualOpacity);
-                g.drawCircle(pos.x, pos.y, radius);
-
+                pos = cartesianToPolar(cx, trackWidth, r, tcx, tcy, startAngle, endAngle);
                 /* Mouse Events */
-                model.getMouseEventModel().addPointBasedEvent(d, [pos.x, pos.y, radius]);
             } else {
-                g.beginFill(colorToHex(color), actualOpacity);
-                g.drawCircle(cx, rowPosition + rowHeight - cy, radius);
-
-                /* Mouse Events */
-                model.getMouseEventModel().addPointBasedEvent(d, [cx, rowPosition + rowHeight - cy, radius]);
+                pos = {
+                    x: cx,
+                    y: rowPosition + rowHeight - cy
+                };
             }
+            g.beginFill(color, actualOpacity);
+            g.drawCircle(pos.x, pos.y, radius);
+            model.getMouseEventModel().addPointBasedEvent(d, [pos.x, pos.y, radius], d.uuid);
         });
     });
 }
@@ -96,7 +116,8 @@ export function pointProperty(
 ) {
     const xe = model.visualPropertyByChannel('xe', datum);
     const x = model.visualPropertyByChannel('x', datum);
-    const size = model.visualPropertyByChannel('size', datum);
+
+    // console.warn('pointProperty', propertyKey);
 
     // priority of channels
     switch (propertyKey) {
@@ -107,8 +128,10 @@ export function pointProperty(
             const y = model.visualPropertyByChannel('y', datum);
             return ye ? (ye + y) / 2.0 : y;
         }
-        case 'p-size':
+        case 'p-size': {
+            const size = model.visualPropertyByChannel('size', datum);
             return xe && model.spec().stretch ? (xe - x) / 2.0 : size;
+        }
         default:
             return undefined;
     }

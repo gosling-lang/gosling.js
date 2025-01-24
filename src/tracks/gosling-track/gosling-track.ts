@@ -417,8 +417,6 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 drawMark(HGC, this, tile, model);
                 drawPostEmbellishment(HGC, this, tile, model, this.options.theme);
             });
-
-            this.forceDraw();
         }
 
         /**
@@ -442,7 +440,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
             this.processAllTiles(true);
             this.draw();
-            this.forceDraw();
+            this.forceAnimate();
         }
         /**
          * Clears MouseEventModel from each GoslingTrackModel. Must be a public method because it is called from draw()
@@ -499,7 +497,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
          * A function to redraw this track. Typically called when an asynchronous event occurs (i.e. tiles loaded)
          * (Refer to https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/TiledPixiTrack.js#L71)
          */
-        forceDraw() {
+        forceAnimate() {
             this.animate();
         }
 
@@ -515,13 +513,12 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             this.mRangeBrush.updateRange(
                 range ? [newXScale(this._xScale.invert(range[0])), newXScale(this._xScale.invert(range[1]))] : null
             );
-
+            console.warn(newXScale === this._xScale); // true
             this.xScale(newXScale);
             this.yScale(newYScale);
 
             this.refreshTiles();
             this.draw();
-            this.forceDraw();
 
             // Publish the new genomic axis domain
             const genomicRange = newXScale
@@ -579,6 +576,12 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             this.tileSize = this.tilesetInfo?.tile_size ?? 1024;
 
             const tiles = this.visibleAndFetchedTiles();
+            // If we have already processed all tiles, we don't need to do anything
+            // this.#processedTileMap contains all of data needed to draw
+            if (tiles.every(tile => this.#processedTileMap.get(tile) !== undefined)) {
+                return;
+            }
+
             // If we have already processed all tiles, we don't need to do anything
             // this.#processedTileMap contains all of data needed to draw
             if (tiles.every(tile => this.#processedTileMap.get(tile) !== undefined)) {
@@ -643,7 +646,6 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
                 for (const tile of tiles) {
                     const { tileWidth } = this.getTilePosAndDimensions(tile[0], [tile[1], tile[1]]);
-                    this.forceDraw();
                     if (tileWidth > maxTileWith) {
                         return;
                     }
@@ -1331,7 +1333,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 });
             }
 
-            this.forceDraw();
+            this.forceAnimate();
         }
 
         /**
