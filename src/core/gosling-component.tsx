@@ -111,7 +111,13 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
 
                 gosling.compile(
                     spec,
-                    (newHiGlassSpec, newSize, newGoslingSpec, newTracksAndViews, newIdTable) => {
+                    (
+                        newHiGlassSpec: gosling.HiGlassSpec,
+                        newSize: { width: number; height: number },
+                        newGoslingSpec: gosling.GoslingSpec,
+                        newTracksAndViews: VisUnitApiData[],
+                        newIdTable: IdTable
+                    ) => {
                         // TODO: `linkingId` should be updated
                         // We may not want to re-render this
                         if (
