@@ -1,4 +1,4 @@
-import { brushX } from 'd3-brush';
+import { brushX, type D3BrushEvent } from 'd3-brush';
 import { uuid } from '../../core/utils/uuid';
 import { type ScaleLinear } from 'd3-scale';
 import { SVGTrack, type SVGTrackContext } from '@higlass/tracks';
@@ -78,12 +78,13 @@ export class BrushLinearTrackClass<Options> extends SVGTrack<Options> {
         this.draw();
     }
 
-    brushed(event) {
+    // https://github.com/DefinitelyTyped/DefinitelyTyped/blob/c84a6363898b4c93b7068bf48f16bec6a2c2f60b/types/d3-brush/index.d.ts#L233
+    brushed(event: D3BrushEvent<never>) {
         /**
          * Should only be called  on active brushing, not in response to the
          * draw event
          */
-        const s = event.selection;
+        const s = event.selection as [number, number];
 
         if (!this._xScale || !this._yScale) {
             return;
