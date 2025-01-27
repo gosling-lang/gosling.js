@@ -589,10 +589,10 @@ function Editor(props: RouteComponentProps) {
             typeof goslingSpec?.responsiveSize === 'undefined'
                 ? false
                 : typeof goslingSpec?.responsiveSize === 'boolean'
-                ? goslingSpec?.responsiveSize === true
-                : typeof goslingSpec?.responsiveSize === 'object'
-                ? goslingSpec?.responsiveSize.width === true || goslingSpec?.responsiveSize.height === true
-                : false;
+                  ? goslingSpec?.responsiveSize === true
+                  : typeof goslingSpec?.responsiveSize === 'object'
+                    ? goslingSpec?.responsiveSize.width === true || goslingSpec?.responsiveSize.height === true
+                    : false;
         if (newIsResponsive !== isResponsive && newIsResponsive) {
             setScreenSize(undefined); // reset the screen
             setVisibleScreenSize(undefined);
@@ -1023,15 +1023,11 @@ function Editor(props: RouteComponentProps) {
                                                 navigator.clipboard
                                                     .writeText(url)
                                                     .then(() =>
-                                                        // eslint-disable-next-line no-alert
                                                         alert(
                                                             `URL of the current visualization is copied to your clipboard! `
                                                         )
                                                     )
-                                                    .catch(
-                                                        // eslint-disable-next-line no-alert
-                                                        e => alert(`something went wrong ${e}`)
-                                                    );
+                                                    .catch(e => alert(`something went wrong ${e}`));
                                             }
                                         }}
                                     >

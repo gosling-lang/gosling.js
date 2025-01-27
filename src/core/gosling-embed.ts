@@ -94,7 +94,8 @@ export function embed(element: HTMLElement, spec: GoslingSpec, opts: GoslingEmbe
                 size: { width: number; height: number },
                 _: GoslingSpec,
                 trackInfos: VisUnitApiData[],
-                idTable: IdTable) => {
+                idTable: IdTable
+            ) => {
                 const hg = await launchHiglass(element, hsSpec, size, options);
                 const api = createApi(hg, hsSpec, trackInfos, theme, idTable);
                 resolve(api);

@@ -27,7 +27,6 @@ function parseMD(mdString: string, useCounts: boolean) {
     let bamSeqShift = 0;
     const substitutions = [];
 
-    /* eslint-disable-next-line @typescript-eslint/prefer-for-of */
     for (let i = 0; i < mdString.length; i++) {
         if (mdString[i].match(/[0-9]/g)) {
             // a number, keep on going
@@ -326,7 +325,6 @@ const tile = async (uid: string, z: number, x: number): Promise<JsonBamRecord[]>
 
     tileValues.set(`${uid}.${z}.${x}`, []);
 
-    /* eslint-disable-next-line @typescript-eslint/prefer-for-of */
     for (let i = 0; i < cumPositions.length; i++) {
         const chromName = cumPositions[i].chr;
         const chromStart = cumPositions[i].pos;

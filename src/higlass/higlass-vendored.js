@@ -2253,7 +2253,7 @@ fetchTilesPool.run(function(params, done) {
 */
 
 const sessionId = import.meta.env.DEV ? 'dev' : slugid.nice();
-let authHeader = null; // eslint-disable-line import/no-mutable-exports
+const authHeader = null; // eslint-disable-line import/no-mutable-exports
 
 const throttleAndDebounce$1 = (func, interval, finalWait) => {
     let timeout;
@@ -2394,8 +2394,6 @@ function fetchMultiRequestTiles(req, pubSub) {
             const renderParams = theseTileIds.map(x => `d=${x}`).join('&');
             const outUrl = `${server}/tiles/?${renderParams}&s=${sessionId}`;
 
-            /* eslint-disable no-loop-func */
-            /* eslint-disable no-unused-vars */
             const p = new Promise((resolve, reject) => {
                 pubSub.publish('requestSent', outUrl);
                 const params = {};
@@ -2626,7 +2624,7 @@ const calculateTilesFromResolution = (resolution, scale, minX, maxX, pixelsPerTi
     // console.log('PIXELS_PER_TILE:', PIXELS_PER_TILE);
 
     if (!maxX) {
-        maxX = Number.MAX_VALUE; // eslint-disable-line no-param-reassign
+        maxX = Number.MAX_VALUE;
     }
 
     const lowerBound = Math.max(0, Math.floor((scale.domain()[0] - minX) / tileWidth));
@@ -2836,7 +2834,6 @@ const trackInfo = (server, tilesetUid, doneCb, errorCb, pubSub) => {
     json(
         url,
         (error, data) => {
-            // eslint-disable-line
             pubSub.publish('requestReceived', url);
             if (error) {
                 // console.log('error:', error);
@@ -6230,11 +6227,9 @@ class HeatmapTiledPixiTrack extends TiledPixiTrack {
         // Fritz: I am disabling ESLint here twice because moving the slash onto the
         // next line breaks my editors style template somehow.
         const startPercent =
-            (startDomain - axisValueScale.domain()[0]) / // eslint-disable-line operator-linebreak
-            (axisValueScale.domain()[1] - axisValueScale.domain()[0]);
+            (startDomain - axisValueScale.domain()[0]) / (axisValueScale.domain()[1] - axisValueScale.domain()[0]);
         const endPercent =
-            (endDomain - axisValueScale.domain()[0]) / // eslint-disable-line operator-linebreak
-            (axisValueScale.domain()[1] - axisValueScale.domain()[0]);
+            (endDomain - axisValueScale.domain()[0]) / (axisValueScale.domain()[1] - axisValueScale.domain()[0]);
 
         newOptions.scaleStartPercent = startPercent.toFixed(SCALE_LIMIT_PRECISION);
         newOptions.scaleEndPercent = endPercent.toFixed(SCALE_LIMIT_PRECISION);
