@@ -137,7 +137,7 @@ export function rectProperty(
     }
 ) {
     switch (propertyKey) {
-        case 'width':
+        case 'width': {
             const width =
                 // (1) size
                 gm.visualPropertyByChannel('xe', datum)
@@ -145,6 +145,7 @@ export function rectProperty(
                     : // (2) unit mark height
                       additionalInfo?.markWidth;
             return width === 0 ? 0.1 : width; // TODO: not sure if this is necessary for all cases. Perhaps, we can have an option.
+        }
         case 'height':
             return (
                 // (1) size

@@ -38,7 +38,7 @@ function isJSON(str: string | null) {
     if (!str) return false;
     try {
         return JSON.parse(str);
-    } catch (e) {
+    } catch {
         return false;
     }
 }
@@ -139,8 +139,8 @@ const getDescPanelDefultWidth = () => Math.min(500, window.innerWidth);
 function resolveRelativeCsvUrls(spec: string, importMeta: URL) {
     const newSpec = JSON.parse(spec);
     // https://regex101.com/r/l87Q5q/1
-    // eslint-disable-next-line
-    const relativePathRegex = /^[.\/]|^\.[.\/]|^\.\.[^\/]/;
+
+    const relativePathRegex = /^[./]|^\.[./]|^\.\.[^/]/;
     traverseTracksAndViews(newSpec as gosling.GoslingSpec, (tv: any) => {
         if (tv.data && tv.data.type === 'csv' && relativePathRegex.test(tv.data.url)) {
             tv.data.url = new URL(tv.data.url, importMeta).href;
@@ -156,7 +156,7 @@ const fetchSpecFromGist = async (gist: string) => {
         // which is not supported by the normal `fetch()` so we need `fetchJsonp()`
         const response = await fetchJsonp(`https://gist.github.com/${gist}.json`);
         metadata = await (response.ok ? response.json() : null);
-    } catch (error) {
+    } catch {
         return Promise.reject(new Error('Gist not found'));
     }
 
@@ -430,7 +430,9 @@ function Editor(props: RouteComponentProps) {
                     >
                         {Object.keys(deviceToResolution).map(d => {
                             // separator (https://stackoverflow.com/questions/899148/html-select-option-separator)
-                            if (d === '-') return <optgroup label="──────────"></optgroup>;
+                            if (d === '-') {
+                                return <optgroup key={d} label="──────────"></optgroup>;
+                            }
                             return (
                                 <option key={d} value={d}>
                                     {d}
@@ -535,7 +537,7 @@ function Editor(props: RouteComponentProps) {
                     editedGos = JSON.parse(stripJsonComments(code));
                     valid = gosling.validateGoslingSpec(editedGos);
                     setLog(valid);
-                } catch (e) {
+                } catch {
                     const message = '✘ Cannnot parse the code.';
                     console.warn(message);
                     setLog({ message, state: 'error' });
@@ -589,10 +591,10 @@ function Editor(props: RouteComponentProps) {
             typeof goslingSpec?.responsiveSize === 'undefined'
                 ? false
                 : typeof goslingSpec?.responsiveSize === 'boolean'
-                ? goslingSpec?.responsiveSize === true
-                : typeof goslingSpec?.responsiveSize === 'object'
-                ? goslingSpec?.responsiveSize.width === true || goslingSpec?.responsiveSize.height === true
-                : false;
+                  ? goslingSpec?.responsiveSize === true
+                  : typeof goslingSpec?.responsiveSize === 'object'
+                    ? goslingSpec?.responsiveSize.width === true || goslingSpec?.responsiveSize.height === true
+                    : false;
         if (newIsResponsive !== isResponsive && newIsResponsive) {
             setScreenSize(undefined); // reset the screen
             setVisibleScreenSize(undefined);
@@ -1028,10 +1030,10 @@ function Editor(props: RouteComponentProps) {
                                                             `URL of the current visualization is copied to your clipboard! `
                                                         )
                                                     )
-                                                    .catch(
+                                                    .catch(e => {
                                                         // eslint-disable-next-line no-alert
-                                                        e => alert(`something went wrong ${e}`)
-                                                    );
+                                                        alert(`something went wrong ${e}`);
+                                                    });
                                             }
                                         }}
                                     >

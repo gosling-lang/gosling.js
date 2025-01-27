@@ -315,7 +315,7 @@ export class CsvDataFetcherClass {
 /**
  * HiGlass data fetcher specific for Gosling which ultimately will accept any types of data other than CSV files.
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 function CsvDataFetcher(
     _HGC: import('@higlass/types').HGC,
     dataConfig: CsvDataConfig,

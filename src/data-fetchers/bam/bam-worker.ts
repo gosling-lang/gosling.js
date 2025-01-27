@@ -27,13 +27,12 @@ function parseMD(mdString: string, useCounts: boolean) {
     let bamSeqShift = 0;
     const substitutions = [];
 
-    /* eslint-disable-next-line @typescript-eslint/prefer-for-of */
-    for (let i = 0; i < mdString.length; i++) {
-        if (mdString[i].match(/[0-9]/g)) {
+    for (const md of mdString) {
+        if (md.match(/[0-9]/g)) {
             // a number, keep on going
-            currNum = currNum * 10 + +mdString[i];
+            currNum = currNum * 10 + +md;
             deletionEncountered = false;
-        } else if (mdString[i] === '^') {
+        } else if (md === '^') {
             deletionEncountered = true;
         } else {
             currPos += currNum;
@@ -41,7 +40,7 @@ function parseMD(mdString: string, useCounts: boolean) {
             if (useCounts) {
                 substitutions.push({
                     length: currNum,
-                    type: mdString[i]
+                    type: md
                 });
             } else if (deletionEncountered) {
                 // Do nothing if there is a deletion and keep on going.
@@ -52,7 +51,7 @@ function parseMD(mdString: string, useCounts: boolean) {
             } else {
                 substitutions.push({
                     pos: currPos,
-                    base: mdString[i],
+                    base: md,
                     length: 1,
                     bamSeqShift
                 });
@@ -326,11 +325,10 @@ const tile = async (uid: string, z: number, x: number): Promise<JsonBamRecord[]>
 
     tileValues.set(`${uid}.${z}.${x}`, []);
 
-    /* eslint-disable-next-line @typescript-eslint/prefer-for-of */
-    for (let i = 0; i < cumPositions.length; i++) {
-        const chromName = cumPositions[i].chr;
-        const chromStart = cumPositions[i].pos;
-        const chromEnd = cumPositions[i].pos + chromLengths[chromName];
+    for (const chromosome of cumPositions) {
+        const chromName = chromosome.chr;
+        const chromStart = chromosome.pos;
+        const chromEnd = chromosome.pos + chromLengths[chromName];
 
         if (chromStart <= minX && minX < chromEnd) {
             // start of the visible region is within this chromosome
@@ -342,9 +340,7 @@ const tile = async (uid: string, z: number, x: number): Promise<JsonBamRecord[]>
                     bam.file
                         .getRecordsForRange(chromName, minX - chromStart, chromEnd - chromStart, opt)
                         .then(records => {
-                            const mappedRecords = records.map(rec =>
-                                bamRecordToJson(rec, chromName, cumPositions[i].pos)
-                            );
+                            const mappedRecords = records.map(rec => bamRecordToJson(rec, chromName, chromosome.pos));
                             tileValues.set(
                                 `${uid}.${z}.${x}`,
                                 (tileValues.get(`${uid}.${z}.${x}`) as JsonBamRecord[]).concat(mappedRecords)
@@ -362,7 +358,7 @@ const tile = async (uid: string, z: number, x: number): Promise<JsonBamRecord[]>
                 // the end of the region is within this chromosome
                 recordPromises.push(
                     bam.file.getRecordsForRange(chromName, startPos, endPos, opt).then(records => {
-                        const mappedRecords = records.map(rec => bamRecordToJson(rec, chromName, cumPositions[i].pos));
+                        const mappedRecords = records.map(rec => bamRecordToJson(rec, chromName, chromosome.pos));
                         tileValues.set(
                             `${uid}.${z}.${x}`,
                             (tileValues.get(`${uid}.${z}.${x}`) as JsonBamRecord[]).concat(mappedRecords)

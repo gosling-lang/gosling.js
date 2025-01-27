@@ -1,4 +1,4 @@
-import { type Signal, batch, signal } from '@preact/signals-core';
+import { type Signal, batch } from '@preact/signals-core';
 import { scaleLinear } from 'd3-scale';
 import { ZoomTransform, type D3ZoomEvent, zoom } from 'd3-zoom';
 import { select } from 'd3-selection';

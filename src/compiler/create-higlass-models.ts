@@ -105,8 +105,8 @@ export function renderHiGlass(
 
     // Merge the tracks and views
     const tracksAndViews = [
-        ...tracks.map(d => ({ ...d, type: 'track' } as VisUnitApiData)),
-        ...views.map(d => ({ ...d, type: 'view' } as VisUnitApiData))
+        ...tracks.map(d => ({ ...d, type: 'track' }) as VisUnitApiData),
+        ...views.map(d => ({ ...d, type: 'view' }) as VisUnitApiData)
     ];
 
     const compileResult = {

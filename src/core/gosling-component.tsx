@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { type HiGlassApi, HiGlassComponentWrapper } from './higlass-component-wrapper';
 import type { TemplateTrackDef, VisUnitApiData } from '@gosling-lang/gosling-schema';
 import type { RequestInit } from '@gosling-lang/higlass-schema';
@@ -86,16 +85,12 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
     };
 
     // Gosling APIs
-    useImperativeHandle(
-        ref,
-        () => {
-            const hgApi = refAsReadonlyProxy(hgRef);
-            const visUnits = refAsReadonlyProxy(tracksAndViews);
-            const api = createApi(hgApi, viewConfig, visUnits, theme, idTable.current);
-            return { api, hgApi };
-        },
-        [viewConfig, theme]
-    );
+    useImperativeHandle(ref, () => {
+        const hgApi = refAsReadonlyProxy(hgRef);
+        const visUnits = refAsReadonlyProxy(tracksAndViews);
+        const api = createApi(hgApi, viewConfig, visUnits, theme, idTable.current);
+        return { api, hgApi };
+    }, [viewConfig, theme]);
 
     // TODO: add a `force` parameter since changing `linkingId` might not update vis
     const compile = useCallback(

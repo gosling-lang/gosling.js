@@ -40,7 +40,7 @@ export class AxisTrack extends AxisTrackClass {
             id: 'test',
             animate: () => {},
             onValueScaleChanged: () => {},
-            handleTilesetInfoReceived: (tilesetInfo: any) => {},
+            handleTilesetInfoReceived: () => {},
             onTrackOptionsChanged: () => {},
             pubSub: fakePubSub,
             isValueScaleLocked: () => false,

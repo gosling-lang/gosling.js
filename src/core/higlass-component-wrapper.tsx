@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import type * as PIXI from 'pixi.js';
 import React, { useEffect, useState, forwardRef, useMemo } from 'react';
 

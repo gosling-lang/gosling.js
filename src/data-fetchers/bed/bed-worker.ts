@@ -51,7 +51,10 @@ class BedFile {
     #customFields?: string[];
     #uid: string;
 
-    constructor(public tbi: TabixIndexedFile, uid: string) {
+    constructor(
+        public tbi: TabixIndexedFile,
+        uid: string
+    ) {
         this.#uid = uid;
     }
     /**
@@ -289,7 +292,6 @@ const getTabularData = (uid: string, tileIds: string[]) => {
 
     let output = Object.values(data).flat();
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const sampleLength = dataSources.get(uid)!.options.sampleLength;
     if (output.length >= sampleLength) {
         // TODO: we can make this more generic

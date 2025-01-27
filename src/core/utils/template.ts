@@ -304,7 +304,7 @@ export function replaceTrackTemplates(spec: GoslingSpec, templates: TemplateTrac
             delete viewBase.encoding;
         }
         // Remove a template property since it is not a template anymore
-        if('template' in viewBase) {
+        if ('template' in viewBase) {
             delete viewBase.template;
         }
         const convertedView: OverlaidTracks = {

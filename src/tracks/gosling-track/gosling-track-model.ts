@@ -249,8 +249,8 @@ export class GoslingTrackModel {
         const channelFieldType = IsChannelDeep(channel)
             ? channel.type
             : IsChannelValue(channel)
-            ? 'constant'
-            : undefined;
+              ? 'constant'
+              : undefined;
 
         if (!channelFieldType) {
             // Shouldn't be reached. Channel should be either encoded with data or a constant value.
@@ -630,7 +630,7 @@ export class GoslingTrackModel {
                         const min =
                             'zeroBaseline' in channel && channel.zeroBaseline
                                 ? 0
-                                : (d3min(data.map(d => +d[channel.field as string]) as number[]) as number) ?? 0;
+                                : ((d3min(data.map(d => +d[channel.field as string]) as number[]) as number) ?? 0);
                         const max = (d3max(data.map(d => +d[channel.field as string]) as number[]) as number) ?? 0;
                         channel.domain = [min, max]; // TODO: what if data ranges in negative values
                     } else if (channel.type === 'genomic' && !IsDomainArray(channel.domain)) {
@@ -794,13 +794,15 @@ export class GoslingTrackModel {
                             break;
                         case 'color':
                         case 'stroke':
-                            let interpolate = interpolateViridis;
-                            if (Object.keys(PREDEFINED_COLOR_STR_MAP).includes(range as string)) {
-                                interpolate = PREDEFINED_COLOR_STR_MAP[range as string];
+                            {
+                                let interpolate = interpolateViridis;
+                                if (Object.keys(PREDEFINED_COLOR_STR_MAP).includes(range as string)) {
+                                    interpolate = PREDEFINED_COLOR_STR_MAP[range as string];
+                                }
+                                this.channelScales[channelKey] = scaleSequential(interpolate).domain(
+                                    domain as [number, number]
+                                );
                             }
-                            this.channelScales[channelKey] = scaleSequential(interpolate).domain(
-                                domain as [number, number]
-                            );
                             break;
                         default:
                             break;
