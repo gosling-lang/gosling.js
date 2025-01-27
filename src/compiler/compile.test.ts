@@ -76,9 +76,7 @@ describe('Create correct mapping table between Gosling track IDs and HiGlass vie
         const { idTable } = compile(spec, [], getTheme(), {});
         expect(idTable).toMatchInlineSnapshot(`
           {
-            "overlay-090fc92f": "overlay-c2ca2879",
-            "overlay-c2ca2879": "overlay-c2ca2879",
-            "overlay-ea1af8e7": "overlay-c2ca2879",
+            "o-root": "o-root",
             "s1": "s1",
             "s2": "s2",
             "s3": "s3",
