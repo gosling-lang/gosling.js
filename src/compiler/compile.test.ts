@@ -9,7 +9,7 @@ import { spreadTracksByData } from '../core/utils/overlay';
 describe('compile', () => {
     it('compile should not touch the original spec of users', () => {
         const spec = JSON.parse(JSON.stringify(EX_SPEC_VISUAL_ENCODING));
-        compile(spec, () => {}, [], getTheme(), {});
+        compile(spec, [], getTheme(), {});
         expect(JSON.stringify(spec)).toEqual(JSON.stringify(EX_SPEC_VISUAL_ENCODING));
     });
 });
@@ -30,17 +30,10 @@ describe('Create correct mapping table between Gosling track IDs and HiGlass vie
                 }
             ]
         };
-        compile(
-            spec,
-            h => {
-                expect(h).not.toBeUndefined();
-                expect(h.views).toHaveLength(1);
-                expect(h.views[0].uid).toEqual('track-id');
-            },
-            [],
-            getTheme(),
-            {}
-        );
+        const { hg } = compile(spec, [], getTheme(), {});
+        expect(hg).not.toBeUndefined();
+        expect(hg.views).toHaveLength(1);
+        expect(hg.views[0].uid).toEqual('track-id');
     });
     it('Track IDs should not be lost in overlaid tracks', () => {
         const spec: GoslingSpec = {
@@ -55,24 +48,17 @@ describe('Create correct mapping table between Gosling track IDs and HiGlass vie
                 }
             ]
         };
-        compile(
-            spec,
-            (h, s, g, t, table) => {
-                expect(table).toMatchInlineSnapshot(`
-                  {
-                    "o1": "o1",
-                    "o2": "o1",
-                    "o3": "o1",
-                    "s1": "s1",
-                    "s2": "s2",
-                    "s3": "s3",
-                  }
-                `);
-            },
-            [],
-            getTheme(),
-            {}
-        );
+        const { idTable } = compile(spec, [], getTheme(), {});
+        expect(idTable).toMatchInlineSnapshot(`
+          {
+            "overlay-0060b963": "overlay-0060b963",
+            "overlay-01333c96": "overlay-0060b963",
+            "overlay-c09472ed": "overlay-0060b963",
+            "s1": "s1",
+            "s2": "s2",
+            "s3": "s3",
+          }
+        `);
     });
     it('Used the root level ID in overlaid tracks when IDs are missing in children', () => {
         const spec: GoslingSpec = {
@@ -87,22 +73,17 @@ describe('Create correct mapping table between Gosling track IDs and HiGlass vie
                 }
             ]
         };
-        compile(
-            spec,
-            (h, s, g, t, table) => {
-                expect(table).toMatchInlineSnapshot(`
-                  {
-                    "o-root": "o-root",
-                    "s1": "s1",
-                    "s2": "s2",
-                    "s3": "s3",
-                  }
-                `);
-            },
-            [],
-            getTheme(),
-            {}
-        );
+        const { idTable } = compile(spec, [], getTheme(), {});
+        expect(idTable).toMatchInlineSnapshot(`
+          {
+            "overlay-00f09e56": "overlay-05a20c4b",
+            "overlay-05a20c4b": "overlay-05a20c4b",
+            "overlay-24213255": "overlay-05a20c4b",
+            "s1": "s1",
+            "s2": "s2",
+            "s3": "s3",
+          }
+        `);
     });
     const nestedSpec: GoslingSpec = {
         views: [
@@ -123,48 +104,34 @@ describe('Create correct mapping table between Gosling track IDs and HiGlass vie
         ]
     };
     it('Track IDs should not be lost in nested tracks', () => {
-        compile(
-            nestedSpec,
-            (h, s, g, t, table) => {
-                expect(table).toMatchInlineSnapshot(`
-                  {
-                    "o1": "o1",
-                    "o2": "o1",
-                    "o3": "o1",
-                    "o4": "o4",
-                    "o5": "o4",
-                    "o6": "o4",
-                    "s1": "s1",
-                    "s2": "s2",
-                  }
-                `);
-            },
-            [],
-            getTheme(),
-            {}
-        );
+        const { idTable } = compile(nestedSpec, [], getTheme(), {});
+        expect(idTable).toMatchInlineSnapshot(`
+          {
+            "overlay-21bdbf2c": "overlay-c2e233f4",
+            "overlay-2dc0acc6": "overlay-f22dcbdb",
+            "overlay-4a9c9909": "overlay-c2e233f4",
+            "overlay-52434a1a": "overlay-f22dcbdb",
+            "overlay-c2e233f4": "overlay-c2e233f4",
+            "overlay-f22dcbdb": "overlay-f22dcbdb",
+            "s1": "s1",
+            "s2": "s2",
+          }
+        `);
     });
     it('Track IDs should not be lost in circular views', () => {
-        compile(
-            { ...nestedSpec, layout: 'circular' },
-            (h, s, g, t, table) => {
-                expect(table).toMatchInlineSnapshot(`
-                  {
-                    "o1": "o1",
-                    "o2": "o1",
-                    "o3": "o1",
-                    "o4": "o4",
-                    "o5": "o4",
-                    "o6": "o4",
-                    "s1": "s1",
-                    "s2": "s2",
-                  }
-                `);
-            },
-            [],
-            getTheme(),
-            {}
-        );
+        const { idTable } = compile({ ...nestedSpec, layout: 'circular' }, [], getTheme(), {});
+        expect(idTable).toMatchInlineSnapshot(`
+          {
+            "overlay-1d9d3e7a": "overlay-627b7a59",
+            "overlay-627b7a59": "overlay-627b7a59",
+            "overlay-8830f812": "overlay-8830f812",
+            "overlay-c86ef1f9": "overlay-8830f812",
+            "overlay-c921c934": "overlay-8830f812",
+            "overlay-d5930d20": "overlay-627b7a59",
+            "s1": "s1",
+            "s2": "s2",
+          }
+        `);
     });
 });
 
@@ -186,32 +153,25 @@ describe('Dummy track', () => {
             ],
             layout: 'linear'
         };
-        compile(
-            spec,
-            hgSpec => {
-                expect(hgSpec.views[0].tracks.top).toMatchInlineSnapshot(`
-                  [
-                    {
-                      "height": 130,
-                      "options": {
-                        "background": "#000",
-                        "height": 130,
-                        "textFontSize": 10,
-                        "textStroke": "normal",
-                        "textStrokeWidth": 0.2,
-                        "title": "Placeholder",
-                        "width": 600,
-                      },
-                      "type": "dummy-track",
-                      "width": 600,
-                    },
-                  ]
-                `);
+        const { hg } = compile(spec, [], getTheme(), {});
+        expect(hg.views[0].tracks.top).toMatchInlineSnapshot(`
+          [
+            {
+              "height": 130,
+              "options": {
+                "background": "#000",
+                "height": 130,
+                "textFontSize": 10,
+                "textStroke": "normal",
+                "textStrokeWidth": 0.2,
+                "title": "Placeholder",
+                "width": 600,
+              },
+              "type": "dummy-track",
+              "width": 600,
             },
-            [],
-            getTheme(),
-            {}
-        );
+          ]
+        `);
     });
     it('gets filtered out when layout circular', () => {
         const spec: GoslingSpec = {
@@ -233,16 +193,9 @@ describe('Dummy track', () => {
             ],
             layout: 'circular'
         };
-        compile(
-            spec,
-            hgSpec => {
-                expect(hgSpec.views).toHaveLength(1);
-                expect(hgSpec.views[0].tracks).not.toBeUndefined();
-            },
-            [],
-            getTheme(),
-            {}
-        );
+        const { hg } = compile(spec, [], getTheme(), {});
+        expect(hg.views).toHaveLength(1);
+        expect(hg.views[0].tracks).not.toBeUndefined();
     });
 });
 
@@ -263,11 +216,8 @@ describe('Compiler with UrlToFetchOptions', () => {
                 }
             ]
         };
-        compile(
-            spec,
-            hgSpec => {
-                // @ts-ignore
-                expect(hgSpec.views[0].tracks.center[0].contents[0].data).toMatchInlineSnapshot(`
+        const { hg } = compile(spec, [], getTheme(), {}, urlToFetchOptions);
+        expect(hg.views[0].tracks.center[0].contents[0].data).toMatchInlineSnapshot(`
                   {
                     "assembly": "hg38",
                     "indexUrlFetchOptions": {},
@@ -284,12 +234,6 @@ describe('Compiler with UrlToFetchOptions', () => {
                     "xe": undefined,
                   }
                 `);
-            },
-            [],
-            getTheme(),
-            {},
-            urlToFetchOptions
-        );
     });
 
     it('passes UrlToFetchOptions and IndexUrlFetchOptions to the data fetcher', () => {
@@ -312,11 +256,8 @@ describe('Compiler with UrlToFetchOptions', () => {
                 }
             ]
         };
-        compile(
-            spec,
-            hgSpec => {
-                // @ts-ignore
-                expect(hgSpec.views[0].tracks.center[0].contents[0].data).toMatchInlineSnapshot(`
+        const { hg } = compile(spec, [], getTheme(), {}, urlToFetchOptions);
+        expect(hg.views[0].tracks.center[0].contents[0].data).toMatchInlineSnapshot(`
                   {
                     "assembly": "hg38",
                     "indexUrl": "https://file.gff.tbi",
@@ -338,12 +279,6 @@ describe('Compiler with UrlToFetchOptions', () => {
                     "xe": undefined,
                   }
                 `);
-            },
-            [],
-            getTheme(),
-            {},
-            urlToFetchOptions
-        );
     });
 });
 
