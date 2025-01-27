@@ -1297,11 +1297,6 @@
         "overlayOnPreviousTrack": {
           "type": "boolean"
         },
-        "prerelease": {
-          "additionalProperties": false,
-          "description": "internal",
-          "type": "object"
-        },
         "row": {
           "$ref": "#/definitions/ChannelWithBase"
         },

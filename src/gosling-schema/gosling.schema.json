@@ -1186,11 +1186,6 @@
             "overlayOnPreviousTrack": {
               "type": "boolean"
             },
-            "prerelease": {
-              "additionalProperties": false,
-              "description": "internal",
-              "type": "object"
-            },
             "responsiveSize": {
               "$ref": "#/definitions/ResponsiveSize",
               "description": "Determine whether to make the size of `GoslingComponent` bound to its parent element. __Default__: `false`"
@@ -1343,11 +1338,6 @@
                       },
                       "overlayOnPreviousTrack": {
                         "type": "boolean"
-                      },
-                      "prerelease": {
-                        "additionalProperties": false,
-                        "description": "internal",
-                        "type": "object"
                       },
                       "row": {
                         "anyOf": [
@@ -1966,11 +1956,6 @@
             "overlayOnPreviousTrack": {
               "type": "boolean"
             },
-            "prerelease": {
-              "additionalProperties": false,
-              "description": "internal",
-              "type": "object"
-            },
             "responsiveSize": {
               "$ref": "#/definitions/ResponsiveSize",
               "description": "Determine whether to make the size of `GoslingComponent` bound to its parent element. __Default__: `false`"
@@ -2123,11 +2108,6 @@
                       },
                       "overlayOnPreviousTrack": {
                         "type": "boolean"
-                      },
-                      "prerelease": {
-                        "additionalProperties": false,
-                        "description": "internal",
-                        "type": "object"
                       },
                       "row": {
                         "anyOf": [
@@ -2802,11 +2782,6 @@
                       },
                       "overlayOnPreviousTrack": {
                         "type": "boolean"
-                      },
-                      "prerelease": {
-                        "additionalProperties": false,
-                        "description": "internal",
-                        "type": "object"
                       },
                       "row": {
                         "anyOf": [
@@ -4042,11 +4017,6 @@
               "overlayOnPreviousTrack": {
                 "type": "boolean"
               },
-              "prerelease": {
-                "additionalProperties": false,
-                "description": "internal",
-                "type": "object"
-              },
               "row": {
                 "anyOf": [
                   {
@@ -4373,11 +4343,6 @@
         },
         "overlayOnPreviousTrack": {
           "type": "boolean"
-        },
-        "prerelease": {
-          "additionalProperties": false,
-          "description": "internal",
-          "type": "object"
         },
         "row": {
           "anyOf": [
@@ -4735,11 +4700,6 @@
         },
         "overlayOnPreviousTrack": {
           "type": "boolean"
-        },
-        "prerelease": {
-          "additionalProperties": false,
-          "description": "internal",
-          "type": "object"
         },
         "row": {
           "anyOf": [
@@ -5108,11 +5068,6 @@
               "overlayOnPreviousTrack": {
                 "type": "boolean"
               },
-              "prerelease": {
-                "additionalProperties": false,
-                "description": "internal",
-                "type": "object"
-              },
               "row": {
                 "anyOf": [
                   {
@@ -5465,11 +5420,6 @@
         },
         "overlayOnPreviousTrack": {
           "type": "boolean"
-        },
-        "prerelease": {
-          "additionalProperties": false,
-          "description": "internal",
-          "type": "object"
         },
         "row": {
           "anyOf": [
@@ -6007,11 +5957,6 @@
         "overlayOnPreviousTrack": {
           "type": "boolean"
         },
-        "prerelease": {
-          "additionalProperties": false,
-          "description": "internal",
-          "type": "object"
-        },
         "row": {
           "anyOf": [
             {
@@ -6372,11 +6317,6 @@
             "overlayOnPreviousTrack": {
               "type": "boolean"
             },
-            "prerelease": {
-              "additionalProperties": false,
-              "description": "internal",
-              "type": "object"
-            },
             "responsiveSpec": {
               "items": {
                 "additionalProperties": false,
@@ -6525,11 +6465,6 @@
                       },
                       "overlayOnPreviousTrack": {
                         "type": "boolean"
-                      },
-                      "prerelease": {
-                        "additionalProperties": false,
-                        "description": "internal",
-                        "type": "object"
                       },
                       "row": {
                         "anyOf": [
@@ -7145,11 +7080,6 @@
             "overlayOnPreviousTrack": {
               "type": "boolean"
             },
-            "prerelease": {
-              "additionalProperties": false,
-              "description": "internal",
-              "type": "object"
-            },
             "responsiveSpec": {
               "items": {
                 "additionalProperties": false,
@@ -7298,11 +7228,6 @@
                       },
                       "overlayOnPreviousTrack": {
                         "type": "boolean"
-                      },
-                      "prerelease": {
-                        "additionalProperties": false,
-                        "description": "internal",
-                        "type": "object"
                       },
                       "row": {
                         "anyOf": [
@@ -7970,11 +7895,6 @@
                       },
                       "overlayOnPreviousTrack": {
                         "type": "boolean"
-                      },
-                      "prerelease": {
-                        "additionalProperties": false,
-                        "description": "internal",
-                        "type": "object"
                       },
                       "row": {
                         "anyOf": [
@@ -8830,11 +8750,6 @@
         },
         "overlayOnPreviousTrack": {
           "type": "boolean"
-        },
-        "prerelease": {
-          "additionalProperties": false,
-          "description": "internal",
-          "type": "object"
         },
         "spacing": {
           "description": "The size of the gap (1) between tracks, (2) between views, and (3) of the origin of circular tracks. The effect of this property depends on where on the spec you specify the `spacing`.\n\nIn a linear layout, this value is used in pixels, while in a circular layout, this value is used relative to the height of the tracks or views.",
