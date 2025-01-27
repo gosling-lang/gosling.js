@@ -9,7 +9,6 @@ import { renderHiGlass as createHiGlassModels } from './create-higlass-models';
 import { manageResponsiveSpecs } from './responsive';
 import type { IdTable } from '../api/track-and-view-ids';
 
-
 interface CompileResult {
     hg: HiGlassSpec;
     size: Size;
