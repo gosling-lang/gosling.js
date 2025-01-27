@@ -51,9 +51,9 @@ describe('Create correct mapping table between Gosling track IDs and HiGlass vie
         const { idTable } = compile(spec, [], getTheme(), {});
         expect(idTable).toMatchInlineSnapshot(`
           {
-            "overlay-0060b963": "overlay-0060b963",
-            "overlay-01333c96": "overlay-0060b963",
-            "overlay-c09472ed": "overlay-0060b963",
+            "o1": "o1",
+            "o2": "o1",
+            "o3": "o1",
             "s1": "s1",
             "s2": "s2",
             "s3": "s3",
@@ -76,9 +76,9 @@ describe('Create correct mapping table between Gosling track IDs and HiGlass vie
         const { idTable } = compile(spec, [], getTheme(), {});
         expect(idTable).toMatchInlineSnapshot(`
           {
-            "overlay-00f09e56": "overlay-05a20c4b",
-            "overlay-05a20c4b": "overlay-05a20c4b",
-            "overlay-24213255": "overlay-05a20c4b",
+            "overlay-090fc92f": "overlay-c2ca2879",
+            "overlay-c2ca2879": "overlay-c2ca2879",
+            "overlay-ea1af8e7": "overlay-c2ca2879",
             "s1": "s1",
             "s2": "s2",
             "s3": "s3",
@@ -107,12 +107,12 @@ describe('Create correct mapping table between Gosling track IDs and HiGlass vie
         const { idTable } = compile(nestedSpec, [], getTheme(), {});
         expect(idTable).toMatchInlineSnapshot(`
           {
-            "overlay-21bdbf2c": "overlay-c2e233f4",
-            "overlay-2dc0acc6": "overlay-f22dcbdb",
-            "overlay-4a9c9909": "overlay-c2e233f4",
-            "overlay-52434a1a": "overlay-f22dcbdb",
-            "overlay-c2e233f4": "overlay-c2e233f4",
-            "overlay-f22dcbdb": "overlay-f22dcbdb",
+            "o1": "o1",
+            "o2": "o1",
+            "o3": "o1",
+            "o4": "o4",
+            "o5": "o4",
+            "o6": "o4",
             "s1": "s1",
             "s2": "s2",
           }
@@ -122,12 +122,12 @@ describe('Create correct mapping table between Gosling track IDs and HiGlass vie
         const { idTable } = compile({ ...nestedSpec, layout: 'circular' }, [], getTheme(), {});
         expect(idTable).toMatchInlineSnapshot(`
           {
-            "overlay-1d9d3e7a": "overlay-627b7a59",
-            "overlay-627b7a59": "overlay-627b7a59",
-            "overlay-8830f812": "overlay-8830f812",
-            "overlay-c86ef1f9": "overlay-8830f812",
-            "overlay-c921c934": "overlay-8830f812",
-            "overlay-d5930d20": "overlay-627b7a59",
+            "o1": "o1",
+            "o2": "o1",
+            "o3": "o1",
+            "o4": "o4",
+            "o5": "o4",
+            "o6": "o4",
             "s1": "s1",
             "s2": "s2",
           }

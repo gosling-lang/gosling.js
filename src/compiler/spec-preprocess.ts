@@ -125,7 +125,7 @@ export function convertToFlatTracks(spec: SingleView): Track[] {
         let newTrack = {
             ...spec,
             tracks: undefined,
-            alignment: undefined,
+            alignment: undefined
         } as any;
         if (overlays.length === 1) {
             // If there is only a single overlay, we just merge it with the track.
@@ -274,7 +274,9 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                 // Add a unique ID to each overlay track
                 track._overlay.forEach(o => {
                     o.style = getStyleOverridden(track.style, o.style);
-                    o.id = `overlay-${uuid().slice(0, 8)}`;
+                    if (!o.id) {
+                        o.id = `overlay-${uuid().slice(0, 8)}`;
+                    }
                 });
             }
 
