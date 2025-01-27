@@ -794,13 +794,15 @@ export class GoslingTrackModel {
                             break;
                         case 'color':
                         case 'stroke':
-                            let interpolate = interpolateViridis;
-                            if (Object.keys(PREDEFINED_COLOR_STR_MAP).includes(range as string)) {
-                                interpolate = PREDEFINED_COLOR_STR_MAP[range as string];
+                            {
+                                let interpolate = interpolateViridis;
+                                if (Object.keys(PREDEFINED_COLOR_STR_MAP).includes(range as string)) {
+                                    interpolate = PREDEFINED_COLOR_STR_MAP[range as string];
+                                }
+                                this.channelScales[channelKey] = scaleSequential(interpolate).domain(
+                                    domain as [number, number]
+                                );
                             }
-                            this.channelScales[channelKey] = scaleSequential(interpolate).domain(
-                                domain as [number, number]
-                            );
                             break;
                         default:
                             break;

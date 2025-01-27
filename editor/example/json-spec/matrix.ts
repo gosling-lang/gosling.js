@@ -1,19 +1,6 @@
 import type { PredefinedColors, SingleTrack } from '@gosling-lang/gosling-schema';
 import type { GoslingSpec } from 'gosling.js';
-import { random } from 'lodash-es';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
-
-const generateToyJson = (length: number, chr: string, size: number) =>
-    Array.from({ length }, () => {
-        return {
-            c: chr,
-            x: random(true) * size,
-            xe: random(true) * size,
-            y: random(true) * size,
-            ye: random(true) * size,
-            v: random(true)
-        };
-    });
 
 export const EX_SPEC_MATRIX: GoslingSpec = {
     title: 'Hi-C Matrix',

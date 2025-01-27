@@ -638,7 +638,6 @@ declare module '@higlass/tracks' {
         projectionXDomain: [number, number]; // The domain of the brush
     }
 
-    /* eslint-disable-next-line @typescript-eslint/ban-types */
     type LiteralUnion<T, U = string> = T | (U & {});
 
     type Orientation = '2d' | '1d-vertical' | '1d-horizontal' | 'whole' | 'any';

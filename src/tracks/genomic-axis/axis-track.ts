@@ -471,7 +471,9 @@ export class AxisTrackClass extends PixiTrack<AxisTrackOptions> {
             // show the tick text labels
             if (this.options.layout === 'circular') {
                 const rope = this.addCurvedText(tickTexts[i], x + xPadding);
-                rope && this.pTicksCircular.addChild(rope);
+                if (rope) {
+                    this.pTicksCircular.addChild(rope);
+                }
             } else {
                 tickTexts[i].x = x + xPadding;
                 tickTexts[i].y = this.dimensions[1] - yPadding;
@@ -647,7 +649,9 @@ export class AxisTrackClass extends PixiTrack<AxisTrackOptions> {
                 chrText.visible = numTicksDrawn <= 0;
             } else {
                 if (numTicksDrawn > 0) {
-                    rope && this.pTicksCircular.removeChild(rope);
+                    if (rope) {
+                        this.pTicksCircular.removeChild(rope);
+                    }
                 }
             }
 

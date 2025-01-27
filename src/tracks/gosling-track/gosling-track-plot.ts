@@ -58,7 +58,7 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
             },
             animate: () => {},
             onValueScaleChanged: () => {},
-            handleTilesetInfoReceived: (tilesetInfo: any) => {},
+            handleTilesetInfoReceived: () => {},
             onTrackOptionsChanged: () => {},
             pubSub: fakePubSub,
             isValueScaleLocked: () => false,

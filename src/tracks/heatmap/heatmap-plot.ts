@@ -74,7 +74,7 @@ export class HeatmapTrack extends HeatmapTiledPixiTrack<HeatmapTrackOptions> {
             dataFetcher,
             animate: () => {},
             onValueScaleChanged: () => {},
-            handleTilesetInfoReceived: (tilesetInfo: any) => {},
+            handleTilesetInfoReceived: () => {},
             onTrackOptionsChanged: () => {},
             pubSub: fakePubSub,
             isValueScaleLocked: () => false,

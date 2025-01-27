@@ -195,12 +195,6 @@ export interface CommonTrackDef extends CommonViewDef {
     _renderingId?: string;
     /** internal */
     _invalidTrack?: boolean; // flag to ignore rendering certain tracks if they have problems // !!! TODO: add tests
-
-    // To test upcoming feature.
-    /** internal */
-    prerelease?: {
-        // ...
-    };
 }
 
 /**

@@ -193,7 +193,6 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
          */
         tracks = spreadTracksByData(tracks);
 
-        const linkID = uuid();
         tracks.forEach((track, i, array) => {
             // ID should be assigned to each view and track for an API usage
             if (!track.id) {

@@ -8,14 +8,14 @@ import eslintPluginPrettierRecommed from 'eslint-plugin-prettier/recommended';
 /** @type {import('eslint').Linter.Config[]} */
 export default [
   eslintPluginPrettierRecommed,
-  // { files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'] },
-  { languageOptions: { globals: globals.browser } },
+  { files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'] },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   pluginReact.configs.flat.recommended,
   { ignores: ['node_modules', 'build', 'dist', 'public'] },
   {
     languageOptions: {
+      globals: globals.browser,
       parser: tsparser,
       parserOptions: {
         project: 'tsconfig.json',
@@ -71,4 +71,3 @@ export default [
     }
   }
 ];
-

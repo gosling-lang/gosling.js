@@ -285,7 +285,7 @@ class Track {
      * @param {{}} evt
      * @returns {void}
      */
-    defaultMouseMoveHandler(evt) {}
+    defaultMouseMoveHandler() {}
 
     /** @returns {void} */
     remove() {
@@ -298,7 +298,7 @@ class Track {
      * @param {Options} options
      * @returns {void}
      */
-    rerender(options) {}
+    rerender() {}
 
     /**
      * This function is for seeing whether this track should respond
@@ -318,13 +318,13 @@ class Track {
      * @param {number} kMultiplier
      * @returns {void}
      */
-    zoomedY(trackY, kMultiplier) {}
+    zoomedY() {}
 
     /**
      * @param {number} dY
      * @returns {void}
      */
-    movedY(dY) {}
+    movedY() {}
 }
 
 // @ts-nocheck
@@ -1100,7 +1100,7 @@ function dictValues(dictionary) {
     const values = [];
 
     for (const key in dictionary) {
-        if (dictionary.hasOwnProperty(key)) {
+        if (Object.hasOwn(dictionary, key)) {
             values.push(dictionary[key]);
         }
     }
@@ -1131,8 +1131,8 @@ function minNonZero(data) {
      */
     let minNonZeroNum = Number.MAX_SAFE_INTEGER;
 
-    for (let i = 0; i < data.length; i++) {
-        const x = data[i];
+    for (const datum of data) {
+        const x = datum;
 
         if (x < epsilon$1 && x > -epsilon$1) {
             continue;
@@ -1169,8 +1169,8 @@ function maxNonZero(data) {
      */
     let maxNonZeroNum = Number.MIN_SAFE_INTEGER;
 
-    for (let i = 0; i < data.length; i++) {
-        const x = data[i];
+    for (const datum of data) {
+        const x = datum;
 
         if (x < epsilon && x > -epsilon) {
             continue;
@@ -2253,7 +2253,7 @@ fetchTilesPool.run(function(params, done) {
 */
 
 const sessionId = import.meta.env.DEV ? 'dev' : slugid.nice();
-const authHeader = null; // eslint-disable-line import/no-mutable-exports
+const authHeader = null;
 
 const throttleAndDebounce$1 = (func, interval, finalWait) => {
     let timeout;
@@ -2394,7 +2394,7 @@ function fetchMultiRequestTiles(req, pubSub) {
             const renderParams = theseTileIds.map(x => `d=${x}`).join('&');
             const outUrl = `${server}/tiles/?${renderParams}&s=${sessionId}`;
 
-            const p = new Promise((resolve, reject) => {
+            const p = new Promise(resolve => {
                 pubSub.publish('requestSent', outUrl);
                 const params = {};
 
@@ -3102,11 +3102,11 @@ class DataFetcher {
                 /** @type {Record<string, Tile>} */
                 const newTiles = {};
 
-                for (let i = 0; i < tileIds.length; i++) {
-                    const fullTileId = this.fullTileId(tilesetUid, tileIds[i]);
+                for (const tileId of tileIds) {
+                    const fullTileId = this.fullTileId(tilesetUid, tileId);
 
-                    returnedTiles[fullTileId].tilePositionId = tileIds[i];
-                    newTiles[tileIds[i]] = returnedTiles[fullTileId];
+                    returnedTiles[fullTileId].tilePositionId = tileId;
+                    newTiles[tileId] = returnedTiles[fullTileId];
                 }
                 receivedTiles(newTiles);
                 return newTiles;
@@ -3358,21 +3358,21 @@ class DataFetcher {
         /** @type {Record<string, DividedTile>} */
         const newTiles = {};
 
-        for (let i = 0; i < tileIds.length; i++) {
+        for (const tileId of tileIds) {
             // const numeratorUid = this.fullTileId(numeratorTilesetUid, tileIds[i]);
             // const denominatorUid = this.fullTileId(denominatorTilesetUid, tileIds[i]);
-            const zoomLevel = returnedTiles[0][tileIds[i]].zoomLevel;
-            const tilePos = returnedTiles[0][tileIds[i]].tilePos;
+            const zoomLevel = returnedTiles[0][tileId].zoomLevel;
+            const tilePos = returnedTiles[0][tileId].tilePos;
 
             /** @type {DividedTile} */
             let newTile = {
                 zoomLevel,
                 tilePos,
-                tilePositionId: tileIds[i]
+                tilePositionId: tileId
             };
 
-            const denseA = returnedTiles[0][tileIds[i]].dense;
-            const denseB = returnedTiles[1][tileIds[i]].dense;
+            const denseA = returnedTiles[0][tileId].dense;
+            const denseB = returnedTiles[1][tileId].dense;
 
             if (denseA && denseB) {
                 const newData = this.divideData(denseA, denseB);
@@ -3385,13 +3385,13 @@ class DataFetcher {
                     maxNonZero: maxNonZero(newData),
                     zoomLevel,
                     tilePos,
-                    tilePositionId: tileIds[i]
+                    tilePositionId: tileId
                 };
             }
 
             // returned ids will be indexed by the tile id and won't include the
             // tileset uid
-            newTiles[tileIds[i]] = newTile;
+            newTiles[tileId] = newTile;
         }
 
         return newTiles;
@@ -3981,8 +3981,8 @@ class TiledPixiTrack extends PixiTrack {
             x => !this.fetching.has(x.remoteId) && !fetchedTileIDs.has(x.tileId)
         );
 
-        for (let i = 0; i < toFetch.length; i++) {
-            this.fetching.add(toFetch[i].remoteId);
+        for (const curFetch of toFetch) {
+            this.fetching.add(curFetch.remoteId);
         }
 
         this.removeOldTiles();
@@ -4042,7 +4042,7 @@ class TiledPixiTrack extends PixiTrack {
         this.draw();
     }
 
-    zoomed(newXScale, newYScale, k = 1, tx = 0, ty = 0) {
+    zoomed(newXScale, newYScale, k = 1, tx = 0) {
         this.xScale(newXScale);
         this.yScale(newYScale);
 
@@ -4078,8 +4078,8 @@ class TiledPixiTrack extends PixiTrack {
 
         const visibleTileIdsList = [...this.visibleTileIds];
 
-        for (let i = 0; i < visibleTileIdsList.length; i++) {
-            if (!fetchedTileIDs.has(visibleTileIdsList[i])) {
+        for (const tileId of visibleTileIdsList) {
+            if (!fetchedTileIDs.has(tileId)) {
                 return false;
             }
         }
@@ -4144,17 +4144,17 @@ class TiledPixiTrack extends PixiTrack {
         const fetchedTileIDs = Object.keys(this.fetchedTiles);
         this.renderVersion += 1;
 
-        for (let i = 0; i < fetchedTileIDs.length; i++) {
-            if (!(fetchedTileIDs[i] in this.tileGraphics)) {
+        for (const tileId of fetchedTileIDs) {
+            if (!(tileId in this.tileGraphics)) {
                 // console.trace('adding:', fetchedTileIDs[i]);
 
                 const newGraphics = new GLOBALS.PIXI.Graphics();
                 this.pMain.addChild(newGraphics);
 
-                this.fetchedTiles[fetchedTileIDs[i]].graphics = newGraphics;
-                this.initTile(this.fetchedTiles[fetchedTileIDs[i]]);
+                this.fetchedTiles[tileId].graphics = newGraphics;
+                this.initTile(this.fetchedTiles[tileId]);
 
-                this.tileGraphics[fetchedTileIDs[i]] = newGraphics;
+                this.tileGraphics[tileId] = newGraphics;
             }
         }
 
@@ -4170,8 +4170,8 @@ class TiledPixiTrack extends PixiTrack {
     updateExistingGraphics() {
         const fetchedTileIDs = Object.keys(this.fetchedTiles);
 
-        for (let i = 0; i < fetchedTileIDs.length; i++) {
-            const tile = this.fetchedTiles[fetchedTileIDs[i]];
+        for (const tileId of fetchedTileIDs) {
+            const tile = this.fetchedTiles[tileId];
 
             this.updateTile(tile);
         }
@@ -4231,23 +4231,23 @@ class TiledPixiTrack extends PixiTrack {
      * response to a request from fetchTiles.
      */
     receivedTiles(loadedTiles) {
-        for (let i = 0; i < this.visibleTiles.length; i++) {
-            const { tileId } = this.visibleTiles[i];
+        for (const tileIdObj of this.visibleTiles) {
+            const { tileId, remoteId } = tileIdObj;
 
-            if (!loadedTiles[this.visibleTiles[i].remoteId]) continue;
+            if (!loadedTiles[remoteId]) continue;
 
-            if (this.visibleTiles[i].remoteId in loadedTiles) {
+            if (remoteId in loadedTiles) {
                 if (!(tileId in this.fetchedTiles)) {
                     // this tile may have graphics associated with it
-                    this.fetchedTiles[tileId] = this.visibleTiles[i];
+                    this.fetchedTiles[tileId] = tileIdObj;
                 }
 
                 // Fritz: Store a shallow copy. If necessary we perform a deep copy of
                 // the dense data in `tile-proxy.js :: tileDataToPixData()`
                 // Somehow 2d rectangular domain tiles do not come in the flavor of an
                 // object but an object array...
-                if (Array.isArray(loadedTiles[this.visibleTiles[i].remoteId])) {
-                    const tileData = loadedTiles[this.visibleTiles[i].remoteId];
+                if (Array.isArray(loadedTiles[remoteId])) {
+                    const tileData = loadedTiles[remoteId];
                     this.fetchedTiles[tileId].tileData = [...tileData];
                     // Fritz: this is sooo hacky... we should really not use object arrays
                     Object.keys(tileData)
@@ -4257,7 +4257,7 @@ class TiledPixiTrack extends PixiTrack {
                         });
                 } else {
                     this.fetchedTiles[tileId].tileData = {
-                        ...loadedTiles[this.visibleTiles[i].remoteId]
+                        ...loadedTiles[remoteId]
                     };
                 }
 
@@ -4659,7 +4659,7 @@ class ViewportTrackerHorizontal extends SVGTrack {
         this.setDomainsCallback(xDomain, yDomain);
     }
 
-    viewportChanged(viewportXScale, viewportYScale, update = true) {
+    viewportChanged(viewportXScale, viewportYScale) {
         // console.log('viewport changed:', viewportXScale.domain());
         const viewportXDomain = viewportXScale.domain();
         const viewportYDomain = viewportYScale.domain();
@@ -5944,7 +5944,7 @@ class HeatmapTiledPixiTrack extends TiledPixiTrack {
             );
             // The center value
             data = dataLens.get(this.dataLensPadding, this.dataLensPadding);
-        } catch (e) {
+        } catch {
             return;
         }
 
@@ -5953,7 +5953,7 @@ class HeatmapTiledPixiTrack extends TiledPixiTrack {
         let toRgb;
         try {
             toRgb = valueToColor(this.limitedValueScale, this.colorScale, this.valueScale.domain()[0]);
-        } catch (err) {
+        } catch {
             return;
         }
 
@@ -6948,8 +6948,7 @@ class HeatmapTiledPixiTrack extends TiledPixiTrack {
 
         let minTilePosition = tilePositions[0];
 
-        for (let i = 0; i < tilePositions.length; i++) {
-            const curPos = tilePositions[i];
+        for (const curPos of tilePositions) {
             if (curPos[0] < minTilePosition[0] || curPos[1] < minTilePosition[1]) {
                 minTilePosition = curPos;
             }
@@ -7144,26 +7143,26 @@ class HeatmapTiledPixiTrack extends TiledPixiTrack {
         const tiles = [];
 
         // calculate the ids of the tiles that should be visible
-        for (let i = 0; i < rows.length; i++) {
-            for (let j = 0; j < cols.length; j++) {
+        for (const row of rows) {
+            for (const col of cols) {
                 if (this.mirrorTiles()) {
-                    if (rows[i] >= cols[j]) {
+                    if (row >= col) {
                         if (this.options.extent !== 'lower-left') {
                             // if we're in the upper triangular part of the matrix, then we need
                             // to load a mirrored tile
-                            this.addTileId(tiles, zoomLevel, cols[j], rows[i], dataTransform, true);
+                            this.addTileId(tiles, zoomLevel, col, row, dataTransform, true);
                         }
                     } else if (this.options.extent !== 'upper-right') {
                         // otherwise, load an original tile
-                        this.addTileId(tiles, zoomLevel, rows[i], cols[j], dataTransform);
+                        this.addTileId(tiles, zoomLevel, row, col, dataTransform);
                     }
 
-                    if (rows[i] === cols[j] && this.options.extent === 'lower-left') {
+                    if (row === col && this.options.extent === 'lower-left') {
                         // on the diagonal, load original tiles
-                        this.addTileId(tiles, zoomLevel, rows[i], cols[j], dataTransform);
+                        this.addTileId(tiles, zoomLevel, row, col, dataTransform);
                     }
                 } else {
-                    this.addTileId(tiles, zoomLevel, rows[i], cols[j], dataTransform);
+                    this.addTileId(tiles, zoomLevel, row, col, dataTransform);
                 }
             }
         }
@@ -7264,7 +7263,7 @@ class HeatmapTiledPixiTrack extends TiledPixiTrack {
         let data = null;
         try {
             data = this.getVisibleRectangleData(trackX, trackY, 1, 1).get(0, 0);
-        } catch (err) {
+        } catch {
             return '';
         }
 
@@ -7335,11 +7334,11 @@ class HeatmapTiledPixiTrack extends TiledPixiTrack {
     }
 
     calculateZoomLevel() {
-        this.tilesetInfo.min_pos[0];
-        this.tilesetInfo.max_pos[0];
-
-        this.tilesetInfo.min_pos[1];
-        this.tilesetInfo.max_pos[1];
+        // These four lines below don't do anything?
+        // this.tilesetInfo.min_pos[0];
+        // this.tilesetInfo.max_pos[0];
+        // this.tilesetInfo.min_pos[1];
+        // this.tilesetInfo.max_pos[1];
 
         let zoomLevel = null;
 

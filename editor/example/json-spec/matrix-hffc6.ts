@@ -1,5 +1,4 @@
 import type { GoslingSpec } from 'gosling.js';
-import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
     title: 'Matrix Visualization',
