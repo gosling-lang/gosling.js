@@ -25,8 +25,14 @@ export enum TrackType {
     Axis,
     BrushLinear,
     BrushCircular,
-    Heatmap
+    Heatmap,
+    Spatial
 }
+
+
+type SpatialTrackOptions = {
+    color: string | undefined;
+};
 
 /**
  * Associate options to each track type
@@ -39,6 +45,7 @@ interface TrackOptionsMap {
     [TrackType.BrushLinear]: BrushLinearTrackOptions;
     [TrackType.BrushCircular]: BrushCircularTrackOptions;
     [TrackType.Heatmap]: HeatmapTrackOptions;
+    [TrackType.Spatial]: SpatialTrackOptions; //~ TODO: add actual options
 }
 
 /**
@@ -83,6 +90,19 @@ export function createTrackDefs(trackInfos: TrackInfo[], theme: Required<Complet
             // We have a dummy track
             const dummyTrackDefs = processDummyTrack(track, boundingBox);
             trackDefs.push(...dummyTrackDefs);
+        } else if ('type' in track && track.type === '3D') {
+            // We have a 3D track
+            console.warn('got 3D track', track);
+            //const trackDef: TrackDef<Record<string, never>> = {
+            const trackDef: TrackDef<SpatialTrackOptions> = {
+                type: TrackType.Spatial,
+                trackId: track.id,
+                boundingBox,
+                options: {
+                    color: track.color ? track.color.value : undefined,
+                }
+            };
+            trackDefs.push(trackDef);
         } else {
             // We have a gosling track
             const goslingAxisDefs = processGoslingTrack(track, boundingBox, theme);

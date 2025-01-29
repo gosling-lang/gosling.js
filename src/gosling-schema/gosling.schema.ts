@@ -80,7 +80,7 @@ export type ResponsiveSpecOfMultipleViews = {
     }[];
 };
 
-export type Layout = 'linear' | 'circular';
+export type Layout = 'linear' | 'circular' | 'spatial';
 export type Orientation = 'horizontal' | 'vertical';
 
 /** Custom chromosome sizes, e.g., [["foo", 1000], ["bar", 300], ["baz", 240]] */
@@ -154,7 +154,7 @@ export interface CommonViewDef {
 }
 
 /* ----------------------------- TRACK ----------------------------- */
-export type Track = SingleTrack | OverlaidTrack | TemplateTrack | DummyTrack;
+export type Track = SingleTrack | OverlaidTrack | TemplateTrack | DummyTrack | ChromospaceTrack;
 
 export interface CommonTrackDef extends CommonViewDef {
     /** Assigned to `uid` in a HiGlass view config, used for API and caching. */
@@ -196,6 +196,12 @@ export interface CommonTrackDef extends CommonViewDef {
     /** internal */
     _invalidTrack?: boolean; // flag to ignore rendering certain tracks if they have problems // !!! TODO: add tests
 }
+
+export interface ChromospaceTrack
+    extends Pick<CommonTrackDef, 'width' | 'height' | 'id' | 'title' | '_invalidTrack' | 'orientation' | 'static' | 'assembly'> {
+    type: '3D';
+    color: string; //~ just testing
+};
 
 /**
  * A placeholder track. In contrast to other tracks, this track does not display any data. Instead it provides
