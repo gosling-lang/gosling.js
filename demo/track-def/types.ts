@@ -13,7 +13,8 @@ import type { DataDeep, Assembly, DummyTrackStyle } from '@gosling-lang/gosling-
  */
 
 /** A Track after it has been compiled */
-export type ProcessedTrack = ProcessedLinearTrack | ProcessedCircularTrack | ProcessedDummyTrack;
+export type ProcessedTrack = ProcessedLinearTrack | ProcessedCircularTrack | ProcessedTitleTrack | ProcessedDummyTrack;
+
 /** All tracks potentially have these properties */
 export interface ProcessedTrackBase {
     id: string;
@@ -26,13 +27,19 @@ export interface ProcessedTrackBase {
     subtitle?: string;
     data?: DataDeep;
     assembly?: Assembly;
-    overlayOnPreviousTrack?: boolean;
+    overlayOnPreviousTrack?: boolean; // TODO: this can be non-optional.
     _overlay?: OverlayTrack[];
     color?: { value: string };
     stroke?: { value: string };
     opacity?: { value: number };
     strokeWidth?: { value: number };
+    xOffset: number; // TODO: need to double check if this is actually filled in all the time after processed.
+    yOffset: number;
 }
+
+export type ProcessedTitleTrack = Pick<ProcessedTrackBase, 'width' | 'height' | 'title' | 'subtitle'> & {
+    mark: '_header';
+};
 
 export type ProcessedLinearTrack = ProcessedTrackBase & {
     layout: 'linear';

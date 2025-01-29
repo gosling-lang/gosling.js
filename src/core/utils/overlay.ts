@@ -13,12 +13,13 @@ import {
     IsDummyTrack,
     IsTemplateTrack
 } from '@gosling-lang/gosling-schema';
+import type { ProcessedTrack } from 'demo/track-def/types';
 
 /**
  * Resolve superposed tracks into multiple track specifications.
  * Some options are corrected to ensure the resolved tracks use consistent visual properties, such as the existence of the axis for genomic coordinates.
  */
-export function resolveSuperposedTracks(track: Track): SingleTrack[] {
+export function resolveSuperposedTracks(track: ProcessedTrack): ProcessedTrack[] {
     if (IsTemplateTrack(track) || IsDummyTrack(track)) {
         // no BasicSingleTrack to return
         return [];
@@ -31,7 +32,7 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
 
     if (track._overlay.length === 0) {
         // This makes sure not to return empty object
-        return [{ ...track, superpose: undefined } as SingleTrack];
+        return [{ ...track }];
     }
 
     const base: SingleTrack = JSON.parse(JSON.stringify(track));
@@ -59,7 +60,7 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
         return {
             ...d,
             x: { ...d.x, axis: xAxisPosition }
-        } as SingleTrack;
+        } as ProcessedTrack;
     });
 
     // height
@@ -126,8 +127,8 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
                     IsSingleTrack(track) && IsChannelDeep(track.y) && !track.y.axis && overlayOnPreviousTrack
                         ? ({ ...track.y, axis: i === 1 ? 'right' : 'none' } as ChannelDeep)
                         : IsSingleTrack(track)
-                          ? track.y
-                          : undefined;
+                            ? track.y
+                            : undefined;
 
                 if (track.title && i !== arr.length - 1 && arr.length !== 1) {
                     delete track.title; // remove `title` except the last one

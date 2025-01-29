@@ -49,6 +49,12 @@ import {
 } from 'd3-scale-chromatic';
 import { resolveSuperposedTracks } from '../core/utils/overlay';
 import type { TabularDataFetcher } from '@data-fetchers';
+import type {
+    ProcessedCircularTrack,
+    ProcessedDummyTrack,
+    ProcessedTitleTrack,
+    ProcessedTrack
+} from 'demo/track-def/types';
 
 export const PREDEFINED_COLOR_STR_MAP: { [k: string]: (t: number) => string } = {
     viridis: interpolateViridis,
@@ -91,8 +97,16 @@ export function IsOverlaidTracks(_: SingleView): _ is OverlaidTracks {
 export function IsStackedTracks(_: SingleView): _ is StackedTracks {
     return !IsFlatTracks(_) && !IsOverlaidTracks(_);
 }
-
-export function IsDummyTrack(_: Track): _ is DummyTrack {
+export function isProcessedTitleTrack(_: Track | ProcessedTrack): _ is ProcessedTitleTrack {
+    return 'mark' in _ && _.mark === '_header';
+}
+export function isProcessedCircularTrack(_: ProcessedTrack): _ is ProcessedCircularTrack {
+    return 'layout' in _ && _.layout == 'circular';
+}
+export function isProcessedDummyTrack(_: ProcessedTrack): _ is ProcessedDummyTrack {
+    return 'type' in _ && _.type == 'dummy-track';
+}
+export function IsDummyTrack(_: Track | ProcessedTrack): _ is DummyTrack {
     return 'type' in _ && _.type == 'dummy-track';
 }
 
@@ -120,7 +134,7 @@ export function IsTrackStyle(track: Style | undefined): track is Style {
     return track !== undefined;
 }
 
-export function IsSingleTrack(track: Track): track is SingleTrack {
+export function IsSingleTrack(track: ProcessedTrack | Track): track is SingleTrack {
     return !('_overlay' in track);
 }
 
@@ -150,7 +164,7 @@ export function IsVerticalRule(track: Track) {
 /**
  * Is this 2D track, i.e., two genomic axes?
  */
-export function Is2DTrack(track: Track) {
+export function Is2DTrack(track: ProcessedTrack | Track) {
     // If this is an overlaid tracks (e.g., matrix w/ rules),
     // we use the first `SingleTrack` to check the type of two axes.
     const t = IsSingleTrack(track) ? track : resolveSuperposedTracks(track)[0];
@@ -293,7 +307,7 @@ export function getChannelKeysByType(spec: SingleTrack, t: FieldType) {
     return keys;
 }
 
-export function IsXAxis(_: Track) {
+export function IsXAxis(_: Track | ProcessedTrack) {
     if ((IsSingleTrack(_) || IsOverlaidTrack(_)) && IsChannelDeep(_.x) && _.x.axis && _.x.axis !== 'none') {
         return true;
     } else if (IsOverlaidTrack(_)) {
@@ -310,7 +324,7 @@ export function IsXAxis(_: Track) {
     return false;
 }
 
-export function IsYAxis(_: Track) {
+export function IsYAxis(_: ProcessedTrack) {
     if ((IsSingleTrack(_) || IsOverlaidTrack(_)) && IsChannelDeep(_.y) && _.y.axis && _.y.axis !== 'none') {
         return true;
     } else if (IsOverlaidTrack(_)) {
