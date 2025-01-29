@@ -1,7 +1,7 @@
 import { IsChannelDeep } from '@gosling-lang/gosling-schema';
 import type { HiGlassModel } from '../../compiler/higlass-model';
 import { SUPPORTED_CHANNELS } from '../mark';
-import { resolveSuperposedTracks } from './overlay';
+import { expandOverlaidTracks } from './overlay';
 
 /**
  *
@@ -33,7 +33,7 @@ export function getLinkingInfo(hgModel: HiGlassModel) {
 
         if (!hgViewId || !spec) return;
 
-        const resolved = resolveSuperposedTracks(spec);
+        const resolved = expandOverlaidTracks(spec);
 
         resolved.forEach(spec => {
             SUPPORTED_CHANNELS.forEach(cKey => {

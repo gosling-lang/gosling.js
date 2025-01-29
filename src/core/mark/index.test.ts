@@ -1,6 +1,6 @@
 import { drawMark } from '.';
 import { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
-import type { SingleTrack } from '@gosling-lang/gosling-schema';
+import type { LeafTrack } from '@gosling-lang/gosling-schema';
 import { getTheme } from '../utils/theme';
 
 describe('Should draw marks correctly', () => {
@@ -10,7 +10,7 @@ describe('Should draw marks correctly', () => {
             null,
             null,
             null,
-            new GoslingTrackModel({} as SingleTrack, [], getTheme())
+            new GoslingTrackModel({} as LeafTrack, [], getTheme())
         );
     });
 });

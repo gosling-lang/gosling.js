@@ -1,8 +1,8 @@
-import type { GoslingSpec, SelectivityCondition, SingleView } from '@gosling-lang/gosling-schema';
+import type { GoslingSpec, SelectivityCondition, LeafView } from '@gosling-lang/gosling-schema';
 import { logicalComparison } from '../core/utils/semantic-zoom';
 
 export function manageResponsiveSpecs(
-    spec: GoslingSpec | SingleView,
+    spec: GoslingSpec | LeafView,
     wFactor: number,
     hFactor: number,
     parentWidth: number,

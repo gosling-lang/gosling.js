@@ -1,5 +1,5 @@
 import { GoslingTrackModel } from '../../src/tracks/gosling-track/gosling-track-model';
-import { resolveSuperposedTracks } from '../../src/core/utils/overlay';
+import { expandOverlaidTracks } from '../../src/core/utils/overlay';
 import { convertToFlatTracks } from '../../src/compiler/spec-preprocess';
 import { getTheme } from '../../src/core/utils/theme';
 import { EX_TRACK_SEMANTIC_ZOOM } from './json-spec/semantic-zoom';
@@ -11,7 +11,7 @@ describe('Example specs should be valid', () => {
 
         const flatTracks = convertToFlatTracks(EX_TRACK_SEMANTIC_ZOOM.cytoband);
 
-        const resolvedIdeograms = resolveSuperposedTracks(flatTracks[0]);
+        const resolvedIdeograms = expandOverlaidTracks(flatTracks[0]);
         resolvedIdeograms.forEach(spec => {
             const ideogramMark = new GoslingTrackModel(spec, [], getTheme());
             const validity = ideogramMark.validateSpec();
@@ -33,7 +33,7 @@ describe('Example specs should be valid', () => {
         const msgs: string[] = [];
 
         convertToFlatTracks(EX_TRACK_SEMANTIC_ZOOM.cytoband).forEach(t => {
-            const resolvedIdeograms = resolveSuperposedTracks({ ...t, width: 300, height: 300 });
+            const resolvedIdeograms = expandOverlaidTracks({ ...t, width: 300, height: 300 });
             resolvedIdeograms.forEach(spec => {
                 const ideogramMark = new GoslingTrackModel(spec, [], getTheme());
                 const validity = ideogramMark.validateSpec();

@@ -3,7 +3,7 @@ import { isEqual, sampleSize, uniqBy } from 'lodash-es';
 import type { ScaleLinear } from 'd3-scale';
 import { scaleLinear } from 'd3-scale';
 import type {
-    SingleTrack,
+    LeafTrack,
     OverlaidTrack,
     Datum,
     EventStyle,
@@ -23,7 +23,7 @@ import { drawMark, drawPostEmbellishment, drawPreEmbellishment } from '../../cor
 import { GoslingTrackModel } from './gosling-track-model';
 import { validateTrack } from '@gosling-lang/gosling-schema';
 import { shareScaleAcrossTracks } from '../../core/utils/scales';
-import { resolveSuperposedTracks } from '../../core/utils/overlay';
+import { expandOverlaidTracks } from '../../core/utils/overlay';
 import colorToHex from '../../core/utils/color-to-hex';
 import {
     aggregateCoverage,
@@ -86,7 +86,7 @@ export interface GoslingTrackOptions {
      * Track IDs that are superposed with this track, containing the id of this track itself
      */
     siblingIds: string[];
-    spec: SingleTrack | OverlaidTrack;
+    spec: LeafTrack | OverlaidTrack;
     theme: CompleteThemeDeep;
 }
 
@@ -157,7 +157,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
     #loadingTextBg = new PIXI.Graphics();
     #loadingText = new PIXI.Text('', loadingTextStyle);
     prevVisibleAndFetchedTiles?: Tile[];
-    resolvedTracks: SingleTrack[] | undefined;
+    resolvedTracks: LeafTrack[] | undefined;
     // This is used to persist processed tile data across draw() calls.
     #processedTileMap: WeakMap<Tile, boolean> = new WeakMap();
 
@@ -313,8 +313,8 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
         this.drawTile(tile);
     }
 
-    override updateTile(/* tile: Tile */) {} // Never mind about this function for the simplicity.
-    renderTile(/* tile: Tile */) {} // Never mind about this function for the simplicity.
+    override updateTile(/* tile: Tile */) { } // Never mind about this function for the simplicity.
+    renderTile(/* tile: Tile */) { } // Never mind about this function for the simplicity.
 
     /**
      * Display a tile upon receiving a new one or when explicitly called by a developer, e.g., calling
@@ -495,9 +495,9 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
         const genomicRange = newXScale
             .domain()
             .map(absPos => getRelativeGenomicPosition(absPos, this.#assembly, true)) as [
-            GenomicPosition,
-            GenomicPosition
-        ];
+                GenomicPosition,
+                GenomicPosition
+            ];
         publish('location', {
             id: this.#viewUid,
             genomicRange: genomicRange
@@ -908,7 +908,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
     getResolvedTracks(forceUpdate = false) {
         if (forceUpdate || !this.resolvedTracks) {
             const copy = structuredClone(this.options.spec);
-            const tracks = resolveSuperposedTracks(copy).filter(t => t.mark !== 'brush');
+            const tracks = expandOverlaidTracks(copy).filter(t => t.mark !== 'brush');
             // We will never need to access the values field in the data spec. It can be quite large which can degrade performance so we remove it.
             tracks.forEach(track => {
                 if ('values' in track.data) {

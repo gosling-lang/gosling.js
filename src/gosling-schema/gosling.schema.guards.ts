@@ -8,8 +8,7 @@ import type {
     DomainChrInterval,
     Style,
     Track,
-    SingleTrack,
-    OverlaidTrack,
+    LeafTrack,
     ChannelTypes,
     Channel,
     FieldType,
@@ -23,9 +22,8 @@ import type {
     MatrixData,
     VectorData,
     BigWigData,
-    SingleView,
-    FlatTracks,
-    OverlaidTracks,
+    LeafView,
+    _FlatTracks,
     StackedTracks,
     BamData,
     Range,
@@ -33,7 +31,9 @@ import type {
     MouseEventsDeep,
     DataTransform,
     DummyTrack,
-    MultipleViews
+    InternalView,
+    PartialTrack,
+    OverlaidTracks
 } from './gosling.schema';
 import { SUPPORTED_CHANNELS } from '../core/mark';
 import {
@@ -47,8 +47,13 @@ import {
     interpolateYlOrBr,
     interpolateRdPu
 } from 'd3-scale-chromatic';
-import { resolveSuperposedTracks } from '../core/utils/overlay';
 import type { TabularDataFetcher } from '@data-fetchers';
+import type {
+    ProcessedCircularTrack,
+    ProcessedDummyTrack,
+    ProcessedTitleTrack,
+    ProcessedTrack
+} from 'demo/track-def/types';
 
 export const PREDEFINED_COLOR_STR_MAP: { [k: string]: (t: number) => string } = {
     viridis: interpolateViridis,
@@ -70,7 +75,7 @@ export function isTabularDataFetcher(dataFetcher: unknown): dataFetcher is Tabul
     return isObject(dataFetcher) && 'getTabularData' in dataFetcher;
 }
 
-export function hasDataTransform(spec: SingleTrack | OverlaidTrack, type: DataTransform['type']) {
+export function hasDataTransform(spec: LeafTrack | OverlaidTrack, type: DataTransform['type']) {
     return (spec.dataTransform ?? []).some(d => d.type === type);
 }
 
@@ -82,17 +87,25 @@ export function getHiGlassColorRange(colorStr = 'viridis', step = 100) {
     return [...Array(step)].map((_, i) => interpolate((1 / step) * i));
 }
 
-export function IsFlatTracks(_: SingleView): _ is FlatTracks {
+export function IsFlatTracks(_: LeafView): _ is _FlatTracks {
     return !('alignment' in _) && !_.tracks.find(d => (d as any).alignment === 'overlay' || 'tracks' in d);
 }
-export function IsOverlaidTracks(_: SingleView): _ is OverlaidTracks {
+export function isOverlaidTracks(_: Partial<LeafView>): _ is OverlaidTracks {
     return 'alignment' in _ && _.alignment === 'overlay';
 }
-export function IsStackedTracks(_: SingleView): _ is StackedTracks {
-    return !IsFlatTracks(_) && !IsOverlaidTracks(_);
+export function IsStackedTracks(_: LeafView): _ is StackedTracks {
+    return !IsFlatTracks(_) && !isOverlaidTracks(_);
 }
-
-export function IsDummyTrack(_: Track): _ is DummyTrack {
+export function isProcessedTitleTrack(_: Track | ProcessedTrack): _ is ProcessedTitleTrack {
+    return 'mark' in _ && _.mark === '_header';
+}
+export function isProcessedCircularTrack(_: ProcessedTrack): _ is ProcessedCircularTrack {
+    return 'layout' in _ && _.layout == 'circular';
+}
+export function isProcessedDummyTrack(_: ProcessedTrack): _ is ProcessedDummyTrack {
+    return 'type' in _ && _.type == 'dummy-track';
+}
+export function IsDummyTrack(_: PartialTrack | Track | ProcessedTrack): _ is DummyTrack {
     return 'type' in _ && _.type == 'dummy-track';
 }
 
@@ -120,23 +133,23 @@ export function IsTrackStyle(track: Style | undefined): track is Style {
     return track !== undefined;
 }
 
-export function IsSingleTrack(track: Track): track is SingleTrack {
+export function IsSingleTrack(track: ProcessedTrack | Track): track is LeafTrack {
     return !('_overlay' in track);
 }
 
-export function IsOverlaidTrack(track: Partial<Track>): track is OverlaidTrack {
-    return '_overlay' in track;
-}
+// export function IsOverlaidTrack(track: Partial<Track>): track is OverlaidTrack {
+// return '_overlay' in track;
+// }
 
 export function IsTemplateTrack(track: Partial<Track>): track is TemplateTrack {
     return 'template' in track;
 }
 
-export function IsSingleView(view: unknown): view is SingleView {
+export function IsSingleView(view: unknown): view is LeafView {
     return isObject(view) && 'tracks' in view;
 }
 
-export function IsMultipleViews(view: unknown): view is MultipleViews {
+export function IsMultipleViews(view: unknown): view is InternalView {
     return isObject(view) && 'views' in view;
 }
 
@@ -150,17 +163,19 @@ export function IsVerticalRule(track: Track) {
 /**
  * Is this 2D track, i.e., two genomic axes?
  */
-export function Is2DTrack(track: Track) {
+export function Is2DTrack(track: ProcessedTrack | Partial<Track>) {
     // If this is an overlaid tracks (e.g., matrix w/ rules),
     // we use the first `SingleTrack` to check the type of two axes.
-    const t = IsSingleTrack(track) ? track : resolveSuperposedTracks(track)[0];
+    // XXX: revert this function back
+    // const t = IsSingleTrack(track) ? track : resolveSuperposedTracks(track)[0];
+    const t = track;
     return IsChannelDeep(t.x) && t.x.type === 'genomic' && IsChannelDeep(t.y) && t.y.type === 'genomic';
 }
 
 /**
  * Do we want to use HiGlass matrix track (i.e., 'heatmap') to rendering the given visualization?
  */
-export function IsHiGlassMatrix(track: SingleTrack) {
+export function IsHiGlassMatrix(track: LeafTrack) {
     return (
         Is2DTrack(track) &&
         track.data.type === 'matrix' &&
@@ -228,7 +243,7 @@ export function IsRangeArray(range?: Range): range is string[] | number[] {
 /**
  * Check whether visual marks can be stacked on top of each other.
  */
-export function IsStackedMark(track: SingleTrack): boolean {
+export function IsStackedMark(track: LeafTrack): boolean {
     return (
         (track.mark === 'bar' || track.mark === 'area' || track.mark === 'text') &&
         IsChannelDeep(track.color) &&
@@ -245,7 +260,7 @@ export function IsStackedMark(track: SingleTrack): boolean {
  * Check whether visual marks in this channel are stacked on top of each other.
  * For example, `area` marks with a `quantitative` `y` channel are being stacked.
  */
-export function IsStackedChannel(track: SingleTrack, channelKey: keyof typeof ChannelTypes): boolean {
+export function IsStackedChannel(track: LeafTrack, channelKey: keyof typeof ChannelTypes): boolean {
     const channel = track[channelKey];
     return (
         IsStackedMark(track) &&
@@ -268,7 +283,7 @@ export function getValueUsingChannel(datum: { [k: string]: string | number }, ch
     return undefined;
 }
 
-export function getChannelKeysByAggregateFnc(spec: SingleTrack) {
+export function getChannelKeysByAggregateFnc(spec: LeafTrack) {
     const keys: (keyof typeof ChannelTypes)[] = [];
     SUPPORTED_CHANNELS.forEach(k => {
         const c = spec[k];
@@ -282,7 +297,7 @@ export function getChannelKeysByAggregateFnc(spec: SingleTrack) {
 /**
  * Get channel keys by a field type.
  */
-export function getChannelKeysByType(spec: SingleTrack, t: FieldType) {
+export function getChannelKeysByType(spec: LeafTrack, t: FieldType) {
     const keys: (keyof typeof ChannelTypes)[] = [];
     SUPPORTED_CHANNELS.forEach(k => {
         const c = spec[k];
@@ -293,7 +308,7 @@ export function getChannelKeysByType(spec: SingleTrack, t: FieldType) {
     return keys;
 }
 
-export function IsXAxis(_: Track) {
+export function IsXAxis(_: Track | ProcessedTrack) {
     if ((IsSingleTrack(_) || IsOverlaidTrack(_)) && IsChannelDeep(_.x) && _.x.axis && _.x.axis !== 'none') {
         return true;
     } else if (IsOverlaidTrack(_)) {
@@ -310,7 +325,7 @@ export function IsXAxis(_: Track) {
     return false;
 }
 
-export function IsYAxis(_: Track) {
+export function IsYAxis(_: ProcessedTrack) {
     if ((IsSingleTrack(_) || IsOverlaidTrack(_)) && IsChannelDeep(_.y) && _.y.axis && _.y.axis !== 'none') {
         return true;
     } else if (IsOverlaidTrack(_)) {

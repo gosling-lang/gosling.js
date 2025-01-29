@@ -1,4 +1,4 @@
-import type { DataDeep, GoslingSpec, OverlaidTracks } from '@gosling-lang/gosling-schema';
+import type { DataDeep, GoslingSpec, CompositeTrack } from '@gosling-lang/gosling-schema';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 const width = 350;
@@ -21,7 +21,7 @@ const data = {
 } as DataDeep;
 const domain = undefined; // { chromosome: 'chr3', interval: [52168000, 52890000] };
 
-export const HiGlass: OverlaidTracks = {
+export const HiGlass: CompositeTrack = {
     alignment: 'overlay',
     title: 'HiGlass',
     data,
@@ -137,7 +137,7 @@ export const HiGlass: OverlaidTracks = {
     height
 };
 
-const IGV: OverlaidTracks = {
+const IGV: CompositeTrack = {
     alignment: 'overlay',
     title: 'IGV',
     data,
@@ -232,7 +232,7 @@ const IGV: OverlaidTracks = {
     height
 };
 
-const CyverseQUBES: OverlaidTracks = {
+const CyverseQUBES: CompositeTrack = {
     alignment: 'overlay',
     title: 'Cyverse-QUBES',
     data,
@@ -342,7 +342,7 @@ const CyverseQUBES: OverlaidTracks = {
     height
 };
 
-const GmGDB: OverlaidTracks = {
+const GmGDB: CompositeTrack = {
     alignment: 'overlay',
     title: 'GmGDV',
     data,
@@ -444,7 +444,7 @@ const GmGDB: OverlaidTracks = {
     height
 };
 
-const g6: OverlaidTracks = {
+const g6: CompositeTrack = {
     alignment: 'overlay',
     data,
     tracks: [
@@ -512,7 +512,7 @@ const g6: OverlaidTracks = {
     width,
     height
 };
-const g7: OverlaidTracks = {
+const g7: CompositeTrack = {
     alignment: 'overlay',
     data,
     tracks: [
@@ -592,7 +592,7 @@ const g7: OverlaidTracks = {
     height
 };
 
-const GIVE: OverlaidTracks = {
+const GIVE: CompositeTrack = {
     alignment: 'overlay',
     title: 'GIVE',
     data,
@@ -640,7 +640,7 @@ const GIVE: OverlaidTracks = {
     height
 };
 
-const CorcesEtAl: OverlaidTracks = {
+const CorcesEtAl: CompositeTrack = {
     alignment: 'overlay',
     title: 'Corces et al.',
     data,

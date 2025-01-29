@@ -1,5 +1,5 @@
 import type { GoslingSpec } from 'gosling.js';
-import type { SingleView } from '@gosling-lang/gosling-schema';
+import type { LeafView } from '@gosling-lang/gosling-schema';
 import { DEFAULT_VIEW_SPACING } from '../../../src/compiler/defaults';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
@@ -15,7 +15,7 @@ export const getSingleView: (
     height: number,
     numHSpacing: number,
     numVSpacing: number
-) => SingleView = (color, width, height, numHSpacing, numVSpacing) => {
+) => LeafView = (color, width, height, numHSpacing, numVSpacing) => {
     return {
         tracks: Array(1).fill({
             data: {

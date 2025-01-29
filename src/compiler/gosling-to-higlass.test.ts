@@ -4,7 +4,7 @@ import { EX_TRACK_SEMANTIC_ZOOM } from '../../editor/example/json-spec/semantic-
 import { convertToFlatTracks } from './spec-preprocess';
 import { getTheme } from '../core/utils/theme';
 
-import type { SingleTrack } from '@gosling-lang/gosling-schema';
+import type { LeafTrack } from '@gosling-lang/gosling-schema';
 import { GoslingToHiGlassIdMapper } from '../api/track-and-view-ids';
 
 describe('Should convert gosling spec to higlass view config.', () => {
@@ -36,7 +36,7 @@ describe('Should convert gosling spec to higlass view config.', () => {
             model,
             {
                 // no spec
-            } as SingleTrack,
+            } as LeafTrack,
             {
                 width: 1000,
                 height: 100,

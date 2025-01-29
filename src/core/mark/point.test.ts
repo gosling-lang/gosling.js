@@ -3,14 +3,14 @@ import { CHANNEL_DEFAULTS } from '../channel';
 import { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
 import type { Track } from '@gosling-lang/gosling-schema';
 import { HIGLASS_AXIS_SIZE } from '../../compiler/higlass-model';
-import type { SingleTrack } from '@gosling-lang/gosling-schema';
+import type { LeafTrack } from '@gosling-lang/gosling-schema';
 import { drawPoint } from './point';
 import { getTheme } from '../utils/theme';
 
 describe('Rendering Point', () => {
     const g = new PIXI.Graphics();
     it('Simple', () => {
-        const t: SingleTrack = {
+        const t: LeafTrack = {
             data: { type: 'csv', url: '' },
             mark: 'point',
             x: { field: 'x', type: 'genomic' },

@@ -1,4 +1,4 @@
-import { IsFlatTracks, IsOverlaidTracks, IsStackedTracks, IsXAxis } from './gosling.schema.guards';
+import { IsFlatTracks, isOverlaidTracks, IsStackedTracks, IsXAxis } from './gosling.schema.guards';
 
 describe('Type Guard', () => {
     it('IsAxis', () => {
@@ -73,9 +73,9 @@ describe('Type Guard', () => {
         expect(IsStackedTracks({ alignment: 'overlay', tracks: [], width: 10, height: 10 })).toBe(false);
     });
     it('OverlaidTracks', () => {
-        expect(IsOverlaidTracks({ alignment: 'overlay', tracks: [], width: 10, height: 10 })).toBe(true);
-        expect(IsOverlaidTracks({ tracks: [{ alignment: 'overlay', tracks: [], width: 10, height: 10 }] })).toBe(false);
-        expect(IsOverlaidTracks({ tracks: [] })).toBe(false);
-        expect(IsOverlaidTracks({ alignment: 'stack', tracks: [] })).toBe(false);
+        expect(isOverlaidTracks({ alignment: 'overlay', tracks: [], width: 10, height: 10 })).toBe(true);
+        expect(isOverlaidTracks({ tracks: [{ alignment: 'overlay', tracks: [], width: 10, height: 10 }] })).toBe(false);
+        expect(isOverlaidTracks({ tracks: [] })).toBe(false);
+        expect(isOverlaidTracks({ alignment: 'stack', tracks: [] })).toBe(false);
     });
 });

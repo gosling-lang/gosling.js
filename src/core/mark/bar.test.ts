@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import type { SingleTrack } from '@gosling-lang/gosling-schema';
+import type { LeafTrack } from '@gosling-lang/gosling-schema';
 import { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
 import { getTheme } from '../utils/theme';
 import { drawBar } from './bar';
@@ -7,7 +7,7 @@ import type { Tile } from '@higlass/services';
 
 describe('mark:= bar', () => {
     it('x:=G, y:=V, ye:=V', () => {
-        const t: SingleTrack = {
+        const t: LeafTrack = {
             data: { type: 'csv', url: '' },
             mark: 'bar',
             x: { field: 'g', type: 'genomic' },

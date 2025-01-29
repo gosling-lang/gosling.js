@@ -1,7 +1,7 @@
-import type { GoslingSpec, MultivecData, OverlaidTracks } from '@gosling-lang/gosling-schema';
+import type { GoslingSpec, MultivecData, CompositeTrack } from '@gosling-lang/gosling-schema';
 import { EX_TRACK_SEMANTIC_ZOOM } from './semantic-zoom';
 
-export const EX_TRACK_SARS_COV_2_GENES: OverlaidTracks = {
+export const EX_TRACK_SARS_COV_2_GENES: CompositeTrack = {
     alignment: 'overlay',
     title: 'NC_045512.2 Genes',
     data: {

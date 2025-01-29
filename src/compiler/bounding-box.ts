@@ -1,5 +1,12 @@
-import type { MultipleViews, CommonViewDef, GoslingSpec, Track, SingleView } from '@gosling-lang/gosling-schema';
-import { Is2DTrack, IsDummyTrack, IsOverlaidTrack, IsXAxis, IsYAxis } from '@gosling-lang/gosling-schema';
+import type { InternalView, CommonViewDef, GoslingSpec, LeafView } from '@gosling-lang/gosling-schema';
+import {
+    Is2DTrack,
+    isOverlaidTracks,
+    isProcessedCircularTrack,
+    isProcessedDummyTrack,
+    IsXAxis,
+    IsYAxis
+} from '@gosling-lang/gosling-schema';
 import { HIGLASS_AXIS_SIZE } from './higlass-model';
 import {
     DEFAULT_CIRCULAR_VIEW_PADDING,
@@ -7,10 +14,9 @@ import {
     DEFAULT_VIEW_SPACING,
     DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM
 } from './defaults';
-import { resolveSuperposedTracks } from '../core/utils/overlay';
 import { traverseTracksAndViews, traverseViewArrangements } from './spec-preprocess';
 import type { CompleteThemeDeep } from '../core/utils/theme';
-import type { ProcessedTrack } from '../../demo/track-def/types';
+import type { ProcessedTitleTrack, ProcessedTrack } from '../../demo/track-def/types';
 export interface Size {
     width: number;
     height: number;
@@ -80,6 +86,7 @@ export function getRelativeTrackInfo(
 
     // Collect track information including spec, bounding boxes, and RGL' `layout`.
     traverseAndCollectTrackInfo(spec, trackInfos); // RGL parameter (`layout`) is not deteremined yet since we do not know the entire size of vis yet.
+
     // Get the size of entire visualization.
     const size = getBoundingBox(trackInfos);
 
@@ -142,7 +149,7 @@ export function getRelativeTrackInfo(
  * @param circularRootNotFound
  */
 function traverseAndCollectTrackInfo(
-    spec: GoslingSpec | SingleView,
+    spec: GoslingSpec | LeafView,
     output: TrackInfo[],
     dx = 0,
     dy = 0,
@@ -162,7 +169,7 @@ function traverseAndCollectTrackInfo(
     });
 
     let noChildConcatArrangement = true; // if v/hconcat is being used by children, circular visualizations should be adjacently placed.
-    traverseViewArrangements(spec, (a: MultipleViews) => {
+    traverseViewArrangements(spec, (a: InternalView) => {
         if (a.arrangement === 'vertical' || a.arrangement === 'horizontal') {
             noChildConcatArrangement = false;
         }
@@ -179,7 +186,7 @@ function traverseAndCollectTrackInfo(
 
     if ('tracks' in spec) {
         // following `traverseToFixSpecDownstream`, the width and height of each track are gaurenteed to be defined
-        const tracks = spec.tracks as (Track & { width: number; height: number })[];
+        const tracks = spec.tracks as Exclude<ProcessedTrack, ProcessedTitleTrack>[];
 
         if (spec.orientation === 'vertical') {
             // This is a vertical view, so use the largest `height` of the tracks for this view.
@@ -317,9 +324,15 @@ function traverseAndCollectTrackInfo(
 
         cTracks.forEach((t, i) => {
             // at this time, circular dummy tracks are not supported, so we don't do anything here
-            if (IsDummyTrack(t.track)) {
+            if (isProcessedDummyTrack(t.track)) {
                 return;
             }
+
+            if (!isProcessedCircularTrack(t.track)) {
+                // we know this is the circular track. This is just for the type guard.
+                return;
+            }
+
             t.track.layout = 'circular';
 
             t.track.outerRadius = TOTAL_RADIUS - PADDING - ((t.boundingBox.y - dy) / cumHeight) * TOTAL_RING_SIZE;
@@ -354,8 +367,8 @@ function traverseAndCollectTrackInfo(
 
             // !!! As circular tracks are not well supported now when parallelized or serialized, we do not support brush for now.
             if (ifMultipleViews) {
-                if (IsOverlaidTrack(t.track)) {
-                    t.track._overlay = t.track._overlay.filter(o => o.mark !== 'brush');
+                if (isOverlaidTracks(t.track)) {
+                    t.track.tracks = t.track.tracks.filter(o => 'mark' in o && o.mark !== 'brush');
                 }
             }
         });
@@ -373,11 +386,11 @@ function traverseAndCollectTrackInfo(
     return { x: dx, y: dy, width: cumWidth, height: cumHeight };
 }
 
-export function getNumOfXAxes(tracks: Track[]): number {
+export function getNumOfXAxes(tracks: ProcessedTrack[]): number {
     return tracks.filter(t => IsXAxis(t)).length;
 }
 
-export function getNumOfYAxes(tracks: Track[]): number {
+export function getNumOfYAxes(tracks: ProcessedTrack[]): number {
     return tracks.filter(t => IsYAxis(t)).length;
 }
 
@@ -396,5 +409,5 @@ const getTextTrack = (size: Size, title?: string, subtitle?: string) => {
             title,
             subtitle
         })
-    ) as Track;
+    ) as ProcessedTitleTrack;
 };

@@ -5,7 +5,7 @@ import { getLinkingInfo } from '../core/utils/linking';
 import type {
     GoslingSpec,
     OverlaidTrack,
-    SingleTrack,
+    LeafTrack,
     TrackApiData,
     VisUnitApiData,
     ViewApiData
@@ -84,19 +84,19 @@ export function renderHiGlass(
     const tracks: TrackApiData[] = trackInfos.map(d => {
         return {
             id: d.track.id!,
-            spec: d.track as SingleTrack | OverlaidTrack,
+            spec: d.track as LeafTrack | OverlaidTrack,
             shape:
                 d.track.layout === 'linear' || IsDummyTrack(d.track) // Dummy track is always linear
                     ? d.boundingBox
                     : {
-                          ...d.boundingBox,
-                          cx: d.boundingBox.x + d.boundingBox.width / 2.0,
-                          cy: d.boundingBox.y + d.boundingBox.height / 2.0,
-                          innerRadius: d.track.innerRadius!,
-                          outerRadius: d.track.outerRadius!,
-                          startAngle: d.track.startAngle!,
-                          endAngle: d.track.endAngle!
-                      }
+                        ...d.boundingBox,
+                        cx: d.boundingBox.x + d.boundingBox.width / 2.0,
+                        cy: d.boundingBox.y + d.boundingBox.height / 2.0,
+                        innerRadius: d.track.innerRadius!,
+                        outerRadius: d.track.outerRadius!,
+                        startAngle: d.track.startAngle!,
+                        endAngle: d.track.endAngle!
+                    }
         };
     });
 

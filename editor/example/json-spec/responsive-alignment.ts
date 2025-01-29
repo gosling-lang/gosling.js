@@ -1,4 +1,4 @@
-import type { OverlaidTracks, SingleTrack, SingleView } from '@gosling-lang/gosling-schema';
+import type { CompositeTrack, LeafTrack, LeafView } from '@gosling-lang/gosling-schema';
 import type { GoslingSpec } from 'gosling.js';
 import { CHANNEL_DEFAULTS } from '../../../src/core/channel';
 
@@ -8,7 +8,7 @@ type GapBarProp = {
     height: number;
     yAxis: boolean;
 };
-export const gapBar: (prop: GapBarProp) => SingleTrack = prop => {
+export const gapBar: (prop: GapBarProp) => LeafTrack = prop => {
     return {
         title: prop.title ? 'Gap' : undefined,
         data: {
@@ -30,7 +30,7 @@ export const gapBar: (prop: GapBarProp) => SingleTrack = prop => {
 };
 
 type ConservationBarProp = GapBarProp;
-export const conservationBar: (prop: ConservationBarProp) => SingleTrack = prop => {
+export const conservationBar: (prop: ConservationBarProp) => LeafTrack = prop => {
     return {
         title: prop.title ? 'Conservation' : undefined,
         data: {
@@ -58,7 +58,7 @@ type AlignmentProp = {
     rowLegend: boolean;
     colorLegend: boolean;
 };
-export const alignmentWithText: (prop: AlignmentProp) => OverlaidTracks = prop => {
+export const alignmentWithText: (prop: AlignmentProp) => CompositeTrack = prop => {
     return {
         alignment: 'overlay',
         data: {
@@ -104,7 +104,7 @@ export const alignmentWithText: (prop: AlignmentProp) => OverlaidTracks = prop =
     };
 };
 
-export const alignmentWithoutText: (prop: AlignmentProp) => SingleTrack = prop => {
+export const alignmentWithoutText: (prop: AlignmentProp) => LeafTrack = prop => {
     return {
         data: {
             url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/alignment_viewer_p53.fasta.csv',
@@ -169,7 +169,7 @@ export const EX_SPEC_ALIGNMENT_CHART: GoslingSpec = {
     ]
 };
 
-const mainView: SingleView = {
+const mainView: LeafView = {
     linkingId: '-',
     spacing: 30,
     tracks: [
@@ -178,12 +178,12 @@ const mainView: SingleView = {
         alignmentWithText({ width: 800, height: 500, xAxis: true, rowLegend: true, colorLegend: true })
     ]
 };
-const compactMainView: SingleView = {
+const compactMainView: LeafView = {
     linkingId: '-',
     spacing: 30,
     tracks: [alignmentWithText({ width: 800, height: 500, xAxis: false, rowLegend: false, colorLegend: false })]
 };
-const overview: SingleView = {
+const overview: LeafView = {
     static: true,
     xDomain: { interval: [0, 396] },
     alignment: 'overlay',

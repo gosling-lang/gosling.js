@@ -3,7 +3,7 @@ import { compile } from './compile';
 import { getTheme } from '../core/utils/theme';
 import type { GoslingSpec } from '../index';
 import { convertToFlatTracks } from './spec-preprocess';
-import type { SingleView } from '@gosling-lang/gosling-schema';
+import type { LeafView } from '@gosling-lang/gosling-schema';
 import { spreadTracksByData } from '../core/utils/overlay';
 
 describe('compile', () => {
@@ -282,7 +282,7 @@ describe('Compiler with UrlToFetchOptions', () => {
 
 describe('Maintain IDs', () => {
     it('Overlaid tracks', () => {
-        const twoTracksWithDiffData: SingleView = {
+        const twoTracksWithDiffData: LeafView = {
             alignment: 'overlay',
             tracks: [
                 {

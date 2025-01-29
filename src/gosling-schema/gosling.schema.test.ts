@@ -1,4 +1,4 @@
-import type { Channel, SingleTrack } from './gosling.schema';
+import type { Channel, LeafTrack } from './gosling.schema';
 import {
     IsChannelDeep,
     IsChannelValue,
@@ -32,7 +32,7 @@ describe('gosling schema should be checked correctly', () => {
                 x: { field: 'x', type: 'genomic' },
                 y: { field: 'y', type: 'quantitative' },
                 color: { field: 'y', type: 'nominal' }
-            } as SingleTrack)
+            } as LeafTrack)
         ).toBe(true);
 
         expect(
@@ -41,7 +41,7 @@ describe('gosling schema should be checked correctly', () => {
                 x: { field: 'x', type: 'genomic' },
                 y: { field: 'y', type: 'quantitative' },
                 color: { field: 'y', type: 'nominal' }
-            } as SingleTrack)
+            } as LeafTrack)
         ).toBe(true);
     });
 
@@ -52,7 +52,7 @@ describe('gosling schema should be checked correctly', () => {
                 x: { field: 'x', type: 'genomic' },
                 y: { field: 'y', type: 'quantitative' },
                 color: { field: 'y', type: 'quantitative' }
-            } as SingleTrack)
+            } as LeafTrack)
         ).toBe(false);
 
         expect(
@@ -62,7 +62,7 @@ describe('gosling schema should be checked correctly', () => {
                 y: { field: 'y', type: 'quantitative' },
                 color: { field: 'y', type: 'nominal' },
                 row: { field: 'y', type: 'nominal' }
-            } as SingleTrack)
+            } as LeafTrack)
         ).toBe(false);
 
         expect(
@@ -71,7 +71,7 @@ describe('gosling schema should be checked correctly', () => {
                 x: { field: 'x', type: 'genomic' },
                 y: { field: 'y', type: 'quantitative' },
                 color: { field: 'y', type: 'nominal' }
-            } as SingleTrack)
+            } as LeafTrack)
         ).toBe(false);
     });
 
@@ -83,7 +83,7 @@ describe('gosling schema should be checked correctly', () => {
                     x: { field: 'x', type: 'genomic' },
                     y: { field: 'y', type: 'quantitative' },
                     color: { field: 'y', type: 'nominal' }
-                } as SingleTrack,
+                } as LeafTrack,
                 'y'
             )
         ).toBe(true);
@@ -95,7 +95,7 @@ describe('gosling schema should be checked correctly', () => {
                     x: { field: 'x', type: 'genomic' },
                     y: { field: 'y', type: 'quantitative' },
                     color: { field: 'y', type: 'nominal' }
-                } as SingleTrack,
+                } as LeafTrack,
                 'x'
             )
         ).toBe(false);

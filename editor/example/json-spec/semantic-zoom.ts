@@ -1,8 +1,8 @@
-import type { GoslingSpec, OverlaidTracks } from '@gosling-lang/gosling-schema';
+import type { GoslingSpec, CompositeTrack } from '@gosling-lang/gosling-schema';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 import { EX_SPEC_PATHOGENIC } from './pathogenic';
 
-const ScalableSequenceTrack: OverlaidTracks = {
+const ScalableSequenceTrack: CompositeTrack = {
     alignment: 'overlay',
     data: {
         url: GOSLING_PUBLIC_DATA.fasta,
@@ -70,7 +70,7 @@ const ScalableSequenceTrack: OverlaidTracks = {
     height: 80
 };
 
-const ScalableCytoBand: OverlaidTracks = {
+const ScalableCytoBand: CompositeTrack = {
     alignment: 'overlay',
     data: {
         url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv',

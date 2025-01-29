@@ -1,9 +1,8 @@
 import type { Track as HiGlassTrack } from '@gosling-lang/higlass-schema';
 import { HiGlassModel, HIGLASS_AXIS_SIZE } from './higlass-model';
 import { parseServerAndTilesetUidFromUrl } from '../core/utils';
-import type { Track, Domain } from '@gosling-lang/gosling-schema';
+import type { Domain } from '@gosling-lang/gosling-schema';
 import type { BoundingBox, RelativePosition } from './bounding-box';
-import { resolveSuperposedTracks } from '../core/utils/overlay';
 import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from '../gosling-schema/validate';
 import {
     IsDataDeep,
@@ -13,7 +12,8 @@ import {
     IsXAxis,
     IsHiGlassMatrix,
     getHiGlassColorRange,
-    IsDummyTrack
+    IsDummyTrack,
+    isProcessedTitleTrack
 } from '@gosling-lang/gosling-schema';
 import { DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM } from './defaults';
 import type { CompleteThemeDeep } from '../core/utils/theme';
@@ -21,13 +21,14 @@ import { DEFAULT_TEXT_STYLE } from '../core/utils/text-style';
 import type { GoslingToHiGlassIdMapper } from '../api/track-and-view-ids';
 import type { UrlToFetchOptions } from '../core/gosling-component';
 import { uuid } from '../core/utils/uuid';
+import type { ProcessedTrack } from 'demo/track-def/types';
 
 /**
  * Convert a gosling track into a HiGlass view and add it into a higlass model.
  */
 export function goslingToHiGlass(
     hgModel: HiGlassModel,
-    gosTrack: Track,
+    gosTrack: ProcessedTrack,
     bb: BoundingBox,
     layout: RelativePosition,
     theme: Required<CompleteThemeDeep>,
@@ -61,9 +62,8 @@ export function goslingToHiGlass(
         }
     });
 
-    const assembly = firstResolvedSpec.assembly;
-
     if (IsDataDeep(firstResolvedSpec.data)) {
+        const assembly = firstResolvedSpec.assembly;
         let server, tilesetUid;
 
         if (IsDataDeepTileset(firstResolvedSpec.data)) {
@@ -83,15 +83,15 @@ export function goslingToHiGlass(
         const width =
             bb.width -
             (firstResolvedSpec.layout !== 'circular' &&
-            firstResolvedSpec.orientation === 'vertical' &&
-            IsXAxis(firstResolvedSpec)
+                firstResolvedSpec.orientation === 'vertical' &&
+                IsXAxis(firstResolvedSpec)
                 ? HIGLASS_AXIS_SIZE
                 : 0);
         const height =
             bb.height -
             (firstResolvedSpec.layout !== 'circular' &&
-            firstResolvedSpec.orientation === 'horizontal' &&
-            IsXAxis(firstResolvedSpec)
+                firstResolvedSpec.orientation === 'horizontal' &&
+                IsXAxis(firstResolvedSpec)
                 ? HIGLASS_AXIS_SIZE
                 : 0);
         const hgTrack: HiGlassTrack = {
@@ -282,7 +282,7 @@ export function goslingToHiGlass(
         });
 
         hgModel.validateSpec(true);
-    } else if (firstResolvedSpec.mark === '_header') {
+    } else if (isProcessedTitleTrack(firstResolvedSpec)) {
         // `text` tracks are used to show title and subtitle of the views
         hgModel.addDefaultView(`${trackId}-title`).setLayout(layout);
         if (typeof firstResolvedSpec.title === 'string') {

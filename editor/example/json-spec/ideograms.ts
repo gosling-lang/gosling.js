@@ -1,7 +1,7 @@
-import type { GoslingSpec, OverlaidTracks, Track } from '@gosling-lang/gosling-schema';
+import type { GoslingSpec, CompositeTrack, Track } from '@gosling-lang/gosling-schema';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
-export const CytoBands: OverlaidTracks = {
+export const CytoBands: CompositeTrack = {
     alignment: 'overlay',
     data: {
         url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/cytogenetic_band.csv',

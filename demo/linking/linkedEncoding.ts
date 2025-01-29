@@ -1,4 +1,4 @@
-import { IsDummyTrack, IsMultipleViews, IsSingleView, type Assembly, type SingleView } from '@gosling-lang/gosling-schema';
+import { IsDummyTrack, IsMultipleViews, IsSingleView, type Assembly, type LeafView } from '@gosling-lang/gosling-schema';
 import { GenomicPositionHelper, computeChromSizes } from '../../src/core/utils/assembly';
 import { signal, type Signal } from '@preact/signals-core';
 import type { GoslingSpec } from 'gosling.js';
@@ -157,9 +157,9 @@ function getLinkedFeaturesRecursive(gs: GoslingSpec): LinkInfo {
 /**
  * Extracts the linkingId from tracks that have a brush overlay
  */
-function getSingleViewTrackLinks(gs: SingleView): TrackLink[] {
+function getSingleViewTrackLinks(gs: LeafView): TrackLink[] {
     // Helper function to create a track link for the x encoding
-    function createTrackLinkX(trackId: string, track: Track, trackType: TrackType, gs: SingleView) {
+    function createTrackLinkX(trackId: string, track: Track, trackType: TrackType, gs: LeafView) {
         const trackLink = {
             trackId: trackId,
             linkingId: track.x.linkingId,
@@ -174,7 +174,7 @@ function getSingleViewTrackLinks(gs: SingleView): TrackLink[] {
         }
         return trackLink;
     }
-    function createTrackLinkY(trackId: string, track: Track, trackType: TrackType, gs: SingleView) {
+    function createTrackLinkY(trackId: string, track: Track, trackType: TrackType, gs: LeafView) {
         const { assembly } = gs;
         const trackLink = {
             trackId: trackId,
@@ -237,7 +237,7 @@ function getSingleViewTrackLinks(gs: SingleView): TrackLink[] {
 /**
  * Links all of the tracks in a single view together
  */
-function getSingleViewLinks(gs: SingleView): ViewLink[] {
+function getSingleViewLinks(gs: LeafView): ViewLink[] {
     function addLinkY(tracks: Track[], viewYDomain: [number, number]): ViewLink {
         const viewLinkY: ViewLink = {
             linkingId: undefined,
@@ -295,7 +295,7 @@ function getSingleViewLinks(gs: SingleView): ViewLink[] {
 }
 
 function hasDiffXDomainThanView(
-    view: SingleView,
+    view: LeafView,
     track: Track,
     assembly: Assembly | undefined,
     viewXDomain: [number, number]
