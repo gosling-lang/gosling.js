@@ -1,5 +1,5 @@
 import type { SparseTile, TileData } from '@higlass/services';
-import type { Datum, SingleTrack } from '@gosling-lang/gosling-schema';
+import type { Datum, LeafTrack } from '@gosling-lang/gosling-schema';
 import { IsDataDeepTileset } from '@gosling-lang/gosling-schema';
 
 export const GOSLING_DATA_ROW_UID_FIELD = 'gosling-data-row-uid';
@@ -8,7 +8,7 @@ export const GOSLING_DATA_ROW_UID_FIELD = 'gosling-data-row-uid';
  * Convert genomic data formats to common tabular formats for given tile.
  */
 export function getTabularData(
-    spec: SingleTrack,
+    spec: LeafTrack,
     data: TileData & {
         sparse?: Array<SparseTile>;
         shape?: [number, number];

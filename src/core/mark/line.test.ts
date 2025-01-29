@@ -1,13 +1,13 @@
 import * as PIXI from 'pixi.js';
 import { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
-import type { SingleTrack } from '@gosling-lang/gosling-schema';
+import type { LeafTrack } from '@gosling-lang/gosling-schema';
 import { getTheme } from '../utils/theme';
 import { drawLine } from './line';
 
 describe('Rendering Point', () => {
     const g = new PIXI.Graphics();
     it('Simple', () => {
-        const t: SingleTrack = {
+        const t: LeafTrack = {
             data: { type: 'csv', url: '' },
             mark: 'line',
             x: { field: 'x', type: 'genomic' },

@@ -1,8 +1,8 @@
-import type { GoslingSpec, SingleTrack } from '@gosling-lang/gosling-schema';
+import type { GoslingSpec, LeafTrack } from '@gosling-lang/gosling-schema';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 import { CytoBands } from './ideograms';
 
-export const BAR: SingleTrack = {
+export const BAR: LeafTrack = {
     data: {
         url: GOSLING_PUBLIC_DATA.multivec,
         type: 'multivec',

@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
-import type { SingleTrack } from '@gosling-lang/gosling-schema';
+import type { LeafTrack } from '@gosling-lang/gosling-schema';
 import { getTheme } from '../utils/theme';
 import { drawWithinLink } from './withinLink';
 
@@ -8,7 +8,7 @@ describe('Rendering link', () => {
     const g = new PIXI.Graphics();
     const trackInfo = { dimensions: [100, 100] };
     it('Linear Band', () => {
-        const t: SingleTrack = {
+        const t: LeafTrack = {
             data: { type: 'csv', url: '' },
             mark: 'withinLink',
             x: { field: 'x', type: 'genomic' },
@@ -27,7 +27,7 @@ describe('Rendering link', () => {
         drawWithinLink(g, trackInfo, model);
     });
     it('Circular Band', () => {
-        const t: SingleTrack = {
+        const t: LeafTrack = {
             layout: 'circular',
             data: { type: 'csv', url: '' },
             mark: 'withinLink',
@@ -47,7 +47,7 @@ describe('Rendering link', () => {
         drawWithinLink(g, trackInfo, model);
     });
     it('Linear line', () => {
-        const t: SingleTrack = {
+        const t: LeafTrack = {
             layout: 'linear',
             data: { type: 'csv', url: '' },
             mark: 'withinLink',
@@ -65,7 +65,7 @@ describe('Rendering link', () => {
         drawWithinLink(g, trackInfo, model);
     });
     it('Circular line', () => {
-        const t: SingleTrack = {
+        const t: LeafTrack = {
             layout: 'circular',
             data: { type: 'csv', url: '' },
             mark: 'withinLink',

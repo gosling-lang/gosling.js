@@ -5,7 +5,7 @@ export type GoslingSpec =
 
 export type ResponsiveSize = boolean | { width?: boolean; height?: boolean };
 
-export type RootSpecWithSingleView = SingleView & {
+export type RootSpecWithSingleView = LeafView & {
     title?: string;
     subtitle?: string;
     description?: string;
@@ -13,7 +13,7 @@ export type RootSpecWithSingleView = SingleView & {
     responsiveSize?: ResponsiveSize;
 };
 
-export interface RootSpecWithMultipleViews extends MultipleViews {
+export interface RootSpecWithMultipleViews extends InternalView {
     title?: string;
     subtitle?: string;
     description?: string;
@@ -22,9 +22,10 @@ export interface RootSpecWithMultipleViews extends MultipleViews {
 }
 
 /* ----------------------------- VIEW ----------------------------- */
-export type View = SingleView | (MultipleViews & ResponsiveSpecOfMultipleViews);
+export type View = LeafView | (InternalView & ResponsiveSpecOfMultipleViews);
 
-export type SingleView = (OverlaidTracks | StackedTracks | _FlatTracks) & ResponsiveSpecOfSingleView;
+/** View that does not have no child view */
+export type LeafView = (OverlaidTracks | StackedTracks | _FlatTracks) & ResponsiveSpecOfSingleView;
 
 export type SelectivityCondition = {
     operation: LogicalOperation;
@@ -51,23 +52,23 @@ export interface _FlatTracks extends CommonViewDef {
 
 export type PartialTrack = Partial<Track>;
 
-export interface StackedTracks extends CommonViewDef, Partial<SingleTrack> {
+export interface StackedTracks extends CommonViewDef, Partial<LeafTrack> {
     alignment?: 'stack';
     tracks: (PartialTrack | OverlaidTracks)[];
 }
 
-export interface OverlaidTracks extends CommonViewDef, Partial<SingleTrack> {
+export interface OverlaidTracks extends CommonViewDef, Partial<LeafTrack> {
     alignment: 'overlay';
     tracks: PartialTrack[];
 }
 
-export interface MultipleViews extends CommonViewDef {
+export interface InternalView extends CommonViewDef {
     /**
      * Specify how multiple views are arranged.
      */
     arrangement?: 'parallel' | 'serial' | 'horizontal' | 'vertical';
     /** An array of view specifications */
-    views: Array<SingleView | MultipleViews>;
+    views: Array<LeafView | InternalView>;
 
     /** Internal: Used for responsive spec */
     _assignedWidth?: number;
@@ -76,7 +77,7 @@ export interface MultipleViews extends CommonViewDef {
 
 export type ResponsiveSpecOfMultipleViews = {
     responsiveSpec?: {
-        spec: Partial<MultipleViews>;
+        spec: Partial<InternalView>;
         selectivity: SelectivityCondition[];
     }[];
 };
@@ -155,7 +156,7 @@ export interface CommonViewDef {
 }
 
 /* ----------------------------- TRACK ----------------------------- */
-export type Track = SingleTrack | TemplateTrack | DummyTrack;
+export type Track = LeafTrack | TemplateTrack | DummyTrack;
 
 export interface CommonTrackDef extends CommonViewDef {
     /** Assigned to `uid` in a HiGlass view config, used for API and caching. */
@@ -346,7 +347,7 @@ export type TrackApiData = {
     id: string;
 
     /** Expanded track specification processed by the Gosling compiler, e.g., default properties filled in. */
-    spec: SingleTrack;
+    spec: LeafTrack;
 
     /** The shape of the source track */
     shape: BoundingBox | (BoundingBox & CircularTrackShape);
@@ -386,9 +387,9 @@ export type MouseEventsDeep = {
 };
 
 /* ----------------------------- TRACK ----------------------------- */
-export type SingleTrack = SingleTrackBase & Encoding;
+export type LeafTrack = LeafTrackBase & Encoding;
 
-interface SingleTrackBase extends CommonTrackDef {
+interface LeafTrackBase extends CommonTrackDef {
     // Data
     data: DataDeep;
 

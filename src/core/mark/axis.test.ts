@@ -1,13 +1,13 @@
 import * as PIXI from 'pixi.js';
 import { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
-import type { SingleTrack } from '@gosling-lang/gosling-schema';
+import type { LeafTrack } from '@gosling-lang/gosling-schema';
 import { getTheme } from '../utils/theme';
 import { drawLinearYAxis } from './axis';
 
 describe('Y Axis', () => {
     const g = new PIXI.Graphics();
     it('Linear', () => {
-        const t: SingleTrack = {
+        const t: LeafTrack = {
             data: { type: 'csv', url: '' },
             mark: 'line',
             x: { field: 'x', type: 'genomic' },
@@ -35,7 +35,7 @@ describe('Y Axis', () => {
     });
 
     it('Circular', () => {
-        const t: SingleTrack = {
+        const t: LeafTrack = {
             layout: 'circular',
             startAngle: 0,
             endAngle: 240,

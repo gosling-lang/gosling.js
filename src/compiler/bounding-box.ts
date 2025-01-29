@@ -1,7 +1,7 @@
-import type { MultipleViews, CommonViewDef, GoslingSpec, SingleView } from '@gosling-lang/gosling-schema';
+import type { InternalView, CommonViewDef, GoslingSpec, LeafView } from '@gosling-lang/gosling-schema';
 import {
     Is2DTrack,
-    IsOverlaidTracks,
+    isOverlaidTracks,
     isProcessedCircularTrack,
     isProcessedDummyTrack,
     IsXAxis,
@@ -149,7 +149,7 @@ export function getRelativeTrackInfo(
  * @param circularRootNotFound
  */
 function traverseAndCollectTrackInfo(
-    spec: GoslingSpec | SingleView,
+    spec: GoslingSpec | LeafView,
     output: TrackInfo[],
     dx = 0,
     dy = 0,
@@ -169,7 +169,7 @@ function traverseAndCollectTrackInfo(
     });
 
     let noChildConcatArrangement = true; // if v/hconcat is being used by children, circular visualizations should be adjacently placed.
-    traverseViewArrangements(spec, (a: MultipleViews) => {
+    traverseViewArrangements(spec, (a: InternalView) => {
         if (a.arrangement === 'vertical' || a.arrangement === 'horizontal') {
             noChildConcatArrangement = false;
         }
@@ -367,7 +367,7 @@ function traverseAndCollectTrackInfo(
 
             // !!! As circular tracks are not well supported now when parallelized or serialized, we do not support brush for now.
             if (ifMultipleViews) {
-                if (IsOverlaidTracks(t.track)) {
+                if (isOverlaidTracks(t.track)) {
                     t.track.tracks = t.track.tracks.filter(o => 'mark' in o && o.mark !== 'brush');
                 }
             }

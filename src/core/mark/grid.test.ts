@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
-import type { SingleTrack } from '@gosling-lang/gosling-schema';
+import type { LeafTrack } from '@gosling-lang/gosling-schema';
 import { getTheme } from '../utils/theme';
 import { drawGrid } from './grid';
 
@@ -12,7 +12,7 @@ describe('Grid', () => {
         pBackground: g
     };
     it('Linear Y Grid', () => {
-        const t: SingleTrack = {
+        const t: LeafTrack = {
             data: { type: 'csv', url: '' },
             mark: 'line',
             x: { field: 'x', type: 'genomic' },
@@ -30,7 +30,7 @@ describe('Grid', () => {
     });
 
     it('Linear Row Grid', () => {
-        const t: SingleTrack = {
+        const t: LeafTrack = {
             data: { type: 'csv', url: '' },
             mark: 'line',
             x: { field: 'x', type: 'genomic' },
@@ -48,7 +48,7 @@ describe('Grid', () => {
     });
 
     it('Circular Y Grid', () => {
-        const t: SingleTrack = {
+        const t: LeafTrack = {
             layout: 'circular',
             startAngle: 0,
             endAngle: 240,
@@ -71,7 +71,7 @@ describe('Grid', () => {
     });
 
     it('Circular Row Grid', () => {
-        const t: SingleTrack = {
+        const t: LeafTrack = {
             layout: 'circular',
             startAngle: 0,
             endAngle: 240,

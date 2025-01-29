@@ -1,27 +1,27 @@
-import type { AxisPosition, SingleTrack, DataDeep, OverlaidTracks, StackedTracks } from '@gosling-lang/gosling-schema';
-import { IsChannelDeep, IsDummyTrack, IsTemplateTrack, IsOverlaidTracks } from '@gosling-lang/gosling-schema';
+import type { AxisPosition, LeafTrack, DataDeep, OverlaidTracks, StackedTracks } from '@gosling-lang/gosling-schema';
+import { IsChannelDeep, IsDummyTrack, IsTemplateTrack, isOverlaidTracks } from '@gosling-lang/gosling-schema';
 import type { ProcessedTrack } from 'demo/track-def/types';
 
 /**
  * Resolve superposed tracks into multiple track specifications.
  * Some options are corrected to ensure the resolved tracks use consistent visual properties, such as the existence of the axis for genomic coordinates.
  */
-export function expandOverlaidTracks(track: SingleTrack | OverlaidTracks | StackedTracks): SingleTrack[] {
+export function expandOverlaidTracks(track: LeafTrack | OverlaidTracks | StackedTracks): LeafTrack[] {
     if (IsTemplateTrack(track) || IsDummyTrack(track)) {
         // no BasicSingleTrack to return
         return [];
     }
 
     if (!('tracks' in track) || track.tracks.length === 0) {
-        return [{ ...track } as SingleTrack];
+        return [{ ...track } as LeafTrack];
     }
 
-    const base: SingleTrack = JSON.parse(JSON.stringify(track));
-    delete (base as Partial<OverlaidTrack>)._overlay; // remove `superpose` from the base spec
+    const base: LeafTrack = JSON.parse(JSON.stringify(track));
+    delete (base as Partial<OverlaidTracks>)._overlay; // remove `superpose` from the base spec
 
-    const resolved: SingleTrack[] = [];
+    const resolved: LeafTrack[] = [];
     track._overlay.forEach((subSpec, i) => {
-        const spec = Object.assign(JSON.parse(JSON.stringify(base)), subSpec) as SingleTrack;
+        const spec = Object.assign(JSON.parse(JSON.stringify(base)), subSpec) as LeafTrack;
         if (spec.title && i !== 0) {
             delete spec.title;
         }

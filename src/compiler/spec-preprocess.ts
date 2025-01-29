@@ -1,13 +1,13 @@
 import type {
-    SingleTrack,
+    LeafTrack,
     GoslingSpec,
     View,
-    SingleView,
+    LeafView,
     Track,
     PartialTrack,
     CommonTrackDef,
     CommonViewDef,
-    MultipleViews,
+    InternalView,
     DisplaceTransform
 } from '@gosling-lang/gosling-schema';
 import {
@@ -18,7 +18,7 @@ import {
     Is2DTrack,
     IsDummyTrack,
     IsSingleView,
-    IsOverlaidTracks
+    isOverlaidTracks
 } from '@gosling-lang/gosling-schema';
 import {
     DEFAULT_TRACK_HEIGHT_LINEAR,
@@ -76,7 +76,7 @@ export function traverseTracksAndViews(
  * @param spec
  * @param callback
  */
-export function traverseViewArrangements(spec: GoslingSpec, callback: (tv: MultipleViews) => void) {
+export function traverseViewArrangements(spec: GoslingSpec, callback: (tv: InternalView) => void) {
     if ('tracks' in spec) {
         // No need to do anything
     } else {
@@ -91,13 +91,13 @@ export function traverseViewArrangements(spec: GoslingSpec, callback: (tv: Multi
  * This convert the nested track definitions into a flat array.
  * @param spec
  */
-export function convertToFlatTracks(spec: SingleView): Track[] {
+export function convertToFlatTracks(spec: LeafView): Track[] {
     if (IsFlatTracks(spec)) {
         // This is already `FlatTracks`, so just override the view definition
         const base = { ...spec, tracks: undefined, id: undefined };
         return spec.tracks
             .filter(track => !track._invalidTrack)
-            .map(track => Object.assign(JSON.parse(JSON.stringify(base)), track) as SingleTrack);
+            .map(track => Object.assign(JSON.parse(JSON.stringify(base)), track) as LeafTrack);
     }
 
     const newTracks: Track[] = [];
@@ -116,7 +116,7 @@ export function convertToFlatTracks(spec: SingleView): Track[] {
                 } else {
                     // Override track definitions from views
                     const base = { ...spec, tracks: undefined, id: undefined };
-                    const newSpec = Object.assign(JSON.parse(JSON.stringify(base)), track) as SingleTrack;
+                    const newSpec = Object.assign(JSON.parse(JSON.stringify(base)), track) as LeafTrack;
                     newTracks.push(newSpec);
                 }
             });
@@ -143,8 +143,8 @@ export function convertToFlatTracks(spec: SingleView): Track[] {
  * TODO: The description will be revisited.
  * This function passes down properties from parents, so any missing values can be filled in.
  */
-export function processGoslingSpec(spec: GoslingSpec | SingleView, parentDef?: CommonViewDef | MultipleViews) {
-    // Property inheritance
+export function processGoslingSpec(spec: GoslingSpec | LeafView, parentDef?: CommonViewDef | InternalView) {
+    // Inherit properties
     if (parentDef) {
         spec = Object.assign({}, pick(parentDef, Object.keys(DEFAULT_VIEW_PROPERTIES)), spec);
         spec.style = inheritStyle(parentDef.style, spec.style);
@@ -153,9 +153,9 @@ export function processGoslingSpec(spec: GoslingSpec | SingleView, parentDef?: C
     // Fill in defaults
     spec = Object.assign({ id: uuid() }, DEFAULT_VIEW_PROPERTIES, spec);
 
-    // We are now going deeper...
+    // Go deeper
     if (IsSingleView(spec)) {
-        processSingleView(spec);
+        processLeafView(spec);
     } else {
         spec.views.forEach(view => processGoslingSpec(view, spec as CommonViewDef));
     }
@@ -195,7 +195,7 @@ export function expandTrackDisplacement(track: PartialTrack) {
     }
 }
 
-export function processSingleView(spec: SingleView) {
+export function processLeafView(spec: LeafView) {
     // TODO: Implement the below in another place
     // let tracks: Track[] = convertToFlatTracks(spec);
     // !!! Be aware that this should be taken before fixing `overlayOnPreviousTrack` options.
@@ -256,7 +256,7 @@ export function processSingleView(spec: SingleView) {
         }
 
         // Override styles
-        if (IsOverlaidTracks(track)) {
+        if (isOverlaidTracks(track)) {
             // Remove the dummy tracks from an overlay track
             track.tracks = track.tracks.filter(overlaidTrack => {
                 return !('type' in overlaidTrack && overlaidTrack.type == 'dummy-track');
@@ -286,7 +286,7 @@ export function processSingleView(spec: SingleView) {
              */
             if ((IsSingleTrack(track) || IsOverlaidTrack(track)) && IsChannelDeep(track.y) && !track.y.domain) {
                 track.y.domain = spec.yDomain;
-            } else if (IsOverlaidTracks(track)) {
+            } else if (isOverlaidTracks(track)) {
                 track.tracks.forEach(o => {
                     if (IsChannelDeep(o.y) && !o.y.domain) {
                         o.y.domain = spec.yDomain;

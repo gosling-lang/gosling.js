@@ -1,4 +1,4 @@
-import type { GoslingSpec, SingleView, Track } from '@gosling-lang/gosling-schema';
+import type { GoslingSpec, LeafView, Track } from '@gosling-lang/gosling-schema';
 import { getBoundingBox, getRelativeTrackInfo } from './bounding-box';
 import { processGoslingSpec, convertToFlatTracks } from './spec-preprocess';
 import { getTheme } from '../core/utils/theme';
@@ -28,8 +28,8 @@ describe('Fix Spec Downstream', () => {
                 views: [{ tracks: [{ _overlay: [], width: 0, height: 0 }] }]
             };
             processGoslingSpec(spec);
-            expect((spec.views[0] as SingleView).style?.outline).toEqual('red');
-            expect((spec.views[0] as SingleView).tracks[0].style?.outline).toEqual('red');
+            expect((spec.views[0] as LeafView).style?.outline).toEqual('red');
+            expect((spec.views[0] as LeafView).tracks[0].style?.outline).toEqual('red');
         }
         {
             const spec: GoslingSpec = {
@@ -37,8 +37,8 @@ describe('Fix Spec Downstream', () => {
                 views: [{ tracks: [{ _overlay: [], width: 0, height: 0, style: { outline: 'green' } }] }]
             };
             processGoslingSpec(spec);
-            expect((spec.views[0] as SingleView).style?.outline).toEqual('red');
-            expect((spec.views[0] as SingleView).tracks[0].style?.outline).toEqual('green');
+            expect((spec.views[0] as LeafView).style?.outline).toEqual('red');
+            expect((spec.views[0] as LeafView).tracks[0].style?.outline).toEqual('green');
         }
     });
 

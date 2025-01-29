@@ -1,8 +1,8 @@
 import type {
     DomainChrInterval,
     GoslingSpec,
-    OverlaidTracks,
-    SingleTrack,
+    CompositeTrack,
+    LeafTrack,
     TemplateTrack
 } from '@gosling-lang/gosling-schema';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
@@ -12,7 +12,7 @@ const trackColor = {
     2: '#E6A01B'
 };
 
-const tracks: (type: 1 | 2, compact?: boolean) => SingleTrack[] = (type, compact) => [
+const tracks: (type: 1 | 2, compact?: boolean) => LeafTrack[] = (type, compact) => [
     {
         id: `${type}-1`,
         title: `Sample 1`,
@@ -120,7 +120,7 @@ export const gene: (type: 1 | 2, compact?: boolean) => TemplateTrack = (type, co
     };
 };
 
-const _gene: (type: 1 | 2, compact?: boolean) => OverlaidTracks = (type, compact) => {
+const _gene: (type: 1 | 2, compact?: boolean) => CompositeTrack = (type, compact) => {
     return {
         alignment: 'overlay',
         // title: 'Locus 1',

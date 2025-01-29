@@ -1,7 +1,7 @@
 import { type AxisTrackOptions } from '@gosling-lang/genomic-axis';
 import { IsChannelDeep, IsDummyTrack, IsTemplateTrack, type AxisPosition } from '@gosling-lang/gosling-schema';
 import type { CompleteThemeDeep } from '../../src/core/utils/theme';
-import { resolveSuperposedTracks } from '../../src/core/utils/overlay';
+import { expandOverlaidTracks } from '../../src/core/utils/overlay';
 import { HIGLASS_AXIS_SIZE } from '../../src/compiler/higlass-model';
 import { TrackType, type TrackDef } from './main';
 import type { ProcessedCircularTrack, ProcessedTrack } from './types';
@@ -194,7 +194,7 @@ function getAxisPositions(track: ProcessedTrack): {
         return { xAxisPosition: undefined, yAxisPosition: undefined };
     }
 
-    const resolvedSpecs = resolveSuperposedTracks(track);
+    const resolvedSpecs = expandOverlaidTracks(track);
     const firstResolvedSpec = resolvedSpecs[0];
 
     const hasXAxis =

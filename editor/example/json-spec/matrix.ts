@@ -1,4 +1,4 @@
-import type { PredefinedColors, SingleTrack } from '@gosling-lang/gosling-schema';
+import type { PredefinedColors, LeafTrack } from '@gosling-lang/gosling-schema';
 import type { GoslingSpec } from 'gosling.js';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
@@ -2537,7 +2537,7 @@ const getMatrix: (
     e: 'full' | 'upper-right' | 'lower-left',
     w: number,
     h: number
-) => SingleTrack = (t, c, e, w, h) => {
+) => LeafTrack = (t, c, e, w, h) => {
     return {
         id: t,
         data: {

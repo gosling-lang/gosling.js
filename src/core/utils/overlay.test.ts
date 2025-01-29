@@ -1,10 +1,10 @@
 import type { OverlaidTrack } from '@gosling-lang/gosling-schema';
 import { IsChannelDeep } from '@gosling-lang/gosling-schema';
-import { resolveSuperposedTracks, spreadTracksByData } from './overlay';
+import { expandOverlaidTracks, spreadTracksByData } from './overlay';
 
 describe('Should handle superposition options correctly', () => {
     it('Should return an 1-element array if superpose option is not used', () => {
-        const tracks = resolveSuperposedTracks({
+        const tracks = expandOverlaidTracks({
             mark: 'line',
             data: { type: 'csv', url: '' },
             width: 100,
@@ -14,7 +14,7 @@ describe('Should handle superposition options correctly', () => {
         expect(tracks[0].mark).toBe('line');
     });
     it('Should resolve `superpose` options when the array length is one', () => {
-        const tracks = resolveSuperposedTracks({
+        const tracks = expandOverlaidTracks({
             _overlay: [{ mark: 'line' }],
             width: 100,
             height: 100
@@ -23,7 +23,7 @@ describe('Should handle superposition options correctly', () => {
         expect(tracks[0].mark).toBe('line');
     });
     it('Should resolve `superpose` options', () => {
-        const tracks = resolveSuperposedTracks({
+        const tracks = expandOverlaidTracks({
             _overlay: [{ mark: 'line' }, { mark: 'point' }],
             width: 100,
             height: 100
@@ -33,7 +33,7 @@ describe('Should handle superposition options correctly', () => {
         expect(tracks[1].mark).toBe('point');
     });
     it('Should correct several options for consistency', () => {
-        const tracks = resolveSuperposedTracks({
+        const tracks = expandOverlaidTracks({
             _overlay: [{ x: { axis: 'top' } }, { x: { axis: 'bottom' } }],
             width: 100,
             height: 100
@@ -44,7 +44,7 @@ describe('Should handle superposition options correctly', () => {
         );
     });
     it('Should delete title except the last one in overlaid tracks', () => {
-        const tracks = resolveSuperposedTracks({
+        const tracks = expandOverlaidTracks({
             title: 'title',
             _overlay: [{ x: { axis: 'top' } }, { x: { axis: 'bottom' } }],
             width: 100,

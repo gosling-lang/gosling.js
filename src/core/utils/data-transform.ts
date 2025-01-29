@@ -1,6 +1,6 @@
 import type * as d3 from 'd3';
 import type {
-    SingleTrack,
+    LeafTrack,
     Datum,
     FilterTransform,
     LogTransform,
@@ -409,7 +409,7 @@ export function parseSubJSON(_: JsonParseTransform, data: Datum[]): Datum[] {
 /**
  * Experimental! Only support one category supported yet.
  */
-export function aggregateData(spec: SingleTrack, data: Datum[]): Datum[] {
+export function aggregateData(spec: LeafTrack, data: Datum[]): Datum[] {
     if (getChannelKeysByAggregateFnc(spec).length === 0) {
         // we do not have aggregated fields
         return data;

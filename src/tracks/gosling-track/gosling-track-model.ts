@@ -3,7 +3,7 @@ import type {
     PredefinedColors,
     ChannelTypes,
     ChannelValue,
-    SingleTrack,
+    LeafTrack,
     Channel,
     Color,
     Stroke
@@ -57,8 +57,8 @@ export class GoslingTrackModel {
     private theme: Required<CompleteThemeDeep>;
 
     /* spec */
-    private specOriginal: SingleTrack; // original spec of users
-    private specComplete: SingleTrack; // processed spec, being used in visualizations
+    private specOriginal: LeafTrack; // original spec of users
+    private specComplete: LeafTrack; // processed spec, being used in visualizations
 
     /* data */
     private dataAggregated: { [k: string]: number | string }[];
@@ -71,7 +71,7 @@ export class GoslingTrackModel {
     /* mouse events */
     private mouseEventModel: MouseEventModel;
 
-    constructor(spec: SingleTrack, data: { [k: string]: number | string }[], theme: Required<CompleteThemeDeep>) {
+    constructor(spec: LeafTrack, data: { [k: string]: number | string }[], theme: Required<CompleteThemeDeep>) {
         this.id = uuid();
 
         this.theme = theme ?? getTheme();
@@ -112,11 +112,11 @@ export class GoslingTrackModel {
         return this.id;
     }
 
-    public originalSpec(): SingleTrack {
+    public originalSpec(): LeafTrack {
         return this.specOriginal;
     }
 
-    public spec(): SingleTrack {
+    public spec(): LeafTrack {
         return this.specComplete;
     }
 
@@ -131,7 +131,7 @@ export class GoslingTrackModel {
     /**
      * Fill the missing options with default values or with the values calculated based on the data.
      */
-    private generateCompleteSpec(spec: SingleTrack) {
+    private generateCompleteSpec(spec: LeafTrack) {
         if (!spec.width || !spec.height) {
             // This shouldn't be reached.
             console.warn('Size of track is not determined yet.');
@@ -185,7 +185,7 @@ export class GoslingTrackModel {
      * TODO: This is experimental. For bar charts, for example, additional care should be taken to correctly flip the visual marks.
      * Flip the y scales when `flip` options is used.
      */
-    private flipRanges(spec: SingleTrack) {
+    private flipRanges(spec: LeafTrack) {
         if (IsChannelDeep(spec.y) && spec.y.flip && Array.isArray(spec.y.range)) {
             spec.y.range = spec.y.range.reverse();
         }
@@ -249,8 +249,8 @@ export class GoslingTrackModel {
         const channelFieldType = IsChannelDeep(channel)
             ? channel.type
             : IsChannelValue(channel)
-              ? 'constant'
-              : undefined;
+                ? 'constant'
+                : undefined;
 
         if (!channelFieldType) {
             // Shouldn't be reached. Channel should be either encoded with data or a constant value.
@@ -487,7 +487,7 @@ export class GoslingTrackModel {
     /**
      * Set missing `range`, `domain`, and/or `value` of each channel by looking into data.
      */
-    public addScaleMaterials(spec: SingleTrack) {
+    public addScaleMaterials(spec: LeafTrack) {
         const data = this.data();
 
         const genomicChannel = this.getGenomicChannel();
@@ -520,14 +520,14 @@ export class GoslingTrackModel {
                         'zeroBaseline' in channel && channel.zeroBaseline
                             ? 0
                             : d3min(
-                                  xKeys.map(d =>
-                                      d3sum(
-                                          (pivotedData.get(d) as any).map((_d: any) =>
-                                              channel.field ? _d[channel.field] : undefined
-                                          )
-                                      )
-                                  ) as number[]
-                              );
+                                xKeys.map(d =>
+                                    d3sum(
+                                        (pivotedData.get(d) as any).map((_d: any) =>
+                                            channel.field ? _d[channel.field] : undefined
+                                        )
+                                    )
+                                ) as number[]
+                            );
                     const max = d3max(
                         xKeys.map(d =>
                             d3sum(
