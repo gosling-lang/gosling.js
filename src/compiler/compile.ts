@@ -1,6 +1,6 @@
 import type { GoslingSpec, TemplateTrackDef, VisUnitApiData } from '@gosling-lang/gosling-schema';
 import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
-import { traverseToFixSpecDownstream } from './spec-preprocess';
+import { processGoslingSpec } from './spec-preprocess';
 import { replaceTrackTemplates } from '../core/utils/template';
 import { getRelativeTrackInfo, type Size, type TrackInfo } from './bounding-box';
 import type { CompleteThemeDeep } from '../core/utils/theme';
@@ -20,7 +20,7 @@ interface CompileResult {
 }
 
 export function compile(
-    spec: GoslingSpec,
+    originalSpec: GoslingSpec,
     templates: TemplateTrackDef[],
     theme: Required<CompleteThemeDeep>,
     containerStatus: {
@@ -29,14 +29,14 @@ export function compile(
     },
     urlToFetchOptions?: UrlToFetchOptions
 ): CompileResult {
-    // Make sure to keep the original spec as-is
-    const specCopy = JSON.parse(JSON.stringify(spec));
+    // Make sure not to edit the original spec
+    const specCopy = JSON.parse(JSON.stringify(originalSpec));
 
-    // Replace track templates with raw gosling specs (i.e., `TemplateTrack` => `SingleTrack | OverlaidTrack`)
+    // Replace track templates with gosling specs (i.e., `TemplateTrack` => `SingleTrack | OverlaidTrack`)
     replaceTrackTemplates(specCopy, templates);
 
-    // Fix track specs by looking into the root-level spec
-    traverseToFixSpecDownstream(specCopy);
+    // Fill in missing values and inherit parents' properties.
+    processGoslingSpec(specCopy);
 
     // Generate arrangement data
     const trackInfosAndSize = getRelativeTrackInfo(specCopy, theme);
@@ -45,9 +45,11 @@ export function compile(
 
     // Handle responsive specs, either remove them or replace original specs w/ them
     const isResponsiveWidth =
-        (typeof spec.responsiveSize === 'object' && spec.responsiveSize?.width) || spec.responsiveSize;
+        (typeof originalSpec.responsiveSize === 'object' && originalSpec.responsiveSize?.width) ||
+        originalSpec.responsiveSize;
     const isResponsiveHeight =
-        (typeof spec.responsiveSize === 'object' && spec.responsiveSize?.height) || spec.responsiveSize;
+        (typeof originalSpec.responsiveSize === 'object' && originalSpec.responsiveSize?.height) ||
+        originalSpec.responsiveSize;
     const wFactor =
         isResponsiveWidth && containerStatus.containerSize ? containerStatus.containerSize.width / size.width : 1;
     const hFactor =
@@ -62,7 +64,7 @@ export function compile(
 
     // Do the downstream-fix and track arrangement again using the updated spec
     if (replaced) {
-        traverseToFixSpecDownstream(specCopy);
+        processGoslingSpec(specCopy);
         trackInfos = getRelativeTrackInfo(specCopy, theme).trackInfos;
     }
 

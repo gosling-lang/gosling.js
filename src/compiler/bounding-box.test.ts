@@ -1,7 +1,7 @@
 import type { GoslingSpec, Track } from '@gosling-lang/gosling-schema';
 import { DEFAULT_CIRCULAR_VIEW_PADDING, DEFAULT_VIEW_SPACING } from './defaults';
 import { getBoundingBox, getRelativeTrackInfo } from './bounding-box';
-import { traverseToFixSpecDownstream } from '../compiler/spec-preprocess';
+import { processGoslingSpec } from '../compiler/spec-preprocess';
 import { getTheme } from '../core/utils/theme';
 
 describe('Arrangement', () => {
@@ -282,7 +282,7 @@ describe('Arrangement', () => {
                     }
                 ]
             };
-            traverseToFixSpecDownstream(spec);
+            processGoslingSpec(spec);
             const info = getRelativeTrackInfo(spec, getTheme()).trackInfos;
             expect(info).toHaveLength(2);
 

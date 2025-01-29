@@ -1,11 +1,9 @@
-import type { MultipleViews, CommonViewDef, GoslingSpec, Track, SingleView } from '@gosling-lang/gosling-schema';
+import type { MultipleViews, CommonViewDef, GoslingSpec, SingleView } from '@gosling-lang/gosling-schema';
 import {
     Is2DTrack,
-    IsDummyTrack,
-    IsOverlaidTrack,
+    IsOverlaidTracks,
     isProcessedCircularTrack,
     isProcessedDummyTrack,
-    isProcessedTitleTrack,
     IsXAxis,
     IsYAxis
 } from '@gosling-lang/gosling-schema';
@@ -16,10 +14,9 @@ import {
     DEFAULT_VIEW_SPACING,
     DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM
 } from './defaults';
-import { resolveSuperposedTracks } from '../core/utils/overlay';
 import { traverseTracksAndViews, traverseViewArrangements } from './spec-preprocess';
 import type { CompleteThemeDeep } from '../core/utils/theme';
-import type { ProcessedCircularTrack, ProcessedTitleTrack, ProcessedTrack } from '../../demo/track-def/types';
+import type { ProcessedTitleTrack, ProcessedTrack } from '../../demo/track-def/types';
 export interface Size {
     width: number;
     height: number;
@@ -89,6 +86,7 @@ export function getRelativeTrackInfo(
 
     // Collect track information including spec, bounding boxes, and RGL' `layout`.
     traverseAndCollectTrackInfo(spec, trackInfos); // RGL parameter (`layout`) is not deteremined yet since we do not know the entire size of vis yet.
+
     // Get the size of entire visualization.
     const size = getBoundingBox(trackInfos);
 
@@ -369,8 +367,8 @@ function traverseAndCollectTrackInfo(
 
             // !!! As circular tracks are not well supported now when parallelized or serialized, we do not support brush for now.
             if (ifMultipleViews) {
-                if (IsOverlaidTrack(t.track)) {
-                    t.track._overlay = t.track._overlay.filter(o => o.mark !== 'brush');
+                if (IsOverlaidTracks(t.track)) {
+                    t.track.tracks = t.track.tracks.filter(o => 'mark' in o && o.mark !== 'brush');
                 }
             }
         });

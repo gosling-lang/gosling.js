@@ -1,7 +1,6 @@
 import Ajv from 'ajv';
 import type { SingleTrack, ChannelDeep, ChannelTypes, OverlaidTrack, Track } from './gosling.schema';
 import { IsChannelDeep } from './gosling.schema.guards';
-import { resolveSuperposedTracks } from '../core/utils/overlay';
 import GoslingSchema from './gosling.schema.json';
 
 export interface Validity {
@@ -41,7 +40,8 @@ export function validateTrack(track: Track) {
     let valid = true;
     const errorMessages: string[] = [];
 
-    const resolvedTrack = resolveSuperposedTracks(track);
+    // XXX:
+    const resolvedTrack = track; // resolveSuperposedTracks(track);
 
     resolvedTrack.forEach(spec => {
         // Validate with json schema

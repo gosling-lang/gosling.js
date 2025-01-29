@@ -1,38 +1,19 @@
-import type {
-    AxisPosition,
-    SingleTrack,
-    OverlaidTrack,
-    Track,
-    ChannelDeep,
-    DataDeep
-} from '@gosling-lang/gosling-schema';
-import {
-    IsChannelDeep,
-    IsOverlaidTrack,
-    IsSingleTrack,
-    IsDummyTrack,
-    IsTemplateTrack
-} from '@gosling-lang/gosling-schema';
+import type { AxisPosition, SingleTrack, DataDeep, OverlaidTracks, StackedTracks } from '@gosling-lang/gosling-schema';
+import { IsChannelDeep, IsDummyTrack, IsTemplateTrack, IsOverlaidTracks } from '@gosling-lang/gosling-schema';
 import type { ProcessedTrack } from 'demo/track-def/types';
 
 /**
  * Resolve superposed tracks into multiple track specifications.
  * Some options are corrected to ensure the resolved tracks use consistent visual properties, such as the existence of the axis for genomic coordinates.
  */
-export function resolveSuperposedTracks(track: ProcessedTrack): ProcessedTrack[] {
+export function expandOverlaidTracks(track: SingleTrack | OverlaidTracks | StackedTracks): SingleTrack[] {
     if (IsTemplateTrack(track) || IsDummyTrack(track)) {
         // no BasicSingleTrack to return
         return [];
     }
 
-    if (!IsOverlaidTrack(track)) {
-        // no `superpose` to resolve
-        return [track];
-    }
-
-    if (track._overlay.length === 0) {
-        // This makes sure not to return empty object
-        return [{ ...track }];
+    if (!('tracks' in track) || track.tracks.length === 0) {
+        return [{ ...track } as SingleTrack];
     }
 
     const base: SingleTrack = JSON.parse(JSON.stringify(track));
@@ -47,7 +28,7 @@ export function resolveSuperposedTracks(track: ProcessedTrack): ProcessedTrack[]
         resolved.push(spec);
     });
 
-    /* Correct the spec for consistency */
+    // Correct the spec for consistency
     // x-axis
     let xAxisPosition: undefined | AxisPosition = undefined;
     resolved.forEach(d => {
@@ -73,6 +54,7 @@ export function resolveSuperposedTracks(track: ProcessedTrack): ProcessedTrack[]
  * Spread overlaid tracks if they are assigned to different data/metadata.
  * This process is necessary since we are passing over each track to HiGlass, and if a single track is mapped to multiple datastes, HiGlass cannot handle that.
  */
+/*
 export function spreadTracksByData(tracks: Track[]): Track[] {
     return ([] as Track[]).concat(
         ...tracks.map(t => {
@@ -138,7 +120,7 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
         })
     );
 }
-
+*/
 export function isIdenticalDataSpec(specs: (DataDeep | undefined)[]): boolean {
     if (specs.length === 0) {
         return false;

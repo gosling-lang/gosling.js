@@ -3,7 +3,7 @@ import type {
     DataTransform,
     DataTransformWithBase,
     GoslingSpec,
-    OverlaidTracks,
+    CompositeTrack,
     TemplateTrackDef,
     TemplateTrackMappingDef,
     Track
@@ -307,7 +307,7 @@ export function replaceTrackTemplates(spec: GoslingSpec, templates: TemplateTrac
         if ('template' in viewBase) {
             delete viewBase.template;
         }
-        const convertedView: OverlaidTracks = {
+        const convertedView: CompositeTrack = {
             ...viewBase,
             alignment: 'overlay',
             tracks: [],

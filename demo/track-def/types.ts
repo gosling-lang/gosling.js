@@ -37,7 +37,7 @@ export interface ProcessedTrackBase {
     yOffset: number;
 }
 
-export type ProcessedTitleTrack = Pick<ProcessedTrackBase, 'width' | 'height' | 'title' | 'subtitle'> & {
+export type ProcessedTitleTrack = Pick<ProcessedTrackBase, 'id' | 'width' | 'height' | 'title' | 'subtitle'> & {
     mark: '_header';
 };
 

@@ -1,3 +1,5 @@
+import type { CommonViewDef, MultipleViews } from '@gosling-lang/gosling-schema';
+
 export const DEFAULT_VISUAL_PROPERTIES = {
     opacity: 1
 };
@@ -22,3 +24,16 @@ export const DEFAULT_CIRCULAR_VIEW_PADDING = 0; // TODO: this is not properly co
 
 // default color when cannot parse
 export const DEFAULT_BACKUP_COLOR = 'gray';
+
+export const DEFAULT_VIEW_PROPERTIES: CommonViewDef & Pick<MultipleViews, 'arrangement'> = {
+    arrangement: 'vertical',
+    assembly: 'hg38',
+    layout: 'linear',
+    orientation: 'horizontal',
+    static: false,
+    zoomLimits: [1, null],
+    centerRadius: DEFAULT_INNER_RADIUS_PROP,
+    spacing: DEFAULT_VIEW_SPACING,
+    xOffset: 0,
+    yOffset: 0
+};

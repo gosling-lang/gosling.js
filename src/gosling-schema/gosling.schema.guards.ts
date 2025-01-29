@@ -24,8 +24,8 @@ import type {
     VectorData,
     BigWigData,
     SingleView,
-    FlatTracks,
-    OverlaidTracks,
+    _FlatTracks,
+    CompositeTrack,
     StackedTracks,
     BamData,
     Range,
@@ -33,7 +33,9 @@ import type {
     MouseEventsDeep,
     DataTransform,
     DummyTrack,
-    MultipleViews
+    MultipleViews,
+    PartialTrack,
+    OverlaidTracks
 } from './gosling.schema';
 import { SUPPORTED_CHANNELS } from '../core/mark';
 import {
@@ -47,7 +49,6 @@ import {
     interpolateYlOrBr,
     interpolateRdPu
 } from 'd3-scale-chromatic';
-import { resolveSuperposedTracks } from '../core/utils/overlay';
 import type { TabularDataFetcher } from '@data-fetchers';
 import type {
     ProcessedCircularTrack,
@@ -88,10 +89,10 @@ export function getHiGlassColorRange(colorStr = 'viridis', step = 100) {
     return [...Array(step)].map((_, i) => interpolate((1 / step) * i));
 }
 
-export function IsFlatTracks(_: SingleView): _ is FlatTracks {
+export function IsFlatTracks(_: SingleView): _ is _FlatTracks {
     return !('alignment' in _) && !_.tracks.find(d => (d as any).alignment === 'overlay' || 'tracks' in d);
 }
-export function IsOverlaidTracks(_: SingleView): _ is OverlaidTracks {
+export function IsOverlaidTracks(_: Partial<SingleView>): _ is OverlaidTracks {
     return 'alignment' in _ && _.alignment === 'overlay';
 }
 export function IsStackedTracks(_: SingleView): _ is StackedTracks {
@@ -106,7 +107,7 @@ export function isProcessedCircularTrack(_: ProcessedTrack): _ is ProcessedCircu
 export function isProcessedDummyTrack(_: ProcessedTrack): _ is ProcessedDummyTrack {
     return 'type' in _ && _.type == 'dummy-track';
 }
-export function IsDummyTrack(_: Track | ProcessedTrack): _ is DummyTrack {
+export function IsDummyTrack(_: PartialTrack | Track | ProcessedTrack): _ is DummyTrack {
     return 'type' in _ && _.type == 'dummy-track';
 }
 
@@ -138,9 +139,9 @@ export function IsSingleTrack(track: ProcessedTrack | Track): track is SingleTra
     return !('_overlay' in track);
 }
 
-export function IsOverlaidTrack(track: Partial<Track>): track is OverlaidTrack {
-    return '_overlay' in track;
-}
+// export function IsOverlaidTrack(track: Partial<Track>): track is OverlaidTrack {
+// return '_overlay' in track;
+// }
 
 export function IsTemplateTrack(track: Partial<Track>): track is TemplateTrack {
     return 'template' in track;
@@ -164,10 +165,12 @@ export function IsVerticalRule(track: Track) {
 /**
  * Is this 2D track, i.e., two genomic axes?
  */
-export function Is2DTrack(track: ProcessedTrack | Track) {
+export function Is2DTrack(track: ProcessedTrack | Partial<Track>) {
     // If this is an overlaid tracks (e.g., matrix w/ rules),
     // we use the first `SingleTrack` to check the type of two axes.
-    const t = IsSingleTrack(track) ? track : resolveSuperposedTracks(track)[0];
+    // XXX: revert this function back
+    // const t = IsSingleTrack(track) ? track : resolveSuperposedTracks(track)[0];
+    const t = track;
     return IsChannelDeep(t.x) && t.x.type === 'genomic' && IsChannelDeep(t.y) && t.y.type === 'genomic';
 }
 

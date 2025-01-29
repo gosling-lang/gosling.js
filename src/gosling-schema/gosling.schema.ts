@@ -24,7 +24,7 @@ export interface RootSpecWithMultipleViews extends MultipleViews {
 /* ----------------------------- VIEW ----------------------------- */
 export type View = SingleView | (MultipleViews & ResponsiveSpecOfMultipleViews);
 
-export type SingleView = (OverlaidTracks | StackedTracks | FlatTracks) & ResponsiveSpecOfSingleView;
+export type SingleView = (OverlaidTracks | StackedTracks | _FlatTracks) & ResponsiveSpecOfSingleView;
 
 export type SelectivityCondition = {
     operation: LogicalOperation;
@@ -44,7 +44,8 @@ export type ResponsiveSpecOfSingleView = {
     }[];
 };
 
-export interface FlatTracks extends CommonViewDef {
+// ... why is this needed?
+export interface _FlatTracks extends CommonViewDef {
     tracks: Track[];
 }
 
@@ -154,7 +155,7 @@ export interface CommonViewDef {
 }
 
 /* ----------------------------- TRACK ----------------------------- */
-export type Track = SingleTrack | OverlaidTrack | TemplateTrack | DummyTrack;
+export type Track = SingleTrack | TemplateTrack | DummyTrack;
 
 export interface CommonTrackDef extends CommonViewDef {
     /** Assigned to `uid` in a HiGlass view config, used for API and caching. */
@@ -345,7 +346,7 @@ export type TrackApiData = {
     id: string;
 
     /** Expanded track specification processed by the Gosling compiler, e.g., default properties filled in. */
-    spec: SingleTrack | OverlaidTrack;
+    spec: SingleTrack;
 
     /** The shape of the source track */
     shape: BoundingBox | (BoundingBox & CircularTrackShape);
@@ -495,10 +496,10 @@ export type DisplacementType = 'pile' | 'spread';
 /**
  * Superposing multiple tracks.
  */
-export type OverlaidTrack = Partial<SingleTrack> & {
-    // This is a property internally used when compiling
-    _overlay: Partial<Omit<SingleTrack, 'height' | 'width' | 'layout' | 'title' | 'subtitle'>>[];
-};
+// export type OverlaidTrack = Partial<SingleTrack> & {
+// This is a property internally used when compiling
+// _overlay: Partial<Omit<SingleTrack, 'height' | 'width' | 'layout' | 'title' | 'subtitle'>>[];
+// };
 
 /**
  * The styles defined here will be applied to the target marks of mouse events, such as a point mark after the user clicks on it.
