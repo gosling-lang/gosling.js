@@ -49,8 +49,8 @@ export function panZoomHeatmap(
             // Use the default filter and our custom filter
             return defaultFilter && !isDraggingBrush;
         })
-        // @ts-expect-error We need to reset the transform when the user stops zooming
         .on('end', () => {
+            // @ts-expect-error We need to reset the transform when the user stops zooming
             plot.domOverlay.__zoom = new ZoomTransform(1, 0, 0);
         })
         .on('start', () => {

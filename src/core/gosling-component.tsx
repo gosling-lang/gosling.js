@@ -104,50 +104,14 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
                     return;
                 }
 
-                gosling.compile(
+                const {
+                    hg,
+                    size,
+                    gs,
+                    tracksAndViews: newTracksAndViews,
+                    idTable: newIdTable
+                } = gosling.compile(
                     spec,
-                    (
-                        newHiGlassSpec: gosling.HiGlassSpec,
-                        newSize: { width: number; height: number },
-                        newGoslingSpec: gosling.GoslingSpec,
-                        newTracksAndViews: VisUnitApiData[],
-                        newIdTable: IdTable
-                    ) => {
-                        // TODO: `linkingId` should be updated
-                        // We may not want to re-render this
-                        if (
-                            prevSpec.current &&
-                            isEqual(omitDeep(prevSpec.current, ['linkingId']), omitDeep(newGoslingSpec, ['linkingId']))
-                        ) {
-                            return;
-                        }
-
-                        // If a callback function is provided, return compiled information.
-                        props.compiled?.(spec, newHiGlassSpec, { _processedSpec: newGoslingSpec });
-
-                        // Change the size of wrapper `<div/>` elements
-                        setSize(newSize);
-
-                        // Update the compiled view config
-                        const isMountedOnce = typeof viewConfig !== 'undefined';
-                        if (reactive && isMountedOnce) {
-                            // Use API to update visualization.
-                            setTimeout(() => {
-                                preverseZoomStatus(
-                                    newHiGlassSpec,
-                                    hgRef.current?.api.getViewConfig() as gosling.HiGlassSpec
-                                );
-                                hgRef.current?.api.setViewConfig(newHiGlassSpec);
-                            }, DELAY_FOR_CONTAINER_RESIZE_BEFORE_RERENDER);
-                        } else {
-                            // Mount `HiGlassComponent` using this view config.
-                            setViewConfig(newHiGlassSpec);
-                        }
-                        publishOnNewView(newTracksAndViews);
-                        prevSpec.current = newGoslingSpec;
-                        tracksAndViews.current = newTracksAndViews;
-                        idTable.current = newIdTable;
-                    },
                     [...GoslingTemplates], // TODO: allow user definitions
                     theme,
                     {
@@ -156,6 +120,38 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
                     },
                     props.urlToFetchOptions
                 );
+
+                // TODO: `linkingId` should be updated
+                // We may not want to re-render this
+                if (
+                    prevSpec.current &&
+                    isEqual(omitDeep(prevSpec.current, ['linkingId']), omitDeep(gs, ['linkingId']))
+                ) {
+                    return;
+                }
+
+                // If a callback function is provided, return compiled information.
+                props.compiled?.(spec, hg, { _processedSpec: gs });
+
+                // Change the size of wrapper `<div/>` elements
+                setSize(size);
+
+                // Update the compiled view config
+                const isMountedOnce = typeof viewConfig !== 'undefined';
+                if (reactive && isMountedOnce) {
+                    // Use API to update visualization.
+                    setTimeout(() => {
+                        preverseZoomStatus(hg, hgRef.current?.api.getViewConfig() as gosling.HiGlassSpec);
+                        hgRef.current?.api.setViewConfig(hg);
+                    }, DELAY_FOR_CONTAINER_RESIZE_BEFORE_RERENDER);
+                } else {
+                    // Mount `HiGlassComponent` using this view config.
+                    setViewConfig(hg);
+                }
+                publishOnNewView(newTracksAndViews);
+                prevSpec.current = gs;
+                tracksAndViews.current = newTracksAndViews;
+                idTable.current = newIdTable;
             }
         },
         [props.spec, theme]

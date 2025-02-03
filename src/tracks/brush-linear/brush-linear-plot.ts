@@ -38,9 +38,8 @@ export class BrushLinearTrack extends BrushLinearTrackClass<BrushLinearTrackOpti
         const context: BrushLinearTrackContext = {
             id: 'test',
             svgElement: svgElement,
-            getTheme: () => 'light',
-            registerViewportChanged: () => {},
-            removeViewportChanged: () => {},
+            registerViewportChanged: () => { },
+            removeViewportChanged: () => { },
             setDomainsCallback: (xDomain: [number, number]) => (xBrushDomain.value = xDomain),
             projectionXDomain: xBrushDomain.value
         };

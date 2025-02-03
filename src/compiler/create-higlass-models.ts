@@ -15,6 +15,7 @@ import type { UrlToFetchOptions } from 'src/core/gosling-component';
 import { getViewApiData } from '../api/api-data';
 import { GoslingToHiGlassIdMapper } from '../api/track-and-view-ids';
 import { IsDummyTrack } from '@gosling-lang/gosling-schema';
+import type { ProcessedCircularTrack } from 'demo/track-def/types';
 
 export function renderHiGlass(
     spec: GoslingSpec,
@@ -82,21 +83,27 @@ export function renderHiGlass(
     });
 
     const tracks: TrackApiData[] = trackInfos.map(d => {
+        let isLinear = false;
+        if ('layout' in d.track && d.track.layout === 'linear') {
+            isLinear = true;
+        } else if (IsDummyTrack(d.track)) {
+            // Dummy track is always linear
+            isLinear = true;
+        }
         return {
             id: d.track.id!,
             spec: d.track as SingleTrack | OverlaidTrack,
-            shape:
-                d.track.layout === 'linear' || IsDummyTrack(d.track) // Dummy track is always linear
-                    ? d.boundingBox
-                    : {
-                          ...d.boundingBox,
-                          cx: d.boundingBox.x + d.boundingBox.width / 2.0,
-                          cy: d.boundingBox.y + d.boundingBox.height / 2.0,
-                          innerRadius: d.track.innerRadius!,
-                          outerRadius: d.track.outerRadius!,
-                          startAngle: d.track.startAngle!,
-                          endAngle: d.track.endAngle!
-                      }
+            shape: isLinear
+                ? d.boundingBox
+                : {
+                      ...d.boundingBox,
+                      cx: d.boundingBox.x + d.boundingBox.width / 2.0,
+                      cy: d.boundingBox.y + d.boundingBox.height / 2.0,
+                      innerRadius: (d.track as ProcessedCircularTrack).innerRadius!,
+                      outerRadius: (d.track as ProcessedCircularTrack).outerRadius!,
+                      startAngle: (d.track as ProcessedCircularTrack).startAngle!,
+                      endAngle: (d.track as ProcessedCircularTrack).endAngle!
+                  }
         };
     });
 
