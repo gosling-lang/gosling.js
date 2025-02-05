@@ -1,7 +1,6 @@
 import type * as PIXI from 'pixi.js';
 import React, { useEffect, useState, forwardRef, useMemo } from 'react';
 
-import * as gosling from '..';
 // @ts-ignore
 import { HiGlassComponent } from 'higlass';
 import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
@@ -10,7 +9,8 @@ import { uuid } from '../core/utils/uuid';
 /**
  * Register plugin tracks and data fetchers to HiGlass. This is necessary for the first time before using Gosling.
  */
-gosling.init();
+// This is not needed anymore?
+// gosling.init();
 
 // TODO: Complete the API
 export type HiGlassApi = {

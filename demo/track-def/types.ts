@@ -1,4 +1,4 @@
-import type { DataDeep, Assembly, DummyTrackStyle } from '@gosling-lang/gosling-schema';
+import type { DataDeep, Assembly, DummyTrackStyle, Mark, X, Y } from '@gosling-lang/gosling-schema';
 
 /**
  * After the Gosling spec is compiled, it is a "processed spec".
@@ -32,6 +32,8 @@ export interface ProcessedTrackBase {
     stroke?: { value: string };
     opacity?: { value: number };
     strokeWidth?: { value: number };
+    xOffset?: number;
+    yOffset?: number;
 }
 
 export type ProcessedLinearTrack = ProcessedTrackBase & {
@@ -55,9 +57,9 @@ export type ProcessedDummyTrack = ProcessedTrackBase & {
 /** Tracks in the _overlay */
 export interface OverlayTrack {
     id: string;
-    mark: string;
-    x?: unknown;
-    y?: unknown;
+    mark?: Mark;
+    x?: X;
+    y?: Y;
     color?: { value: string };
     stroke?: { value: string };
 }

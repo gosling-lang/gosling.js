@@ -10,7 +10,7 @@ import {
 import { resolveSuperposedTracks } from '../core/utils/overlay';
 import { traverseTracksAndViews, traverseViewArrangements } from './spec-preprocess';
 import type { CompleteThemeDeep } from '../core/utils/theme';
-import type { ProcessedTrack } from '../../demo/track-def/types';
+import type { ProcessedCircularTrack, ProcessedTrack } from '../../demo/track-def/types';
 export interface Size {
     width: number;
     height: number;
@@ -192,7 +192,7 @@ function traverseAndCollectTrackInfo(
                 track.height = cumHeight;
 
                 output.push({
-                    track,
+                    track: track as ProcessedTrack,
                     boundingBox: {
                         x: dx + cumWidth,
                         y: dy,
@@ -234,7 +234,7 @@ function traverseAndCollectTrackInfo(
                 track.width = boundingBox.width;
 
                 output.push({
-                    track,
+                    track: track as ProcessedTrack,
                     boundingBox,
                     layout: { x: 0, y: 0, w: 0, h: 0 } // Just put a dummy info here, this should be added after entire bounding box has been determined
                 });
@@ -320,30 +320,33 @@ function traverseAndCollectTrackInfo(
             if (IsDummyTrack(t.track)) {
                 return;
             }
-            t.track.layout = 'circular';
+            // TODO: We know that this is a circular track, but it would be better to type guard it.
+            const circularTrack = t.track as ProcessedCircularTrack;
 
-            t.track.outerRadius = TOTAL_RADIUS - PADDING - ((t.boundingBox.y - dy) / cumHeight) * TOTAL_RING_SIZE;
-            t.track.innerRadius =
+            circularTrack.layout = 'circular';
+
+            circularTrack.outerRadius = TOTAL_RADIUS - PADDING - ((t.boundingBox.y - dy) / cumHeight) * TOTAL_RING_SIZE;
+            circularTrack.innerRadius =
                 TOTAL_RADIUS - PADDING - ((t.boundingBox.y + t.boundingBox.height - dy) / cumHeight) * TOTAL_RING_SIZE;
 
             // in circular layouts, we place spacing in the origin as well
             const spacingAngle = (SPACING / cumWidth) * 360;
 
             // !!! Multiplying by (cumWidth - SPACING) / cumWidth) to rescale to exclude SPACING
-            t.track.startAngle =
+            circularTrack.startAngle =
                 spacingAngle + ((((t.boundingBox.x - dx) / cumWidth) * (cumWidth - SPACING)) / cumWidth) * 360;
-            t.track.endAngle =
+            circularTrack.endAngle =
                 ((((t.boundingBox.x + t.boundingBox.width - dx) / cumWidth) * (cumWidth - SPACING)) / cumWidth) * 360;
             // t.track.startAngle = ((t.boundingBox.x - dx) / cumWidth) * 360;
             // t.track.endAngle = ((t.boundingBox.x + t.boundingBox.width - dx) / cumWidth) * 360;
 
             // If this is the first track, we add the offset of the x position
             if (i == 0) {
-                t.boundingBox.x = dx + (t.track.xOffset ?? 0);
+                t.boundingBox.x = dx + (circularTrack.xOffset ?? 0);
             } else {
                 t.boundingBox.x = dx;
             }
-            t.boundingBox.y = dy + (t.track.yOffset ?? 0);
+            t.boundingBox.y = dy + (circularTrack.yOffset ?? 0);
 
             // Circular tracks share the same size and position since technically these tracks are being overlaid on top of the others
             t.boundingBox.height = t.track.height = t.boundingBox.width = t.track.width = TOTAL_RADIUS * 2;
@@ -396,5 +399,5 @@ const getTextTrack = (size: Size, title?: string, subtitle?: string) => {
             title,
             subtitle
         })
-    ) as Track;
+    ) as ProcessedTrack;
 };

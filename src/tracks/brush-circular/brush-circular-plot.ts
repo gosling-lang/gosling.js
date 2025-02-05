@@ -42,9 +42,8 @@ export class BrushCircularTrack extends CircularBrushTrackClass {
         const context: BrushCircularTrackContext = {
             id: 'test',
             svgElement: svgElement,
-            getTheme: () => 'light',
-            registerViewportChanged: () => {},
-            removeViewportChanged: () => {},
+            registerViewportChanged: () => { },
+            removeViewportChanged: () => { },
             setDomainsCallback: (xDomain: [number, number]) => (xBrushDomain.value = xDomain),
             projectionXDomain: xBrushDomain.value
         };

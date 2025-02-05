@@ -1,6 +1,6 @@
 import type { HiGlassSpec, Track } from '@gosling-lang/higlass-schema';
 import { HiGlassSchema } from '@gosling-lang/higlass-schema';
-import type { Assembly, AxisPosition, Domain, DummyTrack, Orientation, ZoomLimits } from '@gosling-lang/gosling-schema';
+import type { Assembly, AxisPosition, Domain, Orientation, ZoomLimits } from '@gosling-lang/gosling-schema';
 import { getNumericDomain } from '../core/utils/scales';
 import type { RelativePosition } from './bounding-box';
 import { validateSpec } from '@gosling-lang/gosling-schema';
@@ -9,6 +9,7 @@ import type { CompleteThemeDeep } from '../core/utils/theme';
 import exampleHg from '../core/example/hg-view-config-1';
 import { insertItemToArray } from '../core/utils/array';
 import { uuid } from '../core/utils/uuid';
+import type { ProcessedDummyTrack } from 'demo/track-def/types';
 
 export const HIGLASS_AXIS_SIZE = 30;
 
@@ -119,7 +120,7 @@ export class HiGlassModel {
      * Add a dummy track to the last view
      * @param track
      */
-    public setDummyTrack(track: DummyTrack) {
+    public setDummyTrack(track: ProcessedDummyTrack) {
         if (this.getLastView()) {
             this.getLastView().tracks.top?.push({
                 type: 'dummy-track',
