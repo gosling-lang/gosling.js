@@ -187,6 +187,10 @@
 										"p": 0
 									},
 									{
+										"c": "chr22",
+										"p": 0
+									},
+									{
 										"c": "chrX",
 										"p": 0
 									},
@@ -1083,7 +1087,7 @@
 								]
 							},
 							"strokeWidth": {
-								"value": 2
+								"value": 3
 							},
 							"opacity": {
 								"value": 0.7
@@ -1374,7 +1378,7 @@
 										"grid": true,
 										"range": [
 											10,
-											50
+											110
 										]
 									},
 									"color": {
@@ -1409,7 +1413,7 @@
 								"value": 0.7
 							},
 							"width": 1314,
-							"height": 60
+							"height": 120
 						},
 						{
 							"id": "cnv-mid-boundary",
@@ -1562,7 +1566,7 @@
 								"value": "#5CB6EA"
 							},
 							"width": 1314,
-							"height": 20
+							"height": 30
 						},
 						{
 							"id": "gain-mid-boundary",
@@ -1723,7 +1727,7 @@
 								"value": "#D6641E"
 							},
 							"width": 1314,
-							"height": 20
+							"height": 30
 						},
 						{
 							"id": "loh-mid-boundary",
@@ -2928,7 +2932,7 @@
 							"color": {
 								"field": "svclass",
 								"type": "nominal",
-								"legend": true,
+								"legend": false,
 								"domain": [
 									"Gain",
 									"LOH",
@@ -2967,7 +2971,7 @@
 								]
 							},
 							"strokeWidth": {
-								"value": 2
+								"value": 3
 							},
 							"opacity": {
 								"value": 0.7

@@ -16,7 +16,7 @@ import type { Assembly } from '@gosling-lang/gosling-schema';
 
 const TICK_WIDTH = 200;
 const TICK_HEIGHT = 6;
-const TICK_TEXT_SEPARATION = 2;
+const TICK_TEXT_SEPARATION = 0; // 2;
 const TICK_COLOR = 0x777777;
 
 type AxisTrackOptions = {
@@ -346,7 +346,7 @@ const factory: PluginTrackFactory<never, AxisTrackOptions> = (HGC, context, opti
             if (!this.gBoundTicks || !this.leftBoundTick || !this.rightBoundTick) return;
             const graphics = this.gBoundTicks;
             graphics.clear();
-            graphics.lineStyle(1, 0);
+            graphics.lineStyle(3, 0); // TODO: support stroke width of axis ticks
 
             // determine the stard and end positions of tick lines along the vertical axis
             const lineYStart = this.options.reverseOrientation ? 0 : this.dimensions[1];
