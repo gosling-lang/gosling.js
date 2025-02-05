@@ -83,15 +83,15 @@ export function goslingToHiGlass(
         const width =
             bb.width -
             (firstResolvedSpec.layout !== 'circular' &&
-            firstResolvedSpec.orientation === 'vertical' &&
-            IsXAxis(firstResolvedSpec)
+                firstResolvedSpec.orientation === 'vertical' &&
+                IsXAxis(firstResolvedSpec)
                 ? HIGLASS_AXIS_SIZE
                 : 0);
         const height =
             bb.height -
             (firstResolvedSpec.layout !== 'circular' &&
-            firstResolvedSpec.orientation === 'horizontal' &&
-            IsXAxis(firstResolvedSpec)
+                firstResolvedSpec.orientation === 'horizontal' &&
+                IsXAxis(firstResolvedSpec)
                 ? HIGLASS_AXIS_SIZE
                 : 0);
         const hgTrack: HiGlassTrack = {
@@ -108,16 +108,17 @@ export function goslingToHiGlass(
                 showMousePosition: firstResolvedSpec.layout === 'circular' ? false : theme.root.showMousePosition, // show mouse position only for linear tracks // TODO: or vertical
                 mousePositionColor: theme.root.mousePositionColor,
                 /* Track title */
-                name: firstResolvedSpec.layout === 'linear' ? firstResolvedSpec.title : ' ',
+                name: ' ', // firstResolvedSpec.layout === 'linear' ? firstResolvedSpec.title : ' ',
                 labelPosition: firstResolvedSpec.title
                     ? theme.track.titleAlign === 'left'
                         ? 'topLeft'
                         : 'topRight'
                     : 'none',
                 labelShowResolution: false,
+                fontSize: 100, //theme.track.titleFontSize,
                 labelColor: theme.track.titleColor,
                 labelBackgroundColor: theme.track.titleBackground,
-                labelBackgroundOpacity: 0.5, // TODO: Support `theme.track.titleBackgroundOpacity`
+                labelBackgroundOpacity: 0, // TODO: Support `theme.track.titleBackgroundOpacity`
                 labelTextOpacity: 1,
                 labelLeftMargin: 1,
                 labelTopMargin: 1,

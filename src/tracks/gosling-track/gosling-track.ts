@@ -158,7 +158,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         #processedTileInfo: Record<string, ProcessedTileInfo>;
         firstDraw = true; // False if draw has been called once already. Used with onNewTrack API. Public because used in draw()
         // Used in mark/legend.ts
-        gLegend? = HGC.libraries.d3Selection.select(context.svgElement).append('g');
+        gLegend?= HGC.libraries.d3Selection.select(context.svgElement).append('g');
         displayedLegends: DisplayedLegend[] = []; // Store the color legends added so far so that we can avoid overlaps and redundancy
         // Used in mark/text.ts
         textGraphics: unknown[] = [];
@@ -343,8 +343,8 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             this.drawTile(tile);
         }
 
-        override updateTile(/* tile: Tile */) {} // Never mind about this function for the simplicity.
-        renderTile(/* tile: Tile */) {} // Never mind about this function for the simplicity.
+        override updateTile(/* tile: Tile */) { } // Never mind about this function for the simplicity.
+        renderTile(/* tile: Tile */) { } // Never mind about this function for the simplicity.
 
         /**
          * Display a tile upon receiving a new one or when explicitly called by a developer, e.g., calling
@@ -527,9 +527,9 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             const genomicRange = newXScale
                 .domain()
                 .map(absPos => getRelativeGenomicPosition(absPos, this.#assembly, true)) as [
-                GenomicPosition,
-                GenomicPosition
-            ];
+                    GenomicPosition,
+                    GenomicPosition
+                ];
             publish('location', {
                 id: context.viewUid,
                 genomicRange: genomicRange

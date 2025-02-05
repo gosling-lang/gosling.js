@@ -39,6 +39,7 @@ export const light: ThemeDeep = {
         titleColor: 'black',
         titleBackground: 'white',
         titleFontSize: 24,
+        titleFontFamily: 'Arial',
         titleAlign: 'left',
         outline: 'black',
         outlineWidth: 1

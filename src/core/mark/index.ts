@@ -186,6 +186,7 @@ export function drawPostEmbellishment(
     } else {
         drawLinearYAxis(HGC, trackInfo, tile, model, theme);
         drawRowLegend(HGC, trackInfo, tile, model, theme);
+        drawCircularTitle(HGC, trackInfo, tile, model, theme);
     }
     drawColorLegend(HGC, trackInfo, tile, model, theme);
 }

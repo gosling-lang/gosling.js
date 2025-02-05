@@ -65,10 +65,10 @@ export interface CompleteThemeDeep {
     link: Required<MarkStyle>;
     brush: Required<MarkStyle>;
     text: Required<MarkStyle> &
-        Required<{
-            textFontWeight?: 'bold' | 'normal';
-            textAnchor?: 'start' | 'middle' | 'end';
-        }>;
+    Required<{
+        textFontWeight?: 'bold' | 'normal';
+        textAnchor?: 'start' | 'middle' | 'end';
+    }>;
 }
 
 export interface RootStyle {
@@ -95,6 +95,7 @@ export interface TrackStyle {
     titleColor?: string;
     titleBackground?: string;
     titleFontSize?: number;
+    titleFontFamily?: string;
     titleAlign?: 'left' | 'middle' | 'right';
     outline?: string;
     outlineWidth?: number;
