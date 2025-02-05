@@ -175,8 +175,8 @@ declare module '@higlass/tracks' {
         isValueScaleLocked(): boolean;
         onValueScaleChanged(): void;
         onTrackOptionsChanged(newOptions: Options): void;
-        onMouseMoveZoom(opts: OnMouseMoveZoomOptions1D | OnMouseMoveZoomOptions2D): void;
-        isShowGlobalMousePosition(): boolean;
+        onMouseMoveZoom?(opts: OnMouseMoveZoomOptions1D | OnMouseMoveZoomOptions2D): void;
+        isShowGlobalMousePosition?(): boolean;
         viewUid: string;
         // Members unused in Gosling
         // chromInfoPath: string;
