@@ -47,6 +47,10 @@ export type ProcessedCircularTrack = ProcessedTrackBase & {
     innerRadius: number;
 };
 
+export type ProcessedSpatialTrack = ProcessedTrackBase & {
+    layout: 'spatial';
+};
+
 export type ProcessedDummyTrack = ProcessedTrackBase & {
     type?: string;
     style?: DummyTrackStyle;

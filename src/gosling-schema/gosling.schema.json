@@ -378,6 +378,9 @@
           "$ref": "#/definitions/Assembly",
           "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
         },
+        "color": {
+          "type": "string"
+        },
         "height": {
           "description": "Specify the track height in pixels.",
           "type": "number"
@@ -408,7 +411,8 @@
         }
       },
       "required": [
-        "type"
+        "type",
+        "color"
       ],
       "type": "object"
     },
@@ -3545,7 +3549,8 @@
     "Layout": {
       "enum": [
         "linear",
-        "circular"
+        "circular",
+        "spatial"
       ],
       "type": "string"
     },
@@ -5354,6 +5359,9 @@
             },
             {
               "$ref": "#/definitions/ChannelValue"
+            },
+            {
+              "type": "string"
             }
           ]
         },
