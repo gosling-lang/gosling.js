@@ -14,7 +14,6 @@ import 'allotment/dist/style.css';
 import { debounce, isEqual } from 'lodash-es';
 import stripJsonComments from 'strip-json-comments';
 import JSONCrush from 'jsoncrush';
-import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
 import type { Datum } from '@gosling-lang/gosling-schema';
 import { Themes } from '@gosling-lang/gosling-theme';
 
@@ -239,7 +238,6 @@ function Editor(props: RouteComponentProps) {
     );
     const [isImportDemo, setIsImportDemo] = useState<boolean>(false);
     const [theme, setTheme] = useState<gosling.Theme>('light'); // or `{ base: 'light', axis: { labelMargin: -1 } }`
-    const [hg, setHg] = useState<HiGlassSpec>();
     const [code, setCode] = useState(defaultCode);
     const [jsCode, setJsCode] = useState(defaultJsCode); //[TO-DO: more js format examples]
     const [goslingSpec, setGoslingSpec] = useState<gosling.GoslingSpec>();
@@ -383,7 +381,6 @@ function Editor(props: RouteComponentProps) {
             setCode(jsonCode);
             setJsCode(demo.specJs ?? json2js(jsonCode));
         }
-        setHg(undefined);
     }, [demo]);
 
     const deviceToResolution = {
@@ -591,10 +588,10 @@ function Editor(props: RouteComponentProps) {
             typeof goslingSpec?.responsiveSize === 'undefined'
                 ? false
                 : typeof goslingSpec?.responsiveSize === 'boolean'
-                ? goslingSpec?.responsiveSize === true
-                : typeof goslingSpec?.responsiveSize === 'object'
-                ? goslingSpec?.responsiveSize.width === true || goslingSpec?.responsiveSize.height === true
-                : false;
+                  ? goslingSpec?.responsiveSize === true
+                  : typeof goslingSpec?.responsiveSize === 'object'
+                    ? goslingSpec?.responsiveSize.width === true || goslingSpec?.responsiveSize.height === true
+                    : false;
         if (newIsResponsive !== isResponsive && newIsResponsive) {
             setScreenSize(undefined); // reset the screen
             setVisibleScreenSize(undefined);
@@ -626,13 +623,6 @@ function Editor(props: RouteComponentProps) {
         setSelectedPreviewData(0);
         runSpecUpdateVis();
     }, [code, jsCode, autoRun, language, theme]);
-
-    // Uncommnet below to use HiGlass APIs
-    // useEffect(() => {
-    //     if(hgRef.current) {
-    //         hgRef.current.api.activateTool('select');
-    //     }
-    // }, [hg, hgRef]); // TODO: should `hg` be here?
 
     function getDataPreviewInfo(dataConfig: string) {
         // Detailed information of data config to show in the editor
@@ -741,7 +731,7 @@ function Editor(props: RouteComponentProps) {
                     })}
             </div>
         );
-    }, [hg, demo]);
+    }, [demo]);
 
     // console.log('editor.render()');
     return (
@@ -1181,20 +1171,6 @@ function Editor(props: RouteComponentProps) {
                                     </div>
                                     <div className={`compile-message compile-message-${log.state}`}>{log.message}</div>
                                 </>
-                                {/* HiGlass View Config */}
-                                <Allotment.Pane preferredSize={BOTTOM_PANEL_HEADER_HEIGHT}>
-                                    <div className={`editor-header ${theme === 'dark' ? 'dark' : ''}`}>
-                                        Compiled HiGlass ViewConfig (Read Only)
-                                    </div>
-                                    <div style={{ height: '100%', visibility: showVC ? 'visible' : 'hidden' }}>
-                                        <EditorPanel
-                                            code={stringify(hg)}
-                                            readOnly={true}
-                                            isDarkTheme={theme === 'dark'}
-                                            language="json"
-                                        />
-                                    </div>
-                                </Allotment.Pane>
                             </Allotment>
                         </Allotment.Pane>
                         <ErrorBoundary>

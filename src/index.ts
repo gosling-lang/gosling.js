@@ -3,7 +3,6 @@ export { name, version } from '../package.json';
 import { GoslingSchema, ThemeSchema } from '@gosling-lang/gosling-schema';
 export { GoslingSchema, ThemeSchema };
 export type { GoslingSpec, TemplateTrackDef } from '@gosling-lang/gosling-schema';
-export type { HiGlassSpec } from '@gosling-lang/higlass-schema';
 export { GoslingTemplates } from './core/utils/template';
 export type { Theme } from './core/utils/theme';
 export { Themes, isThereTheme, getTheme } from '@gosling-lang/gosling-theme';
