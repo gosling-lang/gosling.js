@@ -1,15 +1,21 @@
 import { HeatmapTiledPixiTrack } from '@higlass/tracks';
-import type { TiledPixiTrackContext, TiledPixiTrackOptions } from '@higlass/tracks';
+import type {
+    OnMouseMoveZoomOptions1D,
+    OnMouseMoveZoomOptions2D,
+    TiledPixiTrackContext,
+    TiledPixiTrackOptions
+} from '@higlass/tracks';
 import * as PIXI from 'pixi.js';
 import { fakePubSub } from '@higlass/utils';
 import { scaleLinear } from 'd3-scale';
 import { DataFetcher } from '@higlass/datafetcher';
 import { signal, type Signal } from '@preact/signals-core';
+import type { Tile } from '@gosling-lang/gosling-track';
 
 export type HeatmapTrackContext = TiledPixiTrackContext & {
-    svgElement: HTMLElement;
+    svgElement: SVGElement;
     onTrackOptionsChanged: () => void;
-    onMouseMoveZoom?: (event: any) => void;
+    onMouseMoveZoom?: (opts: OnMouseMoveZoomOptions1D | OnMouseMoveZoomOptions2D) => void;
     isShowGlobalMousePosition?: () => boolean; // only used when options.showMousePosition is true
     isValueScaleLocked: () => boolean;
 };
@@ -47,7 +53,7 @@ export class HeatmapTrack extends HeatmapTiledPixiTrack<HeatmapTrackOptions> {
 
     constructor(
         options: HeatmapTrackOptions,
-        dataFetcher: DataFetcher,
+        dataFetcher: DataFetcher<Tile>,
         containers: {
             pixiContainer: PIXI.Container;
             overlayDiv: HTMLElement;
@@ -71,6 +77,7 @@ export class HeatmapTrack extends HeatmapTiledPixiTrack<HeatmapTrackOptions> {
         const context: HeatmapTrackContext = {
             scene: pixiContainer,
             id: 'test',
+            viewUid: 'test',
             dataFetcher,
             animate: () => {},
             onValueScaleChanged: () => {},

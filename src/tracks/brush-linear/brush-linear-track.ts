@@ -2,6 +2,7 @@ import { brushX, type D3BrushEvent } from 'd3-brush';
 import { uuid } from '../../core/utils/uuid';
 import { type ScaleLinear } from 'd3-scale';
 import { SVGTrack, type SVGTrackContext } from '@higlass/tracks';
+import type { Scale } from '@higlass/services';
 
 export interface BrushLinearTrackContext extends SVGTrackContext {
     registerViewportChanged: (
@@ -156,7 +157,7 @@ export class BrushLinearTrackClass<Options> extends SVGTrack<Options> {
         this.brush.on('brush', this.brushed.bind(this));
     }
 
-    zoomed(newXScale: ScaleLinear<number, number>, newYScale: ScaleLinear<number, number>) {
+    zoomed(newXScale: Scale, newYScale: Scale) {
         this.xScale(newXScale);
         this.yScale(newYScale);
 

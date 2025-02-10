@@ -1,6 +1,5 @@
 import { AxisTrackClass, type AxisTrackContext, type AxisTrackOptions } from './axis-track';
 import * as PIXI from 'pixi.js';
-import { fakePubSub } from '@higlass/utils';
 import { scaleLinear } from 'd3-scale';
 import { type Signal, effect } from '@preact/signals-core';
 
@@ -37,14 +36,19 @@ export class AxisTrack extends AxisTrackClass {
         const context: AxisTrackContext = {
             chromInfoPath: 'https://s3.amazonaws.com/gosling-lang.org/data/hg38.chrom.sizes',
             scene: pixiContainer,
-            id: 'test',
             animate: () => {},
-            onValueScaleChanged: () => {},
-            handleTilesetInfoReceived: () => {},
-            onTrackOptionsChanged: () => {},
-            pubSub: fakePubSub,
-            isValueScaleLocked: () => false,
-            svgElement: svgElement
+            dataConfig: {},
+            id: 'test',
+            viewUid: 'test',
+            pubSub: () => {},
+            isShowGlobalMousePosition: () => false
+            // id: 'test',
+            // onValueScaleChanged: () => { },
+            // handleTilesetInfoReceived: () => { },
+            // onTrackOptionsChanged: () => { },
+            // pubSub: fakePubSub,
+            // isValueScaleLocked: () => false,
+            // svgElement: svgElement
         };
 
         super(context, options);
