@@ -29,9 +29,6 @@
       "@gosling-lang/gosling-schema": [
         "src/gosling-schema/index.ts"
       ],
-      "@gosling-lang/higlass-schema": [
-        "src/higlass-schema/index.ts"
-      ],
       "@gosling-lang/gosling-theme": [
         "src/gosling-theme/index.ts"
       ],

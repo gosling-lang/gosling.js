@@ -2,10 +2,10 @@ import * as PIXI from 'pixi.js';
 import { CHANNEL_DEFAULTS } from '../channel';
 import { GoslingTrackModel } from '../../tracks/gosling-track/gosling-track-model';
 import type { Track } from '@gosling-lang/gosling-schema';
-import { HIGLASS_AXIS_SIZE } from '../../compiler/higlass-model';
 import type { SingleTrack } from '@gosling-lang/gosling-schema';
 import { drawPoint } from './point';
 import { getTheme } from '../utils/theme';
+import { DEFAULT_AXIS_SIZE } from '../../compiler/defaults';
 
 describe('Rendering Point', () => {
     const g = new PIXI.Graphics();
@@ -87,7 +87,7 @@ describe('Point marks should correctly encode visual channels', () => {
             const cy = model.encodedPIXIProperty('y-center', data[1]);
             const size = model.encodedPIXIProperty('size', data[1]);
             expect(cx).toEqual(width / 2.0);
-            expect(cy).toEqual((height - HIGLASS_AXIS_SIZE) / 2.0);
+            expect(cy).toEqual((height - DEFAULT_AXIS_SIZE) / 2.0);
             expect(size).toEqual(CHANNEL_DEFAULTS.SIZE);
         }
     });
