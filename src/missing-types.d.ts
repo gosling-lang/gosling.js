@@ -47,14 +47,14 @@ declare module '@higlass/services' {
         tile_size?: number;
         max_tile_width?: number;
     } & (
-            | {
-                resolutions: number[];
-            }
-            | {
-                max_width: number;
-                bins_per_dimension?: number;
-            }
-        );
+        | {
+              resolutions: number[];
+          }
+        | {
+              max_width: number;
+              bins_per_dimension?: number;
+          }
+    );
     export interface TileDataBase {
         shape: [number, number];
         tilePos?: [number, number];
@@ -641,7 +641,7 @@ declare module '@higlass/tracks' {
         projectionXDomain: [number, number]; // The domain of the brush
     }
 
-    type LiteralUnion<T, U = string> = T | (U & {});
+    type LiteralUnion<T, U = string> = T | U;
 
     type Orientation = '2d' | '1d-vertical' | '1d-horizontal' | 'whole' | 'any';
 
@@ -698,10 +698,10 @@ declare module '@higlass/utils' {
 
     export const fakePubSub = {
         __fake__: true,
-        publish: () => { },
-        subscribe: () => ({ event: 'fake', handler: () => { } }),
-        unsubscribe: () => { },
-        clear: () => { }
+        publish: () => {},
+        subscribe: () => ({ event: 'fake', handler: () => {} }),
+        unsubscribe: () => {},
+        clear: () => {}
     };
 
     export type ChromInfo<Name extends string = string> = {

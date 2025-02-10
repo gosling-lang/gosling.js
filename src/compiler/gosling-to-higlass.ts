@@ -85,15 +85,15 @@ export function goslingToHiGlass(
         const width =
             bb.width -
             (firstResolvedSpec.layout !== 'circular' &&
-                firstResolvedSpec.orientation === 'vertical' &&
-                IsXAxis(firstResolvedSpec)
+            firstResolvedSpec.orientation === 'vertical' &&
+            IsXAxis(firstResolvedSpec)
                 ? HIGLASS_AXIS_SIZE
                 : 0);
         const height =
             bb.height -
             (firstResolvedSpec.layout !== 'circular' &&
-                firstResolvedSpec.orientation === 'horizontal' &&
-                IsXAxis(firstResolvedSpec)
+            firstResolvedSpec.orientation === 'horizontal' &&
+            IsXAxis(firstResolvedSpec)
                 ? HIGLASS_AXIS_SIZE
                 : 0);
         const hgTrack: HiGlassTrack = {

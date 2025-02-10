@@ -54,7 +54,7 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
             id: 'test',
             viewUid: 'test',
             // getLockGroupExtrema: () => null,
-            onMouseMoveZoom: () => { },
+            onMouseMoveZoom: () => {},
             // chromInfoPath: '',
             dataFetcher,
             //dataConfig: {
@@ -62,10 +62,10 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
             // tilesetUid: 'UvVPeLHuRDiYA3qwFlm7xQ'
             // coordSystem: "hg19",
             // },
-            animate: () => { },
-            onValueScaleChanged: () => { },
-            handleTilesetInfoReceived: () => { },
-            onTrackOptionsChanged: () => { },
+            animate: () => {},
+            onValueScaleChanged: () => {},
+            handleTilesetInfoReceived: () => {},
+            onTrackOptionsChanged: () => {},
             pubSub: fakePubSub,
             isValueScaleLocked: () => false,
             svgElement: svgElement,
