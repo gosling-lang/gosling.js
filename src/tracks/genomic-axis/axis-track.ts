@@ -135,6 +135,8 @@ export class AxisTrackClass extends PixiTrack<AxisTrackOptions> {
     texts?: TickText[];
 
     constructor(context: AxisTrackContext, options: AxisTrackOptions) {
+        console.warn(context);
+        console.warn(options);
         super(context, options);
         const { dataConfig, animate, chromInfoPath, isShowGlobalMousePosition } = context;
 

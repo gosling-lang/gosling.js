@@ -1,11 +1,17 @@
 import * as PIXI from 'pixi.js';
 import type { TrackApiData, VisUnitApiData, ViewApiData } from '@gosling-lang/gosling-schema';
 import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
-import type { HiGlassApi } from '../core/higlass-component-wrapper';
 import { subscribe, unsubscribe } from './pubsub';
 import { computeChromSizes, GenomicPositionHelper } from '../core/utils/assembly';
 import type { CompleteThemeDeep } from '../core/utils/theme';
 import type { IdTable } from './track-and-view-ids';
+
+// TODO: Complete the API
+export type HiGlassApi = {
+    api: Record<string, any>;
+    pixiRenderer: PIXI.Renderer;
+    pixiStage: PIXI.IRenderableObject;
+};
 
 /**
  * Information of suggested genes.
@@ -47,7 +53,6 @@ export interface GoslingApi {
 
 export function createApi(
     hg: Readonly<HiGlassApi>,
-    hgSpec: HiGlassSpec | undefined,
     tracksAndViews: readonly VisUnitApiData[],
     theme: Required<CompleteThemeDeep>,
     idTable: Readonly<IdTable>

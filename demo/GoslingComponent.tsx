@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PixiManager } from '@pixi-manager';
-
-import { compile } from '../src/compiler/compile';
+import { compile, type UrlToFetchOptions } from '../src/compiler/compile';
 import { getTheme } from '../src/core/utils/theme';
-
 import { createTrackDefs } from './track-def/main';
 import { renderTrackDefs } from './renderer/main';
 import type { TrackInfo } from 'src/compiler/bounding-box';
@@ -14,8 +12,9 @@ interface GoslingComponentProps {
     spec: GoslingSpec | undefined;
     width: number;
     height: number;
+    urlToFetchOptions?: UrlToFetchOptions;
 }
-export function GoslingComponent({ spec, width, height }: GoslingComponentProps) {
+export function GoslingComponent({ spec, width, height, urlToFetchOptions }: GoslingComponentProps) {
     const [fps, setFps] = useState(120);
     // Pixi manager should persist between render calls. Otherwise performance degrades greatly.
     const [pixiManager, setPixiManager] = useState<PixiManager | null>(null);
@@ -28,11 +27,11 @@ export function GoslingComponent({ spec, width, height }: GoslingComponentProps)
             const canvasWidth = 1000,
                 canvasHeight = 1000; // These initial sizes don't matter because the size will be updated
             const pixiManager = new PixiManager(canvasWidth, canvasHeight, plotElement, () => {});
-            renderGosling(spec, plotElement, pixiManager);
+            renderGosling(spec, plotElement, pixiManager, urlToFetchOptions);
             setPixiManager(pixiManager);
         } else {
             pixiManager.clearAll();
-            renderGosling(spec, plotElement, pixiManager);
+            renderGosling(spec, plotElement, pixiManager, urlToFetchOptions);
         }
     }, [spec]);
 
@@ -41,7 +40,12 @@ export function GoslingComponent({ spec, width, height }: GoslingComponentProps)
 /**
  * This is the main function. It takes a Gosling spec and renders it using the PixiManager
  */
-function renderGosling(gs: GoslingSpec, container: HTMLDivElement, pixiManager: PixiManager) {
+function renderGosling(
+    gs: GoslingSpec,
+    container: HTMLDivElement,
+    pixiManager: PixiManager,
+    urlToFetchOptions?: UrlToFetchOptions
+) {
     // 1. Compile the spec
     const compileResult = compile(gs, [], getTheme('light'), { containerSize: { width: 0, height: 0 } });
     const { trackInfos, gs: processedSpec, theme } = compileResult;
@@ -68,7 +72,7 @@ function renderGosling(gs: GoslingSpec, container: HTMLDivElement, pixiManager: 
                 );
                 // 4. Render the tracks
                 const trackDefs = createTrackDefs(rescaledTracks, theme);
-                renderTrackDefs(trackDefs, linkedEncodings, pixiManager);
+                renderTrackDefs(trackDefs, linkedEncodings, pixiManager, urlToFetchOptions);
                 // Resize the canvas to make sure it fits the tracks
                 const { width, height } = calculateWidthHeight(rescaledTracks);
                 pixiManager.resize(width, height);
@@ -79,7 +83,7 @@ function renderGosling(gs: GoslingSpec, container: HTMLDivElement, pixiManager: 
         // 4. If the spec is not responsive, we can just render the tracks
         const trackDefs = createTrackDefs(trackInfos, theme);
         console.warn('Rendering tracks');
-        renderTrackDefs(trackDefs, linkedEncodings, pixiManager);
+        renderTrackDefs(trackDefs, linkedEncodings, pixiManager, urlToFetchOptions);
         // Resize the canvas to make sure it fits the tracks
         const { width, height } = calculateWidthHeight(trackInfos);
         pixiManager.resize(width, height);
