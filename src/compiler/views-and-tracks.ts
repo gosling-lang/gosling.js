@@ -12,7 +12,7 @@ import { getViewApiData } from '../api/api-data';
 import { IsDummyTrack } from '@gosling-lang/gosling-schema';
 import type { ProcessedCircularTrack } from 'demo/track-def/types';
 
-export function renderHiGlass(spec: GoslingSpec, trackInfos: TrackInfo[], theme: Required<CompleteThemeDeep>) {
+export function collectViewsAndTracks(spec: GoslingSpec, trackInfos: TrackInfo[], theme: Required<CompleteThemeDeep>) {
     if (trackInfos.length === 0) {
         // no tracks to render
         throw new Error('No tracks to render');
@@ -32,14 +32,14 @@ export function renderHiGlass(spec: GoslingSpec, trackInfos: TrackInfo[], theme:
             shape: isLinear
                 ? d.boundingBox
                 : {
-                      ...d.boundingBox,
-                      cx: d.boundingBox.x + d.boundingBox.width / 2.0,
-                      cy: d.boundingBox.y + d.boundingBox.height / 2.0,
-                      innerRadius: (d.track as ProcessedCircularTrack).innerRadius!,
-                      outerRadius: (d.track as ProcessedCircularTrack).outerRadius!,
-                      startAngle: (d.track as ProcessedCircularTrack).startAngle!,
-                      endAngle: (d.track as ProcessedCircularTrack).endAngle!
-                  }
+                    ...d.boundingBox,
+                    cx: d.boundingBox.x + d.boundingBox.width / 2.0,
+                    cy: d.boundingBox.y + d.boundingBox.height / 2.0,
+                    innerRadius: (d.track as ProcessedCircularTrack).innerRadius!,
+                    outerRadius: (d.track as ProcessedCircularTrack).outerRadius!,
+                    startAngle: (d.track as ProcessedCircularTrack).startAngle!,
+                    endAngle: (d.track as ProcessedCircularTrack).endAngle!
+                }
         };
     });
 

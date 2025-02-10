@@ -3,7 +3,7 @@ import { traverseToFixSpecDownstream } from './spec-preprocess';
 import { replaceTrackTemplates } from '../core/utils/template';
 import { getRelativeTrackInfo, type Size, type TrackInfo } from './bounding-box';
 import type { CompleteThemeDeep } from '../core/utils/theme';
-import { renderHiGlass as createHiGlassModels } from './create-higlass-models';
+import { collectViewsAndTracks } from './views-and-tracks';
 import { manageResponsiveSpecs } from './responsive';
 
 interface CompileResult {
@@ -66,6 +66,6 @@ export function compile(
     }
 
     // Make HiGlass models for individual tracks
-    const compileResult = createHiGlassModels(specCopy, trackInfos, theme);
+    const compileResult = collectViewsAndTracks(specCopy, trackInfos, theme);
     return compileResult;
 }
