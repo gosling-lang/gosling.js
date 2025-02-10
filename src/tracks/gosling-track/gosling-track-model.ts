@@ -21,7 +21,6 @@ import {
 } from 'd3-scale';
 import { interpolateViridis } from 'd3-scale-chromatic';
 import { min as d3min, max as d3max, sum as d3sum, group } from 'd3-array';
-import { HIGLASS_AXIS_SIZE } from '../../compiler/higlass-model';
 import { SUPPORTED_CHANNELS } from '../../core/mark';
 import type { PIXIVisualProperty } from '../../core/visual-property.schema';
 import { rectProperty } from '../../core/mark/rect';
@@ -43,6 +42,7 @@ import { CHANNEL_DEFAULTS } from '../../core/channel';
 import { type CompleteThemeDeep, getTheme } from '../../core/utils/theme';
 import { uuid } from '../../core/utils/uuid';
 import { MouseEventModel } from '../gosling-track/gosling-mouse-event';
+import { DEFAULT_AXIS_SIZE } from '../../compiler/defaults';
 
 export type ScaleType =
     | ScaleLinear<any, any>
@@ -158,15 +158,15 @@ export class GoslingTrackModel {
             if (IsChannelDeep(spec.x) && spec.x.axis !== undefined && spec.x.axis !== 'none') {
                 // for linear layouts, prepare a horizontal or vertical space for the axis
                 // we already switched the width and height in vertical tracks, so use `height`
-                spec.height -= HIGLASS_AXIS_SIZE;
+                spec.height -= DEFAULT_AXIS_SIZE;
             }
             // TODO: consider 2D
         } else {
             // for circular layouts, prepare a space in radius for the axis
             if (xOrY === 'x' && isAxisShown && IsChannelDeep(spec.x) && spec.x.axis === 'top') {
-                spec['outerRadius'] = ((spec['outerRadius'] as number) - HIGLASS_AXIS_SIZE) as number;
+                spec['outerRadius'] = ((spec['outerRadius'] as number) - DEFAULT_AXIS_SIZE) as number;
             } else if (xOrY === 'x' && isAxisShown && IsChannelDeep(spec.x) && spec.x.axis === 'bottom') {
-                spec['innerRadius'] = ((spec['innerRadius'] as number) + HIGLASS_AXIS_SIZE) as number;
+                spec['innerRadius'] = ((spec['innerRadius'] as number) + DEFAULT_AXIS_SIZE) as number;
             }
         }
 
@@ -249,8 +249,8 @@ export class GoslingTrackModel {
         const channelFieldType = IsChannelDeep(channel)
             ? channel.type
             : IsChannelValue(channel)
-            ? 'constant'
-            : undefined;
+              ? 'constant'
+              : undefined;
 
         if (!channelFieldType) {
             // Shouldn't be reached. Channel should be either encoded with data or a constant value.
@@ -630,7 +630,7 @@ export class GoslingTrackModel {
                         const min =
                             'zeroBaseline' in channel && channel.zeroBaseline
                                 ? 0
-                                : (d3min(data.map(d => +d[channel.field as string]) as number[]) as number) ?? 0;
+                                : ((d3min(data.map(d => +d[channel.field as string]) as number[]) as number) ?? 0);
                         const max = (d3max(data.map(d => +d[channel.field as string]) as number[]) as number) ?? 0;
                         channel.domain = [min, max]; // TODO: what if data ranges in negative values
                     } else if (channel.type === 'genomic' && !IsDomainArray(channel.domain)) {
