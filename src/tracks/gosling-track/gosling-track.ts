@@ -48,7 +48,6 @@ import {
     isTabularDataFetcher,
     hasDataTransform
 } from '@gosling-lang/gosling-schema';
-import { HIGLASS_AXIS_SIZE } from '../../compiler/higlass-model';
 import { flatArrayToPairArray } from '../../core/utils/array';
 import { uuid } from '../../core/utils/uuid';
 import type { Context, Scale, TilePosition } from '@higlass/tracks';
@@ -59,6 +58,7 @@ import { TiledPixiTrack } from '@higlass/tracks';
 import { select, type Selection } from 'd3-selection';
 import { format } from 'd3-format';
 import { calculate1DVisibleTiles } from './utils';
+import { DEFAULT_AXIS_SIZE } from '../../compiler/defaults';
 
 // Set `true` to print in what order each function is called
 export const PRINT_RENDERING_CYCLE = false;
@@ -1053,7 +1053,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
 
             // Replace width and height information with the actual values for responsive encoding
             const [trackWidth, trackHeight] = this.dimensions; // actual size of a track
-            const axisSize = IsXAxis(resolvedSpec) && this.options.spec.layout === 'linear' ? HIGLASS_AXIS_SIZE : 0; // Why the axis size must be added here?
+            const axisSize = IsXAxis(resolvedSpec) && this.options.spec.layout === 'linear' ? DEFAULT_AXIS_SIZE : 0; // Why the axis size must be added here?
             const [w, h] = [trackWidth, trackHeight + axisSize];
             const circularFactor = Math.min(w, h) / Math.min(resolvedSpec.width!, resolvedSpec.height!);
             if (resolvedSpec.innerRadius) {

@@ -13,7 +13,6 @@ const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 const SCHEMAS = [
   ["GoslingSpec", "gosling.schema.json", "../src/gosling-schema/"],
-  ["HiGlassSpec", "higlass.schema.json", "../src/higlass-schema/"],
   ["Theme", "theme.schema.json", "../src/gosling-schema/"],
   ["TemplateTrackDef", "template.schema.json", "../src/gosling-schema/"],
 ];
@@ -28,7 +27,7 @@ const generator = tsj.createGenerator({
 for (const [type, filename, dir] of SCHEMAS) {
   const schema = generator.createSchema(type);
   fs.promises.writeFile(
-      path.resolve(__dirname, `${dir}/${filename}`),
-      stableStringify(schema, null, 2) + "\n",
+    path.resolve(__dirname, `${dir}/${filename}`),
+    stableStringify(schema, null, 2) + "\n",
   );
 }

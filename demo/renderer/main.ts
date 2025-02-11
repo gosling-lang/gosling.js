@@ -12,13 +12,19 @@ import { BrushCircularTrack } from '@gosling-lang/brush-circular';
 import { HeatmapTrack } from '@gosling-lang/heatmap';
 import type { PixiManager } from '@pixi-manager';
 import { DummyTrack } from '@gosling-lang/dummy-track';
+import type { UrlToFetchOptions } from 'src/compiler/compile';
 
 /**
  * Takes a list of track definitions and linkedEncodings and renders them
  * @param trackOptions
  * @param pixiManager
  */
-export function renderTrackDefs(trackDefs: TrackDefs[], linkedEncodings: LinkedEncoding[], pixiManager: PixiManager) {
+export function renderTrackDefs(
+    trackDefs: TrackDefs[],
+    linkedEncodings: LinkedEncoding[],
+    pixiManager: PixiManager,
+    urlToFetchOptions?: UrlToFetchOptions
+) {
     trackDefs.forEach(trackDef => {
         const { boundingBox, type, options } = trackDef;
 
@@ -30,7 +36,7 @@ export function renderTrackDefs(trackDefs: TrackDefs[], linkedEncodings: LinkedE
             const yDomain = getEncodingSignal(trackDef.trackId, 'y', linkedEncodings);
             if (!xDomain) return;
 
-            const datafetcher = getDataFetcher(options.spec);
+            const datafetcher = getDataFetcher(options.spec, urlToFetchOptions);
             const gosPlot = new GoslingTrack(
                 options,
                 datafetcher,
@@ -50,7 +56,7 @@ export function renderTrackDefs(trackDefs: TrackDefs[], linkedEncodings: LinkedE
             const yDomain = getEncodingSignal(trackDef.trackId, 'y', linkedEncodings);
             if (!xDomain || !yDomain) return;
 
-            const datafetcher = getDataFetcher(options.spec);
+            const datafetcher = getDataFetcher(options.spec, urlToFetchOptions);
             new HeatmapTrack(options, datafetcher, pixiManager.makeContainer(boundingBox)).addInteractor(plot =>
                 panZoomHeatmap(plot, xDomain, yDomain)
             );
