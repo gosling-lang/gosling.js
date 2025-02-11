@@ -19,8 +19,8 @@ export class TextTrack extends TextTrackClass {
         const context: TextTrackContext = {
             scene: pixiContainer,
             id: 'test',
-            pubSub: fakePubSub,
-            getTheme: () => 'light'
+            viewUid: 'test',
+            pubSub: fakePubSub
         };
 
         super(context, options);

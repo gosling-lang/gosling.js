@@ -1,7 +1,7 @@
 import type { Track as HiGlassTrack } from '@gosling-lang/higlass-schema';
 import { HiGlassModel, HIGLASS_AXIS_SIZE } from './higlass-model';
 import { parseServerAndTilesetUidFromUrl } from '../core/utils';
-import type { Track, Domain } from '@gosling-lang/gosling-schema';
+import type { Domain } from '@gosling-lang/gosling-schema';
 import type { BoundingBox, RelativePosition } from './bounding-box';
 import { resolveSuperposedTracks } from '../core/utils/overlay';
 import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from '../gosling-schema/validate';
@@ -21,13 +21,14 @@ import { DEFAULT_TEXT_STYLE } from '../core/utils/text-style';
 import type { GoslingToHiGlassIdMapper } from '../api/track-and-view-ids';
 import type { UrlToFetchOptions } from '../core/gosling-component';
 import { uuid } from '../core/utils/uuid';
+import type { ProcessedTrack } from 'demo/track-def/types';
 
 /**
  * Convert a gosling track into a HiGlass view and add it into a higlass model.
  */
 export function goslingToHiGlass(
     hgModel: HiGlassModel,
-    gosTrack: Track,
+    gosTrack: ProcessedTrack,
     bb: BoundingBox,
     layout: RelativePosition,
     theme: Required<CompleteThemeDeep>,
@@ -43,6 +44,7 @@ export function goslingToHiGlass(
         return hgModel;
     }
     // we only look into the first resolved spec to get information, such as size of the track
+    // @ts-expect-error Major edit to the function below is needed. This can be addressed together with restructuring the compiling process.
     const resolvedSpecs = resolveSuperposedTracks(gosTrack);
     const firstResolvedSpec = resolvedSpecs[0];
 

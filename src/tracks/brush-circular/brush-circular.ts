@@ -181,6 +181,7 @@ export class CircularBrushTrackClass extends SVGTrack<BrushCircularTrackOptions>
         }
 
         this.circularBrushData = this.getBrushData(extent);
+        // @ts-expect-error the attr parameter should be typed
         this.gBrush.data(this.circularBrushData).attr('d', this.brush).attr('visibility', 'visible');
     }
 
@@ -249,12 +250,12 @@ export class CircularBrushTrackClass extends SVGTrack<BrushCircularTrackOptions>
             const scale = (this.options.endAngle - this.options.startAngle) / 360;
             const offsetedS = s - (this.options.startAngle / 360) * Math.PI * 2;
             const offsetedE = e - (this.options.startAngle / 360) * Math.PI * 2;
-            const xDomain = [
+            const xDomain: [number, number] = [
                 this._xScale.invert(w - (w * offsetedE) / (Math.PI * 2 * scale)),
                 this._xScale.invert(w - (w * offsetedS) / (Math.PI * 2 * scale))
             ];
 
-            const yDomain = this.viewportYDomain;
+            const yDomain = this.viewportYDomain as [number, number];
 
             if (!this.hasFromView) {
                 this.viewportXDomain = xDomain;
@@ -265,6 +266,7 @@ export class CircularBrushTrackClass extends SVGTrack<BrushCircularTrackOptions>
             this.updateBrush([s, e]);
         };
 
+        // @ts-expect-error drag function should be typed
         return d3Drag().on('start', start).on('drag', drag);
     }
 

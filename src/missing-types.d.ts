@@ -166,22 +166,23 @@ declare module '@higlass/tracks' {
 
     export type Context<TileData, Options> = {
         id: string;
-        viewUid: string;
         pubSub: PubSub;
-        scene: PIXI.Graphics;
-        dataConfig: DataConfig;
+        scene: PIXI.Container;
         dataFetcher: DataFetcher<TileData>;
-        getLockGroupExtrema(): [min: number, max: number] | null;
         handleTilesetInfoReceived(tilesetInfo: TilesetInfo): void;
         animate(): void;
         svgElement: SVGElement;
         isValueScaleLocked(): boolean;
         onValueScaleChanged(): void;
         onTrackOptionsChanged(newOptions: Options): void;
-        onMouseMoveZoom(opts: OnMouseMoveZoomOptions1D | OnMouseMoveZoomOptions2D): void;
-        chromInfoPath: string;
-        isShowGlobalMousePosition(): boolean;
-        getTheme(): string;
+        onMouseMoveZoom?(opts: OnMouseMoveZoomOptions1D | OnMouseMoveZoomOptions2D): void;
+        isShowGlobalMousePosition?(): boolean;
+        viewUid: string;
+        // Members unused in Gosling
+        // chromInfoPath: string;
+        // getTheme(): string;
+        // dataConfig: DataConfig;
+        // getLockGroupExtrema(): [min: number, max: number] | null;
     };
 
     export class Track<Options> {
@@ -428,7 +429,7 @@ declare module '@higlass/tracks' {
     }
 
     export abstract class Tiled1DPixiTrack<TileData, Options> extends TiledPixiTrack<TileData, Options> {
-        onMouseMoveZoom: Context<TileData, Options>['onMouseMoveZoom'];
+        onMouseMoveZoom?: (opts: OnMouseMoveZoomOptions1D | OnMouseMoveZoomOptions2D) => void;
         isValueScaleLocked: Pick<Context<TileData, Options>, 'isValueScaleLocked'>;
         getLockGroupExtrema: Pick<Context<TileData, Options>, 'getLockGroupExtrema'>;
         initTile(tile: TileData): void;
@@ -443,7 +444,7 @@ declare module '@higlass/tracks' {
          * This function should be overwritten by HorizontalTiled1DPixiTrack.js
          * and VerticalTiled1DPixiTrack.js
          */
-        abstract relevantScale(): Scale;
+        // abstract relevantScale(): Scale;
         calculateVisibleTiles(): void;
         /** Get the tile's position in its coordinate system. */
         getTilePosAndDimensions(
@@ -478,7 +479,7 @@ declare module '@higlass/tracks' {
          */
         getDataAtPos(relPos: number): number;
         mouseMoveHandler(mousePosition?: { x?: number; y?: number }): void;
-        abstract mouseMoveZoomHandler(absX?: number, abxY?: number): void;
+        // abstract mouseMoveZoomHandler(absX?: number, abxY?: number): void;
     }
 
     export abstract class HeatmapTiledPixiTrack<Options> extends Tiled1DPixiTrack<TileData, Options> {
@@ -515,10 +516,11 @@ declare module '@higlass/tracks' {
         isShowGlobalMousePosition(): boolean;
         is2d?: boolean;
         calculateZoomLevel(): number;
-        relevantScale(): Scale;
         drawAxis(valueScale: Scale): void;
-        mouseMoveZoomHandler(absX?: number, absY?: number): void;
         drawConstIndicator(): void;
+        // Unused members in Gosling
+        // relevantScale(): Scale;
+        // mouseMoveZoomHandler(absX?: number, absY?: number): void;
     }
 
     export class HorizontalLine1DPixiTrack<T, Options> extends HorizontalTiled1DPixiTrack<T, Options> {
@@ -580,9 +582,10 @@ declare module '@higlass/tracks' {
     }
 
     export interface PixiTrackContext {
-        pubSub?: any;
+        pubSub: any;
         scene: PIXI.Container;
         id: string;
+        viewUid: string;
     }
 
     export interface PixiTrackOptions {
@@ -608,11 +611,12 @@ declare module '@higlass/tracks' {
     }
 
     export type TiledPixiTrackContext = PixiTrackContext & {
-        dataFetcher?: DataFetcher;
-        dataConfig: MinimalDataConfig;
+        dataFetcher: DataFetcher;
         animate: () => void;
         onValueScaleChanged: () => void;
         handleTilesetInfoReceived: (tilesetInfo: any) => void;
+        // Below is unused from Gosling
+        // dataConfig: MinimalDataConfig;
     };
 
     export type TiledPixiTrackOptions = PixiTrackOptions & {
@@ -622,7 +626,6 @@ declare module '@higlass/tracks' {
     interface TrackContext {
         id: string;
         pubSub?: PubSub;
-        getTheme: () => unknown;
     }
     interface SVGTrackContext extends TrackContext {
         svgElement: SVGElement;
@@ -638,7 +641,7 @@ declare module '@higlass/tracks' {
         projectionXDomain: [number, number]; // The domain of the brush
     }
 
-    type LiteralUnion<T, U = string> = T | (U & {});
+    type LiteralUnion<T, U = string> = T | U;
 
     type Orientation = '2d' | '1d-vertical' | '1d-horizontal' | 'whole' | 'any';
 
