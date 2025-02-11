@@ -51,10 +51,7 @@ class BedFile {
     #customFields?: string[];
     #uid: string;
 
-    constructor(
-        public tbi: TabixIndexedFile,
-        uid: string
-    ) {
+    constructor(public tbi: TabixIndexedFile, uid: string) {
         this.#uid = uid;
     }
     /**

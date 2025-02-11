@@ -61,10 +61,14 @@ type ChromInfo = {
 };
 
 export interface AxisTrackContext {
-    dataConfig: Record<string, unknown>;
+    scene: PIXI.Container;
     animate: () => void;
     chromInfoPath?: string;
+    dataConfig: Record<string, unknown>;
     isShowGlobalMousePosition: () => boolean;
+    id: string;
+    viewUid: string;
+    pubSub: any; // TODO: is this really needed?
 }
 
 const defaultOptions = {

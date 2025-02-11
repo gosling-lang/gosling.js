@@ -7,6 +7,7 @@ import { DataFetcher } from '@higlass/datafetcher';
 
 import { type Plot } from '../utils';
 import { signal, effect } from '@preact/signals-core';
+import type { Tile } from '@higlass/services';
 
 /**
  * A wrapper around the GoslingTrackClass that allows for use with signals
@@ -24,7 +25,7 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
 
     constructor(
         options: GoslingTrackOptions,
-        dataFetcher: DataFetcher,
+        dataFetcher: DataFetcher<Tile>,
         containers: {
             pixiContainer: PIXI.Container;
             overlayDiv: HTMLElement;
@@ -46,16 +47,21 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
             overlayDiv.appendChild(svgElement);
         }
 
+        // TODO: remove many of unused properties/methods below
         // Setup the context object
         const context: GoslingTrackContext = {
             scene: pixiContainer,
             id: 'test',
+            viewUid: 'test',
+            // getLockGroupExtrema: () => null,
+            onMouseMoveZoom: () => {},
+            // chromInfoPath: '',
             dataFetcher,
-            dataConfig: {
-                server: 'https://resgen.io/api/v1',
-                tilesetUid: 'UvVPeLHuRDiYA3qwFlm7xQ'
-                // coordSystem: "hg19",
-            },
+            //dataConfig: {
+            // server: 'https://resgen.io/api/v1',
+            // tilesetUid: 'UvVPeLHuRDiYA3qwFlm7xQ'
+            // coordSystem: "hg19",
+            // },
             animate: () => {},
             onValueScaleChanged: () => {},
             handleTilesetInfoReceived: () => {},
