@@ -198,10 +198,20 @@ export interface CommonTrackDef extends CommonViewDef {
 }
 
 export interface ChromospaceTrack
-    extends Pick<CommonTrackDef, 'width' | 'height' | 'id' | 'title' | '_invalidTrack' | 'orientation' | 'static' | 'assembly'> {
+    extends Pick<
+        CommonTrackDef,
+        'width' | 'height' | 'id' | 'title' | '_invalidTrack' | 'orientation' | 'static' | 'assembly'
+    > {
     type: '3D';
     color: string; //~ just testing
-};
+
+    // Some properties added just to be consistent with our track types.
+    // These make type checking less complicated during compiling, but certainly this can be removed/changed reflecting on the use cases.
+    layout?: 'spatial'; // internal property
+    overlayOnPreviousTrack?: false; // internal property
+    style?: { [key: string]: string | number }; // Any style-related properties to support?
+    zoomLimits?: [null, null]; // This determines whether users can zoom ifinitely or not. Unused at the moment.
+}
 
 /**
  * A placeholder track. In contrast to other tracks, this track does not display any data. Instead it provides
