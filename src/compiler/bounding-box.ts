@@ -1,7 +1,7 @@
 import type { MultipleViews, CommonViewDef, GoslingSpec, Track, SingleView } from '@gosling-lang/gosling-schema';
 import { Is2DTrack, IsDummyTrack, IsOverlaidTrack, IsXAxis, IsYAxis } from '@gosling-lang/gosling-schema';
-import { HIGLASS_AXIS_SIZE } from './higlass-model';
 import {
+    DEFAULT_AXIS_SIZE,
     DEFAULT_CIRCULAR_VIEW_PADDING,
     DEFAULT_INNER_RADIUS_PROP,
     DEFAULT_VIEW_SPACING,
@@ -186,7 +186,7 @@ function traverseAndCollectTrackInfo(
             cumHeight = Math.max(...tracks.map(d => d.height));
             tracks.forEach((track, i, array) => {
                 if (getNumOfXAxes([track]) === 1) {
-                    track.width += HIGLASS_AXIS_SIZE;
+                    track.width += DEFAULT_AXIS_SIZE;
                 }
 
                 track.height = cumHeight;
@@ -217,7 +217,7 @@ function traverseAndCollectTrackInfo(
             tracks.forEach((track, i, array) => {
                 // let scaledHeight = track.height;
                 if (getNumOfXAxes([track]) === 1) {
-                    track.height += HIGLASS_AXIS_SIZE;
+                    track.height += DEFAULT_AXIS_SIZE;
                 }
                 const boundingBox = {
                     x: dx,
@@ -228,7 +228,7 @@ function traverseAndCollectTrackInfo(
                 const singleTrack = resolveSuperposedTracks(track);
                 if (singleTrack.length > 0 && Is2DTrack(singleTrack[0]) && getNumOfYAxes([track]) === 1) {
                     // If this is a 2D track (e.g., matrix), we need to reserve a space for the y-axis track
-                    boundingBox.width += HIGLASS_AXIS_SIZE;
+                    boundingBox.width += DEFAULT_AXIS_SIZE;
                 }
 
                 track.width = boundingBox.width;

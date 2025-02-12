@@ -2,9 +2,9 @@ import { type AxisTrackOptions } from '@gosling-lang/genomic-axis';
 import { IsChannelDeep, IsDummyTrack, IsTemplateTrack, type AxisPosition } from '@gosling-lang/gosling-schema';
 import type { CompleteThemeDeep } from '../../src/core/utils/theme';
 import { resolveSuperposedTracks } from '../../src/core/utils/overlay';
-import { HIGLASS_AXIS_SIZE } from '../../src/compiler/higlass-model';
 import { TrackType, type TrackDef } from './main';
 import type { ProcessedCircularTrack, ProcessedTrack } from './types';
+import { DEFAULT_AXIS_SIZE } from '../../src/compiler/defaults';
 
 /**
  * Generates the track definition for the axis track
@@ -33,7 +33,7 @@ export function getAxisTrackDef(
         if (track.layout === 'linear') {
             const isHorizontal = track.orientation === 'horizontal';
             const widthOrHeight = isHorizontal ? 'height' : 'width';
-            const axisBbox = { ...trackBbox, [widthOrHeight]: HIGLASS_AXIS_SIZE };
+            const axisBbox = { ...trackBbox, [widthOrHeight]: DEFAULT_AXIS_SIZE };
             trackBbox[widthOrHeight] -= axisBbox[widthOrHeight];
             if (xAxisPosition === 'top') {
                 trackBbox.y += axisBbox.height;
@@ -62,7 +62,7 @@ export function getAxisTrackDef(
             }
             const isHorizontal = track.orientation === 'horizontal';
             const widthOrHeight = isHorizontal ? 'width' : 'height';
-            const axisBbox = { ...trackBbox, [widthOrHeight]: HIGLASS_AXIS_SIZE };
+            const axisBbox = { ...trackBbox, [widthOrHeight]: DEFAULT_AXIS_SIZE };
             trackBbox[widthOrHeight] -= axisBbox[widthOrHeight];
             if (yAxisPosition === 'right') {
                 axisBbox.x = trackBbox.x + trackBbox.width;

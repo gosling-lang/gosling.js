@@ -61,5 +61,5 @@ export const JsonExampleSpecs = {
     EX_SPEC_TEMPLATE,
     EX_SPEC_MOUSE_EVENT,
     EX_SPEC_DEBUG,
-    EX_SPEC_SPATIAL,
+    EX_SPEC_SPATIAL
 };
