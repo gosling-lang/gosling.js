@@ -1,3 +1,22 @@
+# [1.0.0](https://github.com/gosling-lang/gosling.js/compare/v0.17.0...v1.0.0) (2025-02-12)
+
+
+### Bug Fixes
+
+* add valid esm.sh path for higlass-text module ([#1104](https://github.com/gosling-lang/gosling.js/issues/1104)) ([c9882b5](https://github.com/gosling-lang/gosling.js/commit/c9882b5c391532d52a702b48449505d47088c43e)), closes [#1103](https://github.com/gosling-lang/gosling.js/issues/1103)
+* **editor:** deprecated versions of github workflows ([#1106](https://github.com/gosling-lang/gosling.js/issues/1106)) ([3cefbf3](https://github.com/gosling-lang/gosling.js/commit/3cefbf3cab2017cc6169a60332526466f104c781))
+
+
+### Features
+
+* **core:** Make reactive default in component  ([#1073](https://github.com/gosling-lang/gosling.js/issues/1073)) ([17fd085](https://github.com/gosling-lang/gosling.js/commit/17fd085ee364ba1be12ea135bd4507a9e638bb59))
+* **core:** mouseEvent out of the experimental property ([#1072](https://github.com/gosling-lang/gosling.js/issues/1072)) ([1aa335b](https://github.com/gosling-lang/gosling.js/commit/1aa335b2ee481c77e24bd1b09a5692e2f8bce8dc))
+* **core:** remove DataTrack from schema and compiler ([#1074](https://github.com/gosling-lang/gosling.js/issues/1074)) ([2440948](https://github.com/gosling-lang/gosling.js/commit/244094843df50669f85e5d09d6d8b519c4fa3011)), closes [#1079](https://github.com/gosling-lang/gosling.js/issues/1079)
+* **core:** remove specProcessed event ([#1076](https://github.com/gosling-lang/gosling.js/issues/1076)) ([12da1ba](https://github.com/gosling-lang/gosling.js/commit/12da1bac527fd70d5e64f5044ee6803463b91881))
+* **core:** remove tooltip information about the number of additional elements ([#1080](https://github.com/gosling-lang/gosling.js/issues/1080)) ([bde823c](https://github.com/gosling-lang/gosling.js/commit/bde823c3d306d1fc0d43f6c138fc75d4967309ba))
+
+
+
 # [0.17.0](https://github.com/gosling-lang/gosling.js/compare/v0.16.0...v0.17.0) (2024-05-06)
 
 
