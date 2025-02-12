@@ -13,7 +13,6 @@ import { HeatmapTrack } from '@gosling-lang/heatmap';
 import type { PixiManager } from '@pixi-manager';
 import { DummyTrack } from '@gosling-lang/dummy-track';
 import type { UrlToFetchOptions } from 'src/compiler/compile';
-
 import * as chs from 'chromospace';
 
 /**
