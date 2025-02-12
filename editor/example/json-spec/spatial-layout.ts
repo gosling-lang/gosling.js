@@ -12,19 +12,18 @@ export const EX_SPEC_SPATIAL: GoslingSpec = {
             arrangement: 'horizontal',
             views: [
                 {
-                    layout: "spatial",
+                    layout: 'spatial',
                     tracks: [
                         {
-                            data:
-                            {
-                                type: "csv",
-                                url: "https://debug.test/isnt-used-yet",
+                            data: {
+                                type: 'csv',
+                                url: 'https://debug.test/isnt-used-yet'
                             },
                             //type: "3D",
                             width: 250,
                             height: 250
                         }
-                    ],
+                    ]
                 },
                 {
                     layout: 'linear',
