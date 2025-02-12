@@ -1,22 +1,22 @@
 import type { GoslingSpec, TemplateTrackDef, VisUnitApiData } from '@gosling-lang/gosling-schema';
-import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
 import { traverseToFixSpecDownstream } from './spec-preprocess';
 import { replaceTrackTemplates } from '../core/utils/template';
 import { getRelativeTrackInfo, type Size, type TrackInfo } from './bounding-box';
 import type { CompleteThemeDeep } from '../core/utils/theme';
-import type { UrlToFetchOptions } from 'src/core/gosling-component';
-import { renderHiGlass as createHiGlassModels } from './create-higlass-models';
+import { collectViewsAndTracks } from './views-and-tracks';
 import { manageResponsiveSpecs } from './responsive';
-import type { IdTable } from '../api/track-and-view-ids';
 
 interface CompileResult {
-    hg: HiGlassSpec;
     size: Size;
     gs: GoslingSpec;
     tracksAndViews: VisUnitApiData[];
-    idTable: IdTable;
     trackInfos: TrackInfo[];
     theme: Required<CompleteThemeDeep>;
+}
+
+/** Matches URLs to specific fetch options so that datafetchers have access URL specific fetch options */
+export interface UrlToFetchOptions {
+    [url: string]: RequestInit;
 }
 
 export function compile(
@@ -26,8 +26,7 @@ export function compile(
     containerStatus: {
         containerSize?: { width: number; height: number };
         containerParentSize?: { width: number; height: number };
-    },
-    urlToFetchOptions?: UrlToFetchOptions
+    }
 ): CompileResult {
     // Make sure to keep the original spec as-is
     const specCopy = JSON.parse(JSON.stringify(spec));
@@ -67,6 +66,6 @@ export function compile(
     }
 
     // Make HiGlass models for individual tracks
-    const compileResult = createHiGlassModels(specCopy, trackInfos, theme, urlToFetchOptions);
+    const compileResult = collectViewsAndTracks(specCopy, trackInfos, theme);
     return compileResult;
 }

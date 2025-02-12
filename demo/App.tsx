@@ -16,7 +16,6 @@ import { compile } from '../src/compiler/compile';
 import { getTheme } from '../src/core/utils/theme';
 
 import './App.css';
-import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
 import { createTrackDefs, renderTrackDefs, showTrackInfoPositions } from './track-def/main';
 import type { TrackInfo } from 'src/compiler/bounding-box';
 import type { GoslingSpec } from 'gosling.js';

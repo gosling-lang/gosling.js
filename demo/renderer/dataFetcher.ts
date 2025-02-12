@@ -10,11 +10,16 @@ import {
     VcfDataFetcher
 } from '@data-fetchers';
 import type { ProcessedTrack } from 'demo/track-def/types';
+import type { UrlToFetchOptions } from 'src/compiler/compile';
 
-export function getDataFetcher(spec: ProcessedTrack) {
+export function getDataFetcher(spec: ProcessedTrack, urlToFetchOptions?: UrlToFetchOptions) {
     if (!('data' in spec)) {
         console.warn('No data in the track spec', spec);
     }
+
+    const urlFetchOptions = ('url' in spec.data && urlToFetchOptions?.[spec.data.url]) || {};
+    const indexUrlFetchOptions = ('indexUrl' in spec.data && urlToFetchOptions?.[spec.data.indexUrl]) || {};
+
     if (spec.data.type == 'multivec' || spec.data.type == 'beddb' || spec.data.type == 'matrix') {
         const url = spec.data.url;
         const server = url.split('/').slice(0, -2).join('/');
@@ -26,23 +31,23 @@ export function getDataFetcher(spec: ProcessedTrack) {
     }
     if (spec.data.type == 'csv') {
         const fields = getFields(spec);
-        return new CsvDataFetcher({ ...spec.data, ...fields, assembly: spec.assembly });
+        return new CsvDataFetcher({ ...spec.data, ...fields, assembly: spec.assembly, urlFetchOptions });
     }
     if (spec.data.type == 'json') {
         const fields = getFields(spec);
         return new JsonDataFetcher({ ...spec.data, ...fields, assembly: spec.assembly });
     }
     if (spec.data.type == 'gff') {
-        return new GffDataFetcher({ ...spec.data, assembly: spec.assembly });
+        return new GffDataFetcher({ ...spec.data, assembly: spec.assembly, urlFetchOptions, indexUrlFetchOptions });
     }
     if (spec.data.type == 'bam') {
-        return new BamDataFetcher({ ...spec.data, assembly: spec.assembly });
+        return new BamDataFetcher({ ...spec.data, assembly: spec.assembly, urlFetchOptions, indexUrlFetchOptions });
     }
     if (spec.data.type == 'bed') {
-        return new BedDataFetcher({ ...spec.data, assembly: spec.assembly });
+        return new BedDataFetcher({ ...spec.data, assembly: spec.assembly, urlFetchOptions, indexUrlFetchOptions });
     }
     if (spec.data.type == 'vcf') {
-        return new VcfDataFetcher({ ...spec.data, assembly: spec.assembly });
+        return new VcfDataFetcher({ ...spec.data, assembly: spec.assembly, urlFetchOptions, indexUrlFetchOptions });
     }
 }
 
