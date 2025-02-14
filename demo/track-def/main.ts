@@ -6,6 +6,7 @@ import { type BrushLinearTrackOptions } from '@gosling-lang/brush-linear';
 import type { TrackInfo } from '../../src/compiler/bounding-box';
 import type { CompleteThemeDeep } from '../../src/core/utils/theme';
 import type { GoslingTrackOptions } from '../../src/tracks/gosling-track/gosling-track';
+import type { SpatialTrackOptions } from 'src/tracks/spatial-track/spatial-track';
 
 import { proccessTextHeader } from './text';
 import { processHeatmapTrack, isHeatmapTrack } from './heatmap';
@@ -29,10 +30,6 @@ export enum TrackType {
     Spatial
 }
 
-
-type SpatialTrackOptions = {
-    color: string | undefined;
-};
 
 /**
  * Associate options to each track type
@@ -90,16 +87,17 @@ export function createTrackDefs(trackInfos: TrackInfo[], theme: Required<Complet
             // We have a dummy track
             const dummyTrackDefs = processDummyTrack(track, boundingBox);
             trackDefs.push(...dummyTrackDefs);
-        } else if ('type' in track && track.type === '3D') {
+        } else if ('layout' in track && track.layout === 'spatial') {
             // We have a 3D track
             console.warn('got 3D track', track);
-            //const trackDef: TrackDef<Record<string, never>> = {
             const trackDef: TrackDef<SpatialTrackOptions> = {
                 type: TrackType.Spatial,
                 trackId: track.id,
                 boundingBox,
                 options: {
                     color: track.color ? track.color.value : undefined,
+                    test: track.test,
+                    data3D: track.data3D,
                 }
             };
             trackDefs.push(trackDef);

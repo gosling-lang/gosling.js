@@ -381,6 +381,9 @@
         "color": {
           "type": "string"
         },
+        "data3D": {
+          "type": "string"
+        },
         "height": {
           "description": "Specify the track height in pixels.",
           "type": "number"
@@ -414,6 +417,9 @@
           },
           "type": "object"
         },
+        "test": {
+          "type": "string"
+        },
         "title": {
           "description": "If defined, will show the textual label on the left-top corner of a track.",
           "type": "string"
@@ -437,7 +443,9 @@
       },
       "required": [
         "type",
-        "color"
+        "color",
+        "test",
+        "data3D"
       ],
       "type": "object"
     },
@@ -5393,6 +5401,9 @@
         "data": {
           "$ref": "#/definitions/DataDeep"
         },
+        "data3D": {
+          "type": "string"
+        },
         "dataTransform": {
           "items": {
             "$ref": "#/definitions/DataTransform"
@@ -5602,6 +5613,9 @@
           "type": "string"
         },
         "template": {
+          "type": "string"
+        },
+        "test": {
           "type": "string"
         },
         "text": {

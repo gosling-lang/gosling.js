@@ -204,6 +204,8 @@ export interface ChromospaceTrack
     > {
     type: '3D';
     color: string; //~ just testing
+    test: string;
+    data3D: string;
 
     // Some properties added just to be consistent with our track types.
     // These make type checking less complicated during compiling, but certainly this can be removed/changed reflecting on the use cases.

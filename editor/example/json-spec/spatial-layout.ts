@@ -17,8 +17,13 @@ export const EX_SPEC_SPATIAL: GoslingSpec = {
                         {
                             data: {
                                 type: 'csv',
-                                url: 'https://debug.test/isnt-used-yet'
+                                url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/cytogenetic_band.csv', //~ just some existing data, to get rid of errors
                             },
+                            x: {
+                                field: "x",
+                            },
+                            test: "bla bla",
+                            data3D: "https://pub-5c3f8ce35c924114a178c6e929fc3ac7.r2.dev/Tan-2018_GSM3271353_gm12878_07.arrow",
                             //type: "3D",
                             width: 250,
                             height: 250

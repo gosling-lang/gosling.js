@@ -13,7 +13,7 @@ import { HeatmapTrack } from '@gosling-lang/heatmap';
 import type { PixiManager } from '@pixi-manager';
 import { DummyTrack } from '@gosling-lang/dummy-track';
 import type { UrlToFetchOptions } from 'src/compiler/compile';
-import * as chs from 'chromospace';
+import { createSpatialTrack } from '../../src/tracks/spatial-track/spatial-track';
 
 /**
  * Takes a list of track definitions and linkedEncodings and renders them
@@ -112,41 +112,11 @@ export function renderTrackDefs(
         }
         // Add a new track type for Chromospace
         if (type === TrackType.Spatial) {
-            const color = options.color;
-            const viewConfig = {
-                scale: 0.01,
-                color: color,
-                //color: "purple"
-            };
-            let chromatinScene = chs.initScene();
-            //~ https://chspace.xyz/?source=https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/refs/heads/main/dros.3.arrow
-            // https://pub-5c3f8ce35c924114a178c6e929fc3ac7.r2.dev/Tan-2018_GSM3271353_gm12878_07.arrow
-            const s = chs.loadFromURL("https://pub-5c3f8ce35c924114a178c6e929fc3ac7.r2.dev/Tan-2018_GSM3271353_gm12878_07.arrow", { center: true, normalize: true });
-            //const s = chs.loadFromURL("https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/refs/heads/main/dros.3.arrow", { center: true, normalize: true });
-            s.then(result => {
-
-                if (!result) {
-                    console.warn("error loading remote file");
-                    return;
-                }
-
-                const isModel = "parts" in result; //~ ChromatinModel has .parts
-                if (isModel) {
-                    chromatinScene = chs.addModelToScene(chromatinScene, result, viewConfig);
-                } else {
-                    chromatinScene = chs.addChunkToScene(chromatinScene, result, viewConfig);
-                }
-                const [_, canvas] = chs.display(chromatinScene, { alwaysRedraw: false });
-
-                // Even though Chromospace doesn't use PixiJS, we can use the PixiManager to create a div container that the canvas can be placed into.
-                // In the final version, we would probably want Chromospace to use an existing canvas element (to limit the creation of new elements).
-                // But for now this gets the job done.
-                const container = pixiManager.makeContainer(boundingBox).overlayDiv;
-                container.appendChild(canvas);
-            }).catch(error => {
-                console.log(error);
-            });
-
+            // Even though Chromospace doesn't use PixiJS, we can use the PixiManager to create a div container that the canvas can be placed into.
+            // In the final version, we would probably want Chromospace to use an existing canvas element (to limit the creation of new elements).
+            // But for now this gets the job done.
+            const container = pixiManager.makeContainer(boundingBox).overlayDiv;
+            createSpatialTrack(options, container);
         }
     });
 }
