@@ -13,6 +13,7 @@ import { HeatmapTrack } from '@gosling-lang/heatmap';
 import type { PixiManager } from '@pixi-manager';
 import { DummyTrack } from '@gosling-lang/dummy-track';
 import type { UrlToFetchOptions } from 'src/compiler/compile';
+import { createSpatialTrack } from '../../src/tracks/spatial-track/spatial-track';
 
 /**
  * Takes a list of track definitions and linkedEncodings and renders them
@@ -108,6 +109,14 @@ export function renderTrackDefs(
         }
         if (type === TrackType.Dummy) {
             new DummyTrack(options, pixiManager.makeContainer(boundingBox).overlayDiv);
+        }
+        // Add a new track type for Chromospace
+        if (type === TrackType.Spatial) {
+            // Even though Chromospace doesn't use PixiJS, we can use the PixiManager to create a div container that the canvas can be placed into.
+            // In the final version, we would probably want Chromospace to use an existing canvas element (to limit the creation of new elements).
+            // But for now this gets the job done.
+            const container = pixiManager.makeContainer(boundingBox).overlayDiv;
+            createSpatialTrack(options, container);
         }
     });
 }
