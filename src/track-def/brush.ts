@@ -65,7 +65,7 @@ function getBrushCircularOptions(spec: ProcessedCircularTrack, overlay: OverlayT
         endAngle: spec.endAngle ?? 352.8,
         innerRadius: spec.innerRadius ?? 151.08695652173913,
         outerRadius: spec.outerRadius ?? 250,
-        axisPositionHorizontal: 'left'
+        axisPositionHorizontal: 'left' as 'left' | 'right'
     };
     return options;
 }

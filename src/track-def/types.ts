@@ -17,6 +17,7 @@ export type ProcessedTrack = ProcessedLinearTrack | ProcessedCircularTrack | Pro
 /** All tracks potentially have these properties */
 export interface ProcessedTrackBase {
     id: string;
+    _renderingId?: string;
     height: number;
     width: number;
     static: boolean;
@@ -50,6 +51,7 @@ export type ProcessedCircularTrack = ProcessedTrackBase & {
 };
 
 export type ProcessedDummyTrack = ProcessedTrackBase & {
+    layout: 'linear'; // Can only be linear
     type?: string;
     style?: DummyTrackStyle;
 };

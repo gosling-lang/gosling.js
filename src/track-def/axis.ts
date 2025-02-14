@@ -94,9 +94,6 @@ function getAxisTrackLinearOptions(
 ): AxisTrackOptions {
     const narrowType = getAxisNarrowType(encoding, track.orientation, boundingBox.width, boundingBox.height);
     const options: AxisTrackOptions = {
-        orientation: getAxisOrientation(encoding, track.orientation),
-        encoding: encoding,
-        static: track.static,
         innerRadius: 0,
         outerRadius: 0,
         width: boundingBox.width,
@@ -121,23 +118,6 @@ function getAxisTrackLinearOptions(
 }
 
 /**
- * Determines the orientation of the axis
- */
-function getAxisOrientation(
-    encoding: 'x' | 'y',
-    trackOrientation: 'horizontal' | 'vertical'
-): 'horizontal' | 'vertical' {
-    if (encoding === 'x') {
-        return trackOrientation === 'horizontal' ? 'horizontal' : 'vertical';
-    }
-    if (encoding === 'y') {
-        return trackOrientation === 'horizontal' ? 'vertical' : 'horizontal';
-    }
-    console.warn('Invalid track orientation. Defaulting to horizontal');
-    return 'horizontal';
-}
-
-/**
  * Generates options for the circular axis track
  */
 function getAxisTrackCircularOptions(
@@ -157,8 +137,6 @@ function getAxisTrackCircularOptions(
 
     const options: AxisTrackOptions = {
         layout: 'circular',
-        encoding: 'x',
-        static: track.static,
         innerRadius,
         outerRadius,
         width: boundingBox.width,
@@ -194,6 +172,7 @@ function getAxisPositions(track: ProcessedTrack): {
         return { xAxisPosition: undefined, yAxisPosition: undefined };
     }
 
+    // @ts-expect-error this function should be refactored
     const resolvedSpecs = resolveSuperposedTracks(track);
     const firstResolvedSpec = resolvedSpecs[0];
 
