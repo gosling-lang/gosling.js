@@ -1,6 +1,6 @@
 import type { OverlaidTrack, SingleTrack } from "@gosling-lang/gosling-schema";
 import * as chs from "chromospace";
-import type { CsvDataFetcherClass } from "src/data-fetchers/csv/csv-data-fetcher";
+import type { CsvDataFetcherClass, LoadedTiles } from "src/data-fetchers/csv/csv-data-fetcher";
 import { tableFromArrays, tableToIPC } from "@uwdata/flechette";
 
 export type SpatialTrackOptions = {
@@ -15,15 +15,25 @@ export type SpatialTrackOptions = {
     };
 };
 
-function transformObjectToArrow(t: Tile): Uint8Array | null {
-    const tabularData = t['0.0'].tabularData;
+function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptions): Uint8Array | null {
+    const tabularData = t['0.0'].tabularData; //~ TODO: tile id
     const xArr: number[] = [];
     const yArr: number[] = [];
     const zArr: number[] = [];
+
+    const parseAsNumber = (e: string | number): number => {
+        if (typeof e === 'string') {
+            return parseFloat(e);
+        }
+        return e;
+    }
+    console.log(options);
+
     for (let i = 0; i < tabularData.length; i++) {
-        xArr.push(parseFloat(tabularData[i].x));
-        yArr.push(parseFloat(tabularData[i].y));
-        zArr.push(parseFloat(tabularData[i].z));
+        // same as `xArr.push(parseAsNumber(tabularData[i].x));` but here I can use the string from the `"x": { "field": "whatever-value" }` instead of hard-coded ".x"
+        xArr.push(parseAsNumber(tabularData[i]['x']));
+        yArr.push(parseAsNumber(tabularData[i]['y']));
+        zArr.push(parseAsNumber(tabularData[i]['z']));
     }
     const arrays = {
         x: xArr,
@@ -31,10 +41,7 @@ function transformObjectToArrow(t: Tile): Uint8Array | null {
         z: zArr,
     };
     const table = tableFromArrays(arrays);
-    console.log("table");
-    console.log(table);
     const buffer = tableToIPC(table, { format: "file" });
-    console.log(buffer?.byteLength);
     return buffer;
 }
 
@@ -54,7 +61,7 @@ export function createSpatialTrack(options: SpatialTrackOptions, dataFetcher: Cs
     dataFetcher.fetchTilesDebounced((t) => {
         console.log('CSV tiles: ~~~~~~~~');
         console.log(t);
-        const ipcBuffer = transformObjectToArrow(t);
+        const ipcBuffer = transformObjectToArrow(t, options);
         if (ipcBuffer) {
             const s = chs.load(ipcBuffer.buffer, { center: true, normalize: true });
 
