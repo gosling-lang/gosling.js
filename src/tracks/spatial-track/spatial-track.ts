@@ -29,11 +29,16 @@ function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptions): U
     }
     console.log(options);
 
+    const fieldForSpatialX = options.spec.spatial.x;
+    const fieldForSpatialY = options.spec.spatial.y;
+    const fieldForSpatialZ = options.spec.spatial.z;
+    console.log(`fieldForSpatialX: ${fieldForSpatialX},\nfieldForSpatialY: ${fieldForSpatialY},\nfieldForSpatialZ: ${fieldForSpatialZ}`);
+
     for (let i = 0; i < tabularData.length; i++) {
         // same as `xArr.push(parseAsNumber(tabularData[i].x));` but here I can use the string from the `"x": { "field": "whatever-value" }` instead of hard-coded ".x"
-        xArr.push(parseAsNumber(tabularData[i]['x']));
-        yArr.push(parseAsNumber(tabularData[i]['y']));
-        zArr.push(parseAsNumber(tabularData[i]['z']));
+        xArr.push(parseAsNumber(tabularData[i][fieldForSpatialX]));
+        yArr.push(parseAsNumber(tabularData[i][fieldForSpatialY]));
+        zArr.push(parseAsNumber(tabularData[i][fieldForSpatialZ]));
     }
     const arrays = {
         x: xArr,
