@@ -202,10 +202,15 @@ export interface ChromospaceTrack
         CommonTrackDef,
         'width' | 'height' | 'id' | 'title' | '_invalidTrack' | 'orientation' | 'static' | 'assembly'
     > {
-    type: '3D';
+    //type: '3D';
     color: string; //~ just testing
     test: string;
     data3D: string;
+    spatial: {
+        x: string;
+        y: string;
+        z: string;
+    };
 
     // Some properties added just to be consistent with our track types.
     // These make type checking less complicated during compiling, but certainly this can be removed/changed reflecting on the use cases.
@@ -279,7 +284,11 @@ export type Mark =
     | 'triangleBottom'
     | 'brush'
     // The _header mark is used internally for text tracks
-    | '_header';
+    | '_header'
+    // Spatial track
+    | 'sphere'
+    | 'box'
+    | 'octahedron';
 
 /* ----------------------------- API & MOUSE EVENTS ----------------------------- */
 interface CommonEventData {
