@@ -429,6 +429,12 @@ export const editorExampleObj: {
         spec: JsonExampleSpecs.EX_SPEC_SPATIAL,
         image: THUMBNAILS.SPATIAL_DRAFT
     },
+    SPATIAL_LAYOUT_MIN: {
+        group: 'Experimental',
+        name: 'Spatial Layout: Minimal',
+        spec: JsonExampleSpecs.EX_SPEC_SPATIAL_MINIMAL,
+        image: THUMBNAILS.SPATIAL_DRAFT
+    },
     CORCES_ET_AL: {
         group: 'Coordinated Multiple Views',
         name: 'Corces et al. 2020',

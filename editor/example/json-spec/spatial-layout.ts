@@ -89,3 +89,28 @@ export const EX_SPEC_SPATIAL: GoslingSpec = {
         }
     ]
 };
+
+export const EX_SPEC_SPATIAL_MINIMAL: GoslingSpec = {
+    title: 'Spatial Layout (Minimal, CSV)',
+    subtitle: 'Super basic example of spatial layout',
+    views: [
+        {
+            layout: 'spatial',
+            tracks: [
+                {
+                    data: {
+                        type: 'csv',
+                        url: 'https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/refs/heads/main/gosling-3d/Stevens-2017_GSM2219497_Cell_1_model_1_chr_f.csv',
+                    },
+                    spatial: {
+                        x: "x",
+                        y: "y",
+                        z: "z",
+                    },
+                    width: 500,
+                    height: 500
+                }
+            ]
+        }
+    ]
+};
