@@ -95,6 +95,7 @@ export function createTrackDefs(trackInfos: TrackInfo[], theme: Required<Complet
                 trackId: track.id,
                 boundingBox,
                 options: {
+                    spec: track,
                     color: track.color ? track.color.value : undefined,
                     test: track.test,
                     data3D: track.data3D,

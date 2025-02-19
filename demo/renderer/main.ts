@@ -14,6 +14,7 @@ import type { PixiManager } from '@pixi-manager';
 import { DummyTrack } from '@gosling-lang/dummy-track';
 import type { UrlToFetchOptions } from 'src/compiler/compile';
 import { createSpatialTrack } from '../../src/tracks/spatial-track/spatial-track';
+import type { CsvDataFetcherClass } from 'src/data-fetchers/csv/csv-data-fetcher';
 
 /**
  * Takes a list of track definitions and linkedEncodings and renders them
@@ -116,7 +117,11 @@ export function renderTrackDefs(
             // In the final version, we would probably want Chromospace to use an existing canvas element (to limit the creation of new elements).
             // But for now this gets the job done.
             const container = pixiManager.makeContainer(boundingBox).overlayDiv;
-            createSpatialTrack(options, container);
+            console.log("!@$!#%@#");
+            console.log(options.spec);
+            options.spec.data.sampleLength = 2000;
+            const datafetcher = getDataFetcher(options.spec, urlToFetchOptions);
+            createSpatialTrack(options, datafetcher as CsvDataFetcherClass, container);
         }
     });
 }

@@ -1,6 +1,10 @@
+import type { OverlaidTrack, SingleTrack } from "@gosling-lang/gosling-schema";
 import * as chs from "chromospace";
+import type { CsvDataFetcherClass } from "src/data-fetchers/csv/csv-data-fetcher";
+import { tableFromArrays, tableToIPC } from "@uwdata/flechette";
 
 export type SpatialTrackOptions = {
+    spec: SingleTrack | OverlaidTrack;
     color: string | undefined;
     test: string | undefined;
     data3D: string | undefined;
@@ -11,60 +15,87 @@ export type SpatialTrackOptions = {
     };
 };
 
-export function createSpatialTrack(options: SpatialTrackOptions, container: HTMLDivElement) {
-    hiFromSpatialTrack();
+function transformObjectToArrow(t: Tile): Uint8Array | null {
+    const tabularData = t['0.0'].tabularData;
+    const xArr: number[] = [];
+    const yArr: number[] = [];
+    const zArr: number[] = [];
+    for (let i = 0; i < tabularData.length; i++) {
+        xArr.push(parseFloat(tabularData[i].x));
+        yArr.push(parseFloat(tabularData[i].y));
+        zArr.push(parseFloat(tabularData[i].z));
+    }
+    const arrays = {
+        x: xArr,
+        y: yArr,
+        z: zArr,
+    };
+    const table = tableFromArrays(arrays);
+    console.log("table");
+    console.log(table);
+    const buffer = tableToIPC(table, { format: "file" });
+    console.log(buffer?.byteLength);
+    return buffer;
+}
+
+export function createSpatialTrack(options: SpatialTrackOptions, dataFetcher: CsvDataFetcherClass, container: HTMLDivElement) {
     const viewConfig = {
         scale: 0.01,
         color: options.color,
     };
     let chromatinScene = chs.initScene();
     console.warn(`options.test: ${options.test}`);
-
-    //~ WIP: it's probably dumb to fetch a sample dataset when none is specified...
-    const dataToLoad = decideDataToLoad(options);
-
-    const s = chs.loadFromURL(dataToLoad, { center: true, normalize: true });
-    s.then(result => {
-
-        if (!result) {
-            console.warn("error loading remote file");
-            return undefined;
-        }
-
-        const isModel = "parts" in result; //~ ChromatinModel has .parts
-        if (isModel) {
-            chromatinScene = chs.addModelToScene(chromatinScene, result, viewConfig);
-        } else {
-            chromatinScene = chs.addChunkToScene(chromatinScene, result, viewConfig);
-        }
-        const [_, canvas] = chs.display(chromatinScene, { alwaysRedraw: false });
-
-        container.appendChild(canvas);
-    }).catch(error => {
-        console.log(error);
+    dataFetcher.tilesetInfo((info) => {
+        console.log("info");
+        console.log(info);
+        console.log("dataConfig");
+        console.log(dataFetcher.dataConfig);
     });
-}
+    dataFetcher.fetchTilesDebounced((t) => {
+        console.log('CSV tiles: ~~~~~~~~');
+        console.log(t);
+        const ipcBuffer = transformObjectToArrow(t);
+        if (ipcBuffer) {
+            const s = chs.load(ipcBuffer.buffer, { center: true, normalize: true });
 
-/* 
- * TODO: I imagine when people specify the 3D data via 
- * something else than a .arrow file, I'll want to create 
- * an arrow file from the values I pulled from that other file 
- * */
-function preprocessData() {
-}
+            const result = s;
 
-/* This is just for debugging. It should be replaced by using the data fetchers interface */
-function decideDataToLoad(options: SpatialTrackOptions) {
-    const sampleModel = "https://pub-5c3f8ce35c924114a178c6e929fc3ac7.r2.dev/Tan-2018_GSM3271353_gm12878_07.arrow";
-    const sampleChunk = "https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/refs/heads/main/dros.3.arrow";
-    let dataToLoad = options.data3D;
-    if (!dataToLoad) {
-        const randNum = Math.random() * 2;
-        dataToLoad = (randNum > 1.0) ? sampleModel : sampleChunk;
-    }
-    return dataToLoad;
-}
+            const isModel = "parts" in result; //~ ChromatinModel has .parts
+            if (isModel) {
+                chromatinScene = chs.addModelToScene(chromatinScene, result, viewConfig);
+            } else {
+                chromatinScene = chs.addChunkToScene(chromatinScene, result, viewConfig);
+            }
+            const [_, canvas] = chs.display(chromatinScene, { alwaysRedraw: false });
 
-export function hiFromSpatialTrack() {
-    console.log("hi from spatial track");
+            container.appendChild(canvas);
+        } else {
+        }
+
+    }, ["0.0", "1.0"]);
+
+    ////~ WIP: it's probably dumb to fetch a sample dataset when none is specified...
+    //const dataToLoad = decideDataToLoad(options);
+    //
+    ////chs.load
+    //const s = chs.loadFromURL(dataToLoad, { center: true, normalize: true });
+    //s.then(result => {
+    //
+    //    if (!result) {
+    //        console.warn("error loading remote file");
+    //        return undefined;
+    //    }
+    //
+    //    const isModel = "parts" in result; //~ ChromatinModel has .parts
+    //    if (isModel) {
+    //        chromatinScene = chs.addModelToScene(chromatinScene, result, viewConfig);
+    //    } else {
+    //        chromatinScene = chs.addChunkToScene(chromatinScene, result, viewConfig);
+    //    }
+    //    const [_, canvas] = chs.display(chromatinScene, { alwaysRedraw: false });
+    //
+    //    container.appendChild(canvas);
+    //}).catch(error => {
+    //    console.log(error);
+    //});
 }
