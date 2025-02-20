@@ -24,7 +24,7 @@ export function normalizeSpec(spec: GoslingSpec, templates: TemplateTrackDef[]) 
 /**
  * The short-form definitions of mark displacements are expanded with `dataTransform` definitions.
  */
-function replaceDisplacements(spec: GoslingSpec) {
+export function replaceDisplacements(spec: GoslingSpec) {
     traverseTracks(spec, track => {
         if ('displacement' in track) {
             if (
