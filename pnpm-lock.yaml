@@ -42,8 +42,8 @@ dependencies:
     specifier: ^6.0.3
     version: 6.0.3
   chromospace:
-    specifier: ^0.1.3
-    version: 0.1.3
+    specifier: ^0.1.4
+    version: 0.1.4
   css-element-queries:
     specifier: ^1.2.3
     version: 1.2.3
@@ -2182,8 +2182,8 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /apache-arrow@17.0.0:
-    resolution: {integrity: sha512-X0p7auzdnGuhYMVKYINdQssS4EcKec9TCXyez/qtJt32DrIMGbzqiaMiQ0X6fQlQpw8Fl0Qygcv4dfRAr5Gu9Q==}
+  /apache-arrow@18.1.0:
+    resolution: {integrity: sha512-v/ShMp57iBnBp4lDgV8Jx3d3Q5/Hac25FWmQ98eMahUiHPXcvwIMKJD0hBIgclm/FCG+LwPkAKtkRO1O/W0YGg==}
     hasBin: true
     dependencies:
       '@swc/helpers': 0.5.15
@@ -2643,15 +2643,15 @@ packages:
     resolution: {integrity: sha512-IJnETTalXbsLx1eKEgx19d5L6SRM7cH4vINw/99p/M11HCuXGRWL+6YmCm7FWFGIo6dtWuQoQi1dc5yQ7ESIHg==}
     dev: false
 
-  /chromospace@0.1.3:
-    resolution: {integrity: sha512-0XIjsDXhNGMeLYFFGpwW7W7aw8XQq47JvbjU+IqCORAf8iAJ437faem8XWRwwxAnYjPm3elMkgEHio7YDyrLQg==}
+  /chromospace@0.1.4:
+    resolution: {integrity: sha512-IRBrtZzI2WqDxOufULC2lmDb7StyoPOG7YGKFRbsrEm6QzX+vI7TbRNbyPL6NPiczUR8KNZ62XhhJUOWk4OLNA==}
     dependencies:
-      apache-arrow: 17.0.0
+      apache-arrow: 18.1.0
       chroma-js: 3.1.2
       gl-matrix: 3.4.3
-      n8ao: 1.9.4(postprocessing@6.36.7)(three@0.168.0)
-      postprocessing: 6.36.7(three@0.168.0)
-      three: 0.168.0
+      n8ao: 1.9.4(postprocessing@6.36.7)(three@0.171.0)
+      postprocessing: 6.36.7(three@0.171.0)
+      three: 0.171.0
     dev: false
 
   /classnames@2.3.2:
@@ -5634,14 +5634,14 @@ packages:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
     dev: true
 
-  /n8ao@1.9.4(postprocessing@6.36.7)(three@0.168.0):
+  /n8ao@1.9.4(postprocessing@6.36.7)(three@0.171.0):
     resolution: {integrity: sha512-gbpAorQecZn2oGK/rheHxPTNwOxVsEC6216+Jr9tXHUk9L5VCE2q/uxsSrQpfNkZDoCmQHf7oSg3SYFWCAt0wg==}
     peerDependencies:
       postprocessing: '>=6.30.0'
       three: '>=0.137'
     dependencies:
-      postprocessing: 6.36.7(three@0.168.0)
-      three: 0.168.0
+      postprocessing: 6.36.7(three@0.171.0)
+      three: 0.171.0
     dev: false
 
   /nanoevents@7.0.1:
@@ -6160,12 +6160,12 @@ packages:
       source-map-js: 1.0.2
     dev: true
 
-  /postprocessing@6.36.7(three@0.168.0):
+  /postprocessing@6.36.7(three@0.171.0):
     resolution: {integrity: sha512-X6B3xt9dy4Osv19kqnVGqV01I2Tm7VwV6rLegRIZkZJPH3ozKLypHSBK1xKx7P/Ols++OkXe6L8dBGTaDUL5aw==}
     peerDependencies:
       three: '>= 0.157.0 < 0.174.0'
     dependencies:
-      three: 0.168.0
+      three: 0.171.0
     dev: false
 
   /prelude-ls@1.2.1:
@@ -6622,7 +6622,7 @@ packages:
   /rxjs@7.8.1:
     resolution: {integrity: sha512-AA3TVj+0A2iuIoQkWEK/tqFjBq2j+6PO6Y0zJcvzLAFhEFIO3HL0vls9hWLncZbAAbK0mar7oZ4V079I/qPMxg==}
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
     dev: false
 
   /safe-array-concat@1.0.1:
@@ -7216,8 +7216,8 @@ packages:
       - supports-color
     dev: false
 
-  /three@0.168.0:
-    resolution: {integrity: sha512-6m6jXtDwMJEK/GGMbAOTSAmxNdzKvvBzgd7q8bE/7Tr6m7PaBh5kKLrN7faWtlglXbzj7sVba48Idwx+NRsZXw==}
+  /three@0.171.0:
+    resolution: {integrity: sha512-Y/lAXPaKZPcEdkKjh0JOAHVv8OOnv/NDJqm0wjfCzyQmfKxV7zvkwsnBgPBKTzJHToSOhRGQAGbPJObT59B/PQ==}
     dev: false
 
   /through2@2.0.5:
@@ -7346,10 +7346,6 @@ packages:
       safe-stable-stringify: 2.4.3
       typescript: 4.6.4
     dev: true
-
-  /tslib@2.6.2:
-    resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
-    dev: false
 
   /tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
