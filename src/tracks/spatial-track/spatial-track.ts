@@ -173,8 +173,7 @@ export function createSpatialTrack(options: SpatialTrackOptions, dataFetcher: Cs
             const scale = handleSizeField(options.spec.size, arrowIpc);
             console.log("scale config", scale);
             const viewConfig = {
-                scale: 0.01,
-                //scale: scale,
+                scale: scale,
                 color: color,
                 mark: options.spec.mark,
             };
