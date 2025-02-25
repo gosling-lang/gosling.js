@@ -210,6 +210,8 @@ export interface ChromospaceTrack
         x: string;
         y: string;
         z: string;
+        chr: string;
+        coord: string;
     };
 
     // Some properties added just to be consistent with our track types.

@@ -407,6 +407,12 @@
         "spatial": {
           "additionalProperties": false,
           "properties": {
+            "chr": {
+              "type": "string"
+            },
+            "coord": {
+              "type": "string"
+            },
             "x": {
               "type": "string"
             },
@@ -420,7 +426,9 @@
           "required": [
             "x",
             "y",
-            "z"
+            "z",
+            "chr",
+            "coord"
           ],
           "type": "object"
         },
@@ -5568,6 +5576,12 @@
         "spatial": {
           "additionalProperties": false,
           "properties": {
+            "chr": {
+              "type": "string"
+            },
+            "coord": {
+              "type": "string"
+            },
             "x": {
               "type": "string"
             },
@@ -5581,7 +5595,9 @@
           "required": [
             "x",
             "y",
-            "z"
+            "z",
+            "chr",
+            "coord"
           ],
           "type": "object"
         },
