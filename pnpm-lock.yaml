@@ -42,8 +42,8 @@ dependencies:
     specifier: ^6.0.3
     version: 6.0.3
   chromospace:
-    specifier: ^0.1.4
-    version: 0.1.4
+    specifier: ^0.1.5
+    version: 0.1.5
   css-element-queries:
     specifier: ^1.2.3
     version: 1.2.3
@@ -2643,8 +2643,8 @@ packages:
     resolution: {integrity: sha512-IJnETTalXbsLx1eKEgx19d5L6SRM7cH4vINw/99p/M11HCuXGRWL+6YmCm7FWFGIo6dtWuQoQi1dc5yQ7ESIHg==}
     dev: false
 
-  /chromospace@0.1.4:
-    resolution: {integrity: sha512-IRBrtZzI2WqDxOufULC2lmDb7StyoPOG7YGKFRbsrEm6QzX+vI7TbRNbyPL6NPiczUR8KNZ62XhhJUOWk4OLNA==}
+  /chromospace@0.1.5:
+    resolution: {integrity: sha512-No/YgOBLJMsXlX/rCqZ6lv0y4eDu/fPfTWSFciNs4vJyMWNfb1AHnnjk0b11TsTwRNk/sem1+25zk9InqhiQsA==}
     dependencies:
       apache-arrow: 18.1.0
       chroma-js: 3.1.2
