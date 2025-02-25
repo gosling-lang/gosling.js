@@ -1,7 +1,7 @@
-import type { OverlaidTrack, SingleTrack } from "@gosling-lang/gosling-schema";
+import type { ChannelValue, Color, OverlaidTrack, SingleTrack, Size } from "@gosling-lang/gosling-schema";
 import * as chs from "chromospace";
 import type { CsvDataFetcherClass, LoadedTiles } from "src/data-fetchers/csv/csv-data-fetcher";
-import { tableFromArrays, tableToIPC } from "@uwdata/flechette";
+import { tableFromArrays, tableFromIPC, tableToIPC } from "@uwdata/flechette";
 
 export type SpatialTrackOptions = {
     spec: SingleTrack | OverlaidTrack;
@@ -20,6 +20,8 @@ function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptions): U
     const xArr: number[] = [];
     const yArr: number[] = [];
     const zArr: number[] = [];
+    const chrArr: string[] = [];
+    const coordArr: number[] = [];
 
     const parseAsNumber = (e: string | number): number => {
         if (typeof e === 'string') {
@@ -32,30 +34,93 @@ function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptions): U
     const fieldForSpatialX = options.spec.spatial.x;
     const fieldForSpatialY = options.spec.spatial.y;
     const fieldForSpatialZ = options.spec.spatial.z;
+    const fieldForSpatialChr = options.spec.spatial.chr;
+    const fieldForSpatialCoord = options.spec.spatial.coord;
     console.log(`fieldForSpatialX: ${fieldForSpatialX},\nfieldForSpatialY: ${fieldForSpatialY},\nfieldForSpatialZ: ${fieldForSpatialZ}`);
+    console.log(`fieldForSpatialChr : ${fieldForSpatialChr},\nfieldForSpatialCoord: ${fieldForSpatialCoord}`);
 
     for (let i = 0; i < tabularData.length; i++) {
         // same as `xArr.push(parseAsNumber(tabularData[i].x));` but here I can use the string from the `"x": { "field": "whatever-value" }` instead of hard-coded ".x"
         xArr.push(parseAsNumber(tabularData[i][fieldForSpatialX]));
         yArr.push(parseAsNumber(tabularData[i][fieldForSpatialY]));
         zArr.push(parseAsNumber(tabularData[i][fieldForSpatialZ]));
+        chrArr.push(tabularData[i][fieldForSpatialChr] as string);
+        coordArr.push(parseAsNumber(tabularData[i][fieldForSpatialCoord]));
     }
     const arrays = {
         x: xArr,
         y: yArr,
         z: zArr,
+        chr: chrArr,
+        coord: coordArr,
     };
     const table = tableFromArrays(arrays);
     const buffer = tableToIPC(table, { format: "file" });
     return buffer;
 }
 
+function fetchValuesFromColumn(columnName: string, arrowIpc: Uint8Array): number[] {
+    const table = tableFromIPC(arrowIpc);
+    const column = table.getChild(columnName).toArray();
+    return column;
+}
+
+/**
+ * Returns something we can feed to chromospace view config
+ */
+function handleColorField(color?: ChannelValue | Color | string, arrowIpc: Uint8Array): string {
+    if (color === undefined) {
+        return "red";
+    } else if (typeof color === 'string') {
+        return color;
+    } else if ("value" in color) {
+        return color.value as string;
+    } else if ("field" in color) {
+        if (!color.type) {
+            color.type = 'nominal'; // assume 'nominal' by default?
+        }
+        if (color.type === 'nominal') {
+
+        } else if (color.type === 'quantitative') {
+            const values = fetchValuesFromColumn(color.field, arrowIpc);
+            console.log("values", values);
+            const minVal = 1; //~ TODO: actually find
+            const maxVal = 1000; //~ TODO: actually find
+            const colorConfig = {
+                //values: values,
+                values: [...values],
+                min: minVal,
+                max: maxVal,
+                colorScale: "viridis",
+            };
+            return colorConfig;
+        }
+        else {
+            return "#ff00ff";
+        }
+    } else {
+        return "#ff00ff"; // error color
+    }
+}
+
+// color?: ChannelValue | Color
+function handleSizeField(size?: ChannelValue | Size | number): number {
+    if (size === undefined) {
+        return 0.01;
+    } else if (typeof size === 'number') {
+        return size;
+    } else if ("value" in size) {
+        return size.value as number;
+    } else {
+        return 0.01;
+    }
+}
+
 export function createSpatialTrack(options: SpatialTrackOptions, dataFetcher: CsvDataFetcherClass, container: HTMLDivElement) {
-    const viewConfig = {
-        scale: 0.01,
-        color: options.color,
-    };
-    let chromatinScene = chs.initScene();
+    console.log(`MARK was: ${options.spec.mark}`);
+    console.log("SPEC OPTIONS");
+    console.log(options);
+    options.spec.size
     console.warn(`options.test: ${options.test}`);
     dataFetcher.tilesetInfo((info) => {
         console.log("info");
@@ -68,11 +133,24 @@ export function createSpatialTrack(options: SpatialTrackOptions, dataFetcher: Cs
         console.log(t);
         const ipcBuffer = transformObjectToArrow(t, options);
         if (ipcBuffer) {
+
+            let chromatinScene = chs.initScene();
+            const arrowIpc = ipcBuffer.buffer;
+            const color = handleColorField(options.spec.color, arrowIpc);
+            const scale = handleSizeField(options.spec.size);
+            const viewConfig = {
+                //scale: 0.01,
+                scale: scale,
+                color: color,
+                mark: options.spec.mark,
+            };
+            console.log("viewConfig", viewConfig);
             const s = chs.load(ipcBuffer.buffer, { center: true, normalize: true });
 
             const result = s;
 
             const isModel = "parts" in result; //~ ChromatinModel has .parts
+            console.log(`isModel: ${isModel}`);
             if (isModel) {
                 chromatinScene = chs.addModelToScene(chromatinScene, result, viewConfig);
             } else {
@@ -85,29 +163,4 @@ export function createSpatialTrack(options: SpatialTrackOptions, dataFetcher: Cs
         }
 
     }, ["0.0", "1.0"]);
-
-    ////~ WIP: it's probably dumb to fetch a sample dataset when none is specified...
-    //const dataToLoad = decideDataToLoad(options);
-    //
-    ////chs.load
-    //const s = chs.loadFromURL(dataToLoad, { center: true, normalize: true });
-    //s.then(result => {
-    //
-    //    if (!result) {
-    //        console.warn("error loading remote file");
-    //        return undefined;
-    //    }
-    //
-    //    const isModel = "parts" in result; //~ ChromatinModel has .parts
-    //    if (isModel) {
-    //        chromatinScene = chs.addModelToScene(chromatinScene, result, viewConfig);
-    //    } else {
-    //        chromatinScene = chs.addChunkToScene(chromatinScene, result, viewConfig);
-    //    }
-    //    const [_, canvas] = chs.display(chromatinScene, { alwaysRedraw: false });
-    //
-    //    container.appendChild(canvas);
-    //}).catch(error => {
-    //    console.log(error);
-    //});
 }

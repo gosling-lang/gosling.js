@@ -100,12 +100,15 @@ export const EX_SPEC_SPATIAL_MINIMAL: GoslingSpec = {
                 {
                     data: {
                         type: 'csv',
-                        url: 'https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/refs/heads/main/gosling-3d/Stevens-2017_GSM2219497_Cell_1_model_1_chr_f.csv',
+                        //url: 'https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/refs/heads/main/gosling-3d/Stevens-2017_GSM2219497_Cell_1_model_1_chr_f.csv',
+                        url: 'https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/main/gosling-3d/yeast_model.csv',
                     },
                     spatial: {
                         x: "x",
                         y: "y",
                         z: "z",
+                        chr: "chr",
+                        coord: "coord",
                     },
                     width: 500,
                     height: 500
