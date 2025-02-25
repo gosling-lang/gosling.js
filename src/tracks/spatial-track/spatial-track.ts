@@ -65,6 +65,16 @@ function fetchValuesFromColumn(columnName: string, arrowIpc: Uint8Array): number
     return column;
 }
 
+function findMinAndMaxOfColumn(column: Int16Array): [number, number] {
+    let minVal = Infinity;
+    let maxVal = -Infinity;
+    for (const v of column) {
+        minVal = Math.min(minVal, v);
+        maxVal = Math.max(maxVal, v);
+    }
+    return [minVal, maxVal];
+}
+
 /**
  * Returns something we can feed to chromospace view config
  */
@@ -80,12 +90,12 @@ function handleColorField(color?: ChannelValue | Color | string, arrowIpc: Uint8
             color.type = 'nominal'; // assume 'nominal' by default?
         }
         if (color.type === 'nominal') {
-
+            console.warn("not implemented!");
         } else if (color.type === 'quantitative') {
             const values = fetchValuesFromColumn(color.field, arrowIpc);
             console.log("values", values);
-            const minVal = 1; //~ TODO: actually find
-            const maxVal = 1000; //~ TODO: actually find
+            const [minVal, maxVal] = findMinAndMaxOfColumn(values);
+            console.log(`minVal = ${minVal}, maxVal = ${maxVal}`);
             const colorConfig = {
                 //values: values,
                 values: [...values],
@@ -103,14 +113,37 @@ function handleColorField(color?: ChannelValue | Color | string, arrowIpc: Uint8
     }
 }
 
-// color?: ChannelValue | Color
-function handleSizeField(size?: ChannelValue | Size | number): number {
+//~ I see a case for a generic impl for color and size...
+function handleSizeField(size?: ChannelValue | Size | number, arrowIpc: Uint8Array): number {
     if (size === undefined) {
         return 0.01;
     } else if (typeof size === 'number') {
         return size;
     } else if ("value" in size) {
         return size.value as number;
+    } else if ("field" in size) {
+        if (!size.type) {
+            size.type = 'quantitative'; // assume 'nominal' by default?
+        }
+        if (size.type === 'nominal') {
+            console.warn("not implemented!");
+        } else if (size.type === 'quantitative') {
+            const values = fetchValuesFromColumn(size.field, arrowIpc);
+            console.log(`size.field = ${size.field}`);
+            console.log(values);
+            const [minVal, maxVal] = findMinAndMaxOfColumn(values);
+            const sizeConfig = {
+                values: [...values],
+                min: minVal,
+                max: maxVal,
+                scaleMin: 0.01, //~ TODO: fill from spec (this is the target min scale)
+                scaleMax: 0.001, //~ TODO: fill from spec (this is the target max scale)
+            };
+            return sizeConfig;
+        }
+        else {
+            return 0.01;
+        }
     } else {
         return 0.01;
     }
@@ -137,10 +170,11 @@ export function createSpatialTrack(options: SpatialTrackOptions, dataFetcher: Cs
             let chromatinScene = chs.initScene();
             const arrowIpc = ipcBuffer.buffer;
             const color = handleColorField(options.spec.color, arrowIpc);
-            const scale = handleSizeField(options.spec.size);
+            const scale = handleSizeField(options.spec.size, arrowIpc);
+            console.log("scale config", scale);
             const viewConfig = {
-                //scale: 0.01,
-                scale: scale,
+                scale: 0.01,
+                //scale: scale,
                 color: color,
                 mark: options.spec.mark,
             };
