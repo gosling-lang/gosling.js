@@ -1292,7 +1292,8 @@ export type DataTransform =
     | GenomicLengthTransform
     | SvTypeTransform
     | CoverageTransform
-    | JsonParseTransform;
+    | JsonParseTransform
+    | JoinTransform;
 
 export type FilterTransform = OneOfFilter | RangeFilter | IncludeFilter;
 
@@ -1446,6 +1447,23 @@ export interface JsonParseTransform {
     genomicField: string;
     /** Length of genomic interval. */
     genomicLengthField: string;
+}
+
+/**
+ * Join new data to the existing `data`.
+ * The data will join _left_ to the existing `data`.
+ */
+export interface JoinTransform {
+    type: 'join';
+    /** The field that contains the key values to match with another data */
+    keyField: string;
+    /** The data to join */
+    from: {
+        /** The URL to the data. TSV */
+        url: string;
+        /** The field that contains the key values in the target data */
+        keyField: string;
+    };
 }
 
 /* ----------------------------- Templates ----------------------------- */
