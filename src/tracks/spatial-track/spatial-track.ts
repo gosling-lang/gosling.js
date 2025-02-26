@@ -75,6 +75,16 @@ function findMinAndMaxOfColumn(column: Int16Array): [number, number] {
     return [minVal, maxVal];
 }
 
+//~ TODO: make more generic
+function getRange(size: Size): [number, number] {
+    if (size.range) {
+        //~ TODO: yeah...this is ugly
+        return [size.range[0] as number, size.range[1] as number];
+    } else {
+        return [0.01, 0.001];
+    }
+}
+
 /**
  * Returns something we can feed to chromospace view config
  */
@@ -129,6 +139,7 @@ function handleSizeField(size?: ChannelValue | Size | number, arrowIpc: Uint8Arr
             console.warn("not implemented!");
         } else if (size.type === 'quantitative') {
             const values = fetchValuesFromColumn(size.field, arrowIpc);
+            const [rangeMin, rangeMax] = getRange(size);
             console.log(`size.field = ${size.field}`);
             console.log(values);
             const [minVal, maxVal] = findMinAndMaxOfColumn(values);
@@ -136,8 +147,8 @@ function handleSizeField(size?: ChannelValue | Size | number, arrowIpc: Uint8Arr
                 values: [...values],
                 min: minVal,
                 max: maxVal,
-                scaleMin: 0.01, //~ TODO: fill from spec (this is the target min scale)
-                scaleMax: 0.001, //~ TODO: fill from spec (this is the target max scale)
+                scaleMin: rangeMin,
+                scaleMax: rangeMax,
             };
             return sizeConfig;
         }
