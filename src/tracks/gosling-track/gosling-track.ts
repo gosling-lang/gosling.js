@@ -35,7 +35,8 @@ import {
     parseSubJSON,
     replaceString,
     splitExon,
-    inferSvType
+    inferSvType,
+    joinData
 } from '../../core/utils/data-transform';
 import { publish } from '../../api/pubsub';
 import { getRelativeGenomicPosition } from '../../core/utils/assembly';
@@ -996,7 +997,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
         const resolvedTracks = this.getResolvedTracks();
         resolvedTracks.forEach(resolvedSpec => {
             let tabularDataTransformed = Array.from(tileInfo.tabularData);
-            resolvedSpec.dataTransform?.forEach(t => {
+            resolvedSpec.dataTransform?.forEach(async t => {
                 switch (t.type) {
                     case 'filter':
                         tabularDataTransformed = filterData(t, tabularDataTransformed);
@@ -1009,6 +1010,9 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
                         break;
                     case 'log':
                         tabularDataTransformed = calculateData(t, tabularDataTransformed);
+                        break;
+                    case 'join':
+                        tabularDataTransformed = await joinData(t, tabularDataTransformed);
                         break;
                     case 'exonSplit':
                         tabularDataTransformed = splitExon(t, tabularDataTransformed, resolvedSpec.assembly);

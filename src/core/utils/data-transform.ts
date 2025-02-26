@@ -1,4 +1,5 @@
 import type * as d3 from 'd3';
+import { csv } from 'd3';
 import type {
     SingleTrack,
     Datum,
@@ -12,7 +13,8 @@ import type {
     SvTypeTransform,
     CoverageTransform,
     DisplaceTransform,
-    JsonParseTransform
+    JsonParseTransform,
+    JoinTransform
 } from '@gosling-lang/gosling-schema';
 import {
     getChannelKeysByAggregateFnc,
@@ -100,6 +102,17 @@ export function calculateData(log: LogTransform, data: Datum[]): Datum[] {
         return d;
     });
     return output;
+}
+
+/**
+ * Load a CSV file, and join it to the existing data.
+ */
+export async function joinData(transform: JoinTransform, data: Datum[]): Datum[] {
+    const { keyField } = transform;
+    const { url, keyField: keyField2 } = transform.from;
+    const loaded = await csv(url);
+    return loaded;
+    console.log(loaded);
 }
 
 /**
