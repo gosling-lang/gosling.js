@@ -26,7 +26,7 @@ import { EX_SPEC_TEMPLATE } from './track-template';
 import { EX_SPEC_MOUSE_EVENT } from './mouse-event';
 import { EX_SPEC_PERF_ALIGNMENT } from './perf-alignment';
 import { EX_SPEC_DEBUG } from './debug';
-import { EX_SPEC_SPATIAL, EX_SPEC_SPATIAL_MINIMAL } from './spatial-layout';
+import { EX_SPEC_SPATIAL, EX_SPEC_SPATIAL_MINIMAL, EX_SPEC_SPATIAL_MULTIPLE_TRACKS } from './spatial-layout';
 
 export const JsonExampleSpecs = {
     EX_SPEC_LAYOUT_AND_ARRANGEMENT_1,
@@ -63,4 +63,5 @@ export const JsonExampleSpecs = {
     EX_SPEC_DEBUG,
     EX_SPEC_SPATIAL,
     EX_SPEC_SPATIAL_MINIMAL,
+    EX_SPEC_SPATIAL_MULTIPLE_TRACKS,
 };
