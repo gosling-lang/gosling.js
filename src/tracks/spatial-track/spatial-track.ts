@@ -129,7 +129,6 @@ function handleColorField(color?: ChannelValue | Color | string, arrowIpc: Uint8
                 colorScale: colScale,
             };
             return colorConfig;
-            return ERROR_COLOR;
         } else if (color.type === 'quantitative') {
             const values = fetchValuesFromColumn(color.field, arrowIpc);
             console.log("values", values);
@@ -140,8 +139,8 @@ function handleColorField(color?: ChannelValue | Color | string, arrowIpc: Uint8
                 values: [...values],
                 min: minVal,
                 max: maxVal,
-                //colorScale: "viridis",
-                colorScale: "greens",
+                colorScale: "viridis",
+                //colorScale: "greens",
             };
             return colorConfig;
         }
@@ -191,16 +190,9 @@ function handleSizeField(size?: ChannelValue | Size | number, arrowIpc: Uint8Arr
 }
 
 export function createSpatialTrack(options: SpatialTrackOptions, dataFetcher: CsvDataFetcherClass, container: HTMLDivElement) {
-    console.log(`MARK was: ${options.spec.mark}`);
-    console.log("SPEC OPTIONS");
-    console.log(options);
-    options.spec.size
-    console.warn(`options.test: ${options.test}`);
+    console.log("SPEC OPTIONS", options);
     dataFetcher.tilesetInfo((info) => {
-        console.log("info");
-        console.log(info);
-        console.log("dataConfig");
-        console.log(dataFetcher.dataConfig);
+        console.log("info", info);
     });
     dataFetcher.fetchTilesDebounced((t) => {
         console.log('CSV tiles: ~~~~~~~~');
