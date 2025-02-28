@@ -1,7 +1,7 @@
 import type { GoslingSpec, TemplateTrackDef, VisUnitApiData } from '@gosling-lang/gosling-schema';
 import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
 import { traverseToFixSpecDownstream } from './spec-preprocess';
-import { replaceTrackTemplates } from '../core/utils/template';
+import { GoslingTemplates, replaceTrackTemplates } from '../core/utils/template';
 import { getRelativeTrackInfo, type Size } from './bounding-box';
 import type { CompleteThemeDeep } from '../core/utils/theme';
 import type { UrlToFetchOptions } from 'src/core/gosling-component';
@@ -25,7 +25,7 @@ export type CompileCallback = (
 export function compile(
     spec: GoslingSpec,
     callback: CompileCallback,
-    templates: TemplateTrackDef[] = [],
+    templates: TemplateTrackDef[] = GoslingTemplates,
     theme: Required<CompleteThemeDeep> = getTheme('light'),
     containerStatus: {
         containerSize?: { width: number; height: number };
