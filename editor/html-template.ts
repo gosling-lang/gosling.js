@@ -19,7 +19,6 @@ export const getHtmlTemplate = (
           "react-dom": "https://esm.sh/react-dom@${reactVersion}",
           "pixi": "https://esm.sh/pixi.js@${pixiVersion}",
           "higlass": "https://esm.sh/higlass@${higlassVersion}?external=react,react-dom,pixi",
-          "higlass-text": "https://esm.sh/higlass-text/es/index.js",
           "gosling.js": "https://esm.sh/gosling.js@${goslingVersion}?external=react,react-dom,pixi,higlass,higlass-text"
         }
       }

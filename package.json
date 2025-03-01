@@ -73,7 +73,7 @@
     "generic-filehandle": "^3.0.1",
     "higlass": "^1.13.4",
     "higlass-register": "^0.3.0",
-    "higlass-text": "^0.1.1",
+    "higlass-text": "^0.1.7",
     "json-stringify-pretty-compact": "^2.0.0",
     "jspdf": "^2.3.1",
     "lodash-es": "^4.17.21",
