@@ -561,18 +561,20 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
         this.combineAllTilesIfNeeded();
 
         // apply data transforms to the tabular data and generate track models
-        const models = tiles.flatMap(tile => this.transformDataAndCreateModels(tile));
+        Promise.all(tiles.map(async tile => this.transformDataAndCreateModels(tile))).then(n => {
+            const models = n.flat();
 
-        shareScaleAcrossTracks(models);
+            shareScaleAcrossTracks(models);
 
-        const flatTileData = ([] as Datum[]).concat(...models.map(d => d.data()));
-        if (flatTileData.length !== 0) {
-            this.options.siblingIds.forEach(id => publish('rawData', { id, data: flatTileData }));
-        }
+            const flatTileData = ([] as Datum[]).concat(...models.map(d => d.data()));
+            if (flatTileData.length !== 0) {
+                this.options.siblingIds.forEach(id => publish('rawData', { id, data: flatTileData }));
+            }
 
-        // Record processed tiles so that we don't process them again
-        tiles.forEach(tile => {
-            this.#processedTileMap.set(tile, true);
+            // Record processed tiles so that we don't process them again
+            tiles.forEach(tile => {
+                this.#processedTileMap.set(tile, true);
+            });
         });
     }
 
@@ -982,9 +984,9 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
     /**
      * Apply data transformation to each of the overlaid tracks and generate GoslingTrackModels.
      */
-    transformDataAndCreateModels(tile: Tile) {
+    async transformDataAndCreateModels(tile: Tile) {
         const tileInfo = this.#processedTileInfo[tile.tileId];
-
+        console.log(tileInfo);
         if (!tileInfo || tileInfo.skipRendering) {
             // this probably means the tile data has been merged to another tile
             // so, no need to create track models
@@ -993,11 +995,10 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
 
         // clear the array first
         tileInfo.goslingModels = [];
-
         const resolvedTracks = this.getResolvedTracks();
-        resolvedTracks.forEach(resolvedSpec => {
-            let tabularDataTransformed = Array.from(tileInfo.tabularData);
-            resolvedSpec.dataTransform?.forEach(async t => {
+        for (const resolvedSpec of resolvedTracks) {
+            let tabularDataTransformed: Datum[] = Array.from(tileInfo.tabularData);
+            for (const t of resolvedSpec.dataTransform ?? []) {
                 switch (t.type) {
                     case 'filter':
                         tabularDataTransformed = filterData(t, tabularDataTransformed);
@@ -1012,7 +1013,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
                         tabularDataTransformed = calculateData(t, tabularDataTransformed);
                         break;
                     case 'join':
-                        tabularDataTransformed = joinData(t, tabularDataTransformed);
+                        tabularDataTransformed = await joinData(t, tabularDataTransformed);
                         break;
                     case 'exonSplit':
                         tabularDataTransformed = splitExon(t, tabularDataTransformed, resolvedSpec.assembly);
@@ -1033,7 +1034,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
                         tabularDataTransformed = displace(t, tabularDataTransformed, this._xScale.copy());
                         break;
                 }
-            });
+            }
 
             // TODO: Remove the following block entirely and use the `rawData` API in the Editor (June-02-2022)
             // Send data preview to the editor so that it can be shown to users.
@@ -1055,6 +1056,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
                 // ..
             }
 
+            console.error('ra', tabularDataTransformed);
             // Replace width and height information with the actual values for responsive encoding
             const [trackWidth, trackHeight] = this.dimensions; // actual size of a track
             const axisSize = IsXAxis(resolvedSpec) && this.options.spec.layout === 'linear' ? DEFAULT_AXIS_SIZE : 0; // Why the axis size must be added here?
@@ -1074,7 +1076,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
 
             // Add a track model to the tile object
             tileInfo.goslingModels.push(model);
-        });
+        }
 
         return tileInfo.goslingModels;
     }

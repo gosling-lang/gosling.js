@@ -1,4 +1,3 @@
-import type * as d3 from 'd3';
 import type {
     SingleTrack,
     Datum,
@@ -24,6 +23,7 @@ import {
     IsRangeFilter
 } from '@gosling-lang/gosling-schema';
 import { computeChromSizes } from './assembly';
+import { dsvFormat } from 'd3-dsv';
 // import Logging from './log';
 
 /**
@@ -106,11 +106,25 @@ export function calculateData(log: LogTransform, data: Datum[]): Datum[] {
 /**
  * Load a CSV file, and join it to the existing data.
  */
-export function joinData(transform: JoinTransform, data: Datum[]): Datum[] {
-    const { keyField } = transform;
-    const { url, keyField: keyField2 } = transform.from;
-    const loaded = (() => [])(); // csv(url);
-    return data;
+export async function joinData(transform: JoinTransform, toData: Datum[]): Promise<Datum[]> {
+    const { from, to } = transform;
+    const response = await fetch(from.url);
+    const text = await response.text();
+    const fromData = dsvFormat(',').parse(text);
+
+    // XXX: a very naive approach to join two files
+    const joinned = toData.map(toDatum => {
+        return {
+            ...toDatum,
+            ...fromData.find(
+                fromDatum =>
+                    toDatum[from.chromosomeField] == fromDatum[to.chromosomeField] &&
+                    toDatum[from.genomicField] == fromDatum[to.genomicField]
+            )
+        };
+    });
+    console.error('joined', joinned, fromData);
+    return joinned;
 }
 
 /**
