@@ -1462,7 +1462,7 @@ export interface JoinTransform {
     to: {
         chromosomeField: string;
         genomicField: string;
-    },
+    };
     /** The new data to be combined */
     from: {
         url: string;

@@ -696,6 +696,9 @@
         },
         {
           "$ref": "#/definitions/JsonParseTransform"
+        },
+        {
+          "$ref": "#/definitions/JoinTransform"
         }
       ]
     },
@@ -3505,6 +3508,60 @@
         "field",
         "include",
         "type"
+      ],
+      "type": "object"
+    },
+    "JoinTransform": {
+      "additionalProperties": false,
+      "description": "Join new data to the existing `data`. The data will be combined based on the genomic positions. The data will join _left_ to the existing `data`.",
+      "properties": {
+        "from": {
+          "additionalProperties": false,
+          "description": "The new data to be combined",
+          "properties": {
+            "chromosomeField": {
+              "type": "string"
+            },
+            "genomicField": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "url",
+            "chromosomeField",
+            "genomicField"
+          ],
+          "type": "object"
+        },
+        "to": {
+          "additionalProperties": false,
+          "description": "The existing data to be updated",
+          "properties": {
+            "chromosomeField": {
+              "type": "string"
+            },
+            "genomicField": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "chromosomeField",
+            "genomicField"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "const": "join",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "to",
+        "from"
       ],
       "type": "object"
     },

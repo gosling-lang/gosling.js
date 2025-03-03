@@ -1,5 +1,4 @@
 import type * as d3 from 'd3';
-import { csv } from 'd3';
 import type {
     SingleTrack,
     Datum,
@@ -111,7 +110,7 @@ export function joinData(transform: JoinTransform, data: Datum[]): Datum[] {
     const { keyField } = transform;
     const { url, keyField: keyField2 } = transform.from;
     const loaded = (() => [])(); // csv(url);
-    return loaded;
+    return data;
 }
 
 /**
