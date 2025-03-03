@@ -15,6 +15,8 @@ export type SpatialTrackOptions = {
     };
 };
 
+const ERROR_COLOR = "#ff00ff";
+
 function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptions): Uint8Array | null {
     const tabularData = t['0.0'].tabularData; //~ TODO: tile id
     const xArr: number[] = [];
@@ -59,7 +61,7 @@ function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptions): U
     return buffer;
 }
 
-function fetchValuesFromColumn(columnName: string, arrowIpc: Uint8Array): number[] {
+function fetchValuesFromColumn(columnName: string, arrowIpc: Uint8Array): number[] | string[] {
     const table = tableFromIPC(arrowIpc);
     const column = table.getChild(columnName).toArray();
     return column;
@@ -86,6 +88,23 @@ function getRange(size: Size): [number, number] {
 }
 
 /**
+ * Just a utility function...should be removed
+ */
+const randomColors = (n: number) => {
+    const colors = [];
+    for (let j = 0; j < n; j++) {
+        let colorStr = "#";
+        for (let i = 0; i < 6; i++) {
+            const maxNum = 16; //~ maximum numerical value: 0 - 16 (F)
+            const randNum = Math.floor(Math.random() * maxNum);
+            colorStr += randNum.toString(16); //~ 16 is base
+        }
+        colors.push(colorStr);
+    }
+    return colors;
+}
+
+/**
  * Returns something we can feed to chromospace view config
  */
 function handleColorField(color?: ChannelValue | Color | string, arrowIpc: Uint8Array): string {
@@ -101,6 +120,16 @@ function handleColorField(color?: ChannelValue | Color | string, arrowIpc: Uint8
         }
         if (color.type === 'nominal') {
             console.warn("not implemented!");
+            const values = fetchValuesFromColumn(color.field, arrowIpc) as string[]; //~TODO: forcing to string[] not good
+            const colScale = randomColors(50); //~ just some big number
+            const colorConfig = {
+                values: [...values],
+                //min: minVal,
+                //max: maxVal,
+                colorScale: colScale,
+            };
+            return colorConfig;
+            return ERROR_COLOR;
         } else if (color.type === 'quantitative') {
             const values = fetchValuesFromColumn(color.field, arrowIpc);
             console.log("values", values);
@@ -111,15 +140,16 @@ function handleColorField(color?: ChannelValue | Color | string, arrowIpc: Uint8
                 values: [...values],
                 min: minVal,
                 max: maxVal,
-                colorScale: "viridis",
+                //colorScale: "viridis",
+                colorScale: "greens",
             };
             return colorConfig;
         }
         else {
-            return "#ff00ff";
+            return ERROR_COLOR;
         }
     } else {
-        return "#ff00ff"; // error color
+        return ERROR_COLOR; // error color
     }
 }
 

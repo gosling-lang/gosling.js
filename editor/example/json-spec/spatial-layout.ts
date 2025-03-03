@@ -117,3 +117,51 @@ export const EX_SPEC_SPATIAL_MINIMAL: GoslingSpec = {
         }
     ]
 };
+
+export const EX_SPEC_SPATIAL_MULTIPLE_TRACKS: GoslingSpec = {
+    title: 'Spatial Layout: multiple tracks in one view',
+    views: [
+        {
+            layout: 'spatial',
+            tracks: [
+                {
+                    data: {
+                        type: 'csv',
+                        url: 'https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/main/gosling-3d/yeast_model.csv',
+                    },
+                    spatial: {
+                        x: "x",
+                        y: "y",
+                        z: "z",
+                        chr: "chr",
+                        coord: "coord",
+                    },
+                    color: {
+                        value: "#ffffff",
+                    },
+                    width: 500,
+                    height: 500
+                },
+                {
+                    data: {
+                        type: 'csv',
+                        url: 'https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/main/gosling-3d/yeast_model_only_one_chromosome.csv',
+                    },
+                    spatial: {
+                        x: "x",
+                        y: "y",
+                        z: "z",
+                        chr: "chr",
+                        coord: "coord",
+                    },
+                    color: {
+                        value: "#ffffff",
+                    },
+                    mark: "box",
+                    width: 500,
+                    height: 500
+                }
+            ]
+        }
+    ],
+};
