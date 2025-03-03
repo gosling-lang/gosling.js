@@ -1,3 +1,17 @@
+## [1.0.1](https://github.com/gosling-lang/gosling.js/compare/v1.0.0...v1.0.1) (2025-03-03)
+
+
+### Bug Fixes
+
+* fix error when importing `higlass-text` ([#1117](https://github.com/gosling-lang/gosling.js/issues/1117)) ([b5b531e](https://github.com/gosling-lang/gosling.js/commit/b5b531e88f3336a8971bdbe23b990c6f27209055))
+
+
+### Features
+
+* expose the compiler function ([#1116](https://github.com/gosling-lang/gosling.js/issues/1116)) ([34beae8](https://github.com/gosling-lang/gosling.js/commit/34beae80d1eab086777e27295fd8cfcf602f92ca))
+
+
+
 # [1.0.0](https://github.com/gosling-lang/gosling.js/compare/v0.17.0...v1.0.0) (2025-02-12)
 
 
