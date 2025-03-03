@@ -75,8 +75,8 @@ dependencies:
     specifier: ^0.3.0
     version: 0.3.0
   higlass-text:
-    specifier: ^0.1.1
-    version: 0.1.6
+    specifier: ^0.1.7
+    version: 0.1.7
   json-stringify-pretty-compact:
     specifier: ^2.0.0
     version: 2.0.0
@@ -4133,8 +4133,8 @@ packages:
     resolution: {integrity: sha512-D4I+ATxFuTn+Q6p8Y9rUa+X3b3cqMqhu9Tya6uHtvgV5cs39Mk7i6Z+7PMA8YuwQd5gLMSxCm2lCyWmxRVBQsQ==}
     dev: false
 
-  /higlass-text@0.1.6:
-    resolution: {integrity: sha512-sjAROJfE38bSP72XncPTBV4AeYRs50N85OqRXooEwXF5zKVssBv1EKrvls0ralnSQ1aZX74cB/hTskbI91iRng==}
+  /higlass-text@0.1.7:
+    resolution: {integrity: sha512-TpmbvklUWBEApL1QDyu29+kI/Wo1rxG8QdDPM+uAuSKVRArSDa1FbO22SoTAxRmY/ynGLZXcK9Uidreeb0YUwg==}
     dependencies:
       d3-color: 3.1.0
       d3-scale: 4.0.2
