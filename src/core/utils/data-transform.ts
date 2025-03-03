@@ -107,12 +107,11 @@ export function calculateData(log: LogTransform, data: Datum[]): Datum[] {
 /**
  * Load a CSV file, and join it to the existing data.
  */
-export async function joinData(transform: JoinTransform, data: Datum[]): Datum[] {
+export function joinData(transform: JoinTransform, data: Datum[]): Datum[] {
     const { keyField } = transform;
     const { url, keyField: keyField2 } = transform.from;
-    const loaded = await csv(url);
+    const loaded = (() => [])(); // csv(url);
     return loaded;
-    console.log(loaded);
 }
 
 /**

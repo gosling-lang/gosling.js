@@ -1453,18 +1453,21 @@ export interface JsonParseTransform {
 
 /**
  * Join new data to the existing `data`.
+ * The data will be combined based on the genomic positions.
  * The data will join _left_ to the existing `data`.
  */
 export interface JoinTransform {
     type: 'join';
-    /** The field that contains the key values to match with another data */
-    keyField: string;
-    /** The data to join */
+    /** The existing data to be updated */
+    to: {
+        chromosomeField: string;
+        genomicField: string;
+    },
+    /** The new data to be combined */
     from: {
-        /** The URL to the data. TSV */
         url: string;
-        /** The field that contains the key values in the target data */
-        keyField: string;
+        chromosomeField: string;
+        genomicField: string;
     };
 }
 

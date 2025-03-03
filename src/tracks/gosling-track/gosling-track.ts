@@ -314,8 +314,8 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
         this.drawTile(tile);
     }
 
-    override updateTile(/* tile: Tile */) {} // Never mind about this function for the simplicity.
-    renderTile(/* tile: Tile */) {} // Never mind about this function for the simplicity.
+    override updateTile(/* tile: Tile */) { } // Never mind about this function for the simplicity.
+    renderTile(/* tile: Tile */) { } // Never mind about this function for the simplicity.
 
     /**
      * Display a tile upon receiving a new one or when explicitly called by a developer, e.g., calling
@@ -496,9 +496,9 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
         const genomicRange = newXScale
             .domain()
             .map(absPos => getRelativeGenomicPosition(absPos, this.#assembly, true)) as [
-            GenomicPosition,
-            GenomicPosition
-        ];
+                GenomicPosition,
+                GenomicPosition
+            ];
         publish('location', {
             id: this.#viewUid,
             genomicRange: genomicRange
@@ -1012,7 +1012,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
                         tabularDataTransformed = calculateData(t, tabularDataTransformed);
                         break;
                     case 'join':
-                        tabularDataTransformed = await joinData(t, tabularDataTransformed);
+                        tabularDataTransformed = joinData(t, tabularDataTransformed);
                         break;
                     case 'exonSplit':
                         tabularDataTransformed = splitExon(t, tabularDataTransformed, resolvedSpec.assembly);
