@@ -94,6 +94,7 @@ const esm = defineConfig({
             entry: {
                 gosling: path.resolve(__dirname, 'src/index.ts'),
                 utils: path.resolve(__dirname, 'src/exported-utils.ts'),
+                compiler: path.resolve(__dirname, 'src/exported-compiler.ts')
             },
             formats: ['es'],
         },

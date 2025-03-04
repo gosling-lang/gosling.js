@@ -24,6 +24,10 @@
     "./utils": {
       "types": "./dist/src/exported-utils.d.ts",
       "import": "./dist/utils.js"
+    },
+    "./compiler": {
+      "types": "./dist/src/exported-compiler.d.ts",
+      "import": "./dist/compiler.js"
     }
   },
   "scripts": {
