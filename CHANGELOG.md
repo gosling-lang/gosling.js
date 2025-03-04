@@ -1,3 +1,12 @@
+## [1.0.2](https://github.com/gosling-lang/gosling.js/compare/v1.0.1...v1.0.2) (2025-03-04)
+
+
+### Features
+
+* add a separate entry just for compiler ([#1119](https://github.com/gosling-lang/gosling.js/issues/1119)) ([bba86f1](https://github.com/gosling-lang/gosling.js/commit/bba86f1bf8294788291b3e8074f486f81ef153ba))
+
+
+
 ## [1.0.1](https://github.com/gosling-lang/gosling.js/compare/v1.0.0...v1.0.1) (2025-03-03)
 
 
