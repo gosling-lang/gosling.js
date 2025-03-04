@@ -189,6 +189,23 @@ function handleSizeField(size?: ChannelValue | Size | number, arrowIpc: Uint8Arr
     }
 }
 
+/**
+ * The idea is to "cache" scenes associated with particular `views`.
+ */
+const spatialViewsMap = new Map<string, chs.ChromatinScene>();
+
+function fetchScene(viewsScenesMap: Map<string, chs.ChromatinScene>, viewId: string): chs.ChromatinScene {
+    const s = viewsScenesMap.get(viewId);
+
+    if (!s) {
+        const newScene = chs.initScene();
+        viewsScenesMap.set(viewId, newScene);
+        return newScene;
+    }
+
+    return s;
+}
+
 export function createSpatialTrack(options: SpatialTrackOptions, dataFetcher: CsvDataFetcherClass, container: HTMLDivElement) {
     console.log("SPEC OPTIONS", options);
     dataFetcher.tilesetInfo((info) => {
@@ -200,7 +217,10 @@ export function createSpatialTrack(options: SpatialTrackOptions, dataFetcher: Cs
         const ipcBuffer = transformObjectToArrow(t, options);
         if (ipcBuffer) {
 
-            let chromatinScene = chs.initScene();
+
+            const viewId = "123"; //~ TODO: need to actually get the ID of the view parent of this track
+            let chromatinScene = fetchScene(spatialViewsMap, viewId);
+            //let chromatinScene = chs.initScene();
             const arrowIpc = ipcBuffer.buffer;
             const color = handleColorField(options.spec.color, arrowIpc);
             const scale = handleSizeField(options.spec.size, arrowIpc);
