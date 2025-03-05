@@ -4,6 +4,10 @@ on:
   workflow_dispatch:
   push:
     branches: [spatial]
+# These permissions are needed to interact with GitHub's OIDC Token endpoint.
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   Deploy:
@@ -20,11 +24,13 @@ jobs:
       - run: pnpm build-editor
 
       - name: Setup AWS CLI
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v3
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ secrets.AWS_ROLE }}
           aws-region: us-east-1
-
-      - name: Sync build to S3 bucket
-          run: aws s3 sync build s3://my-bucket-name --delete
+      - name: Copy files to the s3 website content bucket
+        run:
+          aws s3 sync build s3://spatial.gosling-lang.org
+      - name: Invalidate CloudFront cache
+        run:
+          aws cloudfront create-invalidation --distribution-id ${{secrets.CF_DISTRIBUTION_ID}} --paths "/*"
