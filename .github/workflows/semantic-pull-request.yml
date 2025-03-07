@@ -34,7 +34,7 @@ jobs:
             api
             editor
           # Configure if a scope must always be provided.
-          requireScope: true
+          requireScope: false
           # Configure which scopes are disallowed in PR titles (newline-delimited).
           # Anything but `feat` and `fix`
           disallowScopes: |
