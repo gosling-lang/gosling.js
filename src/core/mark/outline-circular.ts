@@ -8,6 +8,8 @@ export function drawCircularOutlines(trackInfo: any, tm: GoslingTrackModel, them
     /* track spec */
     const spec = tm.spec();
 
+    if (spec.layout !== 'circular') return;
+
     /* track size */
     const [l, t] = trackInfo.position;
     const [trackWidth, trackHeight] = trackInfo.dimensions;
@@ -27,24 +29,21 @@ export function drawCircularOutlines(trackInfo: any, tm: GoslingTrackModel, them
     /* render */
     const g = trackInfo.pBackground;
 
-    if (!(spec.layout === 'circular' && spec.mark === 'withinLink')) {
-        // circular link marks usually use entire inner space
-        g.lineStyle(
-            spec.style?.outlineWidth ? spec.style?.outlineWidth / 2.5 : 0,
-            colorToHex(spec.style?.outline ?? '#DBDBDB'),
-            1, // 0.4, // alpha
-            1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
-        );
-        g.beginFill(
-            colorToHex(tm.spec().style?.background ?? theme.track.background),
-            tm.spec().style?.backgroundOpacity ??
-                (!theme.track.background || theme.track.background === 'transparent' ? 0 : 1)
-        );
-        g.moveTo(posStartInner.x, posStartInner.y);
-        g.arc(cx, cy, trackInnerRadius, startRad, endRad, true);
-        g.arc(cx, cy, trackOuterRadius, endRad, startRad, false);
-        g.closePath();
-    }
+    g.lineStyle(
+        spec.style?.outlineWidth ? spec.style?.outlineWidth / 2.5 : 0,
+        colorToHex(spec.style?.outline ?? '#DBDBDB'),
+        1, // 0.4, // alpha
+        1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+    );
+    g.beginFill(
+        colorToHex(tm.spec().style?.background ?? theme.track.background),
+        tm.spec().style?.backgroundOpacity ??
+            (!theme.track.background || theme.track.background === 'transparent' ? 0 : 1)
+    );
+    g.moveTo(posStartInner.x, posStartInner.y);
+    g.arc(cx, cy, trackInnerRadius, startRad, endRad, true);
+    g.arc(cx, cy, trackOuterRadius, endRad, startRad, false);
+    g.closePath();
 
     if (IsChannelDeep(spec.x) && spec.x.axis === 'top') {
         // outer line
