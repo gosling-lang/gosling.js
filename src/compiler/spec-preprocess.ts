@@ -7,7 +7,7 @@ import type {
     PartialTrack,
     CommonTrackDef,
     CommonViewDef,
-    MultipleViews,
+    MultipleViews
 } from '@gosling-lang/gosling-schema';
 import {
     IsSingleTrack,
