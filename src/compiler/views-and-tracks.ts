@@ -32,14 +32,14 @@ export function collectViewsAndTracks(spec: GoslingSpec, trackInfos: TrackInfo[]
             shape: isLinear
                 ? d.boundingBox
                 : {
-                    ...d.boundingBox,
-                    cx: d.boundingBox.x + d.boundingBox.width / 2.0,
-                    cy: d.boundingBox.y + d.boundingBox.height / 2.0,
-                    innerRadius: (d.track as ProcessedCircularTrack).innerRadius!,
-                    outerRadius: (d.track as ProcessedCircularTrack).outerRadius!,
-                    startAngle: (d.track as ProcessedCircularTrack).startAngle!,
-                    endAngle: (d.track as ProcessedCircularTrack).endAngle!
-                }
+                      ...d.boundingBox,
+                      cx: d.boundingBox.x + d.boundingBox.width / 2.0,
+                      cy: d.boundingBox.y + d.boundingBox.height / 2.0,
+                      innerRadius: (d.track as ProcessedCircularTrack).innerRadius!,
+                      outerRadius: (d.track as ProcessedCircularTrack).outerRadius!,
+                      startAngle: (d.track as ProcessedCircularTrack).startAngle!,
+                      endAngle: (d.track as ProcessedCircularTrack).endAngle!
+                  }
         };
     });
 
@@ -48,8 +48,8 @@ export function collectViewsAndTracks(spec: GoslingSpec, trackInfos: TrackInfo[]
 
     // Merge the tracks and views
     const tracksAndViews = [
-        ...tracks.map(d => ({ ...d, type: 'track' }) as VisUnitApiData),
-        ...views.map(d => ({ ...d, type: 'view' }) as VisUnitApiData)
+        ...tracks.map(d => ({ ...d, type: 'track' } as VisUnitApiData)),
+        ...views.map(d => ({ ...d, type: 'view' } as VisUnitApiData))
     ];
 
     const compileResult = {

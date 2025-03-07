@@ -588,10 +588,10 @@ function Editor(props: RouteComponentProps) {
             typeof goslingSpec?.responsiveSize === 'undefined'
                 ? false
                 : typeof goslingSpec?.responsiveSize === 'boolean'
-                  ? goslingSpec?.responsiveSize === true
-                  : typeof goslingSpec?.responsiveSize === 'object'
-                    ? goslingSpec?.responsiveSize.width === true || goslingSpec?.responsiveSize.height === true
-                    : false;
+                ? goslingSpec?.responsiveSize === true
+                : typeof goslingSpec?.responsiveSize === 'object'
+                ? goslingSpec?.responsiveSize.width === true || goslingSpec?.responsiveSize.height === true
+                : false;
         if (newIsResponsive !== isResponsive && newIsResponsive) {
             setScreenSize(undefined); // reset the screen
             setVisibleScreenSize(undefined);

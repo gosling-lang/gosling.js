@@ -5,19 +5,19 @@ import * as uuid from '../core/utils/uuid';
 vi.mock('../core/utils/uuid');
 
 describe('normalize spec', () => {
-  it('displacement', () => {
-    vi.mocked(uuid.uuid).mockReturnValueOnce('random-string');
-    const spec: GoslingSpec = {
-      tracks: [
-        {
-          displacement: { type: 'pile' },
-          x: { field: 'x' },
-          xe: { field: 'xe' }
-        }
-      ]
-    };
-    replaceDisplacements(spec);
-    expect(spec).toMatchInlineSnapshot(`
+    it('displacement', () => {
+        vi.mocked(uuid.uuid).mockReturnValueOnce('random-string');
+        const spec: GoslingSpec = {
+            tracks: [
+                {
+                    displacement: { type: 'pile' },
+                    x: { field: 'x' },
+                    xe: { field: 'xe' }
+                }
+            ]
+        };
+        replaceDisplacements(spec);
+        expect(spec).toMatchInlineSnapshot(`
       {
         "tracks": [
           {
@@ -50,5 +50,5 @@ describe('normalize spec', () => {
         ],
       }
     `);
-  });
+    });
 });
