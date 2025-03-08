@@ -6,6 +6,25 @@ import pkg from './package.json' assert { type: 'json' }; // must do the assert 
 
 const __dirname = fileURLToPath(dirname(import.meta.url));
 
+/**
+ * @param {typeof pkg} pkg
+ * @param {{ forceExclude: Array<string> }} options
+ */
+function determineExternalDependencies(pkg, options) {
+    // Packages that we have modified cannot be external because package consumers will not
+    // get our modifications. Ideally, we can avoid modifying these packages ourselves.
+    const patchedPackages = Object.keys(pkg.pnpm.patchedDependencies).map(
+        specifier => specifier.split('@').slice(0, specifier.startsWith('@') ? 2 : 1).join('@')
+    );
+    return [
+        ...Object.keys(pkg.dependencies),
+        ...Object.keys(pkg.peerDependencies)
+    ].filter(
+        dep => ![...patchedPackages, ...options.forceExclude].includes(dep)
+    );
+
+}
+
 const alias = {
     'gosling.js': path.resolve(__dirname, './src/index.ts'),
     '@gosling-lang/gosling-schema': path.resolve(__dirname, './src/gosling-schema/index.ts'),
@@ -16,14 +35,14 @@ const alias = {
     '@gosling-lang/gosling-brush': path.resolve(__dirname, './src/tracks/gosling-brush/index.ts'),
     '@gosling-lang/dummy-track': path.resolve(__dirname, './src/tracks/dummy-track/index.ts'),
     '@data-fetchers': path.resolve(__dirname, './src/data-fetchers/index.ts'),
-    zlib: path.resolve(__dirname, './src/alias/zlib.ts'),
-    stream: path.resolve(__dirname, './node_modules/stream-browserify') //  gmod/gff uses stream-browserify
+    zlib: path.resolve(__dirname, './src/alias/zlib.ts'), // gmod/bbi uses zlib
+    stream: 'stream-browserify' //  gmod/gff uses stream-browserify
 };
 
-const skipExt = new Set(['@gmod/bbi']);
-const external = [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)].filter(
-    dep => !skipExt.has(dep)
-);
+const external = determineExternalDependencies(pkg, {
+    // see aliases above
+    forceExclude: ["@gmod/bbi", "@gmob/gff"],
+})
 
 const esm = defineConfig({
     build: {
