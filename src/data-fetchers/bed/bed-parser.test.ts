@@ -46,15 +46,15 @@ describe('BED parser with custom columns', () => {
         const autoSqlSchema = parser.constructBedAutoSql();
         expect(autoSqlSchema).toMatchInlineSnapshot(`
           "table customBedSchema
-          \\"BED12\\"
+          "BED12"
               (
-              string chrom; \\"custom input\\"
-              uint chromStart; \\"custom input\\"
-              uint chromEnd; \\"custom input\\"
-              string name; \\"custom input\\"
-              float score; \\"custom input\\"
-              string custom6; \\"custom input\\"
-              string custom7; \\"custom input\\"
+              string chrom; "custom input"
+              uint chromStart; "custom input"
+              uint chromEnd; "custom input"
+              string name; "custom input"
+              float score; "custom input"
+              string custom6; "custom input"
+              string custom7; "custom input"
               )"
         `);
     });
