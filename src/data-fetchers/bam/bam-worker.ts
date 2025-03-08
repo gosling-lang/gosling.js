@@ -181,7 +181,7 @@ function getSubstitutions(segment: Segment, seq: string) {
 
     if (segment.md) {
         const mdSubstitutions = parseMD(segment.md, false);
-        mdSubstitutions.forEach(function (substitution: (typeof mdSubstitutions)[number] & { variant?: string }) {
+        mdSubstitutions.forEach(function(substitution: (typeof mdSubstitutions)[number] & { variant?: string }) {
             let posStart = substitution['pos'] + substitution['bamSeqShift']!;
             let posEnd = posStart + substitution['length'];
             // When there is soft clipping at the beginning,
@@ -210,9 +210,7 @@ const bamRecordToJson = (bamRecord: BamRecord, chrName: string, chrOffset: numbe
     const seq = bamRecord.get('seq');
     const segment: Segment = {
         // if two segments have the same name but different id, they are paired reads.
-        // https://github.com/GMOD/bam-js/blob/7a57d24b6aef08a1366cca86ba5092254c7a7f56/src/bamFile.ts#L386
-        // @ts-expect-error private field!!
-        id: bamRecord._id,
+        id: `${bamRecord.id()}`,
         name: bamRecord.get('name'),
         // @ts-expect-error private field!!
         start: +bamRecord.data.start + 1 + chrOffset,
