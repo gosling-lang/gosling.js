@@ -12,7 +12,8 @@ import type {
     SvTypeTransform,
     CoverageTransform,
     DisplaceTransform,
-    JsonParseTransform
+    JsonParseTransform,
+    JoinTransform
 } from '@gosling-lang/gosling-schema';
 import {
     getChannelKeysByAggregateFnc,
@@ -23,6 +24,7 @@ import {
     IsRangeFilter
 } from '@gosling-lang/gosling-schema';
 import { computeChromSizes } from './assembly';
+import { dsvFormat } from 'd3-dsv';
 // import Logging from './log';
 
 /**
@@ -50,6 +52,36 @@ export function filterData(filter: FilterTransform, data: Datum[]): Datum[] {
         });
     }
     return output;
+}
+
+// XXX: naive caching from a random place
+const FETCH_CACHE: Record<string, Datum[]> = {};
+
+/**
+ * Load a CSV file, and join it to the existing data.
+ */
+export async function joinData(transform: JoinTransform, toData: Datum[]): Promise<Datum[]> {
+    const { from, to } = transform;
+
+    const fetchDataIfNeeded = async (url: string) => {
+        if (FETCH_CACHE[url]) return FETCH_CACHE[url];
+        const response = await fetch(url);
+        const text = await response.text();
+        const data = dsvFormat(',').parse(text) as Datum[];
+        FETCH_CACHE[url] = data;
+        return data;
+    };
+    const fromData = await fetchDataIfNeeded(from.url);
+
+    // a very naive approach to join two files, i.e., exact matching
+    const joinned: Datum[] = toData.map(t => {
+        const found =
+            fromData.find(
+                f => t[to.chromosomeField] === f[from.chromosomeField] && t[to.genomicField] === f[from.genomicField]
+            ) ?? {};
+        return { ...t, ...found };
+    });
+    return joinned;
 }
 
 /**
