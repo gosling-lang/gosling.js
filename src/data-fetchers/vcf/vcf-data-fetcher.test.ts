@@ -33,7 +33,7 @@ describe('VCF file parser', () => {
             "ID": [
               "rs6054257",
             ],
-            "INFO": "{\\"NS\\":[3],\\"DP\\":[14],\\"AF\\":[\\"0.5\\",\\"DB\\",\\"H2\\"]}",
+            "INFO": "{"NS":[3],"DP":[14],"AF":["0.5","DB","H2"]}",
             "MUTTYPE": "substitution",
             "NS": "3",
             "ORIGINALPOS": 137826,
