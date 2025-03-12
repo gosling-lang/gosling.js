@@ -54,6 +54,7 @@ export function filterData(filter: FilterTransform, data: Datum[]): Datum[] {
     return output;
 }
 
+// TODO: cache already transformed data as well
 // XXX: naive caching from a random place
 const FETCH_CACHE: Record<string, Datum[]> = {};
 
