@@ -1286,6 +1286,7 @@ export interface MatrixData {
 
 export type DataTransform =
     | FilterTransform
+    | JoinTransform
     | StrConcatTransform
     | StrReplaceTransform
     | LogTransform
@@ -1337,6 +1338,26 @@ export interface ComparisonFilter extends CommonFilterTransform {
     operation: LogicalOperation;
 
     not: undefined; // Not used
+}
+
+/**
+ * Join new data to the existing data.
+ * The data will be combined based on the overlap of genomic positions.
+ * The data will join _left_ to the existing data.
+ */
+export interface JoinTransform {
+    type: 'join';
+    /** The existing data to be updated */
+    to: {
+        chromosomeField: string;
+        genomicField: string;
+    };
+    /** The new data to be combined */
+    from: {
+        url: string;
+        chromosomeField: string;
+        genomicField: string; // test exact matching
+    };
 }
 
 export type LogBase = number | 'e';
