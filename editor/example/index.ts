@@ -29,6 +29,7 @@ import JS_SPEC_ISLANDVIEWER from './spec/islandviewer.ts?raw';
 import { spec as JSON_SPEC_ISLANDVIEWER } from './spec/islandviewer';
 
 export type ExampleGroup =
+    | 'Spatial Layout'
     | 'Visual Encoding'
     | 'Mouse Events'
     | 'Semantic Zooming'
@@ -44,6 +45,10 @@ export const ExampleGroups: {
     name: ExampleGroup;
     description: string;
 }[] = [
+    {
+        name: 'Spatial Layout',
+        description: 'Spatial genomics data can be visualized in 3D together with linked 2D visualizations.'
+    },
     {
         name: 'Visual Encoding',
         description:
@@ -424,20 +429,21 @@ export const editorExampleObj: {
         image: THUMBNAILS.PERF_ALIGNMENT
     },
     SPATIAL_LAYOUT: {
-        group: 'Experimental',
-        name: 'Spatial Layout: Integrating spatial models of chromatin',
+        group: 'Spatial Layout',
+        name: 'Integrating Spatial Models of Chromatin',
         spec: JsonExampleSpecs.EX_SPEC_SPATIAL,
-        image: THUMBNAILS.SPATIAL_DRAFT
+        image: THUMBNAILS.SPATIAL_DRAFT,
+        forceShow: true
     },
     SPATIAL_LAYOUT_MIN: {
-        group: 'Experimental',
-        name: 'Spatial Layout: Minimal',
+        group: 'Spatial Layout',
+        name: 'Minimal Example',
         spec: JsonExampleSpecs.EX_SPEC_SPATIAL_MINIMAL,
         image: THUMBNAILS.SPATIAL_DRAFT
     },
     SPATIAL_LAYOUT_MULT_TRACKS: {
-        group: 'Experimental',
-        name: 'Spatial Layout: Multiple Track',
+        group: 'Spatial Layout',
+        name: 'Multiple Tracks',
         spec: JsonExampleSpecs.EX_SPEC_SPATIAL_MULTIPLE_TRACKS,
         image: THUMBNAILS.SPATIAL_DRAFT
     },
