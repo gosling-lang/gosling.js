@@ -13,7 +13,8 @@ import type {
     CoverageTransform,
     DisplaceTransform,
     JsonParseTransform,
-    JoinTransform
+    JoinTransform,
+    DataTransform
 } from '@gosling-lang/gosling-schema';
 import {
     getChannelKeysByAggregateFnc,
@@ -25,7 +26,37 @@ import {
 } from '@gosling-lang/gosling-schema';
 import { computeChromSizes } from './assembly';
 import { dsvFormat } from 'd3-dsv';
-// import Logging from './log';
+import type { Scale } from '@higlass/services';
+
+/**
+ * Apply data transformation.
+ */
+export async function transform(t: DataTransform, data: Datum[], xScale?: Scale, assembly?: Assembly) {
+    switch (t.type) {
+        case 'filter':
+            return filterData(t, data);
+        case 'join':
+            return await joinData(t, data);
+        case 'concat':
+            return concatString(t, data);
+        case 'replace':
+            return replaceString(t, data);
+        case 'log':
+            return calculateData(t, data);
+        case 'exonSplit':
+            return splitExon(t, data, assembly);
+        case 'genomicLength':
+            return calculateGenomicLength(t, data);
+        case 'svType':
+            return inferSvType(t, data);
+        case 'coverage':
+            return aggregateCoverage(t, data, xScale);
+        case 'subjson':
+            return parseSubJSON(t, data);
+        case 'displace':
+            return displace(t, data, xScale);
+    }
+}
 
 /**
  * Apply filter

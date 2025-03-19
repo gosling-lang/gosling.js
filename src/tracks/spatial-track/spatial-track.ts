@@ -1,24 +1,30 @@
-import type { ChannelValue, Color, OverlaidTrack, SingleTrack, Size } from "@gosling-lang/gosling-schema";
-import * as chs from "chromospace";
-import type { CsvDataFetcherClass, LoadedTiles } from "src/data-fetchers/csv/csv-data-fetcher";
-import { tableFromArrays, tableFromIPC, tableToIPC } from "@uwdata/flechette";
+import type { ChannelValue, Color, OverlaidTrack, SingleTrack, Size } from '@gosling-lang/gosling-schema';
+import * as chs from 'chromospace';
+import type { CsvDataFetcherClass, LoadedTiles } from 'src/data-fetchers/csv/csv-data-fetcher';
+import { tableFromArrays, tableFromIPC, tableToIPC } from '@uwdata/flechette';
+import { transform } from '../../core/utils/data-transform';
 
 export type SpatialTrackOptions = {
     spec: SingleTrack | OverlaidTrack;
     color: string | undefined;
     test: string | undefined;
     data3D: string | undefined;
-    spatial: { //~ spatial encoding
+    spatial: {
+        //~ spatial encoding
         x: string;
         y: string;
         z: string;
     };
 };
 
-const ERROR_COLOR = "#ff00ff";
+const ERROR_COLOR = '#ff00ff';
 
-function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptions): Uint8Array | null {
-    const tabularData = t['0.0'].tabularData; //~ TODO: tile id
+async function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptions): Promise<Uint8Array | null> {
+    let tabularData = t['0.0'].tabularData; //~ TODO: tile id
+    if (options.spec.dataTransform?.[0]) {
+        tabularData = await transform(options.spec.dataTransform?.[0], tabularData);
+        console.log(tabularData);
+    }
     const xArr: number[] = [];
     const yArr: number[] = [];
     const zArr: number[] = [];
@@ -30,7 +36,7 @@ function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptions): U
             return parseFloat(e);
         }
         return e;
-    }
+    };
     console.log(options);
 
     const fieldForSpatialX = options.spec.spatial.x;
@@ -38,7 +44,9 @@ function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptions): U
     const fieldForSpatialZ = options.spec.spatial.z;
     const fieldForSpatialChr = options.spec.spatial.chr;
     const fieldForSpatialCoord = options.spec.spatial.coord;
-    console.log(`fieldForSpatialX: ${fieldForSpatialX},\nfieldForSpatialY: ${fieldForSpatialY},\nfieldForSpatialZ: ${fieldForSpatialZ}`);
+    console.log(
+        `fieldForSpatialX: ${fieldForSpatialX},\nfieldForSpatialY: ${fieldForSpatialY},\nfieldForSpatialZ: ${fieldForSpatialZ}`
+    );
     console.log(`fieldForSpatialChr : ${fieldForSpatialChr},\nfieldForSpatialCoord: ${fieldForSpatialCoord}`);
 
     for (let i = 0; i < tabularData.length; i++) {
@@ -49,15 +57,42 @@ function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptions): U
         chrArr.push(tabularData[i][fieldForSpatialChr] as string);
         coordArr.push(parseAsNumber(tabularData[i][fieldForSpatialCoord]));
     }
-    const arrays = {
+    let arrays = {
         x: xArr,
         y: yArr,
         z: zArr,
         chr: chrArr,
-        coord: coordArr,
+        coord: coordArr
     };
+
+    // Add additional fields joined by the join operation
+    const allFields = Object.keys(tabularData[0] ?? {});
+    const alreadyAddedFields: string[] = [
+        fieldForSpatialX,
+        fieldForSpatialY,
+        fieldForSpatialZ,
+        fieldForSpatialChr,
+        fieldForSpatialCoord
+    ];
+    const additionalFields = [];
+    for (const c of allFields) {
+        if (alreadyAddedFields.indexOf(c) === -1) {
+            additionalFields.push(c);
+        }
+    }
+    const suppArray: Record<string, (string | number)[]> = {};
+    for (const d of tabularData) {
+        for (const f of additionalFields) {
+            if (!suppArray[f]) {
+                suppArray[f] = [];
+            }
+            suppArray[f].push(+d[f] ? parseAsNumber(d[f]) : d[f]);
+        }
+    }
+    arrays = { ...arrays, ...suppArray };
+
     const table = tableFromArrays(arrays);
-    const buffer = tableToIPC(table, { format: "file" });
+    const buffer = tableToIPC(table, { format: 'file' });
     return buffer;
 }
 
@@ -93,7 +128,7 @@ function getRange(size: Size): [number, number] {
 const randomColors = (n: number) => {
     const colors = [];
     for (let j = 0; j < n; j++) {
-        let colorStr = "#";
+        let colorStr = '#';
         for (let i = 0; i < 6; i++) {
             const maxNum = 16; //~ maximum numerical value: 0 - 16 (F)
             const randNum = Math.floor(Math.random() * maxNum);
@@ -102,36 +137,36 @@ const randomColors = (n: number) => {
         colors.push(colorStr);
     }
     return colors;
-}
+};
 
 /**
  * Returns something we can feed to chromospace view config
  */
 function handleColorField(color?: ChannelValue | Color | string, arrowIpc: Uint8Array): string {
     if (color === undefined) {
-        return "red";
+        return 'red';
     } else if (typeof color === 'string') {
         return color;
-    } else if ("value" in color) {
+    } else if ('value' in color) {
         return color.value as string;
-    } else if ("field" in color) {
+    } else if ('field' in color) {
         if (!color.type) {
             color.type = 'nominal'; // assume 'nominal' by default?
         }
         if (color.type === 'nominal') {
-            console.warn("not implemented!");
+            console.warn('not implemented!');
             const values = fetchValuesFromColumn(color.field, arrowIpc) as string[]; //~TODO: forcing to string[] not good
             const colScale = randomColors(50); //~ just some big number
             const colorConfig = {
                 values: [...values],
                 //min: minVal,
                 //max: maxVal,
-                colorScale: colScale,
+                colorScale: colScale
             };
             return colorConfig;
         } else if (color.type === 'quantitative') {
             const values = fetchValuesFromColumn(color.field, arrowIpc);
-            console.log("values", values);
+            console.log('values', values);
             const [minVal, maxVal] = findMinAndMaxOfColumn(values);
             console.log(`minVal = ${minVal}, maxVal = ${maxVal}`);
             const colorConfig = {
@@ -139,12 +174,11 @@ function handleColorField(color?: ChannelValue | Color | string, arrowIpc: Uint8
                 values: [...values],
                 min: minVal,
                 max: maxVal,
-                colorScale: "viridis",
+                colorScale: 'viridis'
                 //colorScale: "greens",
             };
             return colorConfig;
-        }
-        else {
+        } else {
             return ERROR_COLOR;
         }
     } else {
@@ -158,14 +192,14 @@ function handleSizeField(size?: ChannelValue | Size | number, arrowIpc: Uint8Arr
         return 0.01;
     } else if (typeof size === 'number') {
         return size;
-    } else if ("value" in size) {
+    } else if ('value' in size) {
         return size.value as number;
-    } else if ("field" in size) {
+    } else if ('field' in size) {
         if (!size.type) {
             size.type = 'quantitative'; // assume 'nominal' by default?
         }
         if (size.type === 'nominal') {
-            console.warn("not implemented!");
+            console.warn('not implemented!');
         } else if (size.type === 'quantitative') {
             const values = fetchValuesFromColumn(size.field, arrowIpc);
             const [rangeMin, rangeMax] = getRange(size);
@@ -177,11 +211,10 @@ function handleSizeField(size?: ChannelValue | Size | number, arrowIpc: Uint8Arr
                 min: minVal,
                 max: maxVal,
                 scaleMin: rangeMin,
-                scaleMax: rangeMax,
+                scaleMax: rangeMax
             };
             return sizeConfig;
-        }
-        else {
+        } else {
             return 0.01;
         }
     } else {
@@ -206,47 +239,51 @@ function fetchScene(viewsScenesMap: Map<string, chs.ChromatinScene>, viewId: str
     return s;
 }
 
-export function createSpatialTrack(options: SpatialTrackOptions, dataFetcher: CsvDataFetcherClass, container: HTMLDivElement) {
-    console.log("SPEC OPTIONS", options);
-    dataFetcher.tilesetInfo((info) => {
-        console.log("info", info);
+export function createSpatialTrack(
+    options: SpatialTrackOptions,
+    dataFetcher: CsvDataFetcherClass,
+    container: HTMLDivElement
+) {
+    console.log('SPEC OPTIONS', options);
+    dataFetcher.tilesetInfo(info => {
+        console.log('info', info);
     });
-    dataFetcher.fetchTilesDebounced((t) => {
-        console.log('CSV tiles: ~~~~~~~~');
-        console.log(t);
-        const ipcBuffer = transformObjectToArrow(t, options);
-        if (ipcBuffer) {
+    dataFetcher.fetchTilesDebounced(
+        async t => {
+            console.log('CSV tiles: ~~~~~~~~');
+            console.log(t);
+            const ipcBuffer = await transformObjectToArrow(t, options);
+            if (ipcBuffer) {
+                const viewId = '123'; //~ TODO: need to actually get the ID of the view parent of this track
+                let chromatinScene = fetchScene(spatialViewsMap, viewId);
+                //let chromatinScene = chs.initScene();
+                const arrowIpc = ipcBuffer.buffer;
+                const color = handleColorField(options.spec.color, arrowIpc);
+                const scale = handleSizeField(options.spec.size, arrowIpc);
+                console.log('scale config', scale);
+                const viewConfig = {
+                    scale: scale,
+                    color: color,
+                    mark: options.spec.mark
+                };
+                console.log('viewConfig', viewConfig);
+                const s = chs.load(ipcBuffer.buffer, { center: true, normalize: true });
 
+                const result = s;
 
-            const viewId = "123"; //~ TODO: need to actually get the ID of the view parent of this track
-            let chromatinScene = fetchScene(spatialViewsMap, viewId);
-            //let chromatinScene = chs.initScene();
-            const arrowIpc = ipcBuffer.buffer;
-            const color = handleColorField(options.spec.color, arrowIpc);
-            const scale = handleSizeField(options.spec.size, arrowIpc);
-            console.log("scale config", scale);
-            const viewConfig = {
-                scale: scale,
-                color: color,
-                mark: options.spec.mark,
-            };
-            console.log("viewConfig", viewConfig);
-            const s = chs.load(ipcBuffer.buffer, { center: true, normalize: true });
+                const isModel = 'parts' in result; //~ ChromatinModel has .parts
+                console.log(`isModel: ${isModel}`);
+                if (isModel) {
+                    chromatinScene = chs.addModelToScene(chromatinScene, result, viewConfig);
+                } else {
+                    chromatinScene = chs.addChunkToScene(chromatinScene, result, viewConfig);
+                }
+                const [_, canvas] = chs.display(chromatinScene, { alwaysRedraw: false });
 
-            const result = s;
-
-            const isModel = "parts" in result; //~ ChromatinModel has .parts
-            console.log(`isModel: ${isModel}`);
-            if (isModel) {
-                chromatinScene = chs.addModelToScene(chromatinScene, result, viewConfig);
+                container.appendChild(canvas);
             } else {
-                chromatinScene = chs.addChunkToScene(chromatinScene, result, viewConfig);
             }
-            const [_, canvas] = chs.display(chromatinScene, { alwaysRedraw: false });
-
-            container.appendChild(canvas);
-        } else {
-        }
-
-    }, ["0.0", "1.0"]);
+        },
+        ['0.0', '1.0']
+    );
 }

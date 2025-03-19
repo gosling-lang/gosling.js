@@ -36,7 +36,8 @@ import {
     replaceString,
     splitExon,
     inferSvType,
-    joinData
+    joinData,
+    transform
 } from '../../core/utils/data-transform';
 import { publish } from '../../api/pubsub';
 import { getRelativeGenomicPosition } from '../../core/utils/assembly';
@@ -314,8 +315,8 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
         this.drawTile(tile);
     }
 
-    override updateTile(/* tile: Tile */) {} // Never mind about this function for the simplicity.
-    renderTile(/* tile: Tile */) {} // Never mind about this function for the simplicity.
+    override updateTile(/* tile: Tile */) { } // Never mind about this function for the simplicity.
+    renderTile(/* tile: Tile */) { } // Never mind about this function for the simplicity.
 
     /**
      * Display a tile upon receiving a new one or when explicitly called by a developer, e.g., calling
@@ -496,9 +497,9 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
         const genomicRange = newXScale
             .domain()
             .map(absPos => getRelativeGenomicPosition(absPos, this.#assembly, true)) as [
-            GenomicPosition,
-            GenomicPosition
-        ];
+                GenomicPosition,
+                GenomicPosition
+            ];
         publish('location', {
             id: this.#viewUid,
             genomicRange: genomicRange
@@ -1003,41 +1004,12 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
         for (const resolvedSpec of resolvedTracks) {
             let tabularDataTransformed: Datum[] = Array.from(tileInfo.tabularData);
             for (const t of resolvedSpec.dataTransform ?? []) {
-                switch (t.type) {
-                    case 'filter':
-                        tabularDataTransformed = filterData(t, tabularDataTransformed);
-                        break;
-                    case 'join':
-                        tabularDataTransformed = await joinData(t, tabularDataTransformed);
-                        break;
-                    case 'concat':
-                        tabularDataTransformed = concatString(t, tabularDataTransformed);
-                        break;
-                    case 'replace':
-                        tabularDataTransformed = replaceString(t, tabularDataTransformed);
-                        break;
-                    case 'log':
-                        tabularDataTransformed = calculateData(t, tabularDataTransformed);
-                        break;
-                    case 'exonSplit':
-                        tabularDataTransformed = splitExon(t, tabularDataTransformed, resolvedSpec.assembly);
-                        break;
-                    case 'genomicLength':
-                        tabularDataTransformed = calculateGenomicLength(t, tabularDataTransformed);
-                        break;
-                    case 'svType':
-                        tabularDataTransformed = inferSvType(t, tabularDataTransformed);
-                        break;
-                    case 'coverage':
-                        tabularDataTransformed = aggregateCoverage(t, tabularDataTransformed, this._xScale.copy());
-                        break;
-                    case 'subjson':
-                        tabularDataTransformed = parseSubJSON(t, tabularDataTransformed);
-                        break;
-                    case 'displace':
-                        tabularDataTransformed = displace(t, tabularDataTransformed, this._xScale.copy());
-                        break;
-                }
+                tabularDataTransformed = await transform(
+                    t,
+                    tabularDataTransformed,
+                    this.xScale().copy(),
+                    resolvedSpec.assembly
+                );
             }
 
             // TODO: Remove the following block entirely and use the `rawData` API in the Editor (June-02-2022)

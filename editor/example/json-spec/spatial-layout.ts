@@ -17,13 +17,13 @@ export const EX_SPEC_SPATIAL: GoslingSpec = {
                         {
                             data: {
                                 type: 'csv',
-                                url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/cytogenetic_band.csv', //~ just some existing data, to get rid of errors
+                                url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/cytogenetic_band.csv' //~ just some existing data, to get rid of errors
                             },
                             x: {
-                                field: "x",
+                                field: 'x'
                             },
-                            test: "bla bla",
-                            data3D: "https://pub-5c3f8ce35c924114a178c6e929fc3ac7.r2.dev/Tan-2018_GSM3271353_gm12878_07.arrow",
+                            test: 'bla bla',
+                            data3D: 'https://pub-5c3f8ce35c924114a178c6e929fc3ac7.r2.dev/Tan-2018_GSM3271353_gm12878_07.arrow',
                             //type: "3D",
                             width: 250,
                             height: 250
@@ -101,14 +101,25 @@ export const EX_SPEC_SPATIAL_MINIMAL: GoslingSpec = {
                     data: {
                         type: 'csv',
                         //url: 'https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/refs/heads/main/gosling-3d/Stevens-2017_GSM2219497_Cell_1_model_1_chr_f.csv',
-                        url: 'https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/main/gosling-3d/yeast_model.csv',
+                        url: 'https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/main/gosling-3d/yeast_model.csv'
                     },
+                    dataTransform: [
+                        {
+                            type: 'join',
+                            from: {
+                                url: 'https://gist.githubusercontent.com/sehilyi/29d1cfed56da3ed37370f31a508c8024/raw/9ab733bff25c4c539d86451dfb9d03d4e241d1ad/yeast_model.values.csv',
+                                chromosomeField: 'chr',
+                                genomicField: 'position'
+                            },
+                            to: { chromosomeField: 'chr', genomicField: 'coord' }
+                        }
+                    ],
                     spatial: {
-                        x: "x",
-                        y: "y",
-                        z: "z",
-                        chr: "chr",
-                        coord: "coord",
+                        x: 'x',
+                        y: 'y',
+                        z: 'z',
+                        chr: 'chr',
+                        coord: 'coord'
                     },
                     width: 500,
                     height: 500
@@ -127,17 +138,17 @@ export const EX_SPEC_SPATIAL_MULTIPLE_TRACKS: GoslingSpec = {
                 {
                     data: {
                         type: 'csv',
-                        url: 'https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/main/gosling-3d/yeast_model.csv',
+                        url: 'https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/main/gosling-3d/yeast_model.csv'
                     },
                     spatial: {
-                        x: "x",
-                        y: "y",
-                        z: "z",
-                        chr: "chr",
-                        coord: "coord",
+                        x: 'x',
+                        y: 'y',
+                        z: 'z',
+                        chr: 'chr',
+                        coord: 'coord'
                     },
                     color: {
-                        value: "#ffffff",
+                        value: '#ffffff'
                     },
                     width: 500,
                     height: 500
@@ -145,23 +156,23 @@ export const EX_SPEC_SPATIAL_MULTIPLE_TRACKS: GoslingSpec = {
                 {
                     data: {
                         type: 'csv',
-                        url: 'https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/main/gosling-3d/yeast_model_only_one_chromosome.csv',
+                        url: 'https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/main/gosling-3d/yeast_model_only_one_chromosome.csv'
                     },
                     spatial: {
-                        x: "x",
-                        y: "y",
-                        z: "z",
-                        chr: "chr",
-                        coord: "coord",
+                        x: 'x',
+                        y: 'y',
+                        z: 'z',
+                        chr: 'chr',
+                        coord: 'coord'
                     },
                     color: {
-                        value: "#ffffff",
+                        value: '#ffffff'
                     },
-                    mark: "box",
+                    mark: 'box',
                     width: 500,
                     height: 500
                 }
             ]
         }
-    ],
+    ]
 };
