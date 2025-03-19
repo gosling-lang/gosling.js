@@ -1,7 +1,7 @@
 import type { GoslingSpec } from 'gosling.js';
 
 export const EX_SPEC_JOIN_TRANSFORM: GoslingSpec = {
-    // layout: 'spatial',
+    layout: 'spatial',
     assembly: 'unknown',
     xDomain: { interval: [0, 100] },
     tracks: [
@@ -12,13 +12,13 @@ export const EX_SPEC_JOIN_TRANSFORM: GoslingSpec = {
                 // chromosomeField: 'chr',
                 // genomicFields: ['coord']
             },
-            // spatial: {
-            //    x: 'x',
-            //    y: 'y',
-            //    z: 'z',
-            //    chr: 'chr',
-            //    coord: 'coord'
-            //},
+            spatial: {
+                x: 'x',
+                y: 'y',
+                z: 'z',
+                chr: 'chr',
+                coord: 'coord'
+            },
             mark: 'point',
             x: {
                 field: 'coord',
