@@ -1,42 +1,41 @@
 import type { GoslingSpec } from 'gosling.js';
 
 export const EX_SPEC_JOIN_TRANSFORM: GoslingSpec = {
-    layout: 'spatial',
-    assembly: 'unknown',
-    xDomain: { interval: [0, 100] },
-    tracks: [
+    title: 'Spatial Layout (Minimal, CSV)',
+    subtitle: 'Super basic example of spatial layout',
+    views: [
         {
-            data: {
-                type: 'csv',
-                url: 'https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/main/gosling-3d/yeast_model.csv'
-                // chromosomeField: 'chr',
-                // genomicFields: ['coord']
-            },
-            spatial: {
-                x: 'x',
-                y: 'y',
-                z: 'z',
-                chr: 'chr',
-                coord: 'coord'
-            },
-            mark: 'point',
-            x: {
-                field: 'coord',
-                type: 'genomic'
-            },
-            color: {
-                field: 'n',
-                type: 'nominal'
-            },
-            dataTransform: [
+            assembly: [
+                ['chrI', 230218],
+                ['chrII', 813184]
+            ],
+            layout: 'spatial',
+            tracks: [
                 {
-                    type: 'join',
-                    from: {
-                        url: 'https://gist.githubusercontent.com/sehilyi/29d1cfed56da3ed37370f31a508c8024/raw/9ab733bff25c4c539d86451dfb9d03d4e241d1ad/yeast_model.values.csv',
-                        chromosomeField: 'chr',
-                        genomicField: 'position'
+                    data: {
+                        type: 'bigwig',
+                        url: 'https://gosling-lang.s3.us-east-1.amazonaws.com/data/3d/GSM2831174_FigS3GH_Scc1_G2.bigwig'
                     },
-                    to: { chromosomeField: 'chr', genomicField: 'coord' }
+                    dataTransform: [
+                        {
+                            type: 'join',
+                            from: {
+                                url: 'https://gosling-lang.s3.us-east-1.amazonaws.com/data/3d/yeast.chrI-II.csv',
+                                chromosomeField: 'chr',
+                                genomicField: 'coord'
+                            },
+                            to: { chromosomeField: 'chr', genomicField: 'position' }
+                        }
+                    ],
+                    spatial: {
+                        x: 'x',
+                        y: 'y',
+                        z: 'z',
+                        chr: 'chr',
+                        coord: 'coord'
+                    },
+                    width: 500,
+                    height: 500
                 }
             ]
         }
