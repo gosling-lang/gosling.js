@@ -104,7 +104,7 @@ export async function joinData(transform: JoinTransform, toData: Datum[]): Promi
         return data;
     };
     const fromData = await fetchDataIfNeeded(from.url);
-
+    console.error(toData);
     // a very naive approach to join two files, i.e., exact matching
     const joinned: Datum[] = toData.map(t => {
         const found =

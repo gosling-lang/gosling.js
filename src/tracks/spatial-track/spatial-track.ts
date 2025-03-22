@@ -3,6 +3,7 @@ import * as chs from 'chromospace';
 import type { CsvDataFetcherClass, LoadedTiles } from 'src/data-fetchers/csv/csv-data-fetcher';
 import { tableFromArrays, tableFromIPC, tableToIPC } from '@uwdata/flechette';
 import { transform } from '../../core/utils/data-transform';
+import { getTabularData } from '../gosling-track/data-abstraction';
 
 export type SpatialTrackOptions = {
     spec: SingleTrack | OverlaidTrack;
@@ -20,11 +21,11 @@ export type SpatialTrackOptions = {
 const ERROR_COLOR = '#ff00ff';
 
 async function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptions): Promise<Uint8Array | null> {
-    let tabularData = t['0.0'].tabularData; //~ TODO: tile id
+    let tabularData = t['0.0'].tabularData ?? getTabularData(options.spec, t['0.0']); //~ TODO: tile id
     if (options.spec.dataTransform?.[0]) {
         tabularData = await transform(options.spec.dataTransform?.[0], tabularData);
-        console.log(tabularData);
     }
+    console.log(tabularData);
     const xArr: number[] = [];
     const yArr: number[] = [];
     const zArr: number[] = [];
@@ -250,8 +251,10 @@ export function createSpatialTrack(
     });
     dataFetcher.fetchTilesDebounced(
         async t => {
+            // const _ =
             console.log('CSV tiles: ~~~~~~~~');
             console.log(t);
+            console.log();
             const ipcBuffer = await transformObjectToArrow(t, options);
             if (ipcBuffer) {
                 const viewId = '123'; //~ TODO: need to actually get the ID of the view parent of this track
