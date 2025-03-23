@@ -1350,7 +1350,8 @@ export interface JoinTransform {
     /** The existing data to be updated */
     to: {
         chromosomeField: string;
-        genomicField: string;
+        startField: string;
+        endField?: string;
     };
     /** The new data to be combined */
     from: {
