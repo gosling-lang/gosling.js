@@ -3543,13 +3543,16 @@
             "chromosomeField": {
               "type": "string"
             },
-            "genomicField": {
+            "endField": {
+              "type": "string"
+            },
+            "startField": {
               "type": "string"
             }
           },
           "required": [
             "chromosomeField",
-            "genomicField"
+            "startField"
           ],
           "type": "object"
         },

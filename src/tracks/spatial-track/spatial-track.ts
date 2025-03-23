@@ -21,9 +21,10 @@ export type SpatialTrackOptions = {
 const ERROR_COLOR = '#ff00ff';
 
 async function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptions): Promise<Uint8Array | null> {
+    console.log(options.spec);
     let tabularData = t['0.0'].tabularData ?? getTabularData(options.spec, t['0.0']); //~ TODO: tile id
     if (options.spec.dataTransform?.[0]) {
-        tabularData = await transform(options.spec.dataTransform?.[0], tabularData);
+        tabularData = await transform(options.spec.dataTransform?.[0], tabularData, undefined, options.spec.assembly);
     }
     console.log(tabularData);
     const xArr: number[] = [];
@@ -248,45 +249,46 @@ export function createSpatialTrack(
     console.log('SPEC OPTIONS', options);
     dataFetcher.tilesetInfo(info => {
         console.log('info', info);
-    });
-    dataFetcher.fetchTilesDebounced(
-        async t => {
-            // const _ =
-            console.log('CSV tiles: ~~~~~~~~');
-            console.log(t);
-            console.log();
-            const ipcBuffer = await transformObjectToArrow(t, options);
-            if (ipcBuffer) {
-                const viewId = '123'; //~ TODO: need to actually get the ID of the view parent of this track
-                let chromatinScene = fetchScene(spatialViewsMap, viewId);
-                //let chromatinScene = chs.initScene();
-                const arrowIpc = ipcBuffer.buffer;
-                const color = handleColorField(options.spec.color, arrowIpc);
-                const scale = handleSizeField(options.spec.size, arrowIpc);
-                console.log('scale config', scale);
-                const viewConfig = {
-                    scale: scale,
-                    color: color,
-                    mark: options.spec.mark
-                };
-                console.log('viewConfig', viewConfig);
-                const s = chs.load(ipcBuffer.buffer, { center: true, normalize: true });
-
-                const result = s;
-
-                const isModel = 'parts' in result; //~ ChromatinModel has .parts
-                console.log(`isModel: ${isModel}`);
-                if (isModel) {
-                    chromatinScene = chs.addModelToScene(chromatinScene, result, viewConfig);
-                } else {
-                    chromatinScene = chs.addChunkToScene(chromatinScene, result, viewConfig);
+        dataFetcher.fetchTilesDebounced(
+            async t => {
+                console.log('CSV tiles: ~~~~~~~~');
+                console.log(t);
+                if (!t['0.0'].tileWidth) {
+                    t['0.0'].tileWidth = info.max_width;
                 }
-                const [_, canvas] = chs.display(chromatinScene, { alwaysRedraw: false });
+                const ipcBuffer = await transformObjectToArrow(t, options);
+                if (ipcBuffer) {
+                    const viewId = '123'; //~ TODO: need to actually get the ID of the view parent of this track
+                    let chromatinScene = fetchScene(spatialViewsMap, viewId);
+                    //let chromatinScene = chs.initScene();
+                    const arrowIpc = ipcBuffer.buffer;
+                    const color = handleColorField(options.spec.color, arrowIpc);
+                    const scale = handleSizeField(options.spec.size, arrowIpc);
+                    console.log('scale config', scale);
+                    const viewConfig = {
+                        scale: scale,
+                        color: color,
+                        mark: options.spec.mark
+                    };
+                    console.log('viewConfig', viewConfig);
+                    const s = chs.load(ipcBuffer.buffer, { center: true, normalize: true });
 
-                container.appendChild(canvas);
-            } else {
-            }
-        },
-        ['0.0', '1.0']
-    );
+                    const result = s;
+
+                    const isModel = 'parts' in result; //~ ChromatinModel has .parts
+                    console.log(`isModel: ${isModel}`);
+                    if (isModel) {
+                        chromatinScene = chs.addModelToScene(chromatinScene, result, viewConfig);
+                    } else {
+                        chromatinScene = chs.addChunkToScene(chromatinScene, result, viewConfig);
+                    }
+                    const [_, canvas] = chs.display(chromatinScene, { alwaysRedraw: false });
+
+                    container.appendChild(canvas);
+                } else {
+                }
+            },
+            ['0.0', '1.0']
+        );
+    });
 }

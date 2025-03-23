@@ -36,7 +36,7 @@ export async function transform(t: DataTransform, data: Datum[], xScale?: Scale,
         case 'filter':
             return filterData(t, data);
         case 'join':
-            return await joinData(t, data);
+            return await joinData(t, data, assembly);
         case 'concat':
             return concatString(t, data);
         case 'replace':
@@ -92,7 +92,11 @@ const FETCH_CACHE: Record<string, Datum[]> = {};
 /**
  * Load a CSV file, and join it to the existing data.
  */
-export async function joinData(transform: JoinTransform, toData: Datum[]): Promise<Datum[]> {
+export async function joinData(
+    transform: JoinTransform,
+    toData: Datum[],
+    assembly: Assembly = 'hg19'
+): Promise<Datum[]> {
     const { from, to } = transform;
 
     const fetchDataIfNeeded = async (url: string) => {
@@ -100,17 +104,27 @@ export async function joinData(transform: JoinTransform, toData: Datum[]): Promi
         const response = await fetch(url);
         const text = await response.text();
         const data = dsvFormat(',').parse(text) as Datum[];
+        const chromSizes = computeChromSizes(assembly);
+        for (const d of data) {
+            const chrName = d[from.chromosomeField];
+            const chromPosition = d[from.genomicField];
+            console.warn(from.chromosomeField, chrName, chromSizes.interval[chrName], chromPosition);
+            d[from.genomicField] = chromSizes.interval[chrName]?.[0] + +chromPosition;
+        }
+        console.warn(chromSizes);
         FETCH_CACHE[url] = data;
         return data;
     };
     const fromData = await fetchDataIfNeeded(from.url);
-    console.error(toData);
+    console.error('fromData', fromData);
     // a very naive approach to join two files, i.e., exact matching
     const joinned: Datum[] = toData.map(t => {
         const found =
-            fromData.find(
-                f => t[to.chromosomeField] === f[from.chromosomeField] && t[to.genomicField] === f[from.genomicField]
-            ) ?? {};
+            fromData.find(f => {
+                const start = t[to.startField] <= f[from.genomicField];
+                const end = to.endField ? t[to.endField] >= f[from.genomicField] : true;
+                return start && end;
+            }) ?? {};
         return { ...t, ...found };
     });
     return joinned;
