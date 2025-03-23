@@ -21,7 +21,6 @@ export type SpatialTrackOptions = {
 const ERROR_COLOR = '#ff00ff';
 
 async function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptions): Promise<Uint8Array | null> {
-    console.log(options.spec);
     let tabularData = t['0.0'].tabularData ?? getTabularData(options.spec, t['0.0']); //~ TODO: tile id
     if (options.spec.dataTransform?.[0]) {
         tabularData = await transform(options.spec.dataTransform?.[0], tabularData, undefined, options.spec.assembly);

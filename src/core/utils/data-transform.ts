@@ -100,7 +100,7 @@ export async function joinData(
     const { from, to } = transform;
 
     const fetchDataIfNeeded = async (url: string) => {
-        if (FETCH_CACHE[url]) return FETCH_CACHE[url];
+        // if (FETCH_CACHE[url]) return FETCH_CACHE[url];
         const response = await fetch(url);
         const text = await response.text();
         const data = dsvFormat(',').parse(text) as Datum[];
@@ -108,7 +108,16 @@ export async function joinData(
         for (const d of data) {
             const chrName = d[from.chromosomeField];
             const chromPosition = d[from.genomicField];
-            console.warn(from.chromosomeField, chrName, chromSizes.interval[chrName], chromPosition);
+            /*
+            console.warn(
+                d[from.genomicField],
+                from.chromosomeField,
+                chrName,
+                chromSizes.interval[chrName],
+                chromPosition,
+                chromSizes.interval[chrName]?.[0] + +chromPosition
+            );
+*/
             d[from.genomicField] = chromSizes.interval[chrName]?.[0] + +chromPosition;
         }
         console.warn(chromSizes);
@@ -116,16 +125,15 @@ export async function joinData(
         return data;
     };
     const fromData = await fetchDataIfNeeded(from.url);
-    console.error('fromData', fromData);
+    // console.error('fromData', fromData);
     // a very naive approach to join two files, i.e., exact matching
-    const joinned: Datum[] = toData.map(t => {
-        const found =
-            fromData.find(f => {
-                const start = t[to.startField] <= f[from.genomicField];
-                const end = to.endField ? t[to.endField] >= f[from.genomicField] : true;
-                return start && end;
-            }) ?? {};
-        return { ...t, ...found };
+    const joinned: Datum[] = fromData.map(f => {
+        const found = toData.find(t => {
+            const start = +t[to.startField] <= +f[from.genomicField];
+            const end = to.endField ? +t[to.endField] >= +f[from.genomicField] : true;
+            return start && end;
+        }) ?? { value: 0 };
+        return { ...found, ...f };
     });
     return joinned;
 }
