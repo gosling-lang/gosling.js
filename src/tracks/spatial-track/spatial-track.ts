@@ -21,8 +21,8 @@ export type SpatialTrackOptions = {
 const ERROR_COLOR = '#ff00ff';
 
 async function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptions): Promise<Uint8Array | null> {
-    // Some genomics file formats, such as BigWig and MultiVec do not have tabular data already stored.
-    // So, create on if missing.
+    // Some genomics file formats, such as BigWig and MultiVec, do not have tabular data already stored.
+    // So, create one if missing by running `getTabularData()`.
     // The tile ID of '0.0' extracts all data for a given file at the lowest resolution.
     let tabularData = t['0.0'].tabularData ?? getTabularData(options.spec, t['0.0']);
     if (options.spec.dataTransform?.[0]) {
