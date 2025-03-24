@@ -1343,21 +1343,21 @@ export interface ComparisonFilter extends CommonFilterTransform {
 /**
  * Join new data to the existing data.
  * The data will be combined based on the overlap of genomic positions.
- * The data will join _left_ to the existing data.
+ * The data will join _right_ to the new data (e.g., BigWig --> 3D Model).
  */
 export interface JoinTransform {
     type: 'join';
-    /** The existing data to be updated */
+    /** The existing data to be updated, e.g., BigWig */
     to: {
         chromosomeField: string;
         startField: string;
         endField?: string;
     };
-    /** The new data to be combined */
+    /** The new data to be combined, e.g., 3D Model */
     from: {
         url: string;
         chromosomeField: string;
-        genomicField: string; // test exact matching
+        genomicField: string;
     };
 }
 

@@ -21,11 +21,14 @@ export type SpatialTrackOptions = {
 const ERROR_COLOR = '#ff00ff';
 
 async function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptions): Promise<Uint8Array | null> {
-    let tabularData = t['0.0'].tabularData ?? getTabularData(options.spec, t['0.0']); //~ TODO: tile id
+    // Some genomics file formats, such as BigWig and MultiVec do not have tabular data already stored.
+    // So, create on if missing.
+    // The tile ID of '0.0' extracts all data for a given file at the lowest resolution.
+    let tabularData = t['0.0'].tabularData ?? getTabularData(options.spec, t['0.0']);
     if (options.spec.dataTransform?.[0]) {
+        // This basically ensures to do join operation (e.g., combining bigwig data to 3D model)
         tabularData = await transform(options.spec.dataTransform?.[0], tabularData, undefined, options.spec.assembly);
     }
-    console.log(tabularData);
     const xArr: number[] = [];
     const yArr: number[] = [];
     const zArr: number[] = [];
@@ -253,6 +256,7 @@ export function createSpatialTrack(
                 console.log('CSV tiles: ~~~~~~~~');
                 console.log(t);
                 if (!t['0.0'].tileWidth) {
+                    // This information is needed to create tabular data (i.e., running getTabularData())
                     t['0.0'].tileWidth = info.max_width;
                 }
                 const ipcBuffer = await transformObjectToArrow(t, options);
@@ -287,7 +291,7 @@ export function createSpatialTrack(
                 } else {
                 }
             },
-            ['0.0', '1.0']
+            ['0.0']
         );
     });
 }

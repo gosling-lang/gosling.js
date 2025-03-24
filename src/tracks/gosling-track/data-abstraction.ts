@@ -31,11 +31,10 @@ export function getTabularData(
             // we did not get sufficient data.
             return;
         }
-        console.error(data);
+
         const bin = spec.data.binSize ?? 1;
 
         const numericValues = data.dense;
-        // XXX: data.tileSize and data.tileX are not available. These need to be fixed.
         const numOfGenomicPositions = data.tileSize ?? data.dense.length;
         const tileUnitSize = (data.tileWidth ?? 1024) / numOfGenomicPositions;
 
