@@ -26,7 +26,7 @@ export function GoslingComponent({ spec, width, height, urlToFetchOptions }: Gos
         if (!pixiManager) {
             const canvasWidth = 1000,
                 canvasHeight = 1000; // These initial sizes don't matter because the size will be updated
-            const pixiManager = new PixiManager(canvasWidth, canvasHeight, plotElement, () => {});
+            const pixiManager = new PixiManager(canvasWidth, canvasHeight, plotElement, () => { });
             renderGosling(spec, plotElement, pixiManager, urlToFetchOptions);
             setPixiManager(pixiManager);
         } else {
@@ -37,6 +37,8 @@ export function GoslingComponent({ spec, width, height, urlToFetchOptions }: Gos
 
     return <div id="plot" style={{ height: '100%' }}></div>;
 }
+
+const baseTheme = getTheme('light');
 /**
  * This is the main function. It takes a Gosling spec and renders it using the PixiManager
  */
@@ -47,7 +49,12 @@ function renderGosling(
     urlToFetchOptions?: UrlToFetchOptions
 ) {
     // 1. Compile the spec
-    const compileResult = compile(gs, [], getTheme('light'), { containerSize: { width: 0, height: 0 } });
+    const compileResult = compile(
+        gs,
+        [],
+        { ...baseTheme, axis: { ...baseTheme.axis, labelExcludeChrPrefix: true, labelMargin: 1 } },
+        { containerSize: { width: 0, height: 0 } }
+    );
     const { trackInfos, gs: processedSpec, theme } = compileResult;
     console.warn('Spec', processedSpec);
     // 2. Extract all of the linking information from the spec
@@ -93,7 +100,7 @@ function renderGosling(
 /** Debounces the resize observer */
 function debounce(f: (arg0: unknown) => unknown, delay: number) {
     let timer = 0;
-    return function (...args: [arg0: unknown]) {
+    return function(...args: [arg0: unknown]) {
         clearTimeout(timer);
         timer = setTimeout(() => f.apply(this, args), delay);
     };
