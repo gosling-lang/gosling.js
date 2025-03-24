@@ -447,6 +447,12 @@ export const editorExampleObj: {
         spec: JsonExampleSpecs.EX_SPEC_SPATIAL_MULTIPLE_TRACKS,
         image: THUMBNAILS.SPATIAL_DRAFT
     },
+    SPATIAL_LAYOUT_SUPERIMP: {
+        group: 'Spatial Layout',
+        name: 'Superimposition',
+        spec: JsonExampleSpecs.EX_SPEC_SPATIAL_SUPERIMPOSITION,
+        image: THUMBNAILS.SPATIAL_DRAFT
+    },
     CORCES_ET_AL: {
         group: 'Coordinated Multiple Views',
         name: 'Corces et al. 2020',
