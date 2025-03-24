@@ -7,6 +7,7 @@ import { getTabularData } from '../gosling-track/data-abstraction';
 
 export type SpatialTrackOptions = {
     spec: SingleTrack | OverlaidTrack;
+    parentViewId: string;
     color: string | undefined;
     test: string | undefined;
     data3D: string | undefined;
@@ -232,7 +233,17 @@ function handleSizeField(size?: ChannelValue | Size | number, arrowIpc: Uint8Arr
  */
 const spatialViewsMap = new Map<string, chs.ChromatinScene>();
 
-function fetchScene(viewsScenesMap: Map<string, chs.ChromatinScene>, viewId: string): chs.ChromatinScene {
+/**
+* The logic is:
+* - when I'm processing a track spec, I want to know which parent view the track came from
+* - then if the parent view is the same, I can fetch the existing chromospace scene and add stuff there
+*/
+function fetchScene(viewsScenesMap: Map<string, chs.ChromatinScene>, viewId: string | undefined): chs.ChromatinScene {
+    if (!viewId) { //~ if the parent view is not defined...
+        //~ ...just return a new scene and don't store anything in the map
+        return chs.initScene();
+    }
+
     const s = viewsScenesMap.get(viewId);
 
     if (!s) {
@@ -247,7 +258,8 @@ function fetchScene(viewsScenesMap: Map<string, chs.ChromatinScene>, viewId: str
 export function createSpatialTrack(
     options: SpatialTrackOptions,
     dataFetcher: CsvDataFetcherClass,
-    container: HTMLDivElement
+    container: HTMLDivElement,
+    tracksAndViews: Map<string, string>
 ) {
     console.log('SPEC OPTIONS', options);
     dataFetcher.tilesetInfo(info => {
@@ -262,9 +274,14 @@ export function createSpatialTrack(
                 }
                 const ipcBuffer = await transformObjectToArrow(t, options);
                 if (ipcBuffer) {
-                    const viewId = '123'; //~ TODO: need to actually get the ID of the view parent of this track
+                    const thisTrackId = options.spec.id;
+                    console.log("thisTrackId", thisTrackId);
+                    const viewId = tracksAndViews.get(thisTrackId);
+                    console.log("parent viewId", viewId);
                     let chromatinScene = fetchScene(spatialViewsMap, viewId);
-                    //let chromatinScene = chs.initScene();
+                    console.log("spatialViewsMap after fetchScene");
+                    console.log(spatialViewsMap);
+                    console.log("chromatinScene", chromatinScene);
                     const arrowIpc = ipcBuffer.buffer;
                     const color = handleColorField(options.spec.color, arrowIpc);
                     const scale = handleSizeField(options.spec.size, arrowIpc);

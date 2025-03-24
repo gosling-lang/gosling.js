@@ -96,6 +96,7 @@ export function createTrackDefs(trackInfos: TrackInfo[], theme: Required<Complet
                 boundingBox,
                 options: {
                     spec: track,
+                    //parentViewId: ,
                     color: track.color ? track.color.value : undefined,
                     test: track.test,
                     data3D: track.data3D,

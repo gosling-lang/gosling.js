@@ -1,3 +1,4 @@
+import type { GoslingSpec } from '@gosling-lang/gosling-schema';
 import { type Signal } from '@preact/signals-core';
 import { type ScaleLinear } from 'd3-scale';
 
@@ -42,4 +43,20 @@ export interface HeatmapPlot {
         tx: number,
         ty: number
     ): void;
+}
+
+export function getTrackParentViews(spec: GoslingSpec) {
+    console.warn("getTrackParentViews");
+    //~ <trackId, parent viewId>
+    const tracksAndViews = new Map<string, string>();
+    for (const view of spec.views) {
+        const viewId = view.id;
+        for (const track of view.tracks) {
+            const trackId = track.id;
+            console.log(`${viewId} -> ${trackId}`);
+            tracksAndViews.set(trackId, viewId);
+        }
+    }
+    //console.log(spec.views);
+    return tracksAndViews;
 }

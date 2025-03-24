@@ -7,6 +7,7 @@ import { renderTrackDefs } from './renderer/main';
 import type { TrackInfo } from 'src/compiler/bounding-box';
 import type { GoslingSpec } from 'gosling.js';
 import { getLinkedEncodings } from './linking/linkedEncoding';
+import { getTrackParentViews } from '../src/tracks/utils';
 
 interface GoslingComponentProps {
     spec: GoslingSpec | undefined;
@@ -61,6 +62,11 @@ function renderGosling(
     const linkedEncodings = getLinkedEncodings(processedSpec);
     console.warn('Linked encodings', linkedEncodings);
 
+    //~ DK new: computing the correspondence of tracks - parent views to be able to compose multiple tracks within one view/scene
+    const tracksAndViews = getTrackParentViews(processedSpec);
+    console.log("--------------------asdfasdf------------------");
+    console.log('tracksAndViews', tracksAndViews);
+
     // 3. If the spec is responsive, we need to add a resize observer to the container
     const { isResponsiveWidth, isResponsiveHeight } = checkResponsiveSpec(processedSpec);
     if (isResponsiveWidth || isResponsiveHeight) {
@@ -79,7 +85,7 @@ function renderGosling(
                 );
                 // 4. Render the tracks
                 const trackDefs = createTrackDefs(rescaledTracks, theme);
-                renderTrackDefs(trackDefs, linkedEncodings, pixiManager, urlToFetchOptions);
+                renderTrackDefs(trackDefs, linkedEncodings, tracksAndViews, pixiManager, urlToFetchOptions);
                 // Resize the canvas to make sure it fits the tracks
                 const { width, height } = calculateWidthHeight(rescaledTracks);
                 pixiManager.resize(width, height);
@@ -90,7 +96,7 @@ function renderGosling(
         // 4. If the spec is not responsive, we can just render the tracks
         const trackDefs = createTrackDefs(trackInfos, theme);
         console.warn('Rendering tracks');
-        renderTrackDefs(trackDefs, linkedEncodings, pixiManager, urlToFetchOptions);
+        renderTrackDefs(trackDefs, linkedEncodings, tracksAndViews, pixiManager, urlToFetchOptions);
         // Resize the canvas to make sure it fits the tracks
         const { width, height } = calculateWidthHeight(trackInfos);
         pixiManager.resize(width, height);
