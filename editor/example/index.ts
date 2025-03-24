@@ -447,6 +447,12 @@ export const editorExampleObj: {
         spec: JsonExampleSpecs.EX_SPEC_SPATIAL_MULTIPLE_TRACKS,
         image: THUMBNAILS.SPATIAL_DRAFT
     },
+    THREE_D_YEAST_BIGWIG: {
+        group: 'Experimental',
+        name: '3D Yeast Bigwig',
+        spec: JsonExampleSpecs.EX_SPEC_3D_YEAST_BIGWIG,
+        image: THUMBNAILS.SPATIAL_DRAFT
+    },
     CORCES_ET_AL: {
         group: 'Coordinated Multiple Views',
         name: 'Corces et al. 2020',

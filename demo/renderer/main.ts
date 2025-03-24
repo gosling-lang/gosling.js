@@ -117,7 +117,7 @@ export function renderTrackDefs(
             // In the final version, we would probably want Chromospace to use an existing canvas element (to limit the creation of new elements).
             // But for now this gets the job done.
             const container = pixiManager.makeContainer(boundingBox).overlayDiv;
-            console.log("!@$!#%@#");
+            console.log('!@$!#%@#');
             console.log(options.spec);
             options.spec.data.sampleLength = 30000;
             const datafetcher = getDataFetcher(options.spec, urlToFetchOptions);
