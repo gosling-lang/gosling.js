@@ -116,7 +116,7 @@ export async function joinData(
     };
     const fromData = await fetchDataIfNeeded(from.url);
 
-    // a very naive approach to join two files, i.e., exact matching
+    // a very naive approach to join two files
     const joinned: Datum[] = fromData.map(f => {
         // TODO: to be most accurate, need to find all data records matching and aggregate data
         const found = toData.find(t => {
