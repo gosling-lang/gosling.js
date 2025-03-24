@@ -178,6 +178,9 @@ export const EX_SPEC_SPATIAL_MULTIPLE_TRACKS: GoslingSpec = {
                     color: {
                         value: '#ffffff'
                     },
+                    size: {
+                        value: 0.01,
+                    },
                     width: 500,
                     height: 500
                 },
@@ -196,4 +199,78 @@ export const EX_SPEC_SPATIAL_MULTIPLE_TRACKS: GoslingSpec = {
             ]
         }
     ]
+};
+
+export const EX_SPEC_SPATIAL_SUPERIMPOSITION: GoslingSpec = {
+    title: 'Spatial Layout: superimposition',
+    views: [
+        {
+            layout: 'spatial',
+            tracks: [
+                {
+                    data: {
+                        type: 'csv',
+                        url: 'https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/main/gosling-3d/yeast_model.csv',
+                    },
+                    spatial: {
+                        x: "x",
+                        y: "y",
+                        z: "z",
+                        chr: "chr",
+                        coord: "coord",
+                    },
+                    color: {
+                        value: "#ff0000",
+                    },
+                    size: {
+                        value: 0.01,
+                    },
+                    width: 500,
+                    height: 500
+                },
+                {
+                    data: {
+                        type: 'csv',
+                        url: 'https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/refs/heads/main/gosling-3d/stevens-2017/single_chromosome.csv',
+                    },
+                    spatial: {
+                        x: "x",
+                        y: "y",
+                        z: "z",
+                        chr: "chr",
+                        coord: "coord",
+                    },
+                    color: {
+                        value: "#00ff00",
+                    },
+                    size: {
+                        value: 0.01,
+                    },
+                    width: 500,
+                    height: 500
+                },
+                {
+                    data: {
+                        type: 'csv',
+                        url: 'https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/refs/heads/main/gosling-3d/stevens-2017/single_chromosome.csv',
+                    },
+                    spatial: {
+                        x: "x",
+                        y: "y",
+                        z: "z",
+                        chr: "chr",
+                        coord: "coord",
+                    },
+                    color: {
+                        value: "#0000ff",
+                    },
+                    size: {
+                        value: 0.01,
+                    },
+                    width: 500,
+                    height: 500
+                }
+            ]
+        }
+    ],
 };
