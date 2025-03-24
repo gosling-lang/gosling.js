@@ -24,6 +24,7 @@ import type { CsvDataFetcherClass } from 'src/data-fetchers/csv/csv-data-fetcher
 export function renderTrackDefs(
     trackDefs: TrackDefs[],
     linkedEncodings: LinkedEncoding[],
+    tracksAndViews: Map<string, string>,
     pixiManager: PixiManager,
     urlToFetchOptions?: UrlToFetchOptions
 ) {
@@ -121,7 +122,8 @@ export function renderTrackDefs(
             console.log(options.spec);
             options.spec.data.sampleLength = 30000;
             const datafetcher = getDataFetcher(options.spec, urlToFetchOptions);
-            createSpatialTrack(options, datafetcher as CsvDataFetcherClass, container);
+            console.log("trackAndViewsssssssssssss", tracksAndViews);
+            createSpatialTrack(options, datafetcher as CsvDataFetcherClass, container, tracksAndViews);
         }
     });
 }
