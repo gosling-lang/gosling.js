@@ -1,6 +1,7 @@
 import type { SparseTile, TileData } from '@higlass/services';
 import type { Datum, SingleTrack } from '@gosling-lang/gosling-schema';
 import { IsDataDeepTileset } from '@gosling-lang/gosling-schema';
+import { computeChromSizes } from '../../exported-utils';
 
 export const GOSLING_DATA_ROW_UID_FIELD = 'gosling-data-row-uid';
 
@@ -26,6 +27,7 @@ export function getTabularData(
         return;
     }
 
+    console.log(computeChromSizes(spec.assembly));
     if (spec.data.type === 'vector' || spec.data.type === 'bigwig') {
         if (!('dense' in data)) {
             // we did not get sufficient data.

@@ -814,7 +814,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
         // https://github.com/higlass/higlass/blob/38f0c4415f0595c3b9d685a754d6661dc9612f7c/app/scripts/TiledPixiTrack.js#L637
         super.receivedTiles(loadedTiles);
         // some items in this.fetching are removed
-        if (!isTabularDataFetcher(this.dataFetcher)) {
+        if (isTabularDataFetcher(this.dataFetcher)) {
             this.drawLoadingCue();
         }
     }
@@ -824,7 +824,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
      */
     override removeOldTiles() {
         super.removeOldTiles(); // some items are added to this.fetching
-        if (!isTabularDataFetcher(this.dataFetcher)) {
+        if (isTabularDataFetcher(this.dataFetcher)) {
             this.drawLoadingCue();
         }
     }
