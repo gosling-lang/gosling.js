@@ -64,7 +64,6 @@ export function renderTrackDefs(
             );
         }
         if (type === TrackType.Axis) {
-            console.warn('trackDef', trackDef);
             const domain = getEncodingSignal(trackDef.trackId, options.encoding, linkedEncodings);
             if (!domain) {
                 console.warn(`No domain found for axis ${trackDef.trackId}. Skipping...`);

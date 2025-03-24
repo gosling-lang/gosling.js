@@ -27,7 +27,7 @@ import { EX_SPEC_MOUSE_EVENT } from './mouse-event';
 import { EX_SPEC_PERF_ALIGNMENT } from './perf-alignment';
 import { EX_SPEC_DEBUG } from './debug';
 import { EX_SPEC_SPATIAL, EX_SPEC_SPATIAL_MINIMAL, EX_SPEC_SPATIAL_MULTIPLE_TRACKS } from './spatial-layout';
-import { EX_SPEC_JOIN_TRANSFORM } from './join-transform';
+import { EX_SPEC_3D_YEAST_BIGWIG } from './3d-yeast-and-bigwig';
 
 export const JsonExampleSpecs = {
     EX_SPEC_LAYOUT_AND_ARRANGEMENT_1,
@@ -65,5 +65,5 @@ export const JsonExampleSpecs = {
     EX_SPEC_SPATIAL,
     EX_SPEC_SPATIAL_MINIMAL,
     EX_SPEC_SPATIAL_MULTIPLE_TRACKS,
-    EX_SPEC_JOIN_TRANSFORM
+    EX_SPEC_3D_YEAST_BIGWIG
 };
