@@ -121,7 +121,7 @@
     "conventional-changelog-cli": "^2.1.1",
     "d3-drag": "^2.0.0",
     "d3-selection": "^2.0.0",
-    "esbuild": "^0.12.25",
+    "esbuild": "^0.25.0",
     "eslint": "^8.19.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-jsx-a11y": "^6.7.1",
