@@ -31,7 +31,7 @@ jobs:
           aws-region: us-east-1
 
       - name: Copy files to the S3 website content bucket
-        run: aws s3 sync build s3://spatial.gosling-lang.org
+        run: aws s3 sync build s3://3d.gosling-lang.org
 
       - name: Invalidate CloudFront cache
         run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CF_DISTRIBUTION_ID }} --paths "/*"
