@@ -98,6 +98,7 @@ async function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptio
     arrays = { ...suppArray, ...arrays };
 
     const table = tableFromArrays(arrays);
+    console.warn("table", table);
     const buffer = tableToIPC(table, { format: 'file' });
     return buffer;
 }
@@ -232,6 +233,7 @@ function handleSizeField(size?: ChannelValue | Size | number, arrowIpc: Uint8Arr
  * The idea is to "cache" scenes associated with particular `views`.
  */
 const spatialViewsMap = new Map<string, chs.ChromatinScene>();
+const viewsCanvasesMap = new Map<string, HTMLCanvasElement>();
 
 /**
 * The logic is:
@@ -255,6 +257,18 @@ function fetchScene(viewsScenesMap: Map<string, chs.ChromatinScene>, viewId: str
     return s;
 }
 
+/**
+ * @returns tuple <canvas, was already added in the container> 
+*
+*/
+function fetchCanvas(viewsAndCanvases: Map<string, HTMLCanvasElement>, viewId: string | undefined)
+    : HTMLCanvasElement | undefined {
+    if (!viewId) {
+        return undefined;
+    }
+    return viewsAndCanvases.get(viewId);
+}
+
 export function createSpatialTrack(
     options: SpatialTrackOptions,
     dataFetcher: CsvDataFetcherClass,
@@ -273,41 +287,64 @@ export function createSpatialTrack(
                     t['0.0'].tileWidth = info.max_width;
                 }
                 const ipcBuffer = await transformObjectToArrow(t, options);
-                if (ipcBuffer) {
-                    const thisTrackId = options.spec.id;
-                    console.log("thisTrackId", thisTrackId);
-                    const viewId = tracksAndViews.get(thisTrackId);
-                    console.log("parent viewId", viewId);
-                    let chromatinScene = fetchScene(spatialViewsMap, viewId);
-                    console.log("spatialViewsMap after fetchScene");
-                    console.log(spatialViewsMap);
-                    console.log("chromatinScene", chromatinScene);
-                    const arrowIpc = ipcBuffer.buffer;
-                    const color = handleColorField(options.spec.color, arrowIpc);
-                    const scale = handleSizeField(options.spec.size, arrowIpc);
-                    console.log('scale config', scale);
-                    const viewConfig = {
-                        scale: scale,
-                        color: color,
-                        mark: options.spec.mark
-                    };
-                    console.log('viewConfig', viewConfig);
-                    const s = chs.load(ipcBuffer.buffer, { center: true, normalize: true });
-
-                    const result = s;
-
-                    const isModel = 'parts' in result; //~ ChromatinModel has .parts
-                    console.log(`isModel: ${isModel}`);
-                    if (isModel) {
-                        chromatinScene = chs.addModelToScene(chromatinScene, result, viewConfig);
-                    } else {
-                        chromatinScene = chs.addChunkToScene(chromatinScene, result, viewConfig);
-                    }
-                    const [_, canvas] = chs.display(chromatinScene, { alwaysRedraw: false });
-
-                    container.appendChild(canvas);
-                } else {
+                if (!ipcBuffer) {
+                    console.error("could not tranform into Apache Arrow");
+                    return;
                 }
+
+                const thisTrackId = options.spec.id;
+                const viewId = tracksAndViews.get(thisTrackId);
+                //let chromatinScene = fetchScene(spatialViewsMap, viewId);
+                let chromatinScene = chs.initScene();
+
+                const color = handleColorField(options.spec.color, ipcBuffer.buffer);
+                const scale = handleSizeField(options.spec.size, ipcBuffer.buffer);
+                const viewConfig = {
+                    scale: scale,
+                    color: color,
+                    mark: options.spec.mark
+                };
+
+                const s = chs.load(ipcBuffer.buffer, { center: true, normalize: true });
+                const isModel = "parts" in s; //~ ChromatinModel has .parts
+                if (isModel) {
+                    chromatinScene = chs.addModelToScene(chromatinScene, s, viewConfig);
+                    spatialViewsMap.set(viewId, chromatinScene);
+                } else {
+                    chromatinScene = chs.addChunkToScene(chromatinScene, s, viewConfig);
+                    spatialViewsMap.set(viewId, chromatinScene);
+                }
+
+                let c = fetchCanvas(viewsCanvasesMap, viewId);
+
+                let canvasToUse: HTMLCanvasElement | undefined = c;
+                let canvasNeedsToBeAdded = true;
+                if (canvasToUse != undefined) {
+                    console.log("reusing canvas");
+                    console.log(`scene has ${chromatinScene.structures.length} structures`);
+                    chs.display(chromatinScene, { alwaysRedraw: false }, canvasToUse);
+                    //chs.display(chromatinScene, { alwaysRedraw: true }, canvasToUse);
+                    canvasNeedsToBeAdded = false; //~ don't need to add because we're using cached canvas
+                } else {
+                    console.log("making new canvas");
+                    console.log(`scene has ${chromatinScene.structures.length} structures`);
+                    console.log(chromatinScene.structures);
+                    const [_, createdCanvas] = chs.display(chromatinScene, { alwaysRedraw: false });
+                    //const [_, createdCanvas] = chs.display(chromatinScene, { alwaysRedraw: true });
+                    if (createdCanvas instanceof HTMLCanvasElement) {
+                        canvasToUse = createdCanvas;
+                        //viewsCanvasesMap.set(viewId, canvasToUse);
+
+                        container.appendChild(canvasToUse);
+                    } else {
+                        console.error("this shouldn't happen");
+                    }
+                }
+
+                //if (canvasNeedsToBeAdded && canvasToUse) {
+                //    console.log("Adding canvas!!!");
+                //    container.appendChild(canvasToUse);
+                //}
             },
             ['0.0']
         );
