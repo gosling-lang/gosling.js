@@ -641,7 +641,7 @@
         },
         "from": {
           "additionalProperties": false,
-          "description": "The new data to be combined",
+          "description": "The new data to be combined, e.g., 3D Model",
           "properties": {
             "chromosomeField": {
               "type": "string"
@@ -757,11 +757,8 @@
         },
         "to": {
           "additionalProperties": false,
-          "description": "The existing data to be updated",
+          "description": "The existing data to be updated, e.g., BigWig",
           "properties": {
-            "chromosomeField": {
-              "type": "string"
-            },
             "endField": {
               "type": "string"
             },
@@ -770,7 +767,6 @@
             }
           },
           "required": [
-            "chromosomeField",
             "startField"
           ],
           "type": "object"

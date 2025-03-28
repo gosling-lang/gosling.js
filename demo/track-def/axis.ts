@@ -165,7 +165,7 @@ function getAxisTrackCircularOptions(
         height: boundingBox.height,
         startAngle,
         endAngle,
-        assembly: 'hg38',
+        assembly: track.assembly,
         stroke: 'transparent', // text outline
         color: theme.axis.labelColor,
         labelMargin: theme.axis.labelMargin,

@@ -1261,6 +1261,16 @@
               "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
               "type": "string"
             },
+            "locus": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/X"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
+            },
             "mark": {
               "$ref": "#/definitions/Mark"
             },
@@ -1413,6 +1423,16 @@
                       "linkingId": {
                         "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
                         "type": "string"
+                      },
+                      "locus": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/definitions/X"
+                          },
+                          {
+                            "$ref": "#/definitions/ChannelValue"
+                          }
+                        ]
                       },
                       "mark": {
                         "$ref": "#/definitions/Mark"
@@ -2031,6 +2051,16 @@
               "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
               "type": "string"
             },
+            "locus": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/X"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
+            },
             "mark": {
               "$ref": "#/definitions/Mark"
             },
@@ -2183,6 +2213,16 @@
                       "linkingId": {
                         "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
                         "type": "string"
+                      },
+                      "locus": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/definitions/X"
+                          },
+                          {
+                            "$ref": "#/definitions/ChannelValue"
+                          }
+                        ]
                       },
                       "mark": {
                         "$ref": "#/definitions/Mark"
@@ -2857,6 +2897,16 @@
                       "linkingId": {
                         "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
                         "type": "string"
+                      },
+                      "locus": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/definitions/X"
+                          },
+                          {
+                            "$ref": "#/definitions/ChannelValue"
+                          }
+                        ]
                       },
                       "mark": {
                         "$ref": "#/definitions/Mark"
@@ -3513,11 +3563,11 @@
     },
     "JoinTransform": {
       "additionalProperties": false,
-      "description": "Join new data to the existing data. The data will be combined based on the overlap of genomic positions. The data will join _left_ to the existing data.",
+      "description": "Join new data to the existing data. The data will be combined based on the overlap of genomic positions. The data will join _right_ to the new data (e.g., BigWig --> 3D Model).",
       "properties": {
         "from": {
           "additionalProperties": false,
-          "description": "The new data to be combined",
+          "description": "The new data to be combined, e.g., 3D Model",
           "properties": {
             "chromosomeField": {
               "type": "string"
@@ -3538,11 +3588,8 @@
         },
         "to": {
           "additionalProperties": false,
-          "description": "The existing data to be updated",
+          "description": "The existing data to be updated, e.g., BigWig",
           "properties": {
-            "chromosomeField": {
-              "type": "string"
-            },
             "endField": {
               "type": "string"
             },
@@ -3551,7 +3598,6 @@
             }
           },
           "required": [
-            "chromosomeField",
             "startField"
           ],
           "type": "object"
@@ -3664,12 +3710,91 @@
       "type": "object"
     },
     "Layout": {
-      "enum": [
-        "linear",
-        "circular",
-        "spatial"
-      ],
-      "type": "string"
+      "anyOf": [
+        {
+          "const": "linear",
+          "type": "string"
+        },
+        {
+          "const": "circular",
+          "type": "string"
+        },
+        {
+          "const": "spatial",
+          "type": "string"
+        },
+        {
+          "$ref": "#/definitions/LayoutDeep"
+        }
+      ]
+    },
+    "LayoutDeep": {
+      "anyOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "enum": [
+                "linear",
+                "circular"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "model": {
+              "additionalProperties": false,
+              "properties": {
+                "chromosome": {
+                  "type": "string"
+                },
+                "position": {
+                  "type": "string"
+                },
+                "type": {
+                  "const": "csv",
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "xyz": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "maxItems": 3,
+                  "minItems": 3,
+                  "type": "array"
+                }
+              },
+              "required": [
+                "type",
+                "url",
+                "xyz",
+                "chromosome",
+                "position"
+              ],
+              "type": "object"
+            },
+            "type": {
+              "const": "spatial",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "model"
+          ],
+          "type": "object"
+        }
+      ]
     },
     "LogBase": {
       "anyOf": [
@@ -4153,6 +4278,16 @@
                 "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
                 "type": "string"
               },
+              "locus": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/X"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
               "mark": {
                 "$ref": "#/definitions/Mark"
               },
@@ -4479,6 +4614,16 @@
         "linkingId": {
           "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
           "type": "string"
+        },
+        "locus": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "mark": {
           "$ref": "#/definitions/Mark"
@@ -4836,6 +4981,16 @@
         "linkingId": {
           "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
           "type": "string"
+        },
+        "locus": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "mark": {
           "$ref": "#/definitions/Mark"
@@ -5204,6 +5359,16 @@
                 "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
                 "type": "string"
               },
+              "locus": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/X"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
               "mark": {
                 "$ref": "#/definitions/Mark"
               },
@@ -5566,6 +5731,16 @@
         "linkingId": {
           "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
           "type": "string"
+        },
+        "locus": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "mark": {
           "$ref": "#/definitions/Mark"
@@ -6159,6 +6334,16 @@
           "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
           "type": "string"
         },
+        "locus": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
         "mark": {
           "$ref": "#/definitions/Mark"
         },
@@ -6519,6 +6704,16 @@
               "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
               "type": "string"
             },
+            "locus": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/X"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
+            },
             "mark": {
               "$ref": "#/definitions/Mark"
             },
@@ -6667,6 +6862,16 @@
                       "linkingId": {
                         "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
                         "type": "string"
+                      },
+                      "locus": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/definitions/X"
+                          },
+                          {
+                            "$ref": "#/definitions/ChannelValue"
+                          }
+                        ]
                       },
                       "mark": {
                         "$ref": "#/definitions/Mark"
@@ -7282,6 +7487,16 @@
               "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
               "type": "string"
             },
+            "locus": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/X"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
+            },
             "mark": {
               "$ref": "#/definitions/Mark"
             },
@@ -7430,6 +7645,16 @@
                       "linkingId": {
                         "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
                         "type": "string"
+                      },
+                      "locus": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/definitions/X"
+                          },
+                          {
+                            "$ref": "#/definitions/ChannelValue"
+                          }
+                        ]
                       },
                       "mark": {
                         "$ref": "#/definitions/Mark"
@@ -8097,6 +8322,16 @@
                       "linkingId": {
                         "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
                         "type": "string"
+                      },
+                      "locus": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/definitions/X"
+                          },
+                          {
+                            "$ref": "#/definitions/ChannelValue"
+                          }
+                        ]
                       },
                       "mark": {
                         "$ref": "#/definitions/Mark"
