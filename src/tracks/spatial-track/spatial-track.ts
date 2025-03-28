@@ -28,6 +28,7 @@ async function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptio
     if (options.spec.dataTransform?.[0]) {
         // This basically ensures to do join operation (e.g., combining bigwig data to 3D model)
         tabularData = await transform(options.spec.dataTransform?.[0], tabularData, undefined, options.spec.assembly);
+        console.error('Joined Data', tabularData);
     }
     const xArr: number[] = [];
     const yArr: number[] = [];
@@ -90,10 +91,10 @@ async function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptio
             if (!suppArray[f]) {
                 suppArray[f] = [];
             }
-            suppArray[f].push(+d[f] ? parseAsNumber(d[f]) : d[f]);
+            suppArray[f].push(Number.isNaN(+d[f]) ? d[f] : parseAsNumber(d[f]));
         }
     }
-    arrays = { ...arrays, ...suppArray };
+    arrays = { ...suppArray, ...arrays };
 
     const table = tableFromArrays(arrays);
     const buffer = tableToIPC(table, { format: 'file' });
@@ -206,7 +207,7 @@ function handleSizeField(size?: ChannelValue | Size | number, arrowIpc: Uint8Arr
             console.warn('not implemented!');
         } else if (size.type === 'quantitative') {
             const values = fetchValuesFromColumn(size.field, arrowIpc);
-            const [rangeMin, rangeMax] = getRange(size);
+            const [rangeMax, rangeMin] = getRange(size);
             console.log(`size.field = ${size.field}`);
             console.log(values);
             const [minVal, maxVal] = findMinAndMaxOfColumn(values);
@@ -271,7 +272,7 @@ export function createSpatialTrack(
                     const viewConfig = {
                         scale: scale,
                         color: color,
-                        mark: options.spec.mark
+                        mark: undefined // 'sphere' // options.spec.mark
                     };
                     console.log('viewConfig', viewConfig);
                     const s = chs.load(ipcBuffer.buffer, { center: true, normalize: true });
