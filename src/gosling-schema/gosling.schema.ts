@@ -80,7 +80,19 @@ export type ResponsiveSpecOfMultipleViews = {
     }[];
 };
 
-export type Layout = 'linear' | 'circular' | 'spatial';
+export type Layout = 'linear' | 'circular' | 'spatial' | LayoutDeep;
+export type LayoutDeep =
+    | { type: 'linear' | 'circular' }
+    | {
+        type: 'spatial';
+        model: {
+            type: 'csv';
+            url: string;
+            xyz: [string, string, string];
+            chromosome: string;
+            position: string;
+        };
+    };
 export type Orientation = 'horizontal' | 'vertical';
 
 /** Custom chromosome sizes, e.g., [["foo", 1000], ["bar", 300], ["baz", 240]] */
@@ -487,6 +499,9 @@ export interface Encoding {
     y1e?: Y | ChannelValue;
 
     row?: Row | ChannelValue;
+
+    // For 3D, conceptually identical to `x` in the linear layout
+    locus?: X | ChannelValue;
 
     color?: Color | ChannelValue;
     size?: Size | ChannelValue;
@@ -1349,7 +1364,6 @@ export interface JoinTransform {
     type: 'join';
     /** The existing data to be updated, e.g., BigWig */
     to: {
-        chromosomeField: string;
         startField: string;
         endField?: string;
     };
