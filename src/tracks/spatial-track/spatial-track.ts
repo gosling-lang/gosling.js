@@ -41,6 +41,13 @@ function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptions): U
     console.log(`fieldForSpatialX: ${fieldForSpatialX},\nfieldForSpatialY: ${fieldForSpatialY},\nfieldForSpatialZ: ${fieldForSpatialZ}`);
     console.log(`fieldForSpatialChr : ${fieldForSpatialChr},\nfieldForSpatialCoord: ${fieldForSpatialCoord}`);
 
+    console.log("extra fields");
+    const allFields = Object.keys(tabularData[0]);
+    const expectedFields = ["x", "y", "z", "chr", "coord"];
+    const extraFields = allFields.filter(item => !expectedFields.includes(item));
+    console.log(extraFields);
+
+    const extraColumns = {};
     for (let i = 0; i < tabularData.length; i++) {
         // same as `xArr.push(parseAsNumber(tabularData[i].x));` but here I can use the string from the `"x": { "field": "whatever-value" }` instead of hard-coded ".x"
         xArr.push(parseAsNumber(tabularData[i][fieldForSpatialX]));
@@ -48,6 +55,15 @@ function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptions): U
         zArr.push(parseAsNumber(tabularData[i][fieldForSpatialZ]));
         chrArr.push(tabularData[i][fieldForSpatialChr] as string);
         coordArr.push(parseAsNumber(tabularData[i][fieldForSpatialCoord]));
+
+        for (const cName of extraFields) {
+            const val = tabularData[i][cName];
+            if (!extraColumns[cName]) {
+                extraColumns[cName] = [val];
+            } else {
+                extraColumns[cName].push(val);
+            }
+        }
     }
     const arrays = {
         x: xArr,
@@ -55,6 +71,7 @@ function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptions): U
         z: zArr,
         chr: chrArr,
         coord: coordArr,
+        ...extraColumns,
     };
     const table = tableFromArrays(arrays);
     const buffer = tableToIPC(table, { format: "file" });
@@ -62,9 +79,25 @@ function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptions): U
 }
 
 function fetchValuesFromColumn(columnName: string, arrowIpc: Uint8Array): number[] | string[] {
+    console.log(`fetchValueFromColumn: ${columnName}`);
     const table = tableFromIPC(arrowIpc);
+    console.log("table");
+    console.log(table);
     const column = table.getChild(columnName).toArray();
-    return column;
+
+    const isNumeric = (str: string) => {
+        return !isNaN(str) && str.trim() !== "";
+    };
+
+    if (isNumeric(column[0])) {
+        const columnNumerical = [];
+        for (const v of column) {
+            columnNumerical.push(parseFloat(v));
+        }
+        return columnNumerical;
+    } else {
+        return column;
+    }
 }
 
 function findMinAndMaxOfColumn(column: Int16Array): [number, number] {
@@ -83,7 +116,7 @@ function getRange(size: Size): [number, number] {
         //~ TODO: yeah...this is ugly
         return [size.range[0] as number, size.range[1] as number];
     } else {
-        return [0.01, 0.001];
+        return [0.001, 0.01];
     }
 }
 
@@ -108,6 +141,7 @@ const randomColors = (n: number) => {
  * Returns something we can feed to chromospace view config
  */
 function handleColorField(color?: ChannelValue | Color | string, arrowIpc: Uint8Array): string {
+    console.log("handleColorField");
     if (color === undefined) {
         return "red";
     } else if (typeof color === 'string') {
@@ -121,7 +155,7 @@ function handleColorField(color?: ChannelValue | Color | string, arrowIpc: Uint8
         if (color.type === 'nominal') {
             console.warn("not implemented!");
             const values = fetchValuesFromColumn(color.field, arrowIpc) as string[]; //~TODO: forcing to string[] not good
-            const colScale = randomColors(50); //~ just some big number
+            const colScale = color.range ? color.range : randomColors(50); //~ just some big number
             const colorConfig = {
                 values: [...values],
                 //min: minVal,
@@ -140,7 +174,7 @@ function handleColorField(color?: ChannelValue | Color | string, arrowIpc: Uint8
                 min: minVal,
                 max: maxVal,
                 colorScale: "viridis",
-                //colorScale: "greens",
+                //colorScale: "spectral",
             };
             return colorConfig;
         }
@@ -229,6 +263,7 @@ export function createSpatialTrack(options: SpatialTrackOptions, dataFetcher: Cs
                 scale: scale,
                 color: color,
                 mark: options.spec.mark,
+                links: true,
             };
             console.log("viewConfig", viewConfig);
             const s = chs.load(ipcBuffer.buffer, { center: true, normalize: true });
