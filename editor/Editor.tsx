@@ -597,10 +597,10 @@ function Editor(props: RouteComponentProps) {
             typeof goslingSpec?.responsiveSize === 'undefined'
                 ? false
                 : typeof goslingSpec?.responsiveSize === 'boolean'
-                  ? goslingSpec?.responsiveSize === true
-                  : typeof goslingSpec?.responsiveSize === 'object'
-                    ? goslingSpec?.responsiveSize.width === true || goslingSpec?.responsiveSize.height === true
-                    : false;
+                    ? goslingSpec?.responsiveSize === true
+                    : typeof goslingSpec?.responsiveSize === 'object'
+                        ? goslingSpec?.responsiveSize.width === true || goslingSpec?.responsiveSize.height === true
+                        : false;
         if (newIsResponsive !== isResponsive && newIsResponsive) {
             setScreenSize(undefined); // reset the screen
             setVisibleScreenSize(undefined);
@@ -1268,8 +1268,8 @@ function Editor(props: RouteComponentProps) {
                                             {'REFRESH DATA'}
                                         </button>
                                         {previewData.current.length > selectedPreviewData &&
-                                        previewData.current[selectedPreviewData] &&
-                                        previewData.current[selectedPreviewData].data.length > 0 ? (
+                                            previewData.current[selectedPreviewData] &&
+                                            previewData.current[selectedPreviewData].data.length > 0 ? (
                                             <>
                                                 <div className="editor-data-preview-tab">
                                                     {previewData.current.map((d: PreviewData, i: number) => (
@@ -1330,9 +1330,8 @@ function Editor(props: RouteComponentProps) {
                 </Allotment>
                 {/* Description Panel */}
                 <div
-                    className={`description ${hideDescription ? '' : 'description-shadow '}${
-                        isDescResizing ? '' : 'description-transition'
-                    } ${theme === 'dark' ? 'dark' : ''}`}
+                    className={`description ${hideDescription ? '' : 'description-shadow '}${isDescResizing ? '' : 'description-transition'
+                        } ${theme === 'dark' ? 'dark' : ''}`}
                     style={{ width: !description || hideDescription ? 0 : descPanelWidth }}
                 >
                     <div

@@ -77,6 +77,8 @@ export function GoslingComponent(props: GoslingComponentProps) {
         ></div>
     );
 }
+
+const baseTheme = getTheme('light');
 /**
  * This is the main function. It takes a Gosling spec and renders it using the PixiManager
  */
@@ -139,7 +141,7 @@ export function renderGosling(
 /** Debounces the resize observer */
 function debounce(f: (arg0: unknown) => unknown, delay: number) {
     let timer = 0;
-    return function (...args: [arg0: unknown]) {
+    return function(...args: [arg0: unknown]) {
         clearTimeout(timer);
         // @ts-expect-error
         timer = setTimeout(() => f.apply(this, args), delay);

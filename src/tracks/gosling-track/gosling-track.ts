@@ -25,18 +25,7 @@ import { validateTrack } from '@gosling-lang/gosling-schema';
 import { shareScaleAcrossTracks } from '../../core/utils/scales';
 import { resolveSuperposedTracks } from '../../core/utils/overlay';
 import colorToHex from '../../core/utils/color-to-hex';
-import {
-    aggregateCoverage,
-    calculateData,
-    concatString,
-    displace,
-    filterData,
-    calculateGenomicLength,
-    parseSubJSON,
-    replaceString,
-    splitExon,
-    inferSvType
-} from '../../core/utils/data-transform';
+import { transform } from '../../core/utils/data-transform';
 import { publish } from '../../api/pubsub';
 import { getRelativeGenomicPosition } from '../../core/utils/assembly';
 import { getTextStyle } from '../../core/utils/text-style';
@@ -545,18 +534,23 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
         this.combineAllTilesIfNeeded();
 
         // apply data transforms to the tabular data and generate track models
-        const models = tiles.flatMap(tile => this.transformDataAndCreateModels(tile));
+        Promise.all(tiles.flatMap(tile => this.transformDataAndCreateModels(tile))).then(n => {
+            const models = n.flat();
 
-        shareScaleAcrossTracks(models);
+            shareScaleAcrossTracks(models);
 
         const flatTileData = ([] as Datum[]).concat(...models.map(d => d.data()));
         if (flatTileData.length !== 0) {
             publish('rawData', { id: this.options.id, data: flatTileData });
         }
 
-        // Record processed tiles so that we don't process them again
-        tiles.forEach(tile => {
-            this.#processedTileMap.set(tile, true);
+            // Record processed tiles so that we don't process them again
+            tiles.forEach(tile => {
+                this.#processedTileMap.set(tile, true);
+            });
+
+            this.draw();
+            this.forceDraw();
         });
     }
 
@@ -966,7 +960,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
     /**
      * Apply data transformation to each of the overlaid tracks and generate GoslingTrackModels.
      */
-    transformDataAndCreateModels(tile: Tile) {
+    async transformDataAndCreateModels(tile: Tile) {
         const tileInfo = this.#processedTileInfo[tile.tileId];
 
         if (!tileInfo || tileInfo.skipRendering) {
@@ -979,42 +973,16 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
         tileInfo.goslingModels = [];
 
         const resolvedTracks = this.getResolvedTracks();
-        resolvedTracks.forEach(resolvedSpec => {
-            let tabularDataTransformed = Array.from(tileInfo.tabularData);
-            resolvedSpec.dataTransform?.forEach(t => {
-                switch (t.type) {
-                    case 'filter':
-                        tabularDataTransformed = filterData(t, tabularDataTransformed);
-                        break;
-                    case 'concat':
-                        tabularDataTransformed = concatString(t, tabularDataTransformed);
-                        break;
-                    case 'replace':
-                        tabularDataTransformed = replaceString(t, tabularDataTransformed);
-                        break;
-                    case 'log':
-                        tabularDataTransformed = calculateData(t, tabularDataTransformed);
-                        break;
-                    case 'exonSplit':
-                        tabularDataTransformed = splitExon(t, tabularDataTransformed, resolvedSpec.assembly);
-                        break;
-                    case 'genomicLength':
-                        tabularDataTransformed = calculateGenomicLength(t, tabularDataTransformed);
-                        break;
-                    case 'svType':
-                        tabularDataTransformed = inferSvType(t, tabularDataTransformed);
-                        break;
-                    case 'coverage':
-                        tabularDataTransformed = aggregateCoverage(t, tabularDataTransformed, this._xScale.copy());
-                        break;
-                    case 'subjson':
-                        tabularDataTransformed = parseSubJSON(t, tabularDataTransformed);
-                        break;
-                    case 'displace':
-                        tabularDataTransformed = displace(t, tabularDataTransformed, this._xScale.copy());
-                        break;
-                }
-            });
+        for (const resolvedSpec of resolvedTracks) {
+            let tabularDataTransformed: Datum[] = Array.from(tileInfo.tabularData);
+            for (const t of resolvedSpec.dataTransform ?? []) {
+                tabularDataTransformed = await transform(
+                    t,
+                    tabularDataTransformed,
+                    this.xScale().copy(),
+                    resolvedSpec.assembly
+                );
+            }
 
             // TODO: Remove the following block entirely and use the `rawData` API in the Editor (June-02-2022)
             // Send data preview to the editor so that it can be shown to users.
@@ -1055,7 +1023,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
 
             // Add a track model to the tile object
             tileInfo.goslingModels.push(model);
-        });
+        }
 
         return tileInfo.goslingModels;
     }
