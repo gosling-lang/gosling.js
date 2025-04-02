@@ -29,6 +29,7 @@ import JS_SPEC_ISLANDVIEWER from './spec/islandviewer.ts?raw';
 import { spec as JSON_SPEC_ISLANDVIEWER } from './spec/islandviewer';
 
 export type ExampleGroup =
+    | 'Spatial Layout'
     | 'Visual Encoding'
     | 'Mouse Events'
     | 'Semantic Zooming'
@@ -44,51 +45,51 @@ export const ExampleGroups: {
     name: ExampleGroup;
     description: string;
 }[] = [
-    {
-        name: 'Visual Encoding',
-        description:
-            'Common visualizations, such as bar charts, heatmaps, and line charts, and glyph-based visualizations, such as gene annotations and ideograms.'
-    },
-    {
-        name: 'Mouse Events',
-        description: 'Flexible use of interactions using mouse events, such as mouse hover, range select, and tooltips.'
-    },
-    {
-        name: 'Semantic Zooming',
-        description:
-            'Dynamic visualizations that change visual representations based on the predefined scales, i.e., zoom levels.'
-    },
-    {
-        name: 'Responsive Visualization',
-        description:
-            'Dynamic visualizations that change visual representations and the structure of multiple views based on the screen resolutions.'
-    },
-    {
-        name: 'Coordinated Multiple Views',
-        description:
-            'Coordinated interactions between multiple visualizations, such as zooming, panning, brushing, and linking.'
-    },
-    {
-        name: 'Applications',
-        description: 'Analytics visualizations (re)implemented using Gosling.'
-    },
-    {
-        name: 'Track Templates',
-        description: 'Built-in track templates that allow creating common tracks, like ideograms and gene annotations.'
-    },
-    {
-        name: 'Experimental',
-        description: 'Examples that include experimental features, such as performance improvements.'
-    },
-    {
-        name: 'Doc',
-        description: 'Examples used in the official documentation.'
-    },
-    {
-        name: 'Unassigned',
-        description: 'Examples that are not assigned to a group.'
-    }
-];
+        {
+            name: 'Visual Encoding',
+            description:
+                'Common visualizations, such as bar charts, heatmaps, and line charts, and glyph-based visualizations, such as gene annotations and ideograms.'
+        },
+        {
+            name: 'Mouse Events',
+            description: 'Flexible use of interactions using mouse events, such as mouse hover, range select, and tooltips.'
+        },
+        {
+            name: 'Semantic Zooming',
+            description:
+                'Dynamic visualizations that change visual representations based on the predefined scales, i.e., zoom levels.'
+        },
+        {
+            name: 'Responsive Visualization',
+            description:
+                'Dynamic visualizations that change visual representations and the structure of multiple views based on the screen resolutions.'
+        },
+        {
+            name: 'Coordinated Multiple Views',
+            description:
+                'Coordinated interactions between multiple visualizations, such as zooming, panning, brushing, and linking.'
+        },
+        {
+            name: 'Applications',
+            description: 'Analytics visualizations (re)implemented using Gosling.'
+        },
+        {
+            name: 'Track Templates',
+            description: 'Built-in track templates that allow creating common tracks, like ideograms and gene annotations.'
+        },
+        {
+            name: 'Experimental',
+            description: 'Examples that include experimental features, such as performance improvements.'
+        },
+        {
+            name: 'Doc',
+            description: 'Examples used in the official documentation.'
+        },
+        {
+            name: 'Unassigned',
+            description: 'Examples that are not assigned to a group.'
+        }
+    ];
 
 export interface Example {
     group: ExampleGroup;
@@ -422,6 +423,38 @@ export const editorExampleObj: {
         name: 'Performance Comparison: Stretching Tiles',
         spec: JsonExampleSpecs.EX_SPEC_PERF_ALIGNMENT,
         image: THUMBNAILS.PERF_ALIGNMENT
+    },
+    SPATIAL_LAYOUT: {
+        group: 'Spatial Layout',
+        name: 'Integrating Spatial Models of Chromatin',
+        spec: JsonExampleSpecs.EX_SPEC_SPATIAL,
+        image: THUMBNAILS.SPATIAL_DRAFT,
+        forceShow: true
+    },
+    SPATIAL_LAYOUT_MIN: {
+        group: 'Spatial Layout',
+        name: 'Minimal Example',
+        spec: JsonExampleSpecs.EX_SPEC_SPATIAL_MINIMAL,
+        image: THUMBNAILS.SPATIAL_DRAFT
+    },
+    SPATIAL_LAYOUT_MULT_TRACKS: {
+        group: 'Spatial Layout',
+        name: 'Multiple Tracks',
+        spec: JsonExampleSpecs.EX_SPEC_SPATIAL_MULTIPLE_TRACKS,
+        image: THUMBNAILS.SPATIAL_DRAFT
+    },
+    SPATIAL_LAYOUT_GRAMMAR_EXTENSION: {
+        group: 'Experimental',
+        name: 'Spatial Layout: Grammar Extension',
+        spec: JsonExampleSpecs.EX_SPEC_SPATIAL_LAYOUT_GRAMMAR_EXTENSION,
+        image: THUMBNAILS.SPATIAL_DRAFT,
+        forceShow: true
+    },
+    THREE_D_YEAST_BIGWIG: {
+        group: 'Experimental',
+        name: '3D Yeast Bigwig',
+        spec: JsonExampleSpecs.EX_SPEC_3D_YEAST_BIGWIG,
+        image: THUMBNAILS.SPATIAL_DRAFT
     },
     CORCES_ET_AL: {
         group: 'Coordinated Multiple Views',

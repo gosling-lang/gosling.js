@@ -35,8 +35,8 @@ export function getTabularData(
         const bin = spec.data.binSize ?? 1;
 
         const numericValues = data.dense;
-        const numOfGenomicPositions = data.tileSize;
-        const tileUnitSize = data.tileWidth / data.tileSize;
+        const numOfGenomicPositions = data.tileSize ?? data.dense.length;
+        const tileUnitSize = (data.tileWidth ?? 1024) / numOfGenomicPositions;
 
         const valueName = spec.data.value ?? 'value';
         const columnName = spec.data.column ?? 'position';
@@ -62,9 +62,9 @@ export function getTabularData(
                 const value = numericValues[j] / (agg === 'mean' ? tileUnitSize : 1);
                 tabularData.push({
                     [valueName]: value,
-                    [columnName]: data.tileX + (j + 0.5) * tileUnitSize,
-                    [startName]: data.tileX + j * tileUnitSize,
-                    [endName]: data.tileX + (j + 1) * tileUnitSize,
+                    [columnName]: (data.tileX ?? 0) + (j + 0.5) * tileUnitSize,
+                    [startName]: (data.tileX ?? 0) + j * tileUnitSize,
+                    [endName]: (data.tileX ?? 0) + (j + 1) * tileUnitSize,
                     [minValueName]: value,
                     [maxValueName]: value
                 });

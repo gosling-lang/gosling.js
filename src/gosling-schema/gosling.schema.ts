@@ -80,7 +80,19 @@ export type ResponsiveSpecOfMultipleViews = {
     }[];
 };
 
-export type Layout = 'linear' | 'circular';
+export type Layout = 'linear' | 'circular' | 'spatial' | LayoutDeep;
+export type LayoutDeep =
+    | { type: 'linear' | 'circular' }
+    | {
+        type: 'spatial';
+        model: {
+            type: 'csv';
+            url: string;
+            xyz: [string, string, string];
+            chromosome: string;
+            position: string;
+        };
+    };
 export type Orientation = 'horizontal' | 'vertical';
 
 /** Custom chromosome sizes, e.g., [["foo", 1000], ["bar", 300], ["baz", 240]] */
@@ -154,7 +166,7 @@ export interface CommonViewDef {
 }
 
 /* ----------------------------- TRACK ----------------------------- */
-export type Track = SingleTrack | OverlaidTrack | TemplateTrack | DummyTrack;
+export type Track = SingleTrack | OverlaidTrack | TemplateTrack | DummyTrack | ChromospaceTrack;
 
 export interface CommonTrackDef extends CommonViewDef {
     /** Assigned to `uid` in a HiGlass view config, used for API and caching. */
@@ -195,6 +207,31 @@ export interface CommonTrackDef extends CommonViewDef {
     _renderingId?: string;
     /** internal */
     _invalidTrack?: boolean; // flag to ignore rendering certain tracks if they have problems // !!! TODO: add tests
+}
+
+export interface ChromospaceTrack
+    extends Pick<
+        CommonTrackDef,
+        'width' | 'height' | 'id' | 'title' | '_invalidTrack' | 'orientation' | 'static' | 'assembly'
+    > {
+    //type: '3D';
+    color: string; //~ just testing
+    test: string;
+    data3D: string;
+    spatial: {
+        x: string;
+        y: string;
+        z: string;
+        chr: string;
+        coord: string;
+    };
+
+    // Some properties added just to be consistent with our track types.
+    // These make type checking less complicated during compiling, but certainly this can be removed/changed reflecting on the use cases.
+    layout?: 'spatial'; // internal property
+    overlayOnPreviousTrack?: false; // internal property
+    style?: { [key: string]: string | number }; // Any style-related properties to support?
+    zoomLimits?: [null, null]; // This determines whether users can zoom ifinitely or not. Unused at the moment.
 }
 
 /**
@@ -261,7 +298,11 @@ export type Mark =
     | 'triangleBottom'
     | 'brush'
     // The _header mark is used internally for text tracks
-    | '_header';
+    | '_header'
+    // Spatial track
+    | 'sphere'
+    | 'box'
+    | 'octahedron';
 
 /* ----------------------------- API & MOUSE EVENTS ----------------------------- */
 interface CommonEventData {
@@ -458,6 +499,9 @@ export interface Encoding {
     y1e?: Y | ChannelValue;
 
     row?: Row | ChannelValue;
+
+    // For 3D, conceptually identical to `x` in the linear layout
+    locus?: X | ChannelValue;
 
     color?: Color | ChannelValue;
     size?: Size | ChannelValue;
@@ -1257,6 +1301,7 @@ export interface MatrixData {
 
 export type DataTransform =
     | FilterTransform
+    | JoinTransform
     | StrConcatTransform
     | StrReplaceTransform
     | LogTransform
@@ -1308,6 +1353,26 @@ export interface ComparisonFilter extends CommonFilterTransform {
     operation: LogicalOperation;
 
     not: undefined; // Not used
+}
+
+/**
+ * Join new data to the existing data.
+ * The data will be combined based on the overlap of genomic positions.
+ * The data will join _right_ to the new data (e.g., BigWig --> 3D Model).
+ */
+export interface JoinTransform {
+    type: 'join';
+    /** The existing data to be updated, e.g., BigWig */
+    to: {
+        startField: string;
+        endField?: string;
+    };
+    /** The new data to be combined, e.g., 3D Model */
+    from: {
+        url: string;
+        chromosomeField: string;
+        genomicField: string;
+    };
 }
 
 export type LogBase = number | 'e';

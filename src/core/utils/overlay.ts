@@ -26,7 +26,7 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
 
     if (!IsOverlaidTrack(track)) {
         // no `superpose` to resolve
-        return [track];
+        return [track] as [SingleTrack];
     }
 
     if (track._overlay.length === 0) {

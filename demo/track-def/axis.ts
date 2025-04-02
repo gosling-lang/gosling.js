@@ -104,7 +104,7 @@ function getAxisTrackLinearOptions(
         startAngle: 0,
         endAngle: 0,
         layout: 'linear',
-        assembly: 'hg38',
+        assembly: track.assembly ?? 'hg38',
         stroke: 'transparent', // text outline
         color: theme.axis.labelColor,
         labelMargin: theme.axis.labelMargin,
@@ -165,7 +165,7 @@ function getAxisTrackCircularOptions(
         height: boundingBox.height,
         startAngle,
         endAngle,
-        assembly: 'hg38',
+        assembly: track.assembly,
         stroke: 'transparent', // text outline
         color: theme.axis.labelColor,
         labelMargin: theme.axis.labelMargin,
