@@ -6,7 +6,8 @@ import {
     CHROM_SIZE_HG19,
     CHROM_SIZE_HG38,
     CHROM_SIZE_MM10,
-    CHROM_SIZE_MM9
+    CHROM_SIZE_MM9,
+    CHROM_SIZE_SACCER3
 } from './chrom-size';
 
 export interface ChromSize {
@@ -138,6 +139,12 @@ const CRHOM_SIZES: { [assembly: string]: ChromSize } = Object.freeze({
         total: getChromTotalSize(CHROM_SIZE_MM9),
         path: basePath('mm9')
     },
+    sacCer3: {
+        size: CHROM_SIZE_SACCER3,
+        interval: getChromInterval(CHROM_SIZE_SACCER3),
+        total: getChromTotalSize(CHROM_SIZE_SACCER3),
+        path: 'https://gosling-lang.s3.us-east-1.amazonaws.com/data/sacCer3.chrom.sizes'
+    },
     // `unknown` assembly contains only one chromosome with max length
     unknown: {
         size: { chr: Number.MAX_VALUE },
@@ -213,7 +220,11 @@ export function parseGenomicPosition(position: string): { chromosome: string; st
  * A class that consistently manage and convert genomics positions.
  */
 export class GenomicPositionHelper {
-    constructor(public chromosome: string, public start?: number, public end?: number) {}
+    constructor(
+        public chromosome: string,
+        public start?: number,
+        public end?: number
+    ) { }
     static fromString(str: string) {
         const result = parseGenomicPosition(str);
         return new GenomicPositionHelper(result.chromosome, result.start, result.end);
