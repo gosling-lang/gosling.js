@@ -97,7 +97,7 @@ export type Orientation = 'horizontal' | 'vertical';
 
 /** Custom chromosome sizes, e.g., [["foo", 1000], ["bar", 300], ["baz", 240]] */
 export type ChromSizes = [string, number][];
-export type Assembly = 'hg38' | 'hg19' | 'hg18' | 'hg17' | 'hg16' | 'mm10' | 'mm9' | 'unknown' | ChromSizes;
+export type Assembly = 'hg38' | 'hg19' | 'hg18' | 'hg17' | 'hg16' | 'mm10' | 'mm9' | 'sacCer3' | 'unknown' | ChromSizes;
 export type ZoomLimits = [number | null, number | null];
 
 export interface CommonViewDef {

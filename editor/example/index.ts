@@ -46,6 +46,10 @@ export const ExampleGroups: {
     description: string;
 }[] = [
         {
+            name: 'Spatial Layout',
+            description: 'Visualizations using 3D genome models'
+        },
+        {
             name: 'Visual Encoding',
             description:
                 'Common visualizations, such as bar charts, heatmaps, and line charts, and glyph-based visualizations, such as gene annotations and ideograms.'
@@ -443,17 +447,10 @@ export const editorExampleObj: {
         spec: JsonExampleSpecs.EX_SPEC_SPATIAL_MULTIPLE_TRACKS,
         image: THUMBNAILS.SPATIAL_DRAFT
     },
-    SPATIAL_LAYOUT_GRAMMAR_EXTENSION: {
-        group: 'Experimental',
-        name: 'Spatial Layout: Grammar Extension',
-        spec: JsonExampleSpecs.EX_SPEC_SPATIAL_LAYOUT_GRAMMAR_EXTENSION,
-        image: THUMBNAILS.SPATIAL_DRAFT,
-        forceShow: true
-    },
-    THREE_D_YEAST_BIGWIG: {
-        group: 'Experimental',
-        name: '3D Yeast Bigwig',
-        spec: JsonExampleSpecs.EX_SPEC_3D_YEAST_BIGWIG,
+    SPATIAL_LAYOUT_3D_YEAST_MODEL: {
+        group: 'Spatial Layout',
+        name: '3D Yeast Model (Nature 2010)',
+        spec: JsonExampleSpecs.EX_SPEC_3D_YEAST_MODEL,
         image: THUMBNAILS.SPATIAL_DRAFT
     },
     CORCES_ET_AL: {

@@ -43,6 +43,10 @@
           "type": "string"
         },
         {
+          "const": "sacCer3",
+          "type": "string"
+        },
+        {
           "const": "unknown",
           "type": "string"
         },
