@@ -6,7 +6,8 @@ import {
     CHROM_SIZE_HG19,
     CHROM_SIZE_HG38,
     CHROM_SIZE_MM10,
-    CHROM_SIZE_MM9
+    CHROM_SIZE_MM9,
+    CHROM_SIZE_SACCER3
 } from './chrom-size';
 
 export interface ChromSize {
@@ -137,6 +138,12 @@ const CRHOM_SIZES: { [assembly: string]: ChromSize } = Object.freeze({
         interval: getChromInterval(CHROM_SIZE_MM9),
         total: getChromTotalSize(CHROM_SIZE_MM9),
         path: basePath('mm9')
+    },
+    sacCer3: {
+        size: CHROM_SIZE_SACCER3,
+        interval: getChromInterval(CHROM_SIZE_SACCER3),
+        total: getChromTotalSize(CHROM_SIZE_SACCER3),
+        path: 'https://gosling-lang.s3.us-east-1.amazonaws.com/data/sacCer3.chrom.sizes'
     },
     // `unknown` assembly contains only one chromosome with max length
     unknown: {
