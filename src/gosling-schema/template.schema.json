@@ -639,6 +639,27 @@
           ],
           "type": "object"
         },
+        "from": {
+          "additionalProperties": false,
+          "description": "The new data to be combined, e.g., 3D Model",
+          "properties": {
+            "chromosomeField": {
+              "type": "string"
+            },
+            "genomicField": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "url",
+            "chromosomeField",
+            "genomicField"
+          ],
+          "type": "object"
+        },
         "genomicField": {
           "description": "Relative genomic position to parse.",
           "type": "string"
@@ -734,9 +755,26 @@
         "startField": {
           "type": "string"
         },
+        "to": {
+          "additionalProperties": false,
+          "description": "The existing data to be updated, e.g., BigWig",
+          "properties": {
+            "endField": {
+              "type": "string"
+            },
+            "startField": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "startField"
+          ],
+          "type": "object"
+        },
         "type": {
           "enum": [
             "filter",
+            "join",
             "concat",
             "replace",
             "log",
