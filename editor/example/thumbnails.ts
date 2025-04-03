@@ -31,6 +31,7 @@ import VISUAL_ENCODING from './thumbnails/VISUAL_ENCODING.png';
 import VISUAL_ENCODING_CIRCULAR from './thumbnails/VISUAL_ENCODING_CIRCULAR.png';
 import ISLANDVIEWER from './thumbnails/ISLANDVIEWER.png';
 import SPATIAL_DRAFT from './thumbnails/SPATIAL.png';
+import SPATIAL_YEAST from './thumbnails/SPATIAL_YEAST.png';
 
 export const THUMBNAILS = {
     ALIGNMENT,
@@ -65,5 +66,6 @@ export const THUMBNAILS = {
     VISUAL_ENCODING,
     VISUAL_ENCODING_CIRCULAR,
     ISLANDVIEWER,
-    SPATIAL_DRAFT
+    SPATIAL_DRAFT,
+    SPATIAL_YEAST,
 };

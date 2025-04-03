@@ -451,7 +451,7 @@ export const editorExampleObj: {
         group: 'Spatial Layout',
         name: '3D Yeast Model (Nature 2010)',
         spec: JsonExampleSpecs.EX_SPEC_3D_YEAST_MODEL,
-        image: THUMBNAILS.SPATIAL_DRAFT
+        image: THUMBNAILS.SPATIAL_YEAST,
     },
     CORCES_ET_AL: {
         group: 'Coordinated Multiple Views',
