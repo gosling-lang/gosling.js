@@ -428,12 +428,6 @@ export const editorExampleObj: {
         spec: JsonExampleSpecs.EX_SPEC_PERF_ALIGNMENT,
         image: THUMBNAILS.PERF_ALIGNMENT
     },
-    SPATIAL_LAYOUT: {
-        group: 'Spatial Layout',
-        name: 'Integrating Spatial Models of Chromatin',
-        spec: JsonExampleSpecs.EX_SPEC_SPATIAL,
-        image: THUMBNAILS.SPATIAL_DRAFT,
-    },
     SPATIAL_LAYOUT_MIN: {
         group: 'Spatial Layout',
         name: 'Minimal Example',
