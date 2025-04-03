@@ -18,13 +18,23 @@ export function _fixTrackToWalkaround(t: Track) {
             chr,
             coord
         };
-        const dataTransform: JoinTransform = {
+        const dataTransform: Omit<JoinTransform, 'to'> = {
             type: 'join',
-            from: { url, chromosomeField: chr, genomicField: coord },
-            to: { startField: 'start', endField: 'end' }
+            from: { url, chromosomeField: chr, genomicField: coord }
         };
+        // TODO: need to support other data types as well
+        let to: JoinTransform['to'];
+        if (t.data?.type === 'bigwig') {
+            to = { startField: 'start', endField: 'end' };
+        } else if (t.data?.type === 'csv') {
+            // TODO: Not the reliable way to select two data fields corresponding to start and end positions
+            const startField = t.data.genomicFields?.[0] ?? 'unknown';
+            const endField = t.data.genomicFields?.[1] ?? undefined;
+            to = { startField, endField };
+        }
+
         // @ts-expect-error
-        t.dataTransform = [dataTransform];
+        t.dataTransform = [{ ...dataTransform, to }];
         t.layout = 'spatial';
     } else if (typeof layout == 'object') {
         t.layout = layout.type;
