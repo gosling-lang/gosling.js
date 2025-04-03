@@ -432,13 +432,7 @@ export const editorExampleObj: {
         group: 'Spatial Layout',
         name: 'Minimal Example',
         spec: JsonExampleSpecs.EX_SPEC_SPATIAL_MINIMAL,
-        image: THUMBNAILS.SPATIAL_DRAFT
-    },
-    SPATIAL_LAYOUT_MULT_TRACKS: {
-        group: 'Spatial Layout',
-        name: 'Multiple Tracks',
-        spec: JsonExampleSpecs.EX_SPEC_SPATIAL_MULTIPLE_TRACKS,
-        image: THUMBNAILS.SPATIAL_DRAFT
+        image: THUMBNAILS.SPATIAL_MINIMAL
     },
     SPATIAL_LAYOUT_3D_YEAST_MODEL: {
         group: 'Spatial Layout',
