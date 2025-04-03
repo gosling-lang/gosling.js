@@ -84,15 +84,15 @@ export type Layout = 'linear' | 'circular' | 'spatial' | LayoutDeep;
 export type LayoutDeep =
     | { type: 'linear' | 'circular' }
     | {
-        type: 'spatial';
-        model: {
-            type: 'csv';
-            url: string;
-            xyz: [string, string, string];
-            chromosome: string;
-            position: string;
-        };
-    };
+          type: 'spatial';
+          model: {
+              type: 'csv';
+              url: string;
+              xyz: [string, string, string];
+              chromosome: string;
+              position: string;
+          };
+      };
 export type Orientation = 'horizontal' | 'vertical';
 
 /** Custom chromosome sizes, e.g., [["foo", 1000], ["bar", 300], ["baz", 240]] */
@@ -214,11 +214,13 @@ export interface ChromospaceTrack
         CommonTrackDef,
         'width' | 'height' | 'id' | 'title' | '_invalidTrack' | 'orientation' | 'static' | 'assembly'
     > {
+    // Genomics data. If unspecified, uesrs can still use 3D genome data for visual encoding.
+    data?: DataDeep;
     //type: '3D';
-    color: string; //~ just testing
-    test: string;
-    data3D: string;
-    spatial: {
+    color?: string; //~ just testing
+    test?: string;
+    data3D?: string;
+    spatial?: {
         x: string;
         y: string;
         z: string;

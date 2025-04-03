@@ -15,6 +15,9 @@ import type { UrlToFetchOptions } from 'src/compiler/compile';
 export function getDataFetcher(spec: ProcessedTrack, urlToFetchOptions?: UrlToFetchOptions) {
     if (!('data' in spec)) {
         console.warn('No data in the track spec', spec);
+        // A data object can be missing in 3D tracks. In this case, just pass an empty data.
+        // The 3d track can still use the 3D genome data for visual encoding.
+        return new JsonDataFetcher({ type: 'json', values: [], assembly: spec.assembly });
     }
 
     const urlFetchOptions = ('url' in spec.data && urlToFetchOptions?.[spec.data.url]) || {};
