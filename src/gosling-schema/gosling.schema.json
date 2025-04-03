@@ -385,9 +385,6 @@
         "color": {
           "type": "string"
         },
-        "data": {
-          "$ref": "#/definitions/DataDeep"
-        },
         "data3D": {
           "type": "string"
         },
@@ -472,6 +469,12 @@
           "type": "array"
         }
       },
+      "required": [
+        "color",
+        "test",
+        "data3D",
+        "spatial"
+      ],
       "type": "object"
     },
     "Color": {
