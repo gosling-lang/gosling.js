@@ -114,7 +114,6 @@ export async function joinData(
     };
     const fromData = await fetchDataIfNeeded(from.url);
 
-    console.error(fromData);
     // a very naive approach to join two files
     const joinned: Datum[] = fromData.map(f => {
         // TODO: to be most accurate, need to find all data records matching and aggregate data
@@ -125,7 +124,6 @@ export async function joinData(
         }) ?? { value: 0 };
         return { ...found, ...f };
     });
-    console.error(joinned);
     return joinned;
 }
 
