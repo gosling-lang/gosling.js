@@ -161,7 +161,7 @@ function handleColorField(color?: ChannelValue | Color | string, arrowIpc: Uint8
         if (color.type === 'nominal') {
             console.warn('not implemented!');
             const values = fetchValuesFromColumn(color.field, arrowIpc) as string[]; //~TODO: forcing to string[] not good
-            const colScale = randomColors(50); //~ just some big number
+            const colScale = color.range ?? randomColors(50); //~ just some big number
             const colorConfig = {
                 values: [...values],
                 //min: minVal,

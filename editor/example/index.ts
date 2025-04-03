@@ -433,7 +433,6 @@ export const editorExampleObj: {
         name: 'Integrating Spatial Models of Chromatin',
         spec: JsonExampleSpecs.EX_SPEC_SPATIAL,
         image: THUMBNAILS.SPATIAL_DRAFT,
-        forceShow: true
     },
     SPATIAL_LAYOUT_MIN: {
         group: 'Spatial Layout',
@@ -451,7 +450,8 @@ export const editorExampleObj: {
         group: 'Spatial Layout',
         name: '3D Yeast Model (Nature 2010)',
         spec: JsonExampleSpecs.EX_SPEC_3D_YEAST_MODEL,
-        image: THUMBNAILS.SPATIAL_DRAFT
+        image: THUMBNAILS.SPATIAL_YEAST,
+        forceShow: true
     },
     CORCES_ET_AL: {
         group: 'Coordinated Multiple Views',
