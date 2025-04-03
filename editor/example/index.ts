@@ -434,6 +434,12 @@ export const editorExampleObj: {
         spec: JsonExampleSpecs.EX_SPEC_SPATIAL_MINIMAL,
         image: THUMBNAILS.SPATIAL_MINIMAL
     },
+    SPATIAL_LAYOUT_COLORS: {
+        group: 'Spatial Layout',
+        name: 'Coloring Strategies',
+        spec: JsonExampleSpecs.EX_SPEC_SPATIAL_COLOR,
+        image: THUMBNAILS.SPATIAL_MINIMAL
+    },
     SPATIAL_LAYOUT_3D_YEAST_MODEL: {
         group: 'Spatial Layout',
         name: '3D Yeast Model (Nature 2010)',
