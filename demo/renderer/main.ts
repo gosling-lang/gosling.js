@@ -119,7 +119,10 @@ export function renderTrackDefs(
             const container = pixiManager.makeContainer(boundingBox).overlayDiv;
             console.log('!@$!#%@#');
             console.log(options.spec);
-            options.spec.data.sampleLength = 30000;
+            if (options.spec.data) {
+                // Ensure to pull all data needed
+                options.spec.data.sampleLength = 30000;
+            }
             const datafetcher = getDataFetcher(options.spec, urlToFetchOptions);
             createSpatialTrack(options, datafetcher as CsvDataFetcherClass, container);
         }

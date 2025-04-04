@@ -35,5 +35,4 @@ export function _fixTrackToWalkaround(t: Track) {
         // @ts-expect-error
         t.x = { ...t.locus, type: 'genomic' };
     }
-    console.error('fixed track spec', t);
 }

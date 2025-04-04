@@ -92,14 +92,20 @@ export const EX_SPEC_3D_YEAST_MODEL: GoslingSpec = {
     title: '3D Yeast Model (Nature 2010)',
     assembly: 'sacCer3',
     arrangement: 'horizontal',
+    layout: { ...spatialLayoutDef },
     views: [
         {
-            layout: { ...spatialLayoutDef },
             tracks: [{ ...base, height: trackWidth }]
         },
         {
-            layout: { ...spatialLayoutDef },
-            tracks: [{ ...base, color: { field: 'chr', type: 'nominal', range: colors }, height: trackWidth }]
+            tracks: [
+                {
+                    ...base,
+                    data: undefined,
+                    color: { field: 'chr', type: 'nominal', range: colors },
+                    height: trackWidth
+                }
+            ]
         },
         {
             arrangement: 'vertical',
