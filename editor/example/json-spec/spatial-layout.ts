@@ -17,9 +17,11 @@ export const EX_SPEC_SPATIAL_MINIMAL: GoslingSpec = {
             },
             tracks: [
                 {
+                    color: { field: 'coord', type: 'quantitative' },
                     data: {
                         type: 'csv',
-                        url: 'https://gist.githubusercontent.com/sehilyi/29d1cfed56da3ed37370f31a508c8024/raw/9ab733bff25c4c539d86451dfb9d03d4e241d1ad/yeast_model.values.csv'
+                        url: 'https://gist.githubusercontent.com/sehilyi/29d1cfed56da3ed37370f31a508c8024/raw/9ab733bff25c4c539d86451dfb9d03d4e241d1ad/yeast_model.values.csv',
+                        genomicFields: ['position']
                     },
                     width: 500,
                     height: 500

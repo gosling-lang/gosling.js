@@ -98,7 +98,6 @@ export async function joinData(
     assembly: Assembly = 'hg19'
 ): Promise<Datum[]> {
     const { from, to } = transform;
-
     const fetchDataIfNeeded = async (url: string) => {
         if (FETCH_CACHE[url]) return FETCH_CACHE[url];
         const response = await fetch(url);
@@ -108,23 +107,25 @@ export async function joinData(
         for (const d of data) {
             const chrName = d[from.chromosomeField];
             const chromPosition = d[from.genomicField];
-            d[from.genomicField] = chromSizes.interval[chrName]?.[0] + +chromPosition;
+            d[from.genomicField] = (chromSizes.interval[chrName]?.[0] ?? 0) + +chromPosition;
         }
-        console.warn(chromSizes);
         FETCH_CACHE[url] = data;
         return data;
     };
     const fromData = await fetchDataIfNeeded(from.url);
-
     // a very naive approach to join two files
     const joinned: Datum[] = fromData.map(f => {
         // TODO: to be most accurate, need to find all data records matching and aggregate data
         const found = toData.find(t => {
-            const start = +t[to.startField] <= +f[from.genomicField];
-            const end = to.endField ? +t[to.endField] >= +f[from.genomicField] : true;
-            return start && end;
+            if (to.endField) {
+                const start = +t[to.startField] <= +f[from.genomicField];
+                const end = +t[to.endField] >= +f[from.genomicField];
+                return start && end;
+            } else {
+                return +t[to.startField] == +f[from.genomicField];
+            }
         }) ?? { value: 0 };
-        return { ...found, ...f };
+        return { ...f, ...found };
     });
     return joinned;
 }
