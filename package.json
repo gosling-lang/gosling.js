@@ -62,7 +62,7 @@
     "allotment": "^1.19.0",
     "bezier-js": "4.0.3",
     "buffer": "^6.0.3",
-    "chromospace": "^0.1.6",
+    "chromospace": "^0.1.7",
     "css-element-queries": "^1.2.3",
     "d3-array": "^3.2.4",
     "d3-brush": "^3.0.0",

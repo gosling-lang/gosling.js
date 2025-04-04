@@ -34,7 +34,7 @@ export function _fixTrackToWalkaround(t: Track) {
         }
 
         // @ts-expect-error
-        t.dataTransform = [{ ...dataTransform, to }];
+        t.dataTransform = [{ ...dataTransform, to }, ...(t.dataTransform ?? [])];
         t.layout = 'spatial';
     } else if (typeof layout == 'object') {
         t.layout = layout.type;
