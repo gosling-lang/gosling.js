@@ -32,6 +32,7 @@ import VISUAL_ENCODING_CIRCULAR from './thumbnails/VISUAL_ENCODING_CIRCULAR.png'
 import ISLANDVIEWER from './thumbnails/ISLANDVIEWER.png';
 import SPATIAL_MINIMAL from './thumbnails/SPATIAL_MINIMAL.png';
 import SPATIAL_YEAST from './thumbnails/SPATIAL_YEAST.png';
+import SPATIAL_COLOR from './thumbnails/SPATIAL_COLOR.png';
 
 export const THUMBNAILS = {
     ALIGNMENT,
@@ -68,4 +69,5 @@ export const THUMBNAILS = {
     ISLANDVIEWER,
     SPATIAL_MINIMAL,
     SPATIAL_YEAST,
+    SPATIAL_COLOR,
 };
