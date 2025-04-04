@@ -163,38 +163,52 @@ export const EX_SPEC_SPATIAL_MULTIPLE_TRACKS: GoslingSpec = {
                 type: 'spatial',
                 model: {
                     type: 'csv',
-                    url: 'https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/main/gosling-3d/yeast_model.csv',
+                    url: 'https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/refs/heads/main/gosling-3d/stevens-2017/full-model.csv',
                     xyz: ['x', 'y', 'z'],
                     chromosome: 'chr',
                     position: 'coord'
                 }
             },
+            width: 500,
+            height: 500,
+            alignment: "overlay",
             tracks: [
                 {
-                    data: {
-                        type: 'csv',
-                        url: 'https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/main/gosling-3d/yeast_model.csv'
-                    },
                     color: {
-                        value: '#ffffff'
+                        value: 'gainsboro'
                     },
                     size: {
-                        value: 0.01,
+                        value: 0.005,
                     },
-                    width: 500,
-                    height: 500
+                    mark: 'sphere',
                 },
                 {
-                    data: {
-                        type: 'csv',
-                        url: 'https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/main/gosling-3d/yeast_model_only_one_chromosome.csv'
-                    },
                     color: {
-                        value: '#ffffff'
+                        value: 'darkslateblue'
+                    },
+                    size: {
+                        value: 0.02,
                     },
                     mark: 'box',
-                    width: 500,
-                    height: 500
+                    dataTransform: [{
+                        type: "filter",
+                        field: "chr",
+                        oneOf: ["chr b"],
+                    }],
+                },
+                {
+                    color: {
+                        value: 'darkseagreen'
+                    },
+                    size: {
+                        value: 0.02,
+                    },
+                    mark: 'octahedron',
+                    dataTransform: [{
+                        type: "filter",
+                        field: "chr",
+                        oneOf: ["chr a"],
+                    }],
                 }
             ]
         }

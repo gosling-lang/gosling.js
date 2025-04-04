@@ -5,6 +5,25 @@ import { tableFromArrays, tableFromIPC, tableToIPC } from '@uwdata/flechette';
 import { transform } from '../../core/utils/data-transform';
 import { getTabularData } from '../gosling-track/data-abstraction';
 
+/**
+ * Make an assertion.
+ *
+ * Usage
+ * @example
+ * ```ts
+ * const value: boolean = Math.random() <= 0.5;
+ * assert(value, "value is greater than than 0.5!");
+ * value // true
+ * ```
+ *
+ * @copyright Trevor Manz 2025
+ * @license MIT
+ * @see {@link https://github.com/manzt/manzt/blob/f7faee/utils/assert.js}
+ */
+export function assert(expression: unknown, msg: string | undefined = ""): asserts expression {
+    if (!expression) throw new Error(msg);
+}
+
 export type SpatialTrackOptions = {
     spec: SingleTrack | OverlaidTrack;
     parentViewId: string;
@@ -26,10 +45,12 @@ async function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptio
     // So, create one if missing by running `getTabularData()`.
     // The tile ID of '0.0' extracts all data for a given file at the lowest resolution.
     let tabularData = t['0.0'].tabularData ?? getTabularData(options.spec, t['0.0']);
-    if (options.spec.dataTransform?.[0]) {
-        // This basically ensures to do join operation (e.g., combining bigwig data to 3D model)
-        tabularData = await transform(options.spec.dataTransform?.[0], tabularData, undefined, options.spec.assembly);
-        console.error('Joined Data', tabularData);
+
+    tabularData = structuredClone(tabularData);
+    for (const t of options.spec.dataTransform ?? []) {
+        //if (t.type === "join") { continue; }
+        tabularData = await transform(t, tabularData, undefined, options.spec.assembly);
+        console.log("transforming", t);
     }
     const xArr: number[] = [];
     const yArr: number[] = [];
@@ -229,46 +250,6 @@ function handleSizeField(size?: ChannelValue | Size | number, arrowIpc: Uint8Arr
     }
 }
 
-/**
- * The idea is to "cache" scenes associated with particular `views`.
- */
-const spatialViewsMap = new Map<string, chs.ChromatinScene>();
-const viewsCanvasesMap = new Map<string, HTMLCanvasElement>();
-
-/**
-* The logic is:
-* - when I'm processing a track spec, I want to know which parent view the track came from
-* - then if the parent view is the same, I can fetch the existing chromospace scene and add stuff there
-*/
-function fetchScene(viewsScenesMap: Map<string, chs.ChromatinScene>, viewId: string | undefined): chs.ChromatinScene {
-    if (!viewId) { //~ if the parent view is not defined...
-        //~ ...just return a new scene and don't store anything in the map
-        return chs.initScene();
-    }
-
-    const s = viewsScenesMap.get(viewId);
-
-    if (!s) {
-        const newScene = chs.initScene();
-        viewsScenesMap.set(viewId, newScene);
-        return newScene;
-    }
-
-    return s;
-}
-
-/**
- * @returns tuple <canvas, was already added in the container> 
-*
-*/
-function fetchCanvas(viewsAndCanvases: Map<string, HTMLCanvasElement>, viewId: string | undefined)
-    : HTMLCanvasElement | undefined {
-    if (!viewId) {
-        return undefined;
-    }
-    return viewsAndCanvases.get(viewId);
-}
-
 export function createSpatialTrack(
     options: SpatialTrackOptions,
     dataFetcher: CsvDataFetcherClass,
@@ -286,65 +267,54 @@ export function createSpatialTrack(
                     // This information is needed to create tabular data (i.e., running getTabularData())
                     t['0.0'].tileWidth = info.max_width;
                 }
+
                 const ipcBuffer = await transformObjectToArrow(t, options);
                 if (!ipcBuffer) {
                     console.error("could not tranform into Apache Arrow");
                     return;
                 }
-
-                const thisTrackId = options.spec.id;
-                const viewId = tracksAndViews.get(thisTrackId);
-                //let chromatinScene = fetchScene(spatialViewsMap, viewId);
+                console.warn("spec", options.spec);
                 let chromatinScene = chs.initScene();
+                let i = 0;
+                const tracks = options.spec._overlay ?? [options.spec];
+                for (const ov of tracks) {
+                    console.log("ov", ov);
 
-                const color = handleColorField(options.spec.color, ipcBuffer.buffer);
-                const scale = handleSizeField(options.spec.size, ipcBuffer.buffer);
-                const viewConfig = {
-                    scale: scale,
-                    color: color,
-                    mark: options.spec.mark
-                };
+                    const color = handleColorField(ov.color, ipcBuffer.buffer);
+                    const scale = handleSizeField(ov.size, ipcBuffer.buffer);
+                    const viewConfig = {
+                        scale: scale,
+                        color: color,
+                        mark: ov.mark
+                    };
 
-                const s = chs.load(ipcBuffer.buffer, { center: true, normalize: true });
-                const isModel = "parts" in s; //~ ChromatinModel has .parts
-                if (isModel) {
-                    chromatinScene = chs.addModelToScene(chromatinScene, s, viewConfig);
-                    spatialViewsMap.set(viewId, chromatinScene);
-                } else {
-                    chromatinScene = chs.addChunkToScene(chromatinScene, s, viewConfig);
-                    spatialViewsMap.set(viewId, chromatinScene);
-                }
+                    let s = chs.load(ipcBuffer.buffer, { center: true, normalize: true });
 
-                let c = fetchCanvas(viewsCanvasesMap, viewId);
-
-                let canvasToUse: HTMLCanvasElement | undefined = c;
-                let canvasNeedsToBeAdded = true;
-                if (canvasToUse != undefined) {
-                    console.log("reusing canvas");
-                    console.log(`scene has ${chromatinScene.structures.length} structures`);
-                    chs.display(chromatinScene, { alwaysRedraw: false }, canvasToUse);
-                    //chs.display(chromatinScene, { alwaysRedraw: true }, canvasToUse);
-                    canvasNeedsToBeAdded = false; //~ don't need to add because we're using cached canvas
-                } else {
-                    console.log("making new canvas");
-                    console.log(`scene has ${chromatinScene.structures.length} structures`);
-                    console.log(chromatinScene.structures);
-                    const [_, createdCanvas] = chs.display(chromatinScene, { alwaysRedraw: false });
-                    //const [_, createdCanvas] = chs.display(chromatinScene, { alwaysRedraw: true });
-                    if (createdCanvas instanceof HTMLCanvasElement) {
-                        canvasToUse = createdCanvas;
-                        //viewsCanvasesMap.set(viewId, canvasToUse);
-
-                        container.appendChild(canvasToUse);
+                    const isModel = "parts" in s; //~ ChromatinModel has .parts
+                    if (isModel) {
+                        const filterTransform = (ov.dataTransform ?? []).find(t => t.type === "filter");
+                        if (filterTransform) {
+                            const field: string = filterTransform.field;
+                            assert(field === "chr", "Field for transform should be 'chr'");
+                            const oneOf = filterTransform.oneOf;
+                            const first = oneOf[0];
+                            //const res = chs.get(s, "A")!;
+                            const res = chs.get(s, first)!;
+                            if (res) {
+                                const [selectedModel, _] = res;
+                                s = { parts: [selectedModel] };
+                            }
+                        }
+                        //if (i === 0) {
+                        //}
+                        chromatinScene = chs.addModelToScene(chromatinScene, s, viewConfig);
                     } else {
-                        console.error("this shouldn't happen");
+                        chromatinScene = chs.addChunkToScene(chromatinScene, s, viewConfig);
                     }
+                    i += 1;
                 }
-
-                //if (canvasNeedsToBeAdded && canvasToUse) {
-                //    console.log("Adding canvas!!!");
-                //    container.appendChild(canvasToUse);
-                //}
+                const [_, createdCanvas] = chs.display(chromatinScene, { alwaysRedraw: false, withHUD: false });
+                container.appendChild(createdCanvas);
             },
             ['0.0']
         );

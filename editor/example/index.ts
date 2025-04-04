@@ -455,9 +455,9 @@ export const editorExampleObj: {
     },
     SPATIAL_LAYOUT_SUPERIMP: {
         group: 'Spatial Layout',
-        name: 'Superimposition',
-        spec: JsonExampleSpecs.EX_SPEC_SPATIAL_SUPERIMPOSITION,
-        image: THUMBNAILS.SPATIAL_DRAFT
+        name: 'Multiple tracks',
+        spec: JsonExampleSpecs.EX_SPEC_SPATIAL_MULTIPLE_TRACKS,
+        image: THUMBNAILS.SPATIAL_MULTIPLE_TRACKS
     },
     CORCES_ET_AL: {
         group: 'Coordinated Multiple Views',
