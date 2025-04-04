@@ -272,7 +272,7 @@ export function createSpatialTrack(
                     const viewConfig = {
                         scale: scale,
                         color: color,
-                        mark: undefined // 'sphere' // options.spec.mark
+                        mark: options.spec.mark
                     };
                     console.log('viewConfig', viewConfig);
                     const s = chs.load(ipcBuffer.buffer, { center: true, normalize: true });
