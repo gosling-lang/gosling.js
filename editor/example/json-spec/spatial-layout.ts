@@ -9,7 +9,7 @@ export const EX_SPEC_SPATIAL_MINIMAL: GoslingSpec = {
                 type: 'spatial',
                 model: {
                     type: 'csv',
-                    url: 'https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/main/gosling-3d/yeast_model.csv',
+                    url: 'https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/refs/heads/main/gosling-3d/stevens-2017/full-model.csv',
                     xyz: ['x', 'y', 'z'],
                     chromosome: 'chr',
                     position: 'coord'
@@ -17,12 +17,6 @@ export const EX_SPEC_SPATIAL_MINIMAL: GoslingSpec = {
             },
             tracks: [
                 {
-                    color: { field: 'coord', type: 'quantitative' },
-                    data: {
-                        type: 'csv',
-                        url: 'https://gist.githubusercontent.com/sehilyi/29d1cfed56da3ed37370f31a508c8024/raw/9ab733bff25c4c539d86451dfb9d03d4e241d1ad/yeast_model.values.csv',
-                        genomicFields: ['position']
-                    },
                     width: 500,
                     height: 500
                 }
