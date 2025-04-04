@@ -438,7 +438,7 @@ export const editorExampleObj: {
         group: 'Spatial Layout',
         name: 'Coloring Strategies',
         spec: JsonExampleSpecs.EX_SPEC_SPATIAL_COLOR,
-        image: THUMBNAILS.SPATIAL_MINIMAL
+        image: THUMBNAILS.SPATIAL_COLOR,
     },
     SPATIAL_LAYOUT_3D_YEAST_MODEL: {
         group: 'Spatial Layout',

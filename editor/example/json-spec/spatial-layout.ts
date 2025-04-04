@@ -49,9 +49,8 @@ export const EX_SPEC_SPATIAL_COLOR: GoslingSpec = {
             },
             tracks: [
                 {
-                    data: {
-                        type: 'csv',
-                        url: 'https://gist.githubusercontent.com/sehilyi/29d1cfed56da3ed37370f31a508c8024/raw/9ab733bff25c4c539d86451dfb9d03d4e241d1ad/yeast_model.values.csv'
+                    color: {
+                        value: "lightgreen",
                     },
                     width: 500,
                     height: 500
@@ -71,10 +70,6 @@ export const EX_SPEC_SPATIAL_COLOR: GoslingSpec = {
             },
             tracks: [
                 {
-                    data: {
-                        type: 'csv',
-                        url: 'https://gist.githubusercontent.com/sehilyi/29d1cfed56da3ed37370f31a508c8024/raw/9ab733bff25c4c539d86451dfb9d03d4e241d1ad/yeast_model.values.csv'
-                    },
                     color: {
                         field: "chr",
                         type: "nominal",
@@ -97,10 +92,6 @@ export const EX_SPEC_SPATIAL_COLOR: GoslingSpec = {
             },
             tracks: [
                 {
-                    data: {
-                        type: 'csv',
-                        url: 'https://gist.githubusercontent.com/sehilyi/29d1cfed56da3ed37370f31a508c8024/raw/9ab733bff25c4c539d86451dfb9d03d4e241d1ad/yeast_model.values.csv'
-                    },
                     color: {
                         field: "coord",
                         type: "quantitative",
