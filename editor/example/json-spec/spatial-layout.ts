@@ -98,6 +98,63 @@ export const EX_SPEC_SPATIAL_COLOR: GoslingSpec = {
     ]
 };
 
+export const EX_SPEC_SPATIAL_DENSITY: GoslingSpec = {
+    title: 'Density',
+    subtitle: '',
+    arrangement: "horizontal",
+    views: [
+        {
+            layout: {
+                type: 'spatial',
+                model: {
+                    type: 'csv',
+                    url: 'https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/refs/heads/main/gosling-3d/stevens-2017/densities/Stevens-2017_GSM2219498_Cell_2_model_7_with-densities_r05.csv',
+                    xyz: ['x', 'y', 'z'],
+                    chromosome: 'chr',
+                    position: 'coord'
+                }
+            },
+            tracks: [
+                {
+                    color: {
+                        field: "densityVals",
+                        type: "quantitative",
+                    },
+                    width: 500,
+                    height: 500
+                }
+            ]
+        },
+        {
+            layout: {
+                type: 'spatial',
+                model: {
+                    type: 'csv',
+                    url: 'https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/refs/heads/main/gosling-3d/stevens-2017/densities/Stevens-2017_GSM2219498_Cell_2_model_7_with-densities_r05.csv',
+                    xyz: ['x', 'y', 'z'],
+                    chromosome: 'chr',
+                    position: 'coord'
+                }
+            },
+            tracks: [
+                {
+                    color: {
+                        field: "densityVals",
+                        type: "quantitative",
+                    },
+                    size: {
+                        field: "densityVals",
+                        type: "quantitative",
+                        range: [0.03, 0.002],
+                    },
+                    width: 500,
+                    height: 500
+                }
+            ]
+        },
+    ]
+};
+
 export const EX_SPEC_SPATIAL_MULTIPLE_TRACKS: GoslingSpec = {
     title: 'Spatial Layout: multiple tracks in one view',
     views: [
