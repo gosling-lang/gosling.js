@@ -33,6 +33,7 @@ import ISLANDVIEWER from './thumbnails/ISLANDVIEWER.png';
 import SPATIAL_MINIMAL from './thumbnails/SPATIAL_MINIMAL.png';
 import SPATIAL_YEAST from './thumbnails/SPATIAL_YEAST.png';
 import SPATIAL_COLOR from './thumbnails/SPATIAL_COLOR.png';
+import SPATIAL_DENSITY from './thumbnails/SPATIAL_DENSITY.png';
 
 export const THUMBNAILS = {
     ALIGNMENT,
@@ -70,4 +71,5 @@ export const THUMBNAILS = {
     SPATIAL_MINIMAL,
     SPATIAL_YEAST,
     SPATIAL_COLOR,
+    SPATIAL_DENSITY,
 };
