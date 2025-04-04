@@ -440,6 +440,12 @@ export const editorExampleObj: {
         spec: JsonExampleSpecs.EX_SPEC_SPATIAL_COLOR,
         image: THUMBNAILS.SPATIAL_COLOR,
     },
+    SPATIAL_LAYOUT_DENSITY: {
+        group: 'Spatial Layout',
+        name: 'Density',
+        spec: JsonExampleSpecs.EX_SPEC_SPATIAL_DENSITY,
+        image: THUMBNAILS.SPATIAL_DENSITY,
+    },
     SPATIAL_LAYOUT_3D_YEAST_MODEL: {
         group: 'Spatial Layout',
         name: '3D Yeast Model (Nature 2010)',
