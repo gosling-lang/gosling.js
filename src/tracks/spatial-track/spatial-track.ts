@@ -26,7 +26,6 @@ export function assert(expression: unknown, msg: string | undefined = ""): asser
 
 export type SpatialTrackOptions = {
     spec: SingleTrack | OverlaidTrack;
-    parentViewId: string;
     color: string | undefined;
     test: string | undefined;
     data3D: string | undefined;

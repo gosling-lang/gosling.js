@@ -1,4 +1,3 @@
-import type { GoslingSpec } from '@gosling-lang/gosling-schema';
 import { type Signal } from '@preact/signals-core';
 import { type ScaleLinear } from 'd3-scale';
 
