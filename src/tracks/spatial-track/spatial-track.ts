@@ -47,9 +47,7 @@ async function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptio
 
     tabularData = structuredClone(tabularData);
     for (const t of options.spec.dataTransform ?? []) {
-        //if (t.type === "join") { continue; }
         tabularData = await transform(t, tabularData, undefined, options.spec.assembly);
-        console.log("transforming", t);
     }
     const xArr: number[] = [];
     const yArr: number[] = [];
