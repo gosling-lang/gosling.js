@@ -5,6 +5,25 @@ import { tableFromArrays, tableFromIPC, tableToIPC } from '@uwdata/flechette';
 import { transform } from '../../core/utils/data-transform';
 import { getTabularData } from '../gosling-track/data-abstraction';
 
+/**
+ * Make an assertion.
+ *
+ * Usage
+ * @example
+ * ```ts
+ * const value: boolean = Math.random() <= 0.5;
+ * assert(value, "value is greater than than 0.5!");
+ * value // true
+ * ```
+ *
+ * @copyright Trevor Manz 2025
+ * @license MIT
+ * @see {@link https://github.com/manzt/manzt/blob/f7faee/utils/assert.js}
+ */
+export function assert(expression: unknown, msg: string | undefined = ""): asserts expression {
+    if (!expression) throw new Error(msg);
+}
+
 export type SpatialTrackOptions = {
     spec: SingleTrack | OverlaidTrack;
     color: string | undefined;
@@ -25,10 +44,10 @@ async function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptio
     // So, create one if missing by running `getTabularData()`.
     // The tile ID of '0.0' extracts all data for a given file at the lowest resolution.
     let tabularData = t['0.0'].tabularData ?? getTabularData(options.spec, t['0.0']);
-    if (options.spec.dataTransform?.[0]) {
-        // This basically ensures to do join operation (e.g., combining bigwig data to 3D model)
-        tabularData = await transform(options.spec.dataTransform?.[0], tabularData, undefined, options.spec.assembly);
-        console.error('Joined Data', tabularData);
+
+    tabularData = structuredClone(tabularData);
+    for (const t of options.spec.dataTransform ?? []) {
+        tabularData = await transform(t, tabularData, undefined, options.spec.assembly);
     }
     const xArr: number[] = [];
     const yArr: number[] = [];
@@ -227,27 +246,10 @@ function handleSizeField(size?: ChannelValue | Size | number, arrowIpc: Uint8Arr
     }
 }
 
-/**
- * The idea is to "cache" scenes associated with particular `views`.
- */
-const spatialViewsMap = new Map<string, chs.ChromatinScene>();
-
-function fetchScene(viewsScenesMap: Map<string, chs.ChromatinScene>, viewId: string): chs.ChromatinScene {
-    const s = viewsScenesMap.get(viewId);
-
-    if (!s) {
-        const newScene = chs.initScene();
-        viewsScenesMap.set(viewId, newScene);
-        return newScene;
-    }
-
-    return s;
-}
-
 export function createSpatialTrack(
     options: SpatialTrackOptions,
     dataFetcher: CsvDataFetcherClass,
-    container: HTMLDivElement
+    container: HTMLDivElement,
 ) {
     console.log('SPEC OPTIONS', options);
     dataFetcher.tilesetInfo(info => {
@@ -260,37 +262,49 @@ export function createSpatialTrack(
                     // This information is needed to create tabular data (i.e., running getTabularData())
                     t['0.0'].tileWidth = info.max_width;
                 }
+
                 const ipcBuffer = await transformObjectToArrow(t, options);
-                if (ipcBuffer) {
-                    const viewId = '123'; //~ TODO: need to actually get the ID of the view parent of this track
-                    let chromatinScene = fetchScene(spatialViewsMap, viewId);
-                    //let chromatinScene = chs.initScene();
-                    const arrowIpc = ipcBuffer.buffer;
-                    const color = handleColorField(options.spec.color, arrowIpc);
-                    const scale = handleSizeField(options.spec.size, arrowIpc);
-                    console.log('scale config', scale);
+                if (!ipcBuffer) {
+                    console.error("could not tranform into Apache Arrow");
+                    return;
+                }
+                console.warn("spec", options.spec);
+                let chromatinScene = chs.initScene();
+                const tracks = options.spec._overlay ?? [options.spec];
+                for (const ov of tracks) {
+                    console.log("ov", ov);
+
+                    const color = handleColorField(ov.color, ipcBuffer.buffer);
+                    const scale = handleSizeField(ov.size, ipcBuffer.buffer);
                     const viewConfig = {
                         scale: scale,
                         color: color,
-                        mark: options.spec.mark
+                        mark: ov.mark
                     };
-                    console.log('viewConfig', viewConfig);
-                    const s = chs.load(ipcBuffer.buffer, { center: true, normalize: true });
 
-                    const result = s;
+                    let s = chs.load(ipcBuffer.buffer, { center: true, normalize: true });
 
-                    const isModel = 'parts' in result; //~ ChromatinModel has .parts
-                    console.log(`isModel: ${isModel}`);
+                    const isModel = "parts" in s; //~ ChromatinModel has .parts
                     if (isModel) {
-                        chromatinScene = chs.addModelToScene(chromatinScene, result, viewConfig);
+                        const filterTransform = (ov.dataTransform ?? []).find(t => t.type === "filter");
+                        if (filterTransform) {
+                            const field: string = filterTransform.field;
+                            assert(field === "chr", "Field for transform should be 'chr'");
+                            const oneOf = filterTransform.oneOf;
+                            const first = oneOf[0];
+                            const res = chs.get(s, first)!;
+                            if (res) {
+                                const [selectedModel, _] = res;
+                                s = { parts: [selectedModel] };
+                            }
+                        }
+                        chromatinScene = chs.addModelToScene(chromatinScene, s, viewConfig);
                     } else {
-                        chromatinScene = chs.addChunkToScene(chromatinScene, result, viewConfig);
+                        chromatinScene = chs.addChunkToScene(chromatinScene, s, viewConfig);
                     }
-                    const [_, canvas] = chs.display(chromatinScene, { alwaysRedraw: false });
-
-                    container.appendChild(canvas);
-                } else {
                 }
+                const [_, createdCanvas] = chs.display(chromatinScene, { alwaysRedraw: false, withHUD: false });
+                container.appendChild(createdCanvas);
             },
             ['0.0']
         );
