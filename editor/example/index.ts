@@ -446,18 +446,24 @@ export const editorExampleObj: {
         spec: JsonExampleSpecs.EX_SPEC_SPATIAL_DENSITY,
         image: THUMBNAILS.SPATIAL_DENSITY,
     },
+    SPATIAL_LAYOUT_SUPERIMP: {
+        group: 'Spatial Layout',
+        name: 'Multiple tracks',
+        spec: JsonExampleSpecs.EX_SPEC_SPATIAL_MULTIPLE_TRACKS,
+        image: THUMBNAILS.SPATIAL_MULTIPLE_TRACKS
+    },
+    SPATIAL_LAYOUT_TAN_COMP: {
+        group: 'Spatial Layout',
+        name: 'Human Cell Model (Tan et al., Science 2018): Comparison',
+        spec: JsonExampleSpecs.EX_SPEC_SPATIAL_TAN_COMP,
+        image: THUMBNAILS.SPATIAL_TAN,
+    },
     SPATIAL_LAYOUT_3D_YEAST_MODEL: {
         group: 'Spatial Layout',
         name: '3D Yeast Model (Nature 2010)',
         spec: JsonExampleSpecs.EX_SPEC_3D_YEAST_MODEL,
         image: THUMBNAILS.SPATIAL_YEAST,
         forceShow: true
-    },
-    SPATIAL_LAYOUT_SUPERIMP: {
-        group: 'Spatial Layout',
-        name: 'Multiple tracks',
-        spec: JsonExampleSpecs.EX_SPEC_SPATIAL_MULTIPLE_TRACKS,
-        image: THUMBNAILS.SPATIAL_MULTIPLE_TRACKS
     },
     CORCES_ET_AL: {
         group: 'Coordinated Multiple Views',
