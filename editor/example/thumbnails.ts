@@ -34,6 +34,7 @@ import SPATIAL_MINIMAL from './thumbnails/SPATIAL_MINIMAL.png';
 import SPATIAL_YEAST from './thumbnails/SPATIAL_YEAST.png';
 import SPATIAL_COLOR from './thumbnails/SPATIAL_COLOR.png';
 import SPATIAL_DENSITY from './thumbnails/SPATIAL_DENSITY.png';
+import SPATIAL_MULTIPLE_TRACKS from './thumbnails/SPATIAL_MULTIPLE_TRACKS.png';
 
 export const THUMBNAILS = {
     ALIGNMENT,
@@ -72,4 +73,5 @@ export const THUMBNAILS = {
     SPATIAL_YEAST,
     SPATIAL_COLOR,
     SPATIAL_DENSITY,
+    SPATIAL_MULTIPLE_TRACKS,
 };
