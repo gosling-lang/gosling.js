@@ -118,7 +118,6 @@ async function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptio
     arrays = { ...suppArray, ...arrays };
 
     const table = tableFromArrays(arrays);
-    console.warn("table", table);
     const buffer = tableToIPC(table, { format: 'file' });
     return buffer;
 }
@@ -273,7 +272,6 @@ export function createSpatialTrack(
                 }
                 console.warn("spec", options.spec);
                 let chromatinScene = chs.initScene();
-                let i = 0;
                 const tracks = options.spec._overlay ?? [options.spec];
                 for (const ov of tracks) {
                     console.log("ov", ov);
@@ -303,13 +301,10 @@ export function createSpatialTrack(
                                 s = { parts: [selectedModel] };
                             }
                         }
-                        //if (i === 0) {
-                        //}
                         chromatinScene = chs.addModelToScene(chromatinScene, s, viewConfig);
                     } else {
                         chromatinScene = chs.addChunkToScene(chromatinScene, s, viewConfig);
                     }
-                    i += 1;
                 }
                 const [_, createdCanvas] = chs.display(chromatinScene, { alwaysRedraw: false, withHUD: false });
                 container.appendChild(createdCanvas);
