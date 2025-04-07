@@ -26,7 +26,10 @@ import { EX_SPEC_TEMPLATE } from './track-template';
 import { EX_SPEC_MOUSE_EVENT } from './mouse-event';
 import { EX_SPEC_PERF_ALIGNMENT } from './perf-alignment';
 import { EX_SPEC_DEBUG } from './debug';
-import { EX_SPEC_SPATIAL_MINIMAL, EX_SPEC_SPATIAL_MULTIPLE_TRACKS, EX_SPEC_SPATIAL_COLOR, EX_SPEC_SPATIAL_DENSITY } from './spatial-layout';
+import {
+    EX_SPEC_SPATIAL_MINIMAL, EX_SPEC_SPATIAL_MULTIPLE_TRACKS, EX_SPEC_SPATIAL_COLOR, EX_SPEC_SPATIAL_DENSITY,
+    EX_SPEC_SPATIAL_TAN_COMP
+} from './spatial-layout';
 import { EX_SPEC_3D_YEAST_MODEL } from './3d-yeast-model';
 
 export const JsonExampleSpecs = {
@@ -67,4 +70,5 @@ export const JsonExampleSpecs = {
     EX_SPEC_3D_YEAST_MODEL,
     EX_SPEC_SPATIAL_COLOR,
     EX_SPEC_SPATIAL_DENSITY,
+    EX_SPEC_SPATIAL_TAN_COMP,
 };

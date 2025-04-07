@@ -215,6 +215,96 @@ export const EX_SPEC_SPATIAL_MULTIPLE_TRACKS: GoslingSpec = {
     ]
 };
 
+
+export const EX_SPEC_SPATIAL_TAN_COMP: GoslingSpec = {
+    title: 'Tan 2018 (Science) comparison',
+    arrangement: "horizontal",
+    views: [
+        {
+            layout: {
+                type: 'spatial',
+                model: {
+                    type: 'csv',
+                    url: 'https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/refs/heads/main/gosling-3d/tan-2018/Tan-2018_GSM3271347_gm12878_01.csv',
+                    xyz: ['x', 'y', 'z'],
+                    chromosome: 'chr',
+                    position: 'coord'
+                }
+            },
+            width: 500,
+            height: 500,
+            alignment: "overlay",
+            tracks: [
+                {
+                    color: {
+                        value: 'gainsboro'
+                    },
+                    size: {
+                        value: 0.005,
+                    },
+                    mark: 'sphere',
+                },
+                {
+                    color: {
+                        value: 'darkslateblue'
+                    },
+                    size: {
+                        value: 0.02,
+                    },
+                    mark: 'box',
+                    dataTransform: [{
+                        type: "filter",
+                        field: "chr",
+                        oneOf: ["1(pat)"],
+                    }],
+                },
+
+            ]
+        },
+        {
+            layout: {
+                type: 'spatial',
+                model: {
+                    type: 'csv',
+                    url: 'https://raw.githubusercontent.com/dvdkouril/chromospace-sample-data/refs/heads/main/gosling-3d/tan-2018/Tan-2018_GSM3271348_gm12878_02.csv',
+                    xyz: ['x', 'y', 'z'],
+                    chromosome: 'chr',
+                    position: 'coord'
+                }
+            },
+            width: 500,
+            height: 500,
+            alignment: "overlay",
+            tracks: [
+                {
+                    color: {
+                        value: 'gainsboro'
+                    },
+                    size: {
+                        value: 0.005,
+                    },
+                    mark: 'sphere',
+                },
+                {
+                    color: {
+                        value: 'darkslateblue'
+                    },
+                    size: {
+                        value: 0.02,
+                    },
+                    mark: 'box',
+                    dataTransform: [{
+                        type: "filter",
+                        field: "chr",
+                        oneOf: ["1(pat)"],
+                    }],
+                },
+
+            ]
+        }
+    ]
+};
+
 export const EX_SPEC_SPATIAL_SUPERIMPOSITION: GoslingSpec = {
     title: 'Spatial Layout: superimposition',
     views: [
