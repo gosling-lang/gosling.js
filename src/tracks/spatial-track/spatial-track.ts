@@ -254,7 +254,6 @@ export function createSpatialTrack(
     options: SpatialTrackOptions,
     dataFetcher: CsvDataFetcherClass,
     container: HTMLDivElement,
-    tracksAndViews: Map<string, string>
 ) {
     console.log('SPEC OPTIONS', options);
     dataFetcher.tilesetInfo(info => {

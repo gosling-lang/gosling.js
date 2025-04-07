@@ -44,32 +44,3 @@ export interface HeatmapPlot {
         ty: number
     ): void;
 }
-
-export function getTrackParentViews(spec: GoslingSpec) {
-    console.warn("getTrackParentViews");
-    //~ <trackId, parent viewId>
-    const tracksAndViews = new Map<string, string>();
-    for (const view of spec.views) {
-        const viewId = view.id;
-        console.log("view", view);
-        if (!("tracks" in view)) {
-            //~ either no tracks, or nested views
-            if ("views" in view) {
-                continue; //~ TODO:
-                //view = view.
-                //while ("views" in view) {
-                //}
-            } else {
-                //~ empty, just skip
-                continue;
-            }
-        }
-        for (const track of view.tracks) {
-            const trackId = track.id;
-            console.log(`${viewId} -> ${trackId}`);
-            tracksAndViews.set(trackId, viewId);
-        }
-    }
-    console.log("tracksAndViews", tracksAndViews);
-    return tracksAndViews;
-}
