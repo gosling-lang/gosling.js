@@ -294,7 +294,6 @@ export function createSpatialTrack(
                             assert(field === "chr", "Field for transform should be 'chr'");
                             const oneOf = filterTransform.oneOf;
                             const first = oneOf[0];
-                            //const res = chs.get(s, "A")!;
                             const res = chs.get(s, first)!;
                             if (res) {
                                 const [selectedModel, _] = res;
