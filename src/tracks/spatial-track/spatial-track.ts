@@ -191,15 +191,15 @@ function handleColorField(color?: ChannelValue | Color | string, arrowIpc: Uint8
         } else if (color.type === 'quantitative') {
             const values = fetchValuesFromColumn(color.field, arrowIpc);
             console.log('values', values);
-            const [minVal, maxVal] = findMinAndMaxOfColumn(values);
+            const [minVal, maxVal] = color.domain ? [color.domain[0], color.domain[1]] : findMinAndMaxOfColumn(values);
             console.log(`minVal = ${minVal}, maxVal = ${maxVal}`);
+            const colScale = color.range ?? 'viridis';
             const colorConfig = {
                 //values: values,
                 values: [...values],
                 min: minVal,
                 max: maxVal,
-                colorScale: 'viridis'
-                //colorScale: "greens",
+                colorScale: colScale
             };
             return colorConfig;
         } else {

@@ -246,7 +246,10 @@ export const EX_SPEC_SPATIAL_TAN_COMP: GoslingSpec = {
                 },
                 {
                     color: {
-                        value: 'darkslateblue'
+                        field: 'coord',
+                        type: 'quantitative',
+                        domain: [900000, 249200000],
+                        range: "spectral",
                     },
                     size: {
                         value: 0.02,
@@ -287,7 +290,10 @@ export const EX_SPEC_SPATIAL_TAN_COMP: GoslingSpec = {
                 },
                 {
                     color: {
-                        value: 'darkslateblue'
+                        field: 'coord',
+                        type: 'quantitative',
+                        domain: [900000, 249300000],
+                        range: "spectral",
                     },
                     size: {
                         value: 0.02,
