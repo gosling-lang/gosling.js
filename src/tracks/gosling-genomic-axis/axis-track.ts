@@ -14,7 +14,7 @@ import type { TextStyle } from '../../core/utils/text-style';
 import type { PluginTrackFactory, TrackConfig } from '../../core/utils/define-plugin-track';
 import type { Assembly } from '@gosling-lang/gosling-schema';
 
-const TICK_WIDTH = 200;
+const TICK_WIDTH = 400;
 const TICK_HEIGHT = 6;
 const TICK_TEXT_SEPARATION = 0; // 2;
 const TICK_COLOR = 0x777777;
@@ -678,6 +678,7 @@ const factory: PluginTrackFactory<never, AxisTrackOptions> = (HGC, context, opti
                 .forEach(({ text, rope }: any) => {
                     text.updateTransform();
                     const b = text.getBounds();
+                    console.log(b);
                     const m = this.options.labelMargin;
                     const boxWithMargin = {
                         minX: b.x - m,
