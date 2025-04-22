@@ -33,12 +33,11 @@ jobs:
             exit 1
           fi
 
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.11"
+      - uses: astral-sh/setup-uv@v5
+
       - run: |
-          python -m pip install .
-          python tools/generate_schema_wrapper.py ${{ steps.tag.outputs.tag_name }}
+          uv run tools/generate_schema_wrapper.py ${{ steps.tag.outputs.tag_name }}
+          uv run tools/generate_api_docs.py
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
