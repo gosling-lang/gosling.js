@@ -50,7 +50,7 @@ jobs:
           uv run tools/generate_api_docs.py
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ steps.app-token.outputs.token }}
           commit-message: "Bump Gosling.js to `${{ steps.tag.outputs.tag_name }}`"
