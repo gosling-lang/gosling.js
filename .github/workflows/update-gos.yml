@@ -8,9 +8,14 @@ on:
   release:
     types: [published]
 
+
+env:
+  # Deno not necessary for running auto-gen scripts
+  SKIP_DENO_BUILD: "1"
+
 jobs:
 
-  sync:
+  Sync:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/create-github-app-token@v1
