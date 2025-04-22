@@ -26,12 +26,8 @@ jobs:
         with:
           app-id: ${{ vars.GOSLING_BOT_APP_ID }}
           private-key: ${{ secrets.GOSLING_BOT_APP_KEY }}
-
-      - name: Check token scopes
-        run: |
-          curl -s -H "Authorization: Bearer ${{ steps.app-token.outputs.token }}" \
-               -H "Accept: application/vnd.github+json" \
-               https://api.github.com/rate_limit
+          owner: gosling-lang
+          repositories: gos
 
       - name: Checkout gosling-lang/gos (with submodules)
         uses: actions/checkout@v4
