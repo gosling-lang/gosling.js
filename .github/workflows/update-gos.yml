@@ -13,11 +13,16 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.GOSLING_BOT_APP_ID }}
+          private-key: ${{ secrets.GOSLING_BOT_APP_KEY }}
 
       - name: Checkout gosling-lang/gos (with submodules)
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.PAT }}
+          token: ${{ steps.app-token.outputs.token }}
           repository: gosling-lang/gos
           submodules: true
 
@@ -42,7 +47,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
-          token: ${{ secrets.PAT }}
+          token: ${{ steps.app-token.outputs.token }}
           commit-message: "Bump Gosling.js to `${{ steps.tag.outputs.tag_name }}`"
           title: "Bump Gosling.js to `${{ steps.tag.outputs.tag_name }}`"
           body: "Automated PR. Update binding for Gosling.js `${{ steps.tag.outputs.tag_name }}`."
