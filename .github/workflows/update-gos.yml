@@ -8,16 +8,31 @@ on:
   release:
     types: [published]
 
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  # Deno not necessary for running auto-gen scripts
+  SKIP_DENO_BUILD: "1"
+
 jobs:
 
-  sync:
+  Sync:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.GOSLING_BOT_APP_ID }}
+          private-key: ${{ secrets.GOSLING_BOT_APP_KEY }}
+          owner: gosling-lang
+          repositories: gos
 
       - name: Checkout gosling-lang/gos (with submodules)
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.PAT }}
+          token: ${{ steps.app-token.outputs.token }}
           repository: gosling-lang/gos
           submodules: true
 
@@ -33,17 +48,16 @@ jobs:
             exit 1
           fi
 
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.11"
+      - uses: astral-sh/setup-uv@v5
+
       - run: |
-          python -m pip install .
-          python tools/generate_schema_wrapper.py ${{ steps.tag.outputs.tag_name }}
+          uv run tools/generate_schema_wrapper.py ${{ steps.tag.outputs.tag_name }}
+          uv run tools/generate_api_docs.py
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v7
         with:
-          token: ${{ secrets.PAT }}
+          token: ${{ steps.app-token.outputs.token }}
           commit-message: "Bump Gosling.js to `${{ steps.tag.outputs.tag_name }}`"
           title: "Bump Gosling.js to `${{ steps.tag.outputs.tag_name }}`"
           body: "Automated PR. Update binding for Gosling.js `${{ steps.tag.outputs.tag_name }}`."
