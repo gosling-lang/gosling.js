@@ -1,3 +1,18 @@
+## [1.0.3](https://github.com/gosling-lang/gosling.js/compare/v1.0.2...v1.0.3) (2025-06-26)
+
+
+### Bug Fixes
+
+* **data-fetcher:** replace the use of private member in BAM data fetcher ([#1122](https://github.com/gosling-lang/gosling.js/issues/1122)) ([957701e](https://github.com/gosling-lang/gosling.js/commit/957701e698c4a76a56d926aaa982eadab849ae75))
+* support `gosling.embed()` in React 17 or older ([#1156](https://github.com/gosling-lang/gosling.js/issues/1156)) ([08ff126](https://github.com/gosling-lang/gosling.js/commit/08ff126a2ebb5da164888add13403a7d3f8f7dbd))
+
+
+### Features
+
+* draw track outline for withinLink ([#1124](https://github.com/gosling-lang/gosling.js/issues/1124)) ([ee16482](https://github.com/gosling-lang/gosling.js/commit/ee16482381c8b482db12b3f03e6754a89dd2c9e4))
+
+
+
 ## [1.0.2](https://github.com/gosling-lang/gosling.js/compare/v1.0.1...v1.0.2) (2025-03-04)
 
 
