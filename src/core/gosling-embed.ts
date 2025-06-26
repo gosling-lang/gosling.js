@@ -1,5 +1,4 @@
 import React from 'react';
-import { createRoot } from 'react-dom/client';
 
 import type { GoslingSpec } from '@gosling-lang/gosling-schema';
 import type { HiGlassSpec } from '@gosling-lang/higlass-schema';
@@ -28,7 +27,7 @@ const MAX_TRIES = 20;
 const INTERVAL = 200; // ms
 
 // https://github.com/higlass/higlass/blob/0299ae1229fb57e0ca8da31dff58003c3e5bf1cf/app/scripts/hglib.js#L37A
-const launchHiglass = (
+const launchHiglass = async (
     element: HTMLElement,
     viewConfig: HiGlassSpec,
     size: { width: number; height: number },
@@ -44,7 +43,15 @@ const launchHiglass = (
         options: opts
     });
 
-    createRoot(element).render(component);
+    try {
+        // React 18+
+        const ReactDomClient = await import('react-dom/client');
+        ReactDomClient.createRoot(element).render(component);
+    } catch (e) {
+        // Fallback to React 17 or older
+        const ReactDom = await import('react-dom');
+        ReactDom.render(component, element);
+    }
 
     // For some reason our wrapper component fails to initialize the provided `ref`
     // immediately like `hglib.launch()`. This is a work-around to poll `ref`
