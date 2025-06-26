@@ -138,12 +138,14 @@ If there is an example you would like to add to the editor example library, plea
 
 ## Bumping Gosling.js
 
-GitHub Action handles bumping the version of Gosling.js. The pattern looks like the following:
+To increase the version of Gosling.js:
 
 ```
 pnpm version patch # or minor or major
-git push origin main --tags
+git push origin main
 ```
+
+And then create a [release](https://github.com/gosling-lang/gosling.js/releases) through the GitHub UI using the version name as the tag (e.g., `v1.0.3`). This will trigger the GitHub workflow to publish a package.
 
 # Internal Explanations  
 ## How does a Gosling spec get turned into a HiGlass spec?
