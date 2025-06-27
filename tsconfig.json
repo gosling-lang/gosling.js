@@ -84,6 +84,7 @@
     "src",
     "src/**/*.d.ts",
     "editor",
+    "demo",
     "e2e"
   ],
   "exclude": [

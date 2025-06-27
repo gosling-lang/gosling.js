@@ -12,7 +12,7 @@ export default [
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   pluginReact.configs.flat.recommended,
-  { ignores: ['node_modules', 'build', 'dist', 'public'] },
+  { ignores: ['node_modules', 'build', 'dist', 'public', 'examples'] },
   {
     languageOptions: {
       globals: globals.browser,

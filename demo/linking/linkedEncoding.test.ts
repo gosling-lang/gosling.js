@@ -193,46 +193,46 @@ describe('Link tracks', () => {
         `);
     });
     it('same linkingId across multiple views', () => {
-      const linkingTest = {
-          views: [
-              {
-                  linkingId: "link",
-                  tracks: [
-                      {
-                          id: 'track-1',
-                          mark: 'line',
-                          x: { field: 'position', type: 'genomic', axis: 'bottom' },
-                          y: { field: 'peak', type: 'quantitative', axis: 'right' }
-                      }
-                  ]
-              },
-              {
-                  linkingId: "link",
-                  tracks: [
-                      {
-                          id: 'track-2',
-                          mark: 'line',
-                          x: { field: 'position', type: 'genomic', axis: 'bottom' },
-                          y: { field: 'peak', type: 'quantitative', axis: 'right' }
-                      }
-                  ]
-              },
-              {
-                  linkingId: "link",
-                  tracks: [
-                      {
-                          id: 'track-3',
-                          mark: 'line',
-                          x: { field: 'position', type: 'genomic', axis: 'bottom' },
-                          y: { field: 'peak', type: 'quantitative', axis: 'right' }
-                      },
-                  ]
-              }
-          ]
-      };
-      // Test case 1
-      const result1 = getLinkedEncodings(linkingTest);
-      expect(result1).toMatchInlineSnapshot(`
+        const linkingTest = {
+            views: [
+                {
+                    linkingId: 'link',
+                    tracks: [
+                        {
+                            id: 'track-1',
+                            mark: 'line',
+                            x: { field: 'position', type: 'genomic', axis: 'bottom' },
+                            y: { field: 'peak', type: 'quantitative', axis: 'right' }
+                        }
+                    ]
+                },
+                {
+                    linkingId: 'link',
+                    tracks: [
+                        {
+                            id: 'track-2',
+                            mark: 'line',
+                            x: { field: 'position', type: 'genomic', axis: 'bottom' },
+                            y: { field: 'peak', type: 'quantitative', axis: 'right' }
+                        }
+                    ]
+                },
+                {
+                    linkingId: 'link',
+                    tracks: [
+                        {
+                            id: 'track-3',
+                            mark: 'line',
+                            x: { field: 'position', type: 'genomic', axis: 'bottom' },
+                            y: { field: 'peak', type: 'quantitative', axis: 'right' }
+                        }
+                    ]
+                }
+            ]
+        };
+        // Test case 1
+        const result1 = getLinkedEncodings(linkingTest);
+        expect(result1).toMatchInlineSnapshot(`
         [
           {
             "linkingId": "link",
@@ -257,10 +257,10 @@ describe('Link tracks', () => {
           },
         ]
       `);
-  });
+    });
 
     it('domain in x encoding', () => {
-      // When there is a domain in the x encoding we expect it to be used as the signal
+        // When there is a domain in the x encoding we expect it to be used as the signal
         const spec = {
             tracks: [
                 {
@@ -270,7 +270,7 @@ describe('Link tracks', () => {
                         field: 's1',
                         type: 'genomic',
                         domain: { chromosome: 'chr1', interval: [103900000, 104100000] }
-                    },
+                    }
                 }
             ]
         };
@@ -414,7 +414,7 @@ describe('Heatmap', () => {
                     x: { field: 'xs', type: 'genomic', axis: 'none' },
                     xe: { field: 'xe', type: 'genomic', axis: 'none' },
                     y: { field: 'ys', type: 'genomic', axis: 'none' },
-                    ye: { field: 'ye', type: 'genomic', axis: 'none' },
+                    ye: { field: 'ye', type: 'genomic', axis: 'none' }
                 }
             ]
         };
@@ -453,29 +453,29 @@ describe('Heatmap', () => {
         `);
     });
     it('multiple y linking', () => {
-      const matrix = {
-          xDomain: { chromosome: 'chr7', interval: [77700000, 81000000] },
-          tracks: [
-              {
-                  id: 'matrix-1',
-                  mark: 'bar',
-                  x: { field: 'xs', type: 'genomic', axis: 'none' },
-                  xe: { field: 'xe', type: 'genomic', axis: 'none' },
-                  y: { field: 'ys', type: 'genomic', axis: 'none' },
-                  ye: { field: 'ye', type: 'genomic', axis: 'none' },
-              },
-              {
-                id: 'matrix-2',
-                mark: 'bar',
-                x: { field: 'xs', type: 'genomic', axis: 'none' },
-                y: { field: 'ys', type: 'genomic', axis: 'none' },
-            }
-          ]
-      };
+        const matrix = {
+            xDomain: { chromosome: 'chr7', interval: [77700000, 81000000] },
+            tracks: [
+                {
+                    id: 'matrix-1',
+                    mark: 'bar',
+                    x: { field: 'xs', type: 'genomic', axis: 'none' },
+                    xe: { field: 'xe', type: 'genomic', axis: 'none' },
+                    y: { field: 'ys', type: 'genomic', axis: 'none' },
+                    ye: { field: 'ye', type: 'genomic', axis: 'none' }
+                },
+                {
+                    id: 'matrix-2',
+                    mark: 'bar',
+                    x: { field: 'xs', type: 'genomic', axis: 'none' },
+                    y: { field: 'ys', type: 'genomic', axis: 'none' }
+                }
+            ]
+        };
 
-      const result = getLinkedEncodings(matrix);
+        const result = getLinkedEncodings(matrix);
 
-      expect(result).toMatchInlineSnapshot(`
+        expect(result).toMatchInlineSnapshot(`
         [
           {
             "linkingId": undefined,
@@ -513,5 +513,5 @@ describe('Heatmap', () => {
           },
         ]
       `);
-  });
+    });
 });

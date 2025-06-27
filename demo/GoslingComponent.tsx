@@ -14,8 +14,7 @@ interface GoslingComponentProps {
     height: number;
     urlToFetchOptions?: UrlToFetchOptions;
 }
-export function GoslingComponent({ spec, width, height, urlToFetchOptions }: GoslingComponentProps) {
-    const [fps, setFps] = useState(120);
+export function GoslingComponent({ spec, urlToFetchOptions }: GoslingComponentProps) {
     // Pixi manager should persist between render calls. Otherwise performance degrades greatly.
     const [pixiManager, setPixiManager] = useState<PixiManager | null>(null);
 
@@ -59,6 +58,7 @@ function renderGosling(
     if (isResponsiveWidth || isResponsiveHeight) {
         const resizeObserver = new ResizeObserver(
             debounce(entries => {
+                // @ts-expect-error
                 const { width: containerWidth, height: containerHeight } = entries[0].contentRect;
                 console.warn('Resizing to', containerWidth, containerHeight);
                 // Remove all of the previously drawn overlay divs and tracks
@@ -95,6 +95,7 @@ function debounce(f: (arg0: unknown) => unknown, delay: number) {
     let timer = 0;
     return function (...args: [arg0: unknown]) {
         clearTimeout(timer);
+        // @ts-expect-error
         timer = setTimeout(() => f.apply(this, args), delay);
     };
 }

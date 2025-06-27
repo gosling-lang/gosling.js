@@ -1,8 +1,12 @@
 {
     "extends": "./tsconfig.json",
     "files": [
-        "src/index.ts",
+        "src/index.ts"
     ],
-    "exclude": ["**/*.test.ts"],
-    "include": ["src"],
+    "exclude": [
+        "**/*.test.ts"
+    ],
+    "include": [
+        "src"
+    ]
 }

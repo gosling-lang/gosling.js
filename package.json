@@ -38,7 +38,7 @@
     "check": "tsc --noEmit",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "format": "eslint src/ editor/ --fix && prettier 'editor/**/*.css' --write",
+    "format": "eslint src/ editor/ demo/ --ignore-pattern 'demo/examples/*' --fix && prettier 'editor/**/*.css' --write",
     "schema": "node scripts/generate-schemas.mjs",
     "version": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
     "knip": "knip --config knip.config.json",
