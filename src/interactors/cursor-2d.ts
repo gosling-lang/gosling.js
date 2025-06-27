@@ -11,8 +11,16 @@ export function cursor2D(
     cursorPosX: Signal<number>,
     cursorPosY: Signal<number>
 ) {
-    const baseScaleX = scaleLinear().domain(plot.xDomain.value).range([0, plot.domOverlay.clientWidth]);
-    const baseScaleY = scaleLinear().domain(plot.yDomain.value).range([0, plot.domOverlay.clientHeight]);
+    const xDomain = plot.xDomain.value;
+    const yDomain = plot.yDomain?.value;
+
+    if (!yDomain) {
+        // No sufficient information to draw 2D cursor
+        return;
+    }
+
+    const baseScaleX = scaleLinear().domain(xDomain).range([0, plot.domOverlay.clientWidth]);
+    const baseScaleY = scaleLinear().domain(yDomain).range([0, plot.domOverlay.clientHeight]);
 
     const cursorX = new PIXI.Graphics();
     cursorX.lineStyle(1, 'black', 1);
@@ -32,10 +40,10 @@ export function cursor2D(
         cursorX.position.x = event.offsetX;
         cursorY.position.y = event.offsetY;
         // Calculate the genomic position of the cursor
-        const newScaleX = baseScaleX.domain(plot.xDomain.value);
+        const newScaleX = baseScaleX.domain(xDomain);
         const genomicPosX = newScaleX.invert(event.offsetX);
         cursorPosX.value = genomicPosX;
-        const newScaleY = baseScaleY.domain(plot.yDomain.value);
+        const newScaleY = baseScaleY.domain(yDomain);
         const genomicPosY = newScaleY.invert(event.offsetY);
         cursorPosY.value = genomicPosY;
     };
@@ -47,9 +55,9 @@ export function cursor2D(
 
     // Every time the domain gets changed we want to update the cursor
     effect(() => {
-        const newScaleX = baseScaleX.domain(plot.xDomain.value);
+        const newScaleX = baseScaleX.domain(xDomain);
         cursorX.position.x = newScaleX(cursorPosX.value);
-        const newScaleY = baseScaleY.domain(plot.yDomain.value);
+        const newScaleY = baseScaleY.domain(yDomain);
         cursorY.position.y = newScaleY(cursorPosY.value);
     });
 }
