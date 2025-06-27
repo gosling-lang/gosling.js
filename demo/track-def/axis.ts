@@ -101,10 +101,10 @@ function getAxisTrackLinearOptions(
         outerRadius: 0,
         width: boundingBox.width,
         height: boundingBox.height,
-        startAngle: 0,
-        endAngle: 0,
+        startAngle,
+        endAngle,
         layout: 'linear',
-        assembly: 'hg38',
+        assembly: track.assembly ?? 'hg38',
         stroke: 'transparent', // text outline
         color: theme.axis.labelColor,
         labelMargin: theme.axis.labelMargin,
@@ -147,7 +147,7 @@ function getAxisTrackCircularOptions(
     theme: Required<CompleteThemeDeep>
 ): AxisTrackOptions {
     const narrowType = getAxisNarrowType('x', 'horizontal', boundingBox.width, boundingBox.height);
-    const { startAngle, endAngle, outerRadius } = track;
+    const { startAngle, endAngle, outerRadius, assembly = 'hg38' } = track;
     let { innerRadius } = track;
     if (position === 'top') {
         innerRadius = outerRadius - 30;
@@ -165,7 +165,7 @@ function getAxisTrackCircularOptions(
         height: boundingBox.height,
         startAngle,
         endAngle,
-        assembly: 'hg38',
+        assembly,
         stroke: 'transparent', // text outline
         color: theme.axis.labelColor,
         labelMargin: theme.axis.labelMargin,
