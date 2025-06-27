@@ -101,8 +101,8 @@ function getAxisTrackLinearOptions(
         outerRadius: 0,
         width: boundingBox.width,
         height: boundingBox.height,
-        startAngle,
-        endAngle,
+        startAngle: 0,
+        endAngle: 0,
         layout: 'linear',
         assembly: track.assembly ?? 'hg38',
         stroke: 'transparent', // text outline
