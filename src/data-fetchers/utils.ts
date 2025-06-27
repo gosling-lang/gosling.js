@@ -58,10 +58,23 @@ export function filterUsingGenoPos(
 
 const chromInfoBisector = bisector((d: { pos: number }) => d.pos).left;
 
-const chrToAbs = (chrom: string, chromPos: number, chromInfo: HiGlass.ChromInfo) =>
+/**
+ * Convert a chromosome position to an absolute genome position.
+ *
+ * @template {string} Name
+ * @param {Name} chrom - Chromosome name
+ * @param {number} chromPos - Chromosome position
+ * @param {import('../types').ChromInfo<Name>} chromInfo - Chromosome info object
+ */
+export const chrToAbs = (chrom: string, chromPos: number, chromInfo: HiGlass.ChromInfo) =>
     chromInfo.chrPositions[chrom].pos + chromPos;
 
-const absToChr = (absPosition: number, chromInfo: HiGlass.ChromInfo) => {
+/**
+ * Convert an absolute genome position to a chromosome position.
+ * @param {number} absPosition - Absolute genome position.
+ * @param {import('../types').ChromInfo<Name>} chromInfo - Chromosome info object.
+ */
+export const absToChr = (absPosition: number, chromInfo: HiGlass.ChromInfo) => {
     if (!chromInfo || !chromInfo.cumPositions || !chromInfo.cumPositions.length) {
         return null;
     }

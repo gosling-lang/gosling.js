@@ -6,7 +6,7 @@ import type {
     TiledPixiTrackOptions
 } from '@higlass/tracks';
 import * as PIXI from 'pixi.js';
-import { fakePubSub } from '@higlass/utils';
+import { fakePubSub } from '../../core/utils/fake-pub-sub';
 import { scaleLinear } from 'd3-scale';
 import { DataFetcher } from '@higlass/datafetcher';
 import { signal, type Signal } from '@preact/signals-core';

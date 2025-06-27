@@ -696,14 +696,6 @@ declare module '@higlass/utils' {
     import type { ScaleContinuousNumeric } from 'd3-scale';
     import type { TilesetInfo } from '@higlass/services';
 
-    export const fakePubSub = {
-        __fake__: true,
-        publish: () => {},
-        subscribe: () => ({ event: 'fake', handler: () => {} }),
-        unsubscribe: () => {},
-        clear: () => {}
-    };
-
     export type ChromInfo<Name extends string = string> = {
         cumPositions: { id?: number; pos: number; chr: string }[];
         chrPositions: Record<Name, { pos: number }>;
@@ -718,25 +710,6 @@ declare module '@higlass/utils' {
      * @return  {Function}  Method to remove graphics showing the mouse location.
      */
     export function showMousePosition<T>(context: T, is2d?: boolean, isGlobal?: boolean): () => void;
-    export function absToChr(
-        absPosition: number,
-        chrInfo: Pick<ChromInfo, 'cumPositions' | 'chromLengths'>
-    ): [chr: string, chrPositon: number, offset: number, insertPoint: number];
-    export function chrToAbs<Name extends string>(
-        chrom: Name,
-        chromPos: number,
-        chromInfo: Pick<ChromInfo<Name>, 'chrPositions'>
-    ): number;
-    export function colorToHex(colorValue: string | number): number;
-    export function pixiTextToSvg(text: import('pixi.js').Text): HTMLElement;
-    export function svgLine(
-        x1: number,
-        y1: number,
-        x2: number,
-        y2: number,
-        strokeWidth: number,
-        strokeColor: number
-    ): HTMLElement;
     export class DenseDataExtrema1D {
         constructor(arr: ArrayLike<number | null>);
         minNonZeroInTile: number;

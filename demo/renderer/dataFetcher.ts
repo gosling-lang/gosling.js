@@ -1,5 +1,5 @@
 import { DataFetcher } from '@higlass/datafetcher';
-import { fakePubSub } from '@higlass/utils';
+import { fakePubSub } from '../../src/core/utils/fake-pub-sub';
 import {
     BigWigDataFetcher,
     CsvDataFetcher,

@@ -1,7 +1,7 @@
 import { TextTrackClass } from './text-track';
 import type { TextTrackOptions, TextTrackContext } from './text-track';
 import * as PIXI from 'pixi.js';
-import { fakePubSub } from '@higlass/utils';
+import { fakePubSub } from '../../core/utils/fake-pub-sub';
 
 export class TextTrack extends TextTrackClass {
     constructor(
