@@ -18,8 +18,7 @@ export class DummyTrack extends DummyTrackClass {
         // Setup the context object
         const context = {
             id: 'test',
-            svgElement: svgElement,
-            getTheme: () => 'light'
+            svgElement: svgElement
         };
 
         super(context, options);

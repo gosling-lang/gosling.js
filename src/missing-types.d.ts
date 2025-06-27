@@ -180,7 +180,6 @@ declare module '@higlass/tracks' {
         viewUid: string;
         // Members unused in Gosling
         // chromInfoPath: string;
-        // getTheme(): string;
         // dataConfig: DataConfig;
         // getLockGroupExtrema(): [min: number, max: number] | null;
     };
@@ -198,7 +197,7 @@ declare module '@higlass/tracks' {
         pubSubs: Subscription[];
         isLeftModified: boolean;
         /* Constructor */
-        constructor(props: { id: string; pubSub: PubSub; getTheme?: () => string });
+        constructor(props: { id: string; pubSub: PubSub });
         /* Methods */
         isWithin(x: number, y: number): boolean;
         getProp<Prop extends keyof this>(prop: Prop): this[Prop];
