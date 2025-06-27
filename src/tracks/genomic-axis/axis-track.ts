@@ -11,7 +11,9 @@ import { getTextStyle } from '../../core/utils/text-style';
 import type { TextStyle } from '../../core/utils/text-style';
 import type { Assembly } from '@gosling-lang/gosling-schema';
 import { PixiTrack } from '@higlass/tracks';
-import { absToChr, colorToHex, pixiTextToSvg, svgLine, showMousePosition } from '@higlass/utils';
+import { showMousePosition } from '@higlass/utils';
+import colorToHex from '../../core/utils/color-to-hex';
+import { absToChr } from '../../data-fetchers/utils';
 
 const TICK_WIDTH = 200;
 const TICK_HEIGHT = 6;
@@ -103,6 +105,57 @@ function createTickText(text: string, style: Partial<PIXI.ITextStyle>): TickText
     });
 }
 
+/** Generate a SVG line */
+function svgLine(x1: number, y1: number, x2: number, y2: number, strokeWidth: number, strokeColor: number) {
+    const line = document.createElement('line');
+
+    line.setAttribute('x1', `${x1}`);
+    line.setAttribute('x2', `${x2}`);
+    line.setAttribute('y1', `${y1}`);
+    line.setAttribute('y2', `${y2}`);
+
+    if (strokeWidth) {
+        line.setAttribute('stroke-width', `${strokeWidth}`);
+    }
+    if (strokeColor) {
+        line.setAttribute('stroke', `${strokeColor}`);
+    }
+
+    return line;
+}
+
+/**
+ * Export a PIXI text to an SVG element
+ *
+ * param {PIXI.Text} pixiText A PIXI.Text object that we want to create an SVG element for
+ * returns {Element} A DOM SVG Element with all of the attributes set as to display
+ * the given text.
+ */
+function pixiTextToSvg(pixiText: PIXI.Text) {
+    const g = document.createElement('g');
+    const t = document.createElement('text');
+
+    if (pixiText.anchor.x === 0) {
+        t.setAttribute('text-anchor', 'start');
+    } else if (pixiText.anchor.x === 1) {
+        t.setAttribute('text-anchor', 'end');
+    } else {
+        t.setAttribute('text-anchor', 'middle');
+    }
+
+    t.setAttribute('font-family', pixiText.style.fontFamily.toString());
+    t.setAttribute('font-size', pixiText.style.fontSize.toString());
+    g.setAttribute('transform', `scale(${pixiText.scale.x},1)`);
+
+    t.setAttribute('fill', pixiText.style.fill.toString());
+    t.innerHTML = pixiText.text;
+
+    g.appendChild(t);
+    g.setAttribute('transform', `translate(${pixiText.x},${pixiText.y})scale(${pixiText.scale.x},1)`);
+
+    return g;
+}
+
 export class AxisTrackClass extends PixiTrack<AxisTrackOptions> {
     allTexts: TickLabelInfo[];
     searchField: null;
@@ -183,7 +236,7 @@ export class AxisTrackClass extends PixiTrack<AxisTrackOptions> {
         let chromSizesPath = chromInfoPath;
 
         if (!chromSizesPath) {
-            chromSizesPath = `${dataConfig.server}/chrom-sizes/?id=${dataConfig.tilesetUid}`;
+            chromSizesPath = `${dataConfig.server} / chrom - sizes /? id = ${dataConfig.tilesetUid}`;
         }
 
         // Example:
@@ -289,7 +342,7 @@ export class AxisTrackClass extends PixiTrack<AxisTrackOptions> {
         this.options = options;
 
         this.pixiTextConfig.fontSize = +this.options.fontSize
-            ? (`${+this.options.fontSize}px` as const)
+            ? (`${+this.options.fontSize} px` as const)
             : this.pixiTextConfig.fontSize;
         this.pixiTextConfig.fill = this.options.color || this.pixiTextConfig.fill;
         this.pixiTextConfig.stroke = this.options.stroke || this.pixiTextConfig.stroke;
@@ -372,12 +425,12 @@ export class AxisTrackClass extends PixiTrack<AxisTrackOptions> {
             ? lineYEnd + this.tickTextSeparation
             : lineYEnd - this.tickTextSeparation;
         this.leftBoundTick.text =
-            this.options.assembly === 'unknown' ? `${this.formatTick(x1[1])}` : `${x1[0]}: ${this.formatTick(x1[1])}`;
+            this.options.assembly === 'unknown' ? `${this.formatTick(x1[1])} ` : `${x1[0]}: ${this.formatTick(x1[1])} `;
         this.leftBoundTick.anchor.y = this.options.reverseOrientation ? 0 : 1;
 
         this.rightBoundTick.x = this.dimensions[0];
         this.rightBoundTick.text =
-            this.options.assembly === 'unknown' ? `${this.formatTick(x2[1])}` : `${x2[0]}: ${this.formatTick(x2[1])}`;
+            this.options.assembly === 'unknown' ? `${this.formatTick(x2[1])} ` : `${x2[0]}: ${this.formatTick(x2[1])} `;
         this.rightBoundTick.y = this.options.reverseOrientation
             ? lineYEnd + this.tickTextSeparation
             : lineYEnd - this.tickTextSeparation;
@@ -468,7 +521,7 @@ export class AxisTrackClass extends PixiTrack<AxisTrackOptions> {
             if (this.flipText) tickTexts[i].scale.x = -1;
 
             const chrText = this.options.assembly === 'unknown' ? '' : `${cumPos.chr}: `;
-            tickTexts[i].text = ticks[i] === 0 ? `${chrText}1` : `${chrText}${this.formatTick(ticks[i])}`;
+            tickTexts[i].text = ticks[i] === 0 ? `${chrText} 1` : `${chrText}${this.formatTick(ticks[i])} `;
 
             const x = this._xScale(cumPos.pos + ticks[i]);
 
@@ -741,7 +794,7 @@ export class AxisTrackClass extends PixiTrack<AxisTrackOptions> {
         const output = document.createElement('g');
         track.appendChild(output);
 
-        output.setAttribute('transform', `translate(${this.position[0]},${this.position[1]})`);
+        output.setAttribute('transform', `translate(${this.position[0]}, ${this.position[1]})`);
 
         this.allTexts
             .filter(text => text.text.visible)

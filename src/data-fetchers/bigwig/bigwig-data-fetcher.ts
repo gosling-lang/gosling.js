@@ -9,7 +9,8 @@ import { type CommonDataConfig, RemoteFile } from '../utils';
 
 import type { Feature } from '@gmod/bbi';
 import type { ChromInfo, TilesetInfo } from '@higlass/types';
-import { DenseDataExtrema1D, chrToAbs } from '@higlass/utils';
+import { DenseDataExtrema1D } from '@higlass/utils';
+import { chrToAbs } from '../utils';
 
 type BigWigDataConfig = BigWigData & CommonDataConfig;
 

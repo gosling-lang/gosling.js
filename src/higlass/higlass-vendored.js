@@ -8,10 +8,13 @@ import ndarray from 'ndarray';
 import { select } from 'd3-selection';
 import { brushX, brushY } from 'd3-brush';
 import { globalPubSub } from 'pub-sub-es';
+import { fakePubSub } from '../core/utils/fake-pub-sub';
+import colorToHex from '../core/utils/color-to-hex';
+import { absToChr } from '../data-fetchers/utils';
 
 /**
  * Check if a 2D or 1D point is within a rectangle or range
- * @param {number} x - The point's X coordinate.
+ * Check if a 2D or 1D point is within a rectangle or range
  * @param {number} y - The point's Y coordinate.
  * @param {number} minX - The rectangle's start X coordinate.
  * @param {number} maxX - The rectangle's start X coordinate.
@@ -21,17 +24,6 @@ import { globalPubSub } from 'pub-sub-es';
  */
 const isWithin = (x, y, minX, maxX, minY, maxY, is1d = false) =>
     is1d ? (x >= minX && x <= maxX) || (y >= minY && y <= maxY) : x >= minX && x <= maxX && y >= minY && y <= maxY;
-
-const fakePubSub = {
-    __fake__: true,
-    publish: () => {},
-    subscribe: () => ({
-        event: '',
-        handler: () => {}
-    }),
-    unsubscribe: () => {},
-    clear: () => {}
-};
 
 /**
  * @typedef TrackContext
@@ -124,7 +116,7 @@ class Track {
         return () => this[prop];
     }
 
-    getData() {}
+    getData() { }
 
     /**
      * Capture click events. x and y are relative to the track position
@@ -143,7 +135,7 @@ class Track {
     }
 
     /** There was a click event outside the track * */
-    clickOutside() {}
+    clickOutside() { }
 
     /** @returns {[number, number]} */
     getDimensions() {
@@ -263,7 +255,7 @@ class Track {
     }
 
     /** @returns {void} */
-    draw() {}
+    draw() { }
 
     /** @returns {[number, number]} */
     getPosition() {
@@ -285,7 +277,7 @@ class Track {
      * @param {{}} evt
      * @returns {void}
      */
-    defaultMouseMoveHandler() {}
+    defaultMouseMoveHandler() { }
 
     /** @returns {void} */
     remove() {
@@ -298,7 +290,7 @@ class Track {
      * @param {Options} options
      * @returns {void}
      */
-    rerender() {}
+    rerender() { }
 
     /**
      * This function is for seeing whether this track should respond
@@ -318,37 +310,19 @@ class Track {
      * @param {number} kMultiplier
      * @returns {void}
      */
-    zoomedY() {}
+    zoomedY() { }
 
     /**
      * @param {number} dY
      * @returns {void}
      */
-    movedY() {}
+    movedY() { }
 }
 
 // @ts-nocheck
 
 const GLOBALS = {
     PIXI
-};
-
-/**
- * Convert a regular color value (e.g. 'red', '#FF0000', 'rgb(255,0,0)') to a
- * hex value which is legible by PIXI
- *
- * @param {string} colorValue - Color value to convert
- * @return {number} Hex value
- */
-const colorToHex = colorValue => {
-    /** @type {import('d3-color').RGBColor} */
-    // @ts-expect-error - FIXME: `color` can return many different types
-    // depending on the string input. We should probably use a different
-    // the more strict `rgb` function instead?
-    const c = color(colorValue);
-    const hex = GLOBALS.PIXI.utils.rgb2hex([c.r / 255.0, c.g / 255.0, c.b / 255.0]);
-
-    return hex;
 };
 
 /**
@@ -826,10 +800,10 @@ class PixiTrack extends Track {
             graphics.drawRect(
                 this.position[0] + (labelLeftMargin || labelTopMargin) + this.labelXOffset,
                 this.position[1] +
-                    this.dimensions[1] -
-                    this.labelText.height -
-                    labelBackgroundMargin -
-                    (labelBottomMargin || labelRightMargin),
+                this.dimensions[1] -
+                this.labelText.height -
+                labelBackgroundMargin -
+                (labelBottomMargin || labelRightMargin),
                 this.labelText.width + labelBackgroundMargin,
                 this.labelText.height + labelBackgroundMargin
             );
@@ -846,11 +820,11 @@ class PixiTrack extends Track {
 
             graphics.drawRect(
                 this.position[0] +
-                    this.dimensions[0] -
-                    this.labelText.width -
-                    labelBackgroundMargin -
-                    (labelRightMargin || labelBottomMargin) -
-                    this.labelXOffset,
+                this.dimensions[0] -
+                this.labelText.width -
+                labelBackgroundMargin -
+                (labelRightMargin || labelBottomMargin) -
+                this.labelXOffset,
                 this.position[1] + (labelTopMargin || labelLeftMargin),
                 this.labelText.width + labelBackgroundMargin,
                 this.labelText.height + labelBackgroundMargin
@@ -867,16 +841,16 @@ class PixiTrack extends Track {
 
             graphics.drawRect(
                 this.position[0] +
-                    this.dimensions[0] -
-                    this.labelText.width -
-                    labelBackgroundMargin -
-                    labelRightMargin -
-                    this.labelXOffset,
+                this.dimensions[0] -
+                this.labelText.width -
+                labelBackgroundMargin -
+                labelRightMargin -
+                this.labelXOffset,
                 this.position[1] +
-                    this.dimensions[1] -
-                    this.labelText.height -
-                    labelBackgroundMargin -
-                    labelBottomMargin,
+                this.dimensions[1] -
+                this.labelText.height -
+                labelBackgroundMargin -
+                labelBottomMargin,
                 this.labelText.width + labelBackgroundMargin,
                 this.labelText.height + labelBackgroundMargin
             );
@@ -1008,9 +982,9 @@ class PixiTrack extends Track {
         clipPolygon.setAttribute(
             'points',
             `${this.position[0]},${this.position[1]} ` +
-                `${this.position[0] + this.dimensions[0]},${this.position[1]} ` +
-                `${this.position[0] + this.dimensions[0]},${this.position[1] + this.dimensions[1]} ` +
-                `${this.position[0]},${this.position[1] + this.dimensions[1]} `
+            `${this.position[0] + this.dimensions[0]},${this.position[1]} ` +
+            `${this.position[0] + this.dimensions[0]},${this.position[1] + this.dimensions[1]} ` +
+            `${this.position[0]},${this.position[1] + this.dimensions[1]} `
         );
 
         // the clipping area needs to be a clipPath element
@@ -2183,9 +2157,9 @@ function workerGetTiles(outUrl, server, theseTileIds, authHeader, done, requestB
         headers,
         ...(requestBody && Object.keys(requestBody).length > 0
             ? {
-                  method: 'POST',
-                  body: JSON.stringify(requestBody)
-              }
+                method: 'POST',
+                body: JSON.stringify(requestBody)
+            }
             : {})
     })
         .then(response => response.json())
@@ -4091,7 +4065,7 @@ class TiledPixiTrack extends PixiTrack {
      * Function is called when all tiles that should be visible have
      * been received.
      */
-    allTilesLoaded() {}
+    allTilesLoaded() { }
 
     minValue(_) {
         if (_) {
@@ -4131,7 +4105,7 @@ class TiledPixiTrack extends PixiTrack {
         this.scale.maxValue = this.scale.maxRawValue;
     }
 
-    updateTile(/* tile */) {}
+    updateTile(/* tile */) { }
 
     destroyTile(/* tile */) {
         // remove all data structures needed to draw this tile
@@ -4367,7 +4341,7 @@ class TiledPixiTrack extends PixiTrack {
     /**
      * Draw a tile on some graphics
      */
-    drawTile(/* tileData, graphics */) {}
+    drawTile(/* tileData, graphics */) { }
 
     calculateMedianVisibleValue() {
         if (this.areAllVisibleTilesLoaded()) {
@@ -4760,50 +4734,10 @@ const colorToRgba = colorValue => {
     return [c.r, c.g, c.b, 255];
 };
 
-const chromInfoBisector = bisector((/** @type {{ pos: number }} */ d) => d.pos).left;
-
 /**
  * @template {string} Name
  * @typedef {[name: Name, pos: number, offset: number, insertPoint: number ]} ChromosomePosition
  */
-
-/**
- * Convert an absolute genome position to a chromosome position.
- * @template {string} Name
- * @param {number} absPosition - Absolute genome position.
- * @param {import('../types').ChromInfo<Name>} chromInfo - Chromosome info object.
- * @return {ChromosomePosition<Name> | null} The chromosome position.
- */
-const absToChr = (absPosition, chromInfo) => {
-    if (!chromInfo || !chromInfo.cumPositions || !chromInfo.cumPositions.length) {
-        return null;
-    }
-
-    let insertPoint = chromInfoBisector(chromInfo.cumPositions, absPosition);
-    const lastChr = chromInfo.cumPositions[chromInfo.cumPositions.length - 1].chr;
-    const lastLength = chromInfo.chromLengths[lastChr];
-
-    if (insertPoint > 0) {
-        insertPoint -= 1;
-    }
-
-    let chrPosition = Math.floor(absPosition - chromInfo.cumPositions[insertPoint].pos);
-    let offset = 0;
-
-    if (chrPosition < 0) {
-        // before the start of the genome
-        offset = chrPosition - 1;
-        chrPosition = 1;
-    }
-
-    if (insertPoint === chromInfo.cumPositions.length - 1 && chrPosition > lastLength) {
-        // beyond the last chromosome
-        offset = chrPosition - lastLength;
-        chrPosition = lastLength;
-    }
-
-    return [chromInfo.cumPositions[insertPoint].chr, chrPosition, offset, insertPoint];
-};
 
 // @ts-nocheck
 
@@ -5179,17 +5113,17 @@ const setupShowMousePosition = (context, is2d = false, isGlobal = false) => {
  */
 const valueToColor =
     (valueScale, colorScale, pseudoCounts = 0, eps = 0.000001) =>
-    value => {
-        let rgbIdx = 255;
+        value => {
+            let rgbIdx = 255;
 
-        if (value > eps) {
-            // values less than espilon are considered NaNs and made transparent
-            // (rgbIdx 255)
-            rgbIdx = Math.max(0, Math.min(255, Math.floor(valueScale(value + pseudoCounts))));
-        }
+            if (value > eps) {
+                // values less than espilon are considered NaNs and made transparent
+                // (rgbIdx 255)
+                rgbIdx = Math.max(0, Math.min(255, Math.floor(valueScale(value + pseudoCounts))));
+            }
 
-        return colorScale[rgbIdx];
-    };
+            return colorScale[rgbIdx];
+        };
 
 // @ts-nocheck
 
@@ -6074,9 +6008,9 @@ class HeatmapTiledPixiTrack extends TiledPixiTrack {
         ) {
             this.limitedValueScale.domain([
                 this.valueScale.domain()[0] +
-                    (this.valueScale.domain()[1] - this.valueScale.domain()[0]) * this.options.scaleStartPercent,
+                (this.valueScale.domain()[1] - this.valueScale.domain()[0]) * this.options.scaleStartPercent,
                 this.valueScale.domain()[0] +
-                    (this.valueScale.domain()[1] - this.valueScale.domain()[0]) * this.options.scaleEndPercent
+                (this.valueScale.domain()[1] - this.valueScale.domain()[0]) * this.options.scaleEndPercent
             ]);
         }
 
@@ -6387,8 +6321,7 @@ class HeatmapTiledPixiTrack extends TiledPixiTrack {
 
             this.gColorscaleBrush.attr(
                 'transform',
-                `translate(${this.pColorbarArea.x + this.pColorbar.x + COLORBAR_WIDTH + 2},${
-                    this.pColorbarArea.y + this.pColorbar.y - 1
+                `translate(${this.pColorbarArea.x + this.pColorbar.x + COLORBAR_WIDTH + 2},${this.pColorbarArea.y + this.pColorbar.y - 1
                 })`
             );
         }
@@ -6406,8 +6339,7 @@ class HeatmapTiledPixiTrack extends TiledPixiTrack {
 
             this.gColorscaleBrush.attr(
                 'transform',
-                `translate(${this.pColorbarArea.x + this.pColorbar.x + COLORBAR_WIDTH + BRUSH_COLORBAR_GAP},${
-                    this.pColorbarArea.y + this.pColorbar.y - 1
+                `translate(${this.pColorbarArea.x + this.pColorbar.x + COLORBAR_WIDTH + BRUSH_COLORBAR_GAP},${this.pColorbarArea.y + this.pColorbar.y - 1
                 })`
             );
         }
@@ -6802,8 +6734,8 @@ class HeatmapTiledPixiTrack extends TiledPixiTrack {
                 GLOBALS.PIXI.VERSION[0] === '4'
                     ? GLOBALS.PIXI.Texture.fromCanvas(canvas, GLOBALS.PIXI.SCALE_MODES.NEAREST)
                     : GLOBALS.PIXI.Texture.from(canvas, {
-                          scaleMode: GLOBALS.PIXI.SCALE_MODES.NEAREST
-                      });
+                        scaleMode: GLOBALS.PIXI.SCALE_MODES.NEAREST
+                    });
 
             const sprite = new GLOBALS.PIXI.Sprite(texture);
 
@@ -7409,78 +7341,6 @@ class HeatmapTiledPixiTrack extends TiledPixiTrack {
     }
 }
 
-/**
- * Convert a chromosome position to an absolute genome position.
- *
- * @template {string} Name
- * @param {Name} chrom - Chromosome name
- * @param {number} chromPos - Chromosome position
- * @param {import('../types').ChromInfo<Name>} chromInfo - Chromosome info object
- */
-const chrToAbs = (chrom, chromPos, chromInfo) => chromInfo.chrPositions[chrom].pos + chromPos;
-
-// @ts-nocheck
-/**
- * Export a PIXI text to an SVG element
- *
- * param {PIXI.Text} pixiText A PIXI.Text object that we want to create an SVG element for
- * returns {Element} A DOM SVG Element with all of the attributes set as to display
- * the given text.
- */
-const pixiTextToSvg = pixiText => {
-    const g = document.createElement('g');
-    const t = document.createElement('text');
-
-    if (pixiText.anchor.x === 0) {
-        t.setAttribute('text-anchor', 'start');
-    } else if (pixiText.anchor.x === 1) {
-        t.setAttribute('text-anchor', 'end');
-    } else {
-        t.setAttribute('text-anchor', 'middle');
-    }
-
-    t.setAttribute('font-family', pixiText.style.fontFamily);
-    t.setAttribute('font-size', pixiText.style.fontSize);
-    g.setAttribute('transform', `scale(${pixiText.scale.x},1)`);
-
-    t.setAttribute('fill', pixiText.style.fill);
-    t.innerHTML = pixiText.text;
-
-    g.appendChild(t);
-    g.setAttribute('transform', `translate(${pixiText.x},${pixiText.y})scale(${pixiText.scale.x},1)`);
-
-    return g;
-};
-
-// @ts-nocheck
-/**
- * Generate a SVG line
- * @param   {number}  x1  Start X
- * @param   {number}  y1  Start Y
- * @param   {number}  x2  End X
- * @param   {number}  y2  End Y
- * @param   {number}  strokeWidth  Line width
- * @param   {number}  strokeColor  Color HEX string
- * @return  {object}  SVG line object
- */
-const svgLine = (x1, y1, x2, y2, strokeWidth, strokeColor) => {
-    const line = document.createElement('line');
-
-    line.setAttribute('x1', x1);
-    line.setAttribute('x2', x2);
-    line.setAttribute('y1', y1);
-    line.setAttribute('y2', y2);
-
-    if (strokeWidth) {
-        line.setAttribute('stroke-width', strokeWidth);
-    }
-    if (strokeColor) {
-        line.setAttribute('stroke', strokeColor);
-    }
-
-    return line;
-};
-
 export {
     DataFetcher,
     DenseDataExtrema1D,
@@ -7490,13 +7350,6 @@ export {
     TiledPixiTrack,
     Track,
     ViewportTrackerHorizontal,
-    absToChr,
-    chrToAbs,
-    chromInfoBisector,
-    colorToHex,
-    fakePubSub,
-    pixiTextToSvg,
     setupShowMousePosition as showMousePosition,
-    svgLine,
     api as tileProxy
 };

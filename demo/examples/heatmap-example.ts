@@ -1,7 +1,7 @@
 import { PixiManager } from '@pixi-manager';
 import { HeatmapTrack } from '@gosling-lang/heatmap';
 import { DataFetcher } from '@higlass/datafetcher';
-import { fakePubSub } from '@higlass/utils';
+import { fakePubSub } from '../../src/core/utils/fake-pub-sub';
 import { signal } from '@preact/signals-core';
 import { panZoomHeatmap } from '@gosling-lang/interactors';
 
@@ -26,5 +26,5 @@ export function addHeatmap(pixiManager: PixiManager) {
         dataFetcher,
         pixiManager.makeContainer(heatmapPosition)
     );
-    heatmap.addInteractor((plot) => panZoomHeatmap(plot, xDomain, yDomain));
+    heatmap.addInteractor(plot => panZoomHeatmap(plot, xDomain, yDomain));
 }

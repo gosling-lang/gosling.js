@@ -1,7 +1,5 @@
 import { PixiManager } from '@pixi-manager';
 import { GoslingTrack } from '@gosling-lang/gosling-track';
-import { DataFetcher } from '@higlass/datafetcher';
-import { fakePubSub } from '@higlass/utils';
 import { signal } from '@preact/signals-core';
 import { panZoom } from '@gosling-lang/interactors';
 import { CsvDataFetcher } from '@data-fetchers';

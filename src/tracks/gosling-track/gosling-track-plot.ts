@@ -1,6 +1,6 @@
 import { GoslingTrackClass, type GoslingTrackOptions, type GoslingTrackContext } from './gosling-track';
 import * as PIXI from 'pixi.js';
-import { fakePubSub } from '@higlass/utils';
+import { fakePubSub } from '../../../src/core/utils/fake-pub-sub';
 import { scaleLinear } from 'd3-scale';
 import { type Signal } from '@preact/signals-core';
 import { DataFetcher } from '@higlass/datafetcher';
