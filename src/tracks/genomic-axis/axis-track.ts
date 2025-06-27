@@ -223,7 +223,7 @@ export class AxisTrackClass extends PixiTrack<AxisTrackOptions> {
         this.tickWidth = TICK_WIDTH;
         this.tickHeight = TICK_HEIGHT;
         this.tickTextSeparation = TICK_TEXT_SEPARATION;
-        this.tickColor = colorToHex(this.options.tickColor);
+        this.tickColor = colorToHex(this.options.tickColor.toString());
 
         this.animate = animate;
 
@@ -342,13 +342,13 @@ export class AxisTrackClass extends PixiTrack<AxisTrackOptions> {
         this.options = options;
 
         this.pixiTextConfig.fontSize = +this.options.fontSize
-            ? (`${+this.options.fontSize} px` as const)
+            ? (`${+this.options.fontSize}px` as const)
             : this.pixiTextConfig.fontSize;
         this.pixiTextConfig.fill = this.options.color || this.pixiTextConfig.fill;
         this.pixiTextConfig.stroke = this.options.stroke || this.pixiTextConfig.stroke;
         this.stroke = colorToHex(this.pixiTextConfig.stroke as string);
 
-        this.tickColor = this.options.tickColor ? colorToHex(this.options.tickColor) : TICK_COLOR;
+        this.tickColor = this.options.tickColor ? colorToHex(this.options.tickColor.toString()) : TICK_COLOR;
 
         if (this.options.tickPositions === 'ends' && this.options.layout !== 'circular') {
             this.initBoundsTicks();
@@ -425,12 +425,16 @@ export class AxisTrackClass extends PixiTrack<AxisTrackOptions> {
             ? lineYEnd + this.tickTextSeparation
             : lineYEnd - this.tickTextSeparation;
         this.leftBoundTick.text =
-            this.options.assembly === 'unknown' ? `${this.formatTick(x1[1])} ` : `${x1[0]}: ${this.formatTick(x1[1])} `;
+            this.options.assembly === 'unknown'
+                ? `${this.formatTick(x1?.[1] ?? 0)} `
+                : `${x1?.[0]}: ${this.formatTick(x1?.[1] ?? 0)} `;
         this.leftBoundTick.anchor.y = this.options.reverseOrientation ? 0 : 1;
 
         this.rightBoundTick.x = this.dimensions[0];
         this.rightBoundTick.text =
-            this.options.assembly === 'unknown' ? `${this.formatTick(x2[1])} ` : `${x2[0]}: ${this.formatTick(x2[1])} `;
+            this.options.assembly === 'unknown'
+                ? `${this.formatTick(x2?.[1] ?? 0)} `
+                : `${x2?.[0]}: ${this.formatTick(x2?.[1] ?? 0)} `;
         this.rightBoundTick.y = this.options.reverseOrientation
             ? lineYEnd + this.tickTextSeparation
             : lineYEnd - this.tickTextSeparation;
@@ -621,7 +625,9 @@ export class AxisTrackClass extends PixiTrack<AxisTrackOptions> {
 
         if (!this.texts) return;
 
+        // @ts-expect-error
         const x1 = absToChr(this._xScale.domain()[0], this.chromInfo);
+        // @ts-expect-error
         const x2 = absToChr(this._xScale.domain()[1], this.chromInfo);
 
         if (!x1 || !x2) {
