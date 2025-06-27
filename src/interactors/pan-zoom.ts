@@ -7,7 +7,6 @@ import { zoomWheelBehavior, type Plot } from '../tracks/utils';
 /**
  * This interactor allows the user to pan and zoom the plot
  */
-
 export function panZoom(plot: Plot, xDomain: Signal<[number, number]>, yDomain?: Signal<[number, number]>) {
     plot.xDomain = xDomain; // Update the xDomain with the signal
     if ('yDomain' in plot && yDomain !== undefined) plot.yDomain = yDomain;
@@ -15,6 +14,7 @@ export function panZoom(plot: Plot, xDomain: Signal<[number, number]>, yDomain?:
     // This will store the xDomain when the user starts zooming
     const zoomStartScaleX = scaleLinear();
     const zoomStartScaleY = scaleLinear();
+
     // This function will be called every time the user zooms
     const zoomed = (event: D3ZoomEvent<HTMLElement, unknown>) => {
         if (plot.orientation === undefined || plot.orientation === 'horizontal') {
@@ -34,6 +34,7 @@ export function panZoom(plot: Plot, xDomain: Signal<[number, number]>, yDomain?:
             });
         }
     };
+
     // Create the zoom behavior
     const zoomBehavior = zoom<HTMLElement, unknown>()
         .wheelDelta(zoomWheelBehavior)

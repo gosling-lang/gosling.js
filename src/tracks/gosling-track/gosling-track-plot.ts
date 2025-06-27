@@ -173,6 +173,6 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
 
     addInteractor(interactor: (plot: GoslingTrack) => void) {
         interactor(this);
-        return this; // For chaining
+        return this;
     }
 }

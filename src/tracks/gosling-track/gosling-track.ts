@@ -128,12 +128,6 @@ const loadingTextStyle = getTextStyle({ color: 'black', size: 12 });
  * to keep track of mouse event and channel scales.
  */
 export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions> {
-    /* *
-     *
-     *  Properties
-     *
-     * */
-
     tileSize: number;
     mRangeBrush: LinearBrushModel;
     #assembly?: Assembly; // Used to get the relative genomic position
@@ -160,12 +154,6 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
     resolvedTracks: SingleTrack[] | undefined;
     // This is used to persist processed tile data across draw() calls.
     #processedTileMap: WeakMap<Tile, boolean> = new WeakMap();
-
-    /* *
-     *
-     *  Constructor
-     *
-     * */
 
     constructor(context: GoslingTrackContext, options: GoslingTrackOptions) {
         super(context, options);
@@ -820,7 +808,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
         // https://github.com/higlass/higlass/blob/38f0c4415f0595c3b9d685a754d6661dc9612f7c/app/scripts/TiledPixiTrack.js#L637
         super.receivedTiles(loadedTiles);
         // some items in this.fetching are removed
-        if (!isTabularDataFetcher(this.dataFetcher)) {
+        if (isTabularDataFetcher(this.dataFetcher)) {
             this.drawLoadingCue();
         }
     }
@@ -830,7 +818,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
      */
     override removeOldTiles() {
         super.removeOldTiles(); // some items are added to this.fetching
-        if (!isTabularDataFetcher(this.dataFetcher)) {
+        if (isTabularDataFetcher(this.dataFetcher)) {
             this.drawLoadingCue();
         }
     }
@@ -1509,6 +1497,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
             const margin = 6;
 
             const text = `Fetching... ${Array.from(this.fetching).join(' ')}`;
+            console.warn(this.#loadingText, this);
             this.#loadingText.text = text;
             this.#loadingText.x = this.position[0] + this.dimensions[0] - margin / 2.0;
             this.#loadingText.y = this.position[1] + this.dimensions[1] - margin / 2.0;

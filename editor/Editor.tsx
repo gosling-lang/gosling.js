@@ -1190,7 +1190,7 @@ function Editor(props: RouteComponentProps) {
                                             background: isResponsive ? 'white' : 'none'
                                         }}
                                     >
-                                        <GoslingComponent spec={goslingSpec} width={1000} height={2000} />
+                                        <GoslingComponent spec={goslingSpec} theme={'light'} />
                                         {showViews && !isResponsive ? VisHierarchy : null}
                                     </div>
                                     {/* {expertMode && false ? (

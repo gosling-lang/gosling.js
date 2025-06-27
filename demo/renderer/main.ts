@@ -1,10 +1,10 @@
 import { GoslingTrack } from '@gosling-lang/gosling-track';
 import { AxisTrack } from '@gosling-lang/genomic-axis';
 import { BrushLinearTrack } from '@gosling-lang/brush-linear';
-import { Signal } from '@preact/signals-core';
+import { signal, Signal } from '@preact/signals-core';
 import { TextTrack } from '@gosling-lang/text-track';
 
-import { panZoom, panZoomHeatmap } from '@gosling-lang/interactors';
+import { cursor, cursor2D, panZoom, panZoomHeatmap } from '@gosling-lang/interactors';
 import { type TrackDefs, TrackType } from '../track-def/main';
 import { getDataFetcher } from './dataFetcher';
 import type { LinkedEncoding } from '../linking/linkedEncoding';
@@ -25,6 +25,9 @@ export function renderTrackDefs(
     pixiManager: PixiManager,
     urlToFetchOptions?: UrlToFetchOptions
 ) {
+    const cursorPosX = signal(0);
+    const cursorPosY = signal(0);
+
     trackDefs.forEach(trackDef => {
         const { boundingBox, type, options } = trackDef;
 
@@ -50,6 +53,7 @@ export function renderTrackDefs(
             if (!options.spec.static && !isOverlayedOnPrevious) {
                 gosPlot.addInteractor(plot => panZoom(plot, xDomain, yDomain));
             }
+            gosPlot.addInteractor(plot => cursor(plot, cursorPosX));
         }
         if (type === TrackType.Heatmap) {
             const xDomain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
@@ -57,9 +61,9 @@ export function renderTrackDefs(
             if (!xDomain || !yDomain) return;
 
             const datafetcher = getDataFetcher(options.spec, urlToFetchOptions);
-            new HeatmapTrack(options, datafetcher, pixiManager.makeContainer(boundingBox)).addInteractor(plot =>
-                panZoomHeatmap(plot, xDomain, yDomain)
-            );
+            new HeatmapTrack(options, datafetcher, pixiManager.makeContainer(boundingBox))
+                .addInteractor(plot => panZoomHeatmap(plot, xDomain, yDomain))
+                .addInteractor(plot => cursor2D(plot, cursorPosX, cursorPosY));
         }
         if (type === TrackType.Axis) {
             const domain = getEncodingSignal(trackDef.trackId, options.encoding, linkedEncodings);

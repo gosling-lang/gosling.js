@@ -6,14 +6,14 @@ import { type Plot } from '../tracks/utils';
 /**
  * This interactor shows a cursor that follows the mouse
  */
-export function cursor(plot: Plot & { pMain: PIXI.Container }, cursorPos: Signal<number>) {
+export function cursor(plot: Plot & { pMasked: PIXI.Container }, cursorPos: Signal<number>) {
     const baseScale = scaleLinear().domain(plot.xDomain.value).range([0, plot.domOverlay.clientWidth]);
 
     const cursor = new PIXI.Graphics();
     cursor.lineStyle(1, 'black', 1);
     cursor.moveTo(0, 0);
     cursor.lineTo(0, plot.domOverlay.clientHeight);
-    plot.pMain.addChild(cursor);
+    plot.pMasked.addChild(cursor);
 
     // This function will be called every time the user moves the mouse
     const moveCursor = (event: MouseEvent) => {
