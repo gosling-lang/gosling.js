@@ -1,4 +1,10 @@
-import { IsDummyTrack, IsMultipleViews, IsSingleView, type Assembly, type SingleView } from '@gosling-lang/gosling-schema';
+import {
+    IsDummyTrack,
+    IsMultipleViews,
+    IsSingleView,
+    type Assembly,
+    type SingleView
+} from '@gosling-lang/gosling-schema';
 import { GenomicPositionHelper, computeChromSizes } from '../../src/core/utils/assembly';
 import { signal, type Signal } from '@preact/signals-core';
 import type { GoslingSpec } from 'gosling.js';
@@ -190,7 +196,7 @@ function getSingleViewTrackLinks(gs: SingleView): TrackLink[] {
         return trackLink;
     }
 
-    const { assembly, xDomain, yDomain, tracks } = gs;
+    const { assembly, xDomain, tracks } = gs;
     const viewXDomain = getDomain(xDomain, assembly);
     const trackLinks: TrackLink[] = [];
     tracks.forEach(track => {
