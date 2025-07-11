@@ -7,6 +7,9 @@ import { renderTrackDefs } from './renderer/main';
 import type { TrackInfo } from 'src/compiler/bounding-box';
 import type { GoslingSpec, Theme } from 'gosling.js';
 import { getLinkedEncodings } from './linking/linkedEncoding';
+import { select } from 'd3-selection';
+import { zoom as d3zoom, zoomIdentity, zoomTransform } from 'd3-zoom';
+import { scaleLinear } from 'd3-scale';
 
 // Previously supported:
 // https://github.com/gosling-lang/gosling.js/blob/b7f7f0a065d99c66aee2b87db71e220e18d534ca/src/core/gosling-component.tsx#L33-L45
@@ -87,10 +90,32 @@ function renderGosling(
         // 4. If the spec is not responsive, we can just render the tracks
         const trackDefs = createTrackDefs(trackInfos, themeDeep);
 
-        renderTrackDefs(trackDefs, linkedEncodings, pixiManager, urlToFetchOptions);
+        const plots = renderTrackDefs(trackDefs, linkedEncodings, pixiManager, urlToFetchOptions);
         // Resize the canvas to make sure it fits the tracks
         const { width, height } = calculateWidthHeight(trackInfos);
         pixiManager.resize(width, height);
+        console.warn('Plots', plots);
+
+        /* Testing with zoomTo */
+
+        console.warn(plots['track-1']);
+        const plot = plots['track-1'];
+
+        const zoomStartScaleX = scaleLinear();
+        const zoom = d3zoom()
+            .on('start', () => {
+                zoomStartScaleX.domain(plot.xDomain.value).range([0, plot.width]);
+            })
+            .on('zoom', event => {
+                const newXDomain = event.transform.rescaleX(zoomStartScaleX).domain();
+                // console.warn(event.transform);
+                plot.xDomain.value = newXDomain as [number, number];
+            });
+
+        select<HTMLElement, unknown>(plot.domOverlay)
+            .transition()
+            .duration(1000)
+            .call(zoom.translateBy, -plot.width / 2);
     }
 }
 

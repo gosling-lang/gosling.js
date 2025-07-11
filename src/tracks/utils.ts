@@ -4,7 +4,7 @@ import { type ScaleLinear } from 'd3-scale';
 export function zoomWheelBehavior(event: WheelEvent) {
     // Default d3 zoom feels slow, so we can adjust the following instead
     // https://d3js.org/d3-zoom#zoom_wheelDelta
-    const defaultMultiplier = 1;
+    const defaultMultiplier = 2;
     return (
         -event.deltaY *
         (event.deltaMode === 1 ? 0.05 : event.deltaMode ? 1 : 0.002) *
