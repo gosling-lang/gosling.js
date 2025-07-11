@@ -1,4 +1,4 @@
-name: Deploy Editor (experimental)
+name: Deploy Editor (v2)
 
 on:
   workflow_dispatch:
