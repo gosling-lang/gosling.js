@@ -121,7 +121,8 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                 }
             ]
         },
-        {
+        /*
+             {
             xDomain: { chromosome: 'chr3', interval: [52168000, 52890000] },
             tracks: [
                 {
@@ -182,7 +183,7 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                     }
                 }
             ]
-        },
+        },*/
         {
             xDomain: { interval: [1, 1000000000] },
             tracks: [

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, type RefObject } from 'react';
+import React, { useState, useEffect, type RefObject, useImperativeHandle } from 'react';
 import { PixiManager } from '@pixi-manager';
 import { compile, type UrlToFetchOptions } from '../src/compiler/compile';
 import { getTheme } from '../src/core/utils/theme';
@@ -7,6 +7,9 @@ import { renderTrackDefs } from './renderer/main';
 import type { TrackInfo } from 'src/compiler/bounding-box';
 import type { GoslingSpec, Theme } from 'gosling.js';
 import { getLinkedEncodings } from './linking/linkedEncoding';
+import { createApiV2 } from '../src/api/api';
+
+export type GoslingRef = { api: ReturnType<typeof createApiV2> };
 
 // Previously supported:
 // https://github.com/gosling-lang/gosling.js/blob/b7f7f0a065d99c66aee2b87db71e220e18d534ca/src/core/gosling-component.tsx#L33-L45
@@ -14,13 +17,17 @@ interface GoslingComponentProps {
     spec?: GoslingSpec;
     theme?: Theme;
     urlToFetchOptions?: UrlToFetchOptions;
-    ref?: RefObject<HTMLDivElement>;
+    ref?: RefObject<GoslingRef>;
 }
 
 export function GoslingComponent(props: GoslingComponentProps) {
     const { spec, urlToFetchOptions, theme = 'light', ref } = props;
 
-    console.warn(ref);
+    useImperativeHandle(ref, () => {
+        return {
+            api: createApiV2()
+        };
+    }, []);
 
     // Pixi manager should persist between render calls. Otherwise performance degrades greatly.
     const [pixiManager, setPixiManager] = useState<PixiManager | null>(null);
@@ -32,7 +39,7 @@ export function GoslingComponent(props: GoslingComponentProps) {
         if (!pixiManager) {
             const canvasWidth = 1000,
                 canvasHeight = 1000; // These initial sizes don't matter because the size will be updated
-            const pixiManager = new PixiManager(canvasWidth, canvasHeight, plotElement, () => {});
+            const pixiManager = new PixiManager(canvasWidth, canvasHeight, plotElement, () => { });
             renderGosling(spec, plotElement, pixiManager, theme, urlToFetchOptions);
             setPixiManager(pixiManager);
         } else {
@@ -101,7 +108,7 @@ function renderGosling(
 /** Debounces the resize observer */
 function debounce(f: (arg0: unknown) => unknown, delay: number) {
     let timer = 0;
-    return function (...args: [arg0: unknown]) {
+    return function(...args: [arg0: unknown]) {
         clearTimeout(timer);
         // @ts-expect-error
         timer = setTimeout(() => f.apply(this, args), delay);

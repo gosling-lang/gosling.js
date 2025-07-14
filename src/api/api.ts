@@ -50,6 +50,14 @@ export interface GoslingApi {
     };
 }
 
+// TODO: After fully implementing this, remove `Partial` from the return type
+export function createApiV2(): Pick<GoslingApi, 'subscribe' | 'unsubscribe'> & Partial<GoslingApi> {
+    return {
+        subscribe,
+        unsubscribe
+    };
+}
+
 export function createApi(
     hg: Readonly<HiGlassApi>,
     tracksAndViews: readonly VisUnitApiData[],
