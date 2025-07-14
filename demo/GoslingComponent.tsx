@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, type RefObject } from 'react';
 import { PixiManager } from '@pixi-manager';
 import { compile, type UrlToFetchOptions } from '../src/compiler/compile';
 import { getTheme } from '../src/core/utils/theme';
@@ -14,9 +14,13 @@ interface GoslingComponentProps {
     spec?: GoslingSpec;
     theme?: Theme;
     urlToFetchOptions?: UrlToFetchOptions;
+    ref?: RefObject<HTMLDivElement>;
 }
+
 export function GoslingComponent(props: GoslingComponentProps) {
-    const { spec, urlToFetchOptions, theme = 'light' } = props;
+    const { spec, urlToFetchOptions, theme = 'light', ref } = props;
+
+    console.warn(ref);
 
     // Pixi manager should persist between render calls. Otherwise performance degrades greatly.
     const [pixiManager, setPixiManager] = useState<PixiManager | null>(null);
