@@ -34,5 +34,5 @@ jobs:
         run: aws s3 sync build s3://v2.gosling-lang.org
 
       - name: Invalidate CloudFront cache
-        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CF_DISTRIBUTION_ID }} --paths "/*"
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CF_DISTRIBUTION_ID_V2 }} --paths "/*"
 
