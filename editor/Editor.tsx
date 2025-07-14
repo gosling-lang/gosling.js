@@ -24,7 +24,7 @@ import { traverseTracksAndViews } from '../src/compiler/spec-preprocess';
 import { examples, type Example } from './example';
 import EditorPanel, { type EditorLangauge } from './EditorPanel';
 import EditorExamples from './EditorExamples';
-import { GoslingComponent } from '../demo/GoslingComponent';
+import { GoslingComponent, type GoslingRef } from '../demo/gosling-component';
 
 import './Editor.css';
 import { uuid } from '../src/core/utils/uuid';
@@ -296,7 +296,7 @@ function Editor(props: RouteComponentProps) {
 
     // for using HiGlass JS API
     // const hgRef = useRef<any>();
-    const gosRef = useRef<gosling.GoslingRef>(null);
+    const gosRef = useRef<GoslingRef>(null);
 
     const debounceCodeEdit = useRef(
         debounce((code: string, language: EditorLangauge) => {
@@ -311,46 +311,48 @@ function Editor(props: RouteComponentProps) {
     // publish event listeners to Gosling.js
     useEffect(() => {
         if (gosRef.current) {
-            // gosRef.current.api.subscribe('rawdata', (type, data) => {
-            // console.log('rawdata', data);
+            gosRef.current.api.subscribe('rawData', (type, data) => {
+                console.warn('rawData', type, data);
+            });
             // gosRef.current.api.zoomTo('bam-1', `chr${data.data.chr1}:${data.data.start1}-${data.data.end1}`, 2000);
             // gosRef.current.api.zoomTo('bam-2', `chr${data.data.chr2}:${data.data.start2}-${data.data.end2}`, 2000);
-            // console.log('click', data.data);
             // TODO: show messages on the right-bottom of the editor
-            // gosRef.current.api.subscribe('mouseOver', (type, eventData) => {
-            //     console.warn(type, eventData.id, eventData.genomicPosition, eventData.data);
-            //     // setMouseEventInfo({ type: 'mouseOver', data: eventData.data, position: eventData.genomicPosition });
-            // });
-            // gosRef.current.api.subscribe('click', (type, eventData) => {
-            //     console.warn(type, eventData.id, eventData.genomicPosition, eventData.data);
-            //     // setMouseEventInfo({ type: 'click', data: eventData.data, position: eventData.genomicPosition });
-            // });
+            gosRef.current.api.subscribe('mouseOver', (type, eventData) => {
+                console.warn(type, eventData.id, eventData.genomicPosition, eventData.data);
+                //     // setMouseEventInfo({ type: 'mouseOver', data: eventData.data, position: eventData.genomicPosition });
+            });
+            gosRef.current.api.subscribe('click', (type, eventData) => {
+                console.warn(type, eventData.id, eventData.genomicPosition, eventData.data);
+                // setMouseEventInfo({ type: 'click', data: eventData.data, position: eventData.genomicPosition });
+            });
             // Range Select API
-            // gosRef.current.api.subscribe('rangeSelect', (type, eventData) => {
-            //     console.warn(type, eventData.id, eventData.genomicRange, eventData.data);
-            // });
+            gosRef.current.api.subscribe('rangeSelect', (type, eventData) => {
+                console.warn(type, eventData.id, eventData.genomicRange, eventData.data);
+            });
             // Mouse click on a track
-            // gosRef.current.api.subscribe('trackClick', (type, eventData) => {
-            //     console.warn(type, eventData.id, eventData.spec, eventData.shape);
-            // });
+            gosRef.current.api.subscribe('trackClick', (type, eventData) => {
+                console.warn(type, eventData.id, eventData.spec, eventData.shape);
+            });
             // Location API
-            // gosRef.current.api.subscribe('location', (type, eventData) => {
-            //     console.warn(type, eventData.id, eventData.genomicRange);
+            gosRef.current.api.subscribe('location', (type, eventData) => {
+                console.warn(type, eventData.id, eventData.genomicRange);
+            });
             // New Track
-            // gosRef.current.api.subscribe('onNewTrack', (type, eventData) => {
-            //     console.warn(type, eventData);
-            // });
+            gosRef.current.api.subscribe('onNewTrack', (type, eventData) => {
+                console.warn(type, eventData);
+            });
             // New View
-            // gosRef.current.api.subscribe('onNewView', (type, eventData) => {
-            //     console.warn(type, eventData);
-            // });
+            gosRef.current.api.subscribe('onNewView', (type, eventData) => {
+                console.warn(type, eventData);
+            });
         }
         return () => {
-            // gosRef.current?.api.unsubscribe('mouseOver');
-            // gosRef.current?.api.unsubscribe('click');
-            // gosRef.current?.api.unsubscribe('rangeSelect');
-            // gosRef.current?.api.unsubscribe('trackClick');
-            // gosRef.current?.api.unsubscribe('location');
+            gosRef.current?.api.unsubscribe('rawData');
+            gosRef.current?.api.unsubscribe('mouseOver');
+            gosRef.current?.api.unsubscribe('click');
+            gosRef.current?.api.unsubscribe('rangeSelect');
+            gosRef.current?.api.unsubscribe('trackClick');
+            gosRef.current?.api.unsubscribe('location');
         };
     }, [gosRef.current]);
 
@@ -588,10 +590,10 @@ function Editor(props: RouteComponentProps) {
             typeof goslingSpec?.responsiveSize === 'undefined'
                 ? false
                 : typeof goslingSpec?.responsiveSize === 'boolean'
-                  ? goslingSpec?.responsiveSize === true
-                  : typeof goslingSpec?.responsiveSize === 'object'
-                    ? goslingSpec?.responsiveSize.width === true || goslingSpec?.responsiveSize.height === true
-                    : false;
+                    ? goslingSpec?.responsiveSize === true
+                    : typeof goslingSpec?.responsiveSize === 'object'
+                        ? goslingSpec?.responsiveSize.width === true || goslingSpec?.responsiveSize.height === true
+                        : false;
         if (newIsResponsive !== isResponsive && newIsResponsive) {
             setScreenSize(undefined); // reset the screen
             setVisibleScreenSize(undefined);
@@ -738,25 +740,25 @@ function Editor(props: RouteComponentProps) {
         <>
             <div
                 className={`demo-navbar ${theme === 'dark' ? 'dark' : ''}`}
-                // To test APIs, uncomment the following code.
-                // onClick={() => {
-                //     if (!gosRef.current) return;
-                // // ! Be aware that the first view is for the title/subtitle track. So navigation API does not work.
-                // const id = gosRef.current.api.getViewIds()?.[1]; //'view-1';
-                // if(id) {
-                //     gosRef.current.api.zoomToExtent(id);
-                // }
-                //
-                // // Static visualization rendered in canvas
-                // const { canvas } = gosRef.current.api.getCanvas({
-                //     resolution: 1,
-                //     transparentBackground: true,
-                // });
-                // const testDiv = document.getElementById('preview-container');
-                // if(canvas && testDiv) {
-                //     testDiv.appendChild(canvas);
-                // }
-                // }}
+            // To test APIs, uncomment the following code.
+            // onClick={() => {
+            //     if (!gosRef.current) return;
+            // // ! Be aware that the first view is for the title/subtitle track. So navigation API does not work.
+            // const id = gosRef.current.api.getViewIds()?.[1]; //'view-1';
+            // if(id) {
+            //     gosRef.current.api.zoomToExtent(id);
+            // }
+            //
+            // // Static visualization rendered in canvas
+            // const { canvas } = gosRef.current.api.getCanvas({
+            //     resolution: 1,
+            //     transparentBackground: true,
+            // });
+            // const testDiv = document.getElementById('preview-container');
+            // if(canvas && testDiv) {
+            //     testDiv.appendChild(canvas);
+            // }
+            // }}
             >
                 <button
                     style={{ cursor: 'pointer', lineHeight: '40px' }}
@@ -1244,8 +1246,8 @@ function Editor(props: RouteComponentProps) {
                                             {'REFRESH DATA'}
                                         </button>
                                         {previewData.current.length > selectedPreviewData &&
-                                        previewData.current[selectedPreviewData] &&
-                                        previewData.current[selectedPreviewData].data.length > 0 ? (
+                                            previewData.current[selectedPreviewData] &&
+                                            previewData.current[selectedPreviewData].data.length > 0 ? (
                                             <>
                                                 <div className="editor-data-preview-tab">
                                                     {previewData.current.map((d: PreviewData, i: number) => (
@@ -1306,9 +1308,8 @@ function Editor(props: RouteComponentProps) {
                 </Allotment>
                 {/* Description Panel */}
                 <div
-                    className={`description ${hideDescription ? '' : 'description-shadow '}${
-                        isDescResizing ? '' : 'description-transition'
-                    } ${theme === 'dark' ? 'dark' : ''}`}
+                    className={`description ${hideDescription ? '' : 'description-shadow '}${isDescResizing ? '' : 'description-transition'
+                        } ${theme === 'dark' ? 'dark' : ''}`}
                     style={{ width: !description || hideDescription ? 0 : descPanelWidth }}
                 >
                     <div
