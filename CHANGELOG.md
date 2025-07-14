@@ -1,3 +1,7 @@
+## [1.0.5](https://github.com/gosling-lang/gosling.js/compare/v1.0.4...v1.0.5) (2025-07-14)
+
+
+
 ## [1.0.3](https://github.com/gosling-lang/gosling.js/compare/v1.0.2...v1.0.3) (2025-06-26)
 
 
