@@ -51,10 +51,10 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
         // Setup the context object
         const context: GoslingTrackContext = {
             scene: pixiContainer,
-            id: 'test',
-            viewUid: 'test',
+            id: options.id,
+            viewUid: options.id, // V2: Is this used anywhere?
             // getLockGroupExtrema: () => null,
-            onMouseMoveZoom: () => {},
+            onMouseMoveZoom: () => { },
             // chromInfoPath: '',
             dataFetcher,
             //dataConfig: {
@@ -62,10 +62,10 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
             // tilesetUid: 'UvVPeLHuRDiYA3qwFlm7xQ'
             // coordSystem: "hg19",
             // },
-            animate: () => {},
-            onValueScaleChanged: () => {},
-            handleTilesetInfoReceived: () => {},
-            onTrackOptionsChanged: () => {},
+            animate: () => { },
+            onValueScaleChanged: () => { },
+            handleTilesetInfoReceived: () => { },
+            onTrackOptionsChanged: () => { },
             pubSub: fakePubSub,
             isValueScaleLocked: () => false,
             svgElement: svgElement,
@@ -137,10 +137,10 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
         // When the mouse moves over the overlay div, update the tooltip position
         this.domOverlay.addEventListener('mousemove', (e: MouseEvent) => {
             const { x, y } = getRelativePosition(this.domOverlay, e);
-            this.onMouseMove(x);
+            this.onMouseMove(x, y);
             // Update the tooltip position
-            tooltipDiv.style.left = `${x}px`;
-            tooltipDiv.style.top = `${y}px`;
+            tooltipDiv.style.left = `${x + 10}px`;
+            tooltipDiv.style.top = `${y + 10}px`;
             const tooltip = this.getMouseOverHtml(x, y);
             if (tooltip === '' || this.isRangeBrushActivated) {
                 tooltipDiv.innerHTML = '';

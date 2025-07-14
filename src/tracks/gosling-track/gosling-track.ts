@@ -132,7 +132,6 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
     mRangeBrush: LinearBrushModel;
     #assembly?: Assembly; // Used to get the relative genomic position
     #processedTileInfo: Record<string, ProcessedTileInfo>;
-    #viewUid: string;
     firstDraw = true; // False if draw has been called once already. Used with onNewTrack API. Public because used in draw()
     // Used in mark/legend.ts
     gLegend?: Selection<SVGGElement, unknown, null, undefined>;
@@ -157,7 +156,6 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
 
     constructor(context: GoslingTrackContext, options: GoslingTrackOptions) {
         super(context, options);
-        this.#viewUid = context.viewUid;
 
         if (context.dataFetcher) {
             context.dataFetcher.track = this;
@@ -487,7 +485,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
                 GenomicPosition
             ];
         publish('location', {
-            id: this.#viewUid,
+            id: this.options.id,
             genomicRange: genomicRange
         });
     }
@@ -554,7 +552,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
 
         const flatTileData = ([] as Datum[]).concat(...models.map(d => d.data()));
         if (flatTileData.length !== 0) {
-            this.options.siblingIds.forEach(id => publish('rawData', { id, data: flatTileData }));
+            publish('rawData', { id: this.options.id, data: flatTileData });
         }
 
         // Record processed tiles so that we don't process them again
@@ -1026,7 +1024,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
                     const NUM_OF_ROWS_IN_PREVIEW = 100;
                     const numOrRows = tabularDataTransformed.length;
                     PubSub.publish('data-preview', {
-                        id: this.#viewUid,
+                        id: this.options.id,
                         dataConfig: JSON.stringify({ data: resolvedSpec.data }),
                         data:
                             NUM_OF_ROWS_IN_PREVIEW > numOrRows
@@ -1089,7 +1087,10 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
         this.pMouseHover.clear();
     }
 
-    onMouseMove(mouseX: number) {
+    onMouseMove(mouseX: number, mouseY: number) {
+        // `trackMouseOver` API
+        this.#publishTrackEvents('trackMouseOver', mouseX, mouseY);
+
         if (this.options.spec.layout === 'circular') {
             // TODO: We do not yet support range selection on circular tracks
             return;
@@ -1101,11 +1102,6 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
 
     /** Used for range selections */
     onMouseUp(mouseX: number, mouseY: number) {
-        // `trackClick` API
-        this.#publishTrackEvents('trackClick', mouseX, mouseY);
-
-        const mouseEvents = this.options.spec.mouseEvents;
-        const clickEnabled = !!mouseEvents || (IsMouseEventsDeep(mouseEvents) && !!mouseEvents.click);
         const isDrag = Math.sqrt((this.#mouseDownX - mouseX) ** 2 + (this.#mouseDownY - mouseY) ** 2) > 1;
 
         if (!this.isRangeBrushActivated && !isDrag) {
@@ -1123,25 +1119,6 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
             // Do not have enough information
             return;
         }
-
-        // `click` API
-        if (!isDrag && clickEnabled) {
-            // Identify the current position
-            const genomicPosition = getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)), this.#assembly);
-
-            // Get elements within mouse
-            const capturedElements = this.#getElementsWithinMouse(mouseX, mouseY);
-
-            if (capturedElements.length !== 0) {
-                this.options.siblingIds.forEach(id =>
-                    publish('click', {
-                        id,
-                        genomicPosition,
-                        data: capturedElements.map(d => d.value)
-                    })
-                );
-            }
-        }
     }
 
     onMouseOut() {
@@ -1151,11 +1128,32 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
     }
 
     onMouseClick(mouseX: number, mouseY: number) {
+        // `trackClick` API
+        this.#publishTrackEvents('trackClick', mouseX, mouseY);
+
         const isDrag = Math.sqrt((this.#mouseDownX - mouseX) ** 2 + (this.#mouseDownY - mouseY) ** 2) > 1;
         // Clear the brush if we are not dragging
         if (!isDrag) {
             this.mRangeBrush.clear();
             this.pMouseSelection.clear();
+        }
+        const mouseEvents = this.options.spec.mouseEvents;
+        const clickEnabled = !!mouseEvents || (IsMouseEventsDeep(mouseEvents) && !!mouseEvents.click);
+        // `click` API
+        if (!isDrag && clickEnabled) {
+            // Identify the current position
+            const genomicPosition = getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)), this.#assembly);
+
+            // Get elements within mouse
+            const capturedElements = this.#getElementsWithinMouse(mouseX, mouseY);
+
+            if (capturedElements.length !== 0) {
+                publish('click', {
+                    id: this.options.id,
+                    genomicPosition,
+                    data: capturedElements.map(d => d.value)
+                });
+            }
         }
     }
     /**
@@ -1216,7 +1214,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
                 )
             ) {
                 publish(eventType, {
-                    id: this.#viewUid,
+                    id: this.options.id,
                     spec: structuredClone(this.options.spec),
                     shape: {
                         x,
@@ -1234,7 +1232,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
             }
         } else {
             publish(eventType, {
-                id: this.#viewUid,
+                id: this.options.id,
                 spec: structuredClone(this.options.spec),
                 shape: { x, y, width, height }
             });
@@ -1248,7 +1246,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
             // brush just removed
             if (!skipApiTrigger) {
                 publish('rangeSelect', {
-                    id: this.#viewUid,
+                    id: this.options.id,
                     genomicRange: null,
                     data: []
                 });
@@ -1301,7 +1299,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
             ];
 
             publish('rangeSelect', {
-                id: this.#viewUid,
+                id: this.options.id,
                 genomicRange,
                 data: capturedElements.map(d => d.value)
             });
@@ -1351,9 +1349,6 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
      * Called by showHoverMenu() in HiGlassComponent
      */
     getMouseOverHtml(mouseX: number, mouseY: number) {
-        // `trackMouseOver` API
-        this.#publishTrackEvents('trackMouseOver', mouseX, mouseY);
-
         if (this.isRangeBrushActivated) {
             // In the middle of drawing range brush.
             return '';
@@ -1401,7 +1396,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
 
                 // API call
                 publish('mouseOver', {
-                    id: this.#viewUid,
+                    id: this.options.id,
                     genomicPosition,
                     data: capturedElements.map(d => d.value)
                 });
@@ -1458,7 +1453,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
      */
     #publishOnNewTrack() {
         publish('onNewTrack', {
-            id: this.#viewUid
+            id: this.options.id
         });
     }
 

@@ -311,11 +311,12 @@ function Editor(props: RouteComponentProps) {
     // publish event listeners to Gosling.js
     useEffect(() => {
         if (gosRef.current) {
+            // gosRef.current.api.zoomTo('bam-1', `chr${data.data.chr1}:${data.data.start1}-${data.data.end1}`, 2000);
+            // gosRef.current.api.zoomTo('bam-2', `chr${data.data.chr2}:${data.data.start2}-${data.data.end2}`, 2000);
+            /*
             gosRef.current.api.subscribe('rawData', (type, data) => {
                 console.warn('rawData', type, data);
             });
-            // gosRef.current.api.zoomTo('bam-1', `chr${data.data.chr1}:${data.data.start1}-${data.data.end1}`, 2000);
-            // gosRef.current.api.zoomTo('bam-2', `chr${data.data.chr2}:${data.data.start2}-${data.data.end2}`, 2000);
             // TODO: show messages on the right-bottom of the editor
             gosRef.current.api.subscribe('mouseOver', (type, eventData) => {
                 console.warn(type, eventData.id, eventData.genomicPosition, eventData.data);
@@ -345,14 +346,17 @@ function Editor(props: RouteComponentProps) {
             gosRef.current.api.subscribe('onNewView', (type, eventData) => {
                 console.warn(type, eventData);
             });
+            */
         }
         return () => {
+            /*
             gosRef.current?.api.unsubscribe('rawData');
             gosRef.current?.api.unsubscribe('mouseOver');
             gosRef.current?.api.unsubscribe('click');
             gosRef.current?.api.unsubscribe('rangeSelect');
             gosRef.current?.api.unsubscribe('trackClick');
             gosRef.current?.api.unsubscribe('location');
+            */
         };
     }, [gosRef.current]);
 
@@ -699,6 +703,8 @@ function Editor(props: RouteComponentProps) {
 
     // Layers to be shown on top of the Gosling visualization to show the hiererchy of Gosling views and tracks
     const VisHierarchy = useMemo(() => {
+        return <></>;
+
         const tracksAndViews = gosRef.current?.api.getTracksAndViews();
         const maxHeight = Math.max(...(tracksAndViews?.map(d => d.shape.height) ?? []));
         return (
