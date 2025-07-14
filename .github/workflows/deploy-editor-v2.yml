@@ -1,0 +1,38 @@
+name: Deploy Editor (v2)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [v2]
+
+# These permissions are needed to interact with GitHub's OIDC Token endpoint.
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  Deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: v2
+
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: true
+
+      - run: pnpm build-editor
+
+      - name: Setup AWS CLI
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE }}
+          aws-region: us-east-1
+
+      - name: Copy files to the S3 website content bucket
+        run: aws s3 sync build s3://v2.gosling-lang.org
+
+      - name: Invalidate CloudFront cache
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CF_DISTRIBUTION_ID }} --paths "/*"
+
