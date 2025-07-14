@@ -79,7 +79,7 @@ const launchHiglass = async (
  * @param spec
  */
 export function embed(element: HTMLElement, spec: GoslingSpec, opts: GoslingEmbedOptions = {}) {
-    return new Promise<GoslingApi>((resolve, reject) => {
+    return new Promise<GoslingApi & { _hgApi: HiGlassApi }>((resolve, reject) => {
         const valid = validateGoslingSpec(spec);
 
         if (valid.state === 'error') {
@@ -98,7 +98,7 @@ export function embed(element: HTMLElement, spec: GoslingSpec, opts: GoslingEmbe
             async (hsSpec, size, _, trackInfos, idTable) => {
                 const hg = await launchHiglass(element, hsSpec, size, options);
                 const api = createApi(hg, hsSpec, trackInfos, theme, idTable);
-                resolve(api);
+                resolve({ ...api, _hgApi: hg });
             },
             [...GoslingTemplates],
             theme,
