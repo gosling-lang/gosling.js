@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import MonacoEditor from 'react-monaco-editor';
 
-import ReactResizeDetector from 'react-resize-detector';
+import { useResizeDetector } from 'react-resize-detector';
 import { GoslingSchema } from 'gosling.js';
 import goslingSpec from '../src/gosling-schema/gosling.schema?raw';
 
@@ -136,40 +136,40 @@ function EditorPanel(props: {
         if (props.onChange) props.onChange(newCode, language);
     }
 
-    return (
-        <>
-            <ReactResizeDetector
-                handleWidth
-                handleHeight
-                onResize={(width: number, height: number) => {
-                    editor?.current?.layout({ width, height });
-                }}
-            ></ReactResizeDetector>
-            <MonacoEditor
-                // Refer to https://github.com/react-monaco-editor/react-monaco-editor
-                language={language}
-                value={code}
-                theme={'gosling'}
-                options={{
-                    autoClosingBrackets: 'beforeWhitespace',
-                    autoClosingQuotes: 'beforeWhitespace',
-                    cursorBlinking: 'smooth',
-                    folding: true,
-                    lineNumbersMinChars: 4,
-                    minimap: { enabled: true },
-                    scrollBeyondLastLine: false,
-                    wordWrap: 'on',
-                    lineNumbers: 'on',
-                    renderLineHighlight: 'line',
-                    renderIndentGuides: true,
-                    fontSize: 14,
-                    readOnly
-                }}
-                onChange={onChangeHandle}
-                editorDidMount={editorDidMount}
-                editorWillMount={editorWillMount}
-            />
-        </>
-    );
+    const MonacoEditorWithResizer = () => {
+        const { width, height, ref } = useResizeDetector<HTMLElement>();
+        return (
+            <div ref={ref} style={{ width: '100%', height: '100%' }}>
+                <MonacoEditor
+                    // Refer to https://github.com/react-monaco-editor/react-monaco-editor
+                    width={width}
+                    height={height}
+                    language={language}
+                    value={code}
+                    theme={'gosling'}
+                    options={{
+                        autoClosingBrackets: 'beforeWhitespace',
+                        autoClosingQuotes: 'beforeWhitespace',
+                        cursorBlinking: 'smooth',
+                        folding: true,
+                        lineNumbersMinChars: 4,
+                        minimap: { enabled: true },
+                        scrollBeyondLastLine: false,
+                        wordWrap: 'on',
+                        lineNumbers: 'on',
+                        renderLineHighlight: 'line',
+                        renderIndentGuides: true,
+                        fontSize: 14,
+                        readOnly
+                    }}
+                    onChange={onChangeHandle}
+                    editorDidMount={editorDidMount}
+                    editorWillMount={editorWillMount}
+                />
+            </div>
+        );
+    };
+
+    return <MonacoEditorWithResizer />;
 }
 export default EditorPanel;
