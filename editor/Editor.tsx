@@ -961,7 +961,7 @@ function Editor(props: RouteComponentProps) {
                                         title="Save PNG file"
                                         className="side-subpanel-button"
                                         onClick={() => {
-                                            gosRef.current?.api.exportPng(true);
+                                            gosRef.current?.api.exportPng();
                                         }}
                                     >
                                         {getIconSVG(ICONS.IMAGE, 23, 23)}

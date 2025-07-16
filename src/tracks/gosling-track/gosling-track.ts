@@ -373,7 +373,6 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
             drawMark(this, tile, model);
             drawPostEmbellishment(this, tile, model, this.options.theme);
         });
-
         this.forceDraw();
     }
 
