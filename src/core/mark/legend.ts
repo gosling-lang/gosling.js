@@ -195,7 +195,8 @@ export function drawColorLegendQuantitative(
         .attr(
             'transform',
             (d: Datum) =>
-                `translate(${legendX + colorBarDim.left}, ${legendY + colorBarDim.top - BRUSH_HEIGHT / 2.0 + colorBarDim.height - colorBarDim.height * d.y
+                `translate(${legendX + colorBarDim.left}, ${
+                    legendY + colorBarDim.top - BRUSH_HEIGHT / 2.0 + colorBarDim.height - colorBarDim.height * d.y
                 })`
         )
         .attr('width', `${colorBarDim.width}px`)

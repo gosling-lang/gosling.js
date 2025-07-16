@@ -26,7 +26,6 @@ export function renderTrackDefs(
     urlToFetchOptions?: UrlToFetchOptions
 ) {
     const plotDict: Record<string, unknown> = {};
-    const plots = [];
 
     const cursorPosX = signal(0);
     const cursorPosY = signal(0);

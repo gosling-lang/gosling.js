@@ -2,9 +2,8 @@ import * as PIXI from 'pixi.js';
 import type { TrackApiData, VisUnitApiData, ViewApiData } from '@gosling-lang/gosling-schema';
 import { subscribe, unsubscribe } from './pubsub';
 import { computeChromSizes, GenomicPositionHelper } from '../core/utils/assembly';
-import { getTheme, type CompleteThemeDeep } from '../core/utils/theme';
+import { type CompleteThemeDeep } from '../core/utils/theme';
 import type { IdTable } from './track-and-view-ids';
-import type { compile } from 'src/compiler/compile';
 import type { renderGosling } from 'demo/gosling-component';
 
 // TODO: Complete the API
