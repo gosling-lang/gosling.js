@@ -89,6 +89,7 @@ function renderGosling(
                 pixiManager.clearAll();
                 const rescaledTracks = rescaleTrackInfos(
                     trackInfos,
+                    // XXX: this needs to be exposed as GoslingComponent's parameter
                     containerWidth - 100, // minus 100 to account for the padding
                     containerHeight - 100,
                     isResponsiveWidth,

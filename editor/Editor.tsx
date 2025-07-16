@@ -706,10 +706,12 @@ function Editor(props: RouteComponentProps) {
 
     // Layers to be shown on top of the Gosling visualization to show the hiererchy of Gosling views and tracks
     const VisHierarchy = useMemo(() => {
-        console.warn('tracks', tracksAndViews);
         const maxHeight = Math.max(...(tracksAndViews?.map(d => d.shape.height) ?? []));
+        const padding = '50px'; // Padding GoslingComponent
         return (
-            <div style={{ position: 'absolute', top: '60px', left: '60px', height: maxHeight, pointerEvents: 'none' }}>
+            <div
+                style={{ position: 'absolute', top: padding, left: padding, height: maxHeight, pointerEvents: 'none' }}
+            >
                 {tracksAndViews
                     ?.sort(a => (a.type === 'track' ? 1 : -1))
                     ?.map(d => {
@@ -1192,6 +1194,7 @@ function Editor(props: RouteComponentProps) {
                                     <div
                                         style={{
                                             width: isResponsive && screenSize?.width ? screenSize.width : '100%',
+                                            position: 'relative',
                                             height:
                                                 isResponsive && screenSize?.height
                                                     ? screenSize.height
@@ -1204,7 +1207,6 @@ function Editor(props: RouteComponentProps) {
                                             spec={goslingSpec}
                                             theme={'light'}
                                             visualized={() => {
-                                                console.warn('just visualized');
                                                 const tracksAndViews = gosRef.current?.api.getTracksAndViews();
                                                 setTracksAndViews(tracksAndViews);
                                             }}
