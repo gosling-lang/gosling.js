@@ -56,7 +56,14 @@ export function createApiV2(
     compileResult?: ReturnType<typeof compile>
 ): Pick<
     GoslingApi,
-    'getTracksAndViews' | 'getTracks' | 'getTrackIds' | 'getTrack' | 'getViews' | 'getView' | 'subscribe' | 'unsubscribe'
+    | 'getTracksAndViews'
+    | 'getTracks'
+    | 'getTrackIds'
+    | 'getTrack'
+    | 'getViews'
+    | 'getView'
+    | 'subscribe'
+    | 'unsubscribe'
 > {
     const tracksAndViews = compileResult?.tracksAndViews ?? [];
     const getTracksAndViews = () => {
@@ -94,8 +101,7 @@ export function createApiV2(
         getTracks,
         getTrack,
         getView,
-        getViews,
-
+        getViews
     };
 }
 

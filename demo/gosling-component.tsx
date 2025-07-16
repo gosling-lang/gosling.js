@@ -1,6 +1,6 @@
 import React, { useState, useEffect, type RefObject, useImperativeHandle } from 'react';
 import { PixiManager } from '@pixi-manager';
-import { compile, type CompileResult, type UrlToFetchOptions } from '../src/compiler/compile';
+import { compile, type UrlToFetchOptions } from '../src/compiler/compile';
 import { getTheme } from '../src/core/utils/theme';
 import { createTrackDefs } from './track-def/main';
 import { renderTrackDefs } from './renderer/main';
@@ -18,10 +18,11 @@ interface GoslingComponentProps {
     theme?: Theme;
     urlToFetchOptions?: UrlToFetchOptions;
     ref?: RefObject<GoslingRef>;
+    visualized?: () => void;
 }
 
 export function GoslingComponent(props: GoslingComponentProps) {
-    const { spec, urlToFetchOptions, theme = 'light', ref } = props;
+    const { spec, urlToFetchOptions, theme = 'light', ref, visualized = () => {} } = props;
 
     const [compiledResults, setCompiledResults] = useState<ReturnType<typeof compile>>();
 
@@ -29,6 +30,10 @@ export function GoslingComponent(props: GoslingComponentProps) {
         return {
             api: createApiV2(compiledResults)
         };
+    }, [compiledResults]);
+
+    useEffect(() => {
+        visualized();
     }, [compiledResults]);
 
     // Pixi manager should persist between render calls. Otherwise performance degrades greatly.
@@ -41,7 +46,7 @@ export function GoslingComponent(props: GoslingComponentProps) {
         if (!pixiManager) {
             const canvasWidth = 1000,
                 canvasHeight = 1000; // These initial sizes don't matter because the size will be updated
-            const pixiManager = new PixiManager(canvasWidth, canvasHeight, plotElement, () => { });
+            const pixiManager = new PixiManager(canvasWidth, canvasHeight, plotElement, () => {});
             const compileResult = renderGosling(spec, plotElement, pixiManager, theme, urlToFetchOptions);
             setCompiledResults(compileResult);
             setPixiManager(pixiManager);
@@ -113,7 +118,7 @@ function renderGosling(
 /** Debounces the resize observer */
 function debounce(f: (arg0: unknown) => unknown, delay: number) {
     let timer = 0;
-    return function(...args: [arg0: unknown]) {
+    return function (...args: [arg0: unknown]) {
         clearTimeout(timer);
         // @ts-expect-error
         timer = setTimeout(() => f.apply(this, args), delay);
