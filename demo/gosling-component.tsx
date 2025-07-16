@@ -18,16 +18,23 @@ interface GoslingComponentProps {
     theme?: Theme;
     urlToFetchOptions?: UrlToFetchOptions;
     ref?: RefObject<GoslingRef>;
+    visualized?: () => void;
 }
 
 export function GoslingComponent(props: GoslingComponentProps) {
-    const { spec, urlToFetchOptions, theme = 'light', ref } = props;
+    const { spec, urlToFetchOptions, theme = 'light', ref, visualized = () => {} } = props;
+
+    const [compiledResults, setCompiledResults] = useState<ReturnType<typeof compile>>();
 
     useImperativeHandle(ref, () => {
         return {
-            api: createApiV2()
+            api: createApiV2(compiledResults)
         };
-    }, []);
+    }, [compiledResults]);
+
+    useEffect(() => {
+        visualized();
+    }, [compiledResults]);
 
     // Pixi manager should persist between render calls. Otherwise performance degrades greatly.
     const [pixiManager, setPixiManager] = useState<PixiManager | null>(null);
@@ -39,12 +46,14 @@ export function GoslingComponent(props: GoslingComponentProps) {
         if (!pixiManager) {
             const canvasWidth = 1000,
                 canvasHeight = 1000; // These initial sizes don't matter because the size will be updated
-            const pixiManager = new PixiManager(canvasWidth, canvasHeight, plotElement, () => { });
-            renderGosling(spec, plotElement, pixiManager, theme, urlToFetchOptions);
+            const pixiManager = new PixiManager(canvasWidth, canvasHeight, plotElement, () => {});
+            const compileResult = renderGosling(spec, plotElement, pixiManager, theme, urlToFetchOptions);
+            setCompiledResults(compileResult);
             setPixiManager(pixiManager);
         } else {
             pixiManager.clearAll();
-            renderGosling(spec, plotElement, pixiManager, theme, urlToFetchOptions);
+            const compileResult = renderGosling(spec, plotElement, pixiManager, theme, urlToFetchOptions);
+            setCompiledResults(compileResult);
         }
     }, [spec]);
 
@@ -80,6 +89,7 @@ function renderGosling(
                 pixiManager.clearAll();
                 const rescaledTracks = rescaleTrackInfos(
                     trackInfos,
+                    // XXX: this needs to be exposed as GoslingComponent's parameter
                     containerWidth - 100, // minus 100 to account for the padding
                     containerHeight - 100,
                     isResponsiveWidth,
@@ -103,12 +113,13 @@ function renderGosling(
         const { width, height } = calculateWidthHeight(trackInfos);
         pixiManager.resize(width, height);
     }
+    return compileResult;
 }
 
 /** Debounces the resize observer */
 function debounce(f: (arg0: unknown) => unknown, delay: number) {
     let timer = 0;
-    return function(...args: [arg0: unknown]) {
+    return function (...args: [arg0: unknown]) {
         clearTimeout(timer);
         // @ts-expect-error
         timer = setTimeout(() => f.apply(this, args), delay);

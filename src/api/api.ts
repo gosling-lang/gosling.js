@@ -4,6 +4,7 @@ import { subscribe, unsubscribe } from './pubsub';
 import { computeChromSizes, GenomicPositionHelper } from '../core/utils/assembly';
 import type { CompleteThemeDeep } from '../core/utils/theme';
 import type { IdTable } from './track-and-view-ids';
+import type { compile } from 'src/compiler/compile';
 
 // TODO: Complete the API
 export type HiGlassApi = {
@@ -50,11 +51,57 @@ export interface GoslingApi {
     };
 }
 
-// TODO: After fully implementing this, remove `Partial` from the return type
-export function createApiV2(): Pick<GoslingApi, 'subscribe' | 'unsubscribe'> & Partial<GoslingApi> {
+// TODO: After fully implementing this, remove `Pick` from the return type
+export function createApiV2(
+    compileResult?: ReturnType<typeof compile>
+): Pick<
+    GoslingApi,
+    | 'getTracksAndViews'
+    | 'getTracks'
+    | 'getTrackIds'
+    | 'getTrack'
+    | 'getViews'
+    | 'getView'
+    | 'subscribe'
+    | 'unsubscribe'
+> {
+    const tracksAndViews = compileResult?.tracksAndViews ?? [];
+    const getTracksAndViews = () => {
+        return [...tracksAndViews];
+    };
+    const getTracks = () => {
+        return [...getTracksAndViews().filter(d => d.type === 'track')] as TrackApiData[];
+    };
+    const getTrackIds = () => {
+        return getTracks().map(d => d.id);
+    };
+    const getTrack = (trackId: string) => {
+        const trackInfoFound = getTracks().find(d => d.id === trackId);
+        if (!trackInfoFound) {
+            console.warn(`[getTrack()] Unable to find a track using the ID (${trackId})`);
+        }
+        return trackInfoFound;
+    };
+    const getViews = () => {
+        return [...getTracksAndViews().filter(d => d.type === 'view')] as ViewApiData[];
+    };
+    const getView = (viewId: string) => {
+        const view = getViews().find(d => d.id === viewId);
+        if (!view) {
+            console.warn(`Unable to find a view with the ID of ${viewId}`);
+        }
+        return view;
+    };
+
     return {
         subscribe,
-        unsubscribe
+        unsubscribe,
+        getTrackIds,
+        getTracksAndViews,
+        getTracks,
+        getTrack,
+        getView,
+        getViews
     };
 }
 

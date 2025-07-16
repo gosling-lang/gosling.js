@@ -14,7 +14,7 @@ import 'allotment/dist/style.css';
 import { debounce, isEqual } from 'lodash-es';
 import stripJsonComments from 'strip-json-comments';
 import JSONCrush from 'jsoncrush';
-import type { Datum } from '@gosling-lang/gosling-schema';
+import type { Datum, VisUnitApiData } from '@gosling-lang/gosling-schema';
 import { Themes } from '@gosling-lang/gosling-theme';
 
 import { ICONS, type ICON_INFO } from './icon';
@@ -251,6 +251,9 @@ function Editor(props: RouteComponentProps) {
     const [description, setDescription] = useState<string | null>();
     const [showViews, setShowViews] = useState(false);
     const [expertMode, setExpertMode] = useState(false);
+
+    // Gosling Tracks and views that are obtained through Gosling API
+    const [tracksAndViews, setTracksAndViews] = useState<VisUnitApiData[]>();
 
     // This parameter only matter when a markdown description was loaded from a gist but the user wants to hide it
     const [hideDescription, setHideDescription] = useState<boolean>(IS_SMALL_SCREEN || false);
@@ -594,10 +597,10 @@ function Editor(props: RouteComponentProps) {
             typeof goslingSpec?.responsiveSize === 'undefined'
                 ? false
                 : typeof goslingSpec?.responsiveSize === 'boolean'
-                    ? goslingSpec?.responsiveSize === true
-                    : typeof goslingSpec?.responsiveSize === 'object'
-                        ? goslingSpec?.responsiveSize.width === true || goslingSpec?.responsiveSize.height === true
-                        : false;
+                  ? goslingSpec?.responsiveSize === true
+                  : typeof goslingSpec?.responsiveSize === 'object'
+                    ? goslingSpec?.responsiveSize.width === true || goslingSpec?.responsiveSize.height === true
+                    : false;
         if (newIsResponsive !== isResponsive && newIsResponsive) {
             setScreenSize(undefined); // reset the screen
             setVisibleScreenSize(undefined);
@@ -703,12 +706,12 @@ function Editor(props: RouteComponentProps) {
 
     // Layers to be shown on top of the Gosling visualization to show the hiererchy of Gosling views and tracks
     const VisHierarchy = useMemo(() => {
-        return <></>;
-
-        const tracksAndViews = gosRef.current?.api.getTracksAndViews();
         const maxHeight = Math.max(...(tracksAndViews?.map(d => d.shape.height) ?? []));
+        const padding = '50px'; // Padding GoslingComponent
         return (
-            <div style={{ position: 'absolute', top: '60px', left: '60px', height: maxHeight, pointerEvents: 'none' }}>
+            <div
+                style={{ position: 'absolute', top: padding, left: padding, height: maxHeight, pointerEvents: 'none' }}
+            >
                 {tracksAndViews
                     ?.sort(a => (a.type === 'track' ? 1 : -1))
                     ?.map(d => {
@@ -739,32 +742,32 @@ function Editor(props: RouteComponentProps) {
                     })}
             </div>
         );
-    }, [demo]);
+    }, [tracksAndViews]);
 
     // console.log('editor.render()');
     return (
         <>
             <div
                 className={`demo-navbar ${theme === 'dark' ? 'dark' : ''}`}
-            // To test APIs, uncomment the following code.
-            // onClick={() => {
-            //     if (!gosRef.current) return;
-            // // ! Be aware that the first view is for the title/subtitle track. So navigation API does not work.
-            // const id = gosRef.current.api.getViewIds()?.[1]; //'view-1';
-            // if(id) {
-            //     gosRef.current.api.zoomToExtent(id);
-            // }
-            //
-            // // Static visualization rendered in canvas
-            // const { canvas } = gosRef.current.api.getCanvas({
-            //     resolution: 1,
-            //     transparentBackground: true,
-            // });
-            // const testDiv = document.getElementById('preview-container');
-            // if(canvas && testDiv) {
-            //     testDiv.appendChild(canvas);
-            // }
-            // }}
+                // To test APIs, uncomment the following code.
+                // onClick={() => {
+                //     if (!gosRef.current) return;
+                // // ! Be aware that the first view is for the title/subtitle track. So navigation API does not work.
+                // const id = gosRef.current.api.getViewIds()?.[1]; //'view-1';
+                // if(id) {
+                //     gosRef.current.api.zoomToExtent(id);
+                // }
+                //
+                // // Static visualization rendered in canvas
+                // const { canvas } = gosRef.current.api.getCanvas({
+                //     resolution: 1,
+                //     transparentBackground: true,
+                // });
+                // const testDiv = document.getElementById('preview-container');
+                // if(canvas && testDiv) {
+                //     testDiv.appendChild(canvas);
+                // }
+                // }}
             >
                 <button
                     style={{ cursor: 'pointer', lineHeight: '40px' }}
@@ -1191,6 +1194,7 @@ function Editor(props: RouteComponentProps) {
                                     <div
                                         style={{
                                             width: isResponsive && screenSize?.width ? screenSize.width : '100%',
+                                            position: 'relative',
                                             height:
                                                 isResponsive && screenSize?.height
                                                     ? screenSize.height
@@ -1198,7 +1202,15 @@ function Editor(props: RouteComponentProps) {
                                             background: isResponsive ? 'white' : 'none'
                                         }}
                                     >
-                                        <GoslingComponent ref={gosRef} spec={goslingSpec} theme={'light'} />
+                                        <GoslingComponent
+                                            ref={gosRef}
+                                            spec={goslingSpec}
+                                            theme={'light'}
+                                            visualized={() => {
+                                                const tracksAndViews = gosRef.current?.api.getTracksAndViews();
+                                                setTracksAndViews(tracksAndViews);
+                                            }}
+                                        />
                                         {showViews && !isResponsive ? VisHierarchy : null}
                                     </div>
                                     {/* {expertMode && false ? (
@@ -1252,8 +1264,8 @@ function Editor(props: RouteComponentProps) {
                                             {'REFRESH DATA'}
                                         </button>
                                         {previewData.current.length > selectedPreviewData &&
-                                            previewData.current[selectedPreviewData] &&
-                                            previewData.current[selectedPreviewData].data.length > 0 ? (
+                                        previewData.current[selectedPreviewData] &&
+                                        previewData.current[selectedPreviewData].data.length > 0 ? (
                                             <>
                                                 <div className="editor-data-preview-tab">
                                                     {previewData.current.map((d: PreviewData, i: number) => (
@@ -1314,8 +1326,9 @@ function Editor(props: RouteComponentProps) {
                 </Allotment>
                 {/* Description Panel */}
                 <div
-                    className={`description ${hideDescription ? '' : 'description-shadow '}${isDescResizing ? '' : 'description-transition'
-                        } ${theme === 'dark' ? 'dark' : ''}`}
+                    className={`description ${hideDescription ? '' : 'description-shadow '}${
+                        isDescResizing ? '' : 'description-transition'
+                    } ${theme === 'dark' ? 'dark' : ''}`}
                     style={{ width: !description || hideDescription ? 0 : descPanelWidth }}
                 >
                     <div
