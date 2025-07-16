@@ -2,9 +2,10 @@ import * as PIXI from 'pixi.js';
 import type { TrackApiData, VisUnitApiData, ViewApiData } from '@gosling-lang/gosling-schema';
 import { subscribe, unsubscribe } from './pubsub';
 import { computeChromSizes, GenomicPositionHelper } from '../core/utils/assembly';
-import type { CompleteThemeDeep } from '../core/utils/theme';
+import { getTheme, type CompleteThemeDeep } from '../core/utils/theme';
 import type { IdTable } from './track-and-view-ids';
 import type { compile } from 'src/compiler/compile';
+import type { renderGosling } from 'demo/gosling-component';
 
 // TODO: Complete the API
 export type HiGlassApi = {
@@ -51,9 +52,39 @@ export interface GoslingApi {
     };
 }
 
+export function createEmptyApi(): GoslingApi {
+    return {
+        subscribe,
+        unsubscribe,
+        zoomTo: () => { },
+        zoomToExtent: () => { },
+        zoomToGene: () => { },
+        suggestGene: () => { },
+        getTracksAndViews: () => [],
+        getTrackIds: () => [],
+        getTracks: () => [],
+        getTrack: () => {
+            return undefined;
+        },
+        getViews: () => [],
+        getView: () => {
+            return undefined;
+        },
+        exportPng: () => { },
+        exportPdf: () => { },
+        getCanvas: () => {
+            return {
+                canvas: new HTMLCanvasElement(),
+                canvasWidth: 0,
+                canvasHeight: 0,
+                resolution: 0
+            };
+        }
+    };
+}
 // TODO: After fully implementing this, remove `Pick` from the return type
 export function createApiV2(
-    compileResult?: ReturnType<typeof compile>
+    compileResult?: ReturnType<typeof renderGosling>
 ): Pick<
     GoslingApi,
     | 'getTracksAndViews'
@@ -62,10 +93,17 @@ export function createApiV2(
     | 'getTrack'
     | 'getViews'
     | 'getView'
+    | 'getCanvas'
     | 'subscribe'
     | 'unsubscribe'
+    | 'exportPdf'
+    | 'exportPng'
 > {
-    const tracksAndViews = compileResult?.tracksAndViews ?? [];
+    if (!compileResult) {
+        return createEmptyApi();
+    }
+
+    const { tracksAndViews, theme, pixiManager } = compileResult;
     const getTracksAndViews = () => {
         return [...tracksAndViews];
     };
@@ -92,6 +130,64 @@ export function createApiV2(
         }
         return view;
     };
+    const getCanvas: GoslingApi['getCanvas'] = options => {
+        const resolution = options?.resolution ?? 4;
+        const transparentBackground = options?.transparentBackground ?? false;
+
+        const renderer = pixiManager.app.renderer;
+        const renderTexture = PIXI.RenderTexture.create({
+            width: renderer.width / 2,
+            height: renderer.height / 2,
+            resolution
+        });
+
+        renderer.render(pixiManager.app.stage, { renderTexture: renderTexture });
+
+        const canvas = renderer.plugins.extract.canvas(renderTexture);
+
+        // Set background color for the given theme in the gosling spec
+        // Otherwise, it is transparent
+        const canvasWithBg = document.createElement('canvas') as HTMLCanvasElement;
+        canvasWithBg.width = canvas.width;
+        canvasWithBg.height = canvas.height;
+
+        const ctx = canvasWithBg.getContext('2d')!;
+        if (!transparentBackground) {
+            ctx.fillStyle = theme.root.background;
+            ctx.fillRect(0, 0, canvasWithBg.width, canvasWithBg.height);
+        }
+        ctx.drawImage(canvas, 0, 0);
+
+        return {
+            canvas: canvasWithBg,
+            resolution,
+            canvasWidth: canvas.width,
+            canvasHeight: canvas.height
+        };
+    };
+    const exportPng: GoslingApi['exportPng'] = transparentBackground => {
+        const { canvas } = getCanvas({ resolution: 4, transparentBackground });
+        canvas.toBlob(blob => {
+            const a = document.createElement('a');
+            document.body.append(a);
+            a.download = 'gosling-visualization';
+            a.href = URL.createObjectURL(blob!);
+            a.click();
+            a.remove();
+        }, 'image/png');
+    };
+    const exportPdf: GoslingApi['exportPdf'] = async transparentBackground => {
+        const { jsPDF } = await import('jspdf');
+        const { canvas } = getCanvas({ resolution: 4, transparentBackground });
+        const imgData = canvas.toDataURL('image/jpeg', 1);
+        const pdf = new jsPDF({
+            orientation: canvas.width < canvas.height ? 'p' : 'l',
+            unit: 'pt',
+            format: [canvas.width, canvas.height]
+        });
+        pdf.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height);
+        pdf.save('gosling-visualization.pdf');
+    };
 
     return {
         subscribe,
@@ -101,7 +197,10 @@ export function createApiV2(
         getTracks,
         getTrack,
         getView,
-        getViews
+        getViews,
+        getCanvas,
+        exportPng,
+        exportPdf
     };
 }
 

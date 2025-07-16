@@ -597,10 +597,10 @@ function Editor(props: RouteComponentProps) {
             typeof goslingSpec?.responsiveSize === 'undefined'
                 ? false
                 : typeof goslingSpec?.responsiveSize === 'boolean'
-                  ? goslingSpec?.responsiveSize === true
-                  : typeof goslingSpec?.responsiveSize === 'object'
-                    ? goslingSpec?.responsiveSize.width === true || goslingSpec?.responsiveSize.height === true
-                    : false;
+                    ? goslingSpec?.responsiveSize === true
+                    : typeof goslingSpec?.responsiveSize === 'object'
+                        ? goslingSpec?.responsiveSize.width === true || goslingSpec?.responsiveSize.height === true
+                        : false;
         if (newIsResponsive !== isResponsive && newIsResponsive) {
             setScreenSize(undefined); // reset the screen
             setVisibleScreenSize(undefined);
@@ -749,25 +749,25 @@ function Editor(props: RouteComponentProps) {
         <>
             <div
                 className={`demo-navbar ${theme === 'dark' ? 'dark' : ''}`}
-                // To test APIs, uncomment the following code.
-                // onClick={() => {
-                //     if (!gosRef.current) return;
-                // // ! Be aware that the first view is for the title/subtitle track. So navigation API does not work.
-                // const id = gosRef.current.api.getViewIds()?.[1]; //'view-1';
-                // if(id) {
-                //     gosRef.current.api.zoomToExtent(id);
-                // }
-                //
-                // // Static visualization rendered in canvas
-                // const { canvas } = gosRef.current.api.getCanvas({
-                //     resolution: 1,
-                //     transparentBackground: true,
-                // });
-                // const testDiv = document.getElementById('preview-container');
-                // if(canvas && testDiv) {
-                //     testDiv.appendChild(canvas);
-                // }
-                // }}
+            // To test APIs, uncomment the following code.
+            // onClick={() => {
+            //     if (!gosRef.current) return;
+            // // ! Be aware that the first view is for the title/subtitle track. So navigation API does not work.
+            // const id = gosRef.current.api.getViewIds()?.[1]; //'view-1';
+            // if(id) {
+            //     gosRef.current.api.zoomToExtent(id);
+            // }
+            //
+            // // Static visualization rendered in canvas
+            // const { canvas } = gosRef.current.api.getCanvas({
+            //     resolution: 1,
+            //     transparentBackground: true,
+            // });
+            // const testDiv = document.getElementById('preview-container');
+            // if(canvas && testDiv) {
+            //     testDiv.appendChild(canvas);
+            // }
+            // }}
             >
                 <button
                     style={{ cursor: 'pointer', lineHeight: '40px' }}
@@ -961,7 +961,7 @@ function Editor(props: RouteComponentProps) {
                                         title="Save PNG file"
                                         className="side-subpanel-button"
                                         onClick={() => {
-                                            gosRef.current?.api.exportPng();
+                                            gosRef.current?.api.exportPng(true);
                                         }}
                                     >
                                         {getIconSVG(ICONS.IMAGE, 23, 23)}
@@ -1264,8 +1264,8 @@ function Editor(props: RouteComponentProps) {
                                             {'REFRESH DATA'}
                                         </button>
                                         {previewData.current.length > selectedPreviewData &&
-                                        previewData.current[selectedPreviewData] &&
-                                        previewData.current[selectedPreviewData].data.length > 0 ? (
+                                            previewData.current[selectedPreviewData] &&
+                                            previewData.current[selectedPreviewData].data.length > 0 ? (
                                             <>
                                                 <div className="editor-data-preview-tab">
                                                     {previewData.current.map((d: PreviewData, i: number) => (
@@ -1326,9 +1326,8 @@ function Editor(props: RouteComponentProps) {
                 </Allotment>
                 {/* Description Panel */}
                 <div
-                    className={`description ${hideDescription ? '' : 'description-shadow '}${
-                        isDescResizing ? '' : 'description-transition'
-                    } ${theme === 'dark' ? 'dark' : ''}`}
+                    className={`description ${hideDescription ? '' : 'description-shadow '}${isDescResizing ? '' : 'description-transition'
+                        } ${theme === 'dark' ? 'dark' : ''}`}
                     style={{ width: !description || hideDescription ? 0 : descPanelWidth }}
                 >
                     <div

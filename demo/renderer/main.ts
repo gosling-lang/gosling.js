@@ -25,14 +25,18 @@ export function renderTrackDefs(
     pixiManager: PixiManager,
     urlToFetchOptions?: UrlToFetchOptions
 ) {
+    const plotDict: Record<string, unknown> = {};
+    const plots = [];
+
     const cursorPosX = signal(0);
     const cursorPosY = signal(0);
 
     trackDefs.forEach(trackDef => {
-        const { boundingBox, type, options } = trackDef;
+        const { boundingBox, type, options, trackId } = trackDef;
 
         if (type === TrackType.Text) {
-            new TextTrack(options, pixiManager.makeContainer(boundingBox));
+            const plot = new TextTrack(options, pixiManager.makeContainer(boundingBox));
+            plotDict[trackId] = plot;
         }
         if (type === TrackType.Gosling) {
             const xDomain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
@@ -54,6 +58,7 @@ export function renderTrackDefs(
                 gosPlot.addInteractor(plot => panZoom(plot, xDomain, yDomain));
             }
             gosPlot.addInteractor(plot => cursor(plot, cursorPosX));
+            plotDict[trackId] = gosPlot;
         }
         if (type === TrackType.Heatmap) {
             const xDomain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
@@ -61,9 +66,10 @@ export function renderTrackDefs(
             if (!xDomain || !yDomain) return;
 
             const datafetcher = getDataFetcher(options.spec, urlToFetchOptions);
-            new HeatmapTrack(options, datafetcher, pixiManager.makeContainer(boundingBox))
+            const heatmapPlot = new HeatmapTrack(options, datafetcher, pixiManager.makeContainer(boundingBox))
                 .addInteractor(plot => panZoomHeatmap(plot, xDomain, yDomain))
                 .addInteractor(plot => cursor2D(plot, cursorPosX, cursorPosY));
+            plotDict[trackId] = heatmapPlot;
         }
         if (type === TrackType.Axis) {
             const domain = getEncodingSignal(trackDef.trackId, options.encoding, linkedEncodings);
@@ -81,6 +87,7 @@ export function renderTrackDefs(
             if (!options.static) {
                 axisTrack.addInteractor(plot => panZoom(plot, domain));
             }
+            plotDict[trackId] = axisTrack;
         }
         if (type === TrackType.BrushLinear) {
             const domain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
@@ -94,6 +101,7 @@ export function renderTrackDefs(
                 domain
             );
             if (!options.static) brush.addInteractor(plot => panZoom(plot, domain));
+            plotDict[trackId] = brush;
         }
         if (type === TrackType.BrushCircular) {
             const domain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
@@ -109,11 +117,14 @@ export function renderTrackDefs(
             if (!options.static) {
                 brush.addInteractor(plot => panZoom(plot, domain));
             }
+            plotDict[trackId] = brush;
         }
         if (type === TrackType.Dummy) {
-            new DummyTrack(options, pixiManager.makeContainer(boundingBox).overlayDiv);
+            const dummyPlot = new DummyTrack(options, pixiManager.makeContainer(boundingBox).overlayDiv);
+            plotDict[trackId] = dummyPlot;
         }
     });
+    return plotDict;
 }
 
 /**
