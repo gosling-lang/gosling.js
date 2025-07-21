@@ -28,7 +28,7 @@ describe('Compiler with UrlToFetchOptions', () => {
         expect(df).toMatchInlineSnapshot(`
           CsvDataFetcherClass {
             "dataConfig": {
-              "assembly": undefined,
+              "assembly": "hg38",
               "type": "csv",
               "url": "https://my-csv-url.com",
               "urlFetchOptions": {
