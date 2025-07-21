@@ -11,6 +11,8 @@ import { scaleLinear } from 'd3-scale';
 import { DataFetcher } from '@higlass/datafetcher';
 import { signal, type Signal } from '@preact/signals-core';
 import type { Tile } from '@gosling-lang/gosling-track';
+import type { HeatmapPlot } from '../utils';
+import type { ProcessedTrack } from 'demo/track-def/types';
 
 export type HeatmapTrackContext = TiledPixiTrackContext & {
     svgElement: SVGElement;
@@ -21,6 +23,8 @@ export type HeatmapTrackContext = TiledPixiTrackContext & {
 };
 
 export type HeatmapTrackOptions = TiledPixiTrackOptions & {
+    spec: ProcessedTrack;
+    mousePositionColor?: string;
     maxDomain: number;
     dataTransform?: unknown;
     extent?: string;
@@ -41,7 +45,7 @@ export type HeatmapTrackOptions = TiledPixiTrackOptions & {
     selectRowsAggregationMethod?: unknown;
 };
 
-export class HeatmapTrack extends HeatmapTiledPixiTrack<HeatmapTrackOptions> {
+export class HeatmapTrack extends HeatmapTiledPixiTrack<HeatmapTrackOptions> implements HeatmapPlot {
     /** A signal containing the genomic x-domain [start, end] */
     xDomain: Signal<[number, number]>;
     /** A signal containing the genomic y-domain [start, end] */
@@ -50,6 +54,9 @@ export class HeatmapTrack extends HeatmapTiledPixiTrack<HeatmapTrackOptions> {
     maxDomain: number;
     /** The div element the zoom behavior will get attached to */
     domOverlay: HTMLElement;
+    width: number;
+    height: number;
+    orientation: undefined;
 
     constructor(
         options: HeatmapTrackOptions,
@@ -79,10 +86,10 @@ export class HeatmapTrack extends HeatmapTiledPixiTrack<HeatmapTrackOptions> {
             id: 'test',
             viewUid: 'test',
             dataFetcher,
-            animate: () => {},
-            onValueScaleChanged: () => {},
-            handleTilesetInfoReceived: () => {},
-            onTrackOptionsChanged: () => {},
+            animate: () => { },
+            onValueScaleChanged: () => { },
+            handleTilesetInfoReceived: () => { },
+            onTrackOptionsChanged: () => { },
             pubSub: fakePubSub,
             isValueScaleLocked: () => false,
             svgElement: svgElement
@@ -93,13 +100,15 @@ export class HeatmapTrack extends HeatmapTiledPixiTrack<HeatmapTrackOptions> {
         this.yDomain = yDomain;
         this.domOverlay = overlayDiv;
         this.maxDomain = options.maxDomain;
+        this.width = width;
+        this.height = height;
 
         // Now we need to initialize all of the properties that would normally be set by HiGlassComponent
-        this.setDimensions([width, height]);
+        this.setDimensions([this.width, this.height]);
         this.setPosition([0, 0]);
         // Create some scales which span the whole genome
-        const refXScale = scaleLinear().domain(xDomain.value).range([0, width]);
-        const refYScale = scaleLinear().domain(yDomain.value).range([0, height]);
+        const refXScale = scaleLinear().domain(xDomain.value).range([0, this.width]);
+        const refYScale = scaleLinear().domain(yDomain.value).range([0, this.height]);
         // Set the scales
         this.zoomed(refXScale, refYScale, 1, 0, 0);
         this.refScalesChanged(refXScale, refYScale);

@@ -53,6 +53,7 @@ export function processGoslingTrack(
 
 function getGoslingTrackOptions(spec: ProcessedTrack, theme: Required<CompleteThemeDeep>): GoslingTrackOptions {
     return {
+        // @ts-expect-error At this point, the spec is processed
         spec: spec,
         id: spec.id,
         siblingIds: [],

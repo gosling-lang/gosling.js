@@ -5,15 +5,16 @@ import {
 } from './brush-circular';
 import { scaleLinear } from 'd3-scale';
 import { type Signal, effect, signal } from '@preact/signals-core';
+import type { Plot } from '../utils';
 
 /**
  * A wrapper around the BrushCircularTrackClass that allows for use with signals
  */
-export class BrushCircularTrack extends CircularBrushTrackClass {
+export class BrushCircularTrack extends CircularBrushTrackClass implements Plot {
     /** A signal containing the genomic x-domain [start, end] */
-    xDomain: Signal<number[]>;
+    xDomain: Signal<[number, number]>;
     /** A signal containing the brush x-domain [start, end] */
-    xBrushDomain: Signal<number[]>;
+    xBrushDomain: Signal<[number, number]>;
     /** The div element the zoom behavior will get attached to */
     domOverlay: HTMLElement;
     /** Width of the track */
@@ -42,8 +43,8 @@ export class BrushCircularTrack extends CircularBrushTrackClass {
         const context: BrushCircularTrackContext = {
             id: 'test',
             svgElement: svgElement,
-            registerViewportChanged: () => {},
-            removeViewportChanged: () => {},
+            registerViewportChanged: () => { },
+            removeViewportChanged: () => { },
             setDomainsCallback: (xDomain: [number, number]) => (xBrushDomain.value = xDomain),
             projectionXDomain: xBrushDomain.value
         };

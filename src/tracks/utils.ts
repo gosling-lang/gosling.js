@@ -32,6 +32,9 @@ export interface Plot {
 export interface HeatmapPlot {
     addInteractor(interactor: (plot: Plot) => void): Plot;
     domOverlay: HTMLElement;
+    orientation: undefined;
+    width: number;
+    height: number;
     xDomain: Signal<[number, number]>;
     yDomain: Signal<[number, number]>;
     maxDomain: number;

@@ -12,7 +12,7 @@ import type { ChromInfo, TilesetInfo } from '@higlass/types';
 import { DenseDataExtrema1D } from '@higlass/utils';
 import { chrToAbs } from '../utils';
 
-type BigWigDataConfig = BigWigData & CommonDataConfig;
+export type BigWigDataConfig = BigWigData & CommonDataConfig;
 
 type Tile = {
     tilePos: [number];

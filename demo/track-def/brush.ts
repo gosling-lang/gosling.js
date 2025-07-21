@@ -25,7 +25,7 @@ export function getBrushTrackDefs(
             });
         } else if (spec.layout === 'circular') {
             // If we have a circular layout, we use the BrushCircularTrack
-            const options = getBrushCircularOptions(spec, overlay);
+            const options = getBrushCircularOptions(spec as ProcessedCircularTrack, overlay);
             trackDefs.push({
                 type: TrackType.BrushCircular,
                 trackId: overlay.id,
@@ -42,6 +42,7 @@ export function getBrushTrackDefs(
  */
 function getBrushLinearOptions(spec: ProcessedTrack, overlay: OverlayTrack): BrushLinearTrackOptions {
     const options = {
+        static: spec.static ?? false,
         projectionFillColor: overlay.color?.value ?? 'gray',
         projectionStrokeColor: spec.stroke?.value ?? 'black',
         projectionFillOpacity: spec.opacity?.value ?? 0.3,
@@ -55,7 +56,8 @@ function getBrushLinearOptions(spec: ProcessedTrack, overlay: OverlayTrack): Bru
  * Get the options for a BrushCircularTrack
  */
 function getBrushCircularOptions(spec: ProcessedCircularTrack, overlay: OverlayTrack): BrushCircularTrackOptions {
-    const options = {
+    const options: BrushCircularTrackOptions = {
+        static: spec.static ?? false,
         projectionFillColor: overlay.color?.value ?? 'gray',
         projectionStrokeColor: overlay.stroke?.value ?? 'black',
         projectionFillOpacity: 0.3,

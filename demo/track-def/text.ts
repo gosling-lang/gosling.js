@@ -54,7 +54,7 @@ function getTextTrackOptions(
             fontFamily: theme.root.titleFontFamily,
             offsetY: 0,
             align: theme.root.titleAlign,
-            text: spec.title
+            text: spec.title ?? ''
         };
     } else {
         return {
@@ -65,7 +65,7 @@ function getTextTrackOptions(
             fontFamily: theme.root.subtitleFontFamily,
             offsetY: 0,
             align: theme.root.subtitleAlign,
-            text: spec.subtitle
+            text: spec.subtitle ?? ''
         };
     }
 }

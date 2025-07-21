@@ -9,52 +9,62 @@ import {
     BedDataFetcher,
     VcfDataFetcher
 } from '@data-fetchers';
-import type { ProcessedTrack } from 'demo/track-def/types';
 import type { UrlToFetchOptions } from 'src/compiler/compile';
+import type { BigWigDataConfig } from 'src/data-fetchers/bigwig/bigwig-data-fetcher';
+import type { CsvDataConfig } from 'src/data-fetchers/csv/csv-data-fetcher';
+import type { GFFDataConfig } from 'src/data-fetchers/gff/gff-data-fetcher';
+import type { BedDataConfig } from 'src/data-fetchers/bed/bed-data-fetcher';
+import type { VcfDataConfig } from 'src/data-fetchers/vcf/vcf-data-fetcher';
+import type { OverlaidTrack, SingleTrack } from '@gosling-lang/gosling-schema';
 
-export function getDataFetcher(spec: ProcessedTrack, urlToFetchOptions?: UrlToFetchOptions) {
-    if (!('data' in spec)) {
+export function getDataFetcher(spec: SingleTrack | OverlaidTrack, urlToFetchOptions?: UrlToFetchOptions) {
+    const { data, assembly = 'hg38' } = spec;
+
+    if (typeof data === 'undefined') {
         console.warn('No data in the track spec', spec);
+        return;
     }
 
-    const urlFetchOptions = ('url' in spec.data && urlToFetchOptions?.[spec.data.url]) || {};
-    const indexUrlFetchOptions = ('indexUrl' in spec.data && urlToFetchOptions?.[spec.data.indexUrl]) || {};
+    const { type } = data;
 
-    if (spec.data.type == 'multivec' || spec.data.type == 'beddb' || spec.data.type == 'matrix') {
-        const url = spec.data.url;
+    const urlFetchOptions = ('url' in data && urlToFetchOptions?.[data.url]) || {};
+    const indexUrlFetchOptions = ('indexUrl' in data && urlToFetchOptions?.[data.indexUrl]) || {};
+
+    if (type == 'multivec' || type == 'beddb' || type == 'matrix') {
+        const url = data.url;
         const server = url.split('/').slice(0, -2).join('/');
         const tilesetUid = url.split('=').slice(-1)[0];
         return new DataFetcher({ server, tilesetUid }, fakePubSub);
     }
-    if (spec.data.type == 'bigwig') {
-        return new BigWigDataFetcher({ ...spec.data, assembly: spec.assembly });
+    if (type == 'bigwig') {
+        return new BigWigDataFetcher({ ...data, assembly } as BigWigDataConfig);
     }
-    if (spec.data.type == 'csv') {
+    if (type == 'csv') {
         const fields = getFields(spec);
-        return new CsvDataFetcher({ ...spec.data, ...fields, assembly: spec.assembly, urlFetchOptions });
+        return new CsvDataFetcher({ ...data, ...fields, assembly, urlFetchOptions } as CsvDataConfig);
     }
-    if (spec.data.type == 'json') {
+    if (type == 'json') {
         const fields = getFields(spec);
-        return new JsonDataFetcher({ ...spec.data, ...fields, assembly: spec.assembly });
+        return new JsonDataFetcher({ ...data, ...fields, assembly });
     }
-    if (spec.data.type == 'gff') {
-        return new GffDataFetcher({ ...spec.data, assembly: spec.assembly, urlFetchOptions, indexUrlFetchOptions });
+    if (type == 'gff') {
+        return new GffDataFetcher({ ...data, assembly, urlFetchOptions, indexUrlFetchOptions } as GFFDataConfig);
     }
-    if (spec.data.type == 'bam') {
-        return new BamDataFetcher({ ...spec.data, assembly: spec.assembly, urlFetchOptions, indexUrlFetchOptions });
+    if (type == 'bam') {
+        return new BamDataFetcher({ ...data, assembly, urlFetchOptions, indexUrlFetchOptions });
     }
-    if (spec.data.type == 'bed') {
-        return new BedDataFetcher({ ...spec.data, assembly: spec.assembly, urlFetchOptions, indexUrlFetchOptions });
+    if (type == 'bed') {
+        return new BedDataFetcher({ ...data, assembly, urlFetchOptions, indexUrlFetchOptions } as BedDataConfig);
     }
-    if (spec.data.type == 'vcf') {
-        return new VcfDataFetcher({ ...spec.data, assembly: spec.assembly, urlFetchOptions, indexUrlFetchOptions });
+    if (type == 'vcf') {
+        return new VcfDataFetcher({ ...data, assembly, urlFetchOptions, indexUrlFetchOptions } as VcfDataConfig);
     }
 }
 
 /**
  * Some datafetchers need to know which encoding corresponds to which field
  */
-function getFields(spec: Track) {
+function getFields(spec: SingleTrack | OverlaidTrack) {
     const fields: { x?: string; xe?: string; y?: string; ye?: string } = {};
     if ('x' in spec && spec.x && 'field' in spec.x) {
         fields.x = spec.x.field;
