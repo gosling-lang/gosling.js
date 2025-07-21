@@ -5,13 +5,15 @@ import {
     type Assembly,
     type OverlaidTrack,
     type SingleTrack,
-    type SingleView
+    type SingleView,
+    type Track
 } from '@gosling-lang/gosling-schema';
 import { GenomicPositionHelper, computeChromSizes } from '../../src/core/utils/assembly';
 import { signal, type Signal } from '@preact/signals-core';
 import type { GoslingSpec } from 'gosling.js';
 import { TrackType } from '../track-def/main';
 import { isHeatmapTrack } from '../track-def/heatmap';
+import type { ProcessedTrack } from 'demo/track-def/types';
 
 /**
  * This is the information needed to link tracks together
@@ -204,6 +206,7 @@ function getSingleViewTrackLinks(gs: SingleView): TrackLink[] {
         } as TrackLink;
         // If the track has a domain, we create a signal and add it to the trackLink
         if ('y' in track && track.y && 'domain' in track.y && track.y.domain !== undefined) {
+            // @ts-expect-error - does this actually work?
             const domain = getDomain(track.y.domain, assembly);
             trackLink.signal = signal(domain);
         }
@@ -214,19 +217,25 @@ function getSingleViewTrackLinks(gs: SingleView): TrackLink[] {
     const viewXDomain = getDomain(xDomain, assembly);
     const trackLinks: TrackLink[] = [];
     tracks.forEach(track => {
-        const trackType = isHeatmapTrack(track) ? TrackType.Heatmap : TrackType.Gosling;
+        const processedTrack = track as ProcessedTrack;
+        const trackType = isHeatmapTrack(processedTrack) ? TrackType.Heatmap : TrackType.Gosling;
         // Handle the y domain
-        if (isGenomicEncoding(track, 'y') && hasDiffYDomainThanView(track)) {
-            const trackLink = createTrackLinkY(track.id, track, trackType, gs);
+        if (isGenomicEncoding(track as Track, 'y') && hasDiffYDomainThanView(track as Track)) {
+            const trackLink = createTrackLinkY(
+                processedTrack.id,
+                processedTrack as SingleTrack | OverlaidTrack,
+                trackType,
+                gs
+            );
             trackLinks.push(trackLink);
         }
         // Handle x domain
-        if (hasDiffXDomainThanView(gs, track, assembly, viewXDomain)) {
-            if (track.mark === 'brush') {
+        if (hasDiffXDomainThanView(gs, track as Track, assembly, viewXDomain)) {
+            if (processedTrack.mark === 'brush') {
                 console.warn('Track with brush mark should only be used as an overlay');
                 return;
             }
-            const trackLink = createTrackLinkX(track.id, track, trackType, gs);
+            const trackLink = createTrackLinkX(processedTrack.id, track as SingleTrack | OverlaidTrack, trackType, gs);
             trackLinks.push(trackLink);
         }
 
@@ -235,14 +244,18 @@ function getSingleViewTrackLinks(gs: SingleView): TrackLink[] {
         // Handle case where we have multiple overlay tracks (we only care about the brushes)
         track._overlay!.forEach(overlay => {
             if (overlay.mark === 'brush') {
+                const linkingId =
+                    'x' in overlay && overlay.x && 'linkingId' in overlay.x && overlay.x.linkingId
+                        ? overlay.x.linkingId
+                        : '';
                 const trackType = gs.layout === 'linear' ? TrackType.BrushLinear : TrackType.BrushCircular;
-                const trackLink = {
-                    trackId: overlay.id,
-                    linkingId: overlay.x.linkingId,
+                const trackLink: TrackLink = {
+                    trackId: overlay.id!,
+                    linkingId,
                     trackType,
                     encoding: 'brush'
                 };
-                if (overlay.x.domain !== undefined) {
+                if ('x' in overlay && overlay.x && 'domain' in overlay.x && overlay.x.domain !== undefined) {
                     const { assembly } = gs;
                     const domain = getDomain(overlay.x.domain, assembly);
                     trackLink.signal = signal(domain);
@@ -272,10 +285,13 @@ function getSingleViewLinks(gs: SingleView): ViewLink[] {
             const missingX = !('x' in track) || track.x === undefined;
             const missingY = !('y' in track) || track.y === undefined;
             const hasOverlay = '_overlay' in track && track._overlay.length == 1;
-            if (missingX && missingY && hasOverlay) track = { ...track, y: track._overlay[0].y };
+            if (missingX && missingY && hasOverlay) {
+                // @ts-expect-error - overlay exists
+                track = { ...track, y: track._overlay[0].y };
+            }
             // Continue as usual
             if (isGenomicEncoding(track, 'y') && !hasDiffYDomainThanView(track)) {
-                viewLinkY.trackIds.push(track.id);
+                viewLinkY.trackIds.push(track.id!);
             }
         });
         return viewLinkY;
@@ -297,11 +313,11 @@ function getSingleViewLinks(gs: SingleView): ViewLink[] {
             if (hasOverlaidTracks) {
                 track._overlay?.forEach(overlay => {
                     if (overlay.mark === 'brush') {
-                        viewLinkX.trackIds.push(overlay.id);
+                        viewLinkX.trackIds.push(overlay.id!);
                     }
                 });
             }
-            viewLinkX.trackIds.push(track.id);
+            viewLinkX.trackIds.push(track.id!);
         });
         return viewLinkX;
     }
@@ -309,8 +325,8 @@ function getSingleViewLinks(gs: SingleView): ViewLink[] {
     const viewXDomain = getDomain(xDomain, assembly);
     const viewYDomain = getDomain(yDomain ?? xDomain, assembly);
 
-    const xLink = addLinkX(tracks, assembly, viewXDomain);
-    const yLink = addLinkY(tracks, viewYDomain);
+    const xLink = addLinkX(tracks as Track[], assembly, viewXDomain);
+    const yLink = addLinkY(tracks as Track[], viewYDomain);
     return [xLink, yLink].filter(link => link.trackIds.length > 0);
 }
 
@@ -323,6 +339,7 @@ function hasDiffXDomainThanView(
     // If the track x has a linkingId which is different from the viewLinkingId, then it has a different domain
     const hasLinkingId = 'x' in track && track.x && 'linkingId' in track.x && track.x?.linkingId !== undefined;
     const viewLinkingId = view.linkingId;
+    // @ts-expect-error - linkingId can be undefined
     const trackLinkingId = track.x?.linkingId;
     if (hasLinkingId && viewLinkingId !== trackLinkingId) return true;
 
@@ -330,6 +347,7 @@ function hasDiffXDomainThanView(
     const hasXEncodingDomain = 'x' in track && track.x && 'domain' in track.x && track.x?.domain !== undefined;
 
     if (hasXEncodingDomain) {
+        // @ts-expect-error - x domain can be undefined
         const xEncodingDomain = getDomain(track.x?.domain, assembly);
         return !viewXDomain.every((val, index) => val === xEncodingDomain[index]);
     }
@@ -338,6 +356,7 @@ function hasDiffXDomainThanView(
 
 function isGenomicEncoding(track: Track, encoding: 'x' | 'y') {
     const isGenomic =
+        // @ts-expect-error - encoding can be undefined for dummy tracks
         encoding in track && track[encoding] && 'type' in track[encoding] && track[encoding].type === 'genomic';
     return isGenomic;
 }
@@ -375,9 +394,9 @@ function createDomainString(xDomain: GoslingSpec['xDomain']) {
         return xDomain;
     }
     let position = '';
-    const hasOnlyInterval = 'interval' in xDomain && !('chromosome' in xDomain);
-    const hasOnlyChromosome = 'chromosome' in xDomain && !('interval' in xDomain);
-    const hasBoth = 'chromosome' in xDomain && 'interval' in xDomain;
+    const hasOnlyInterval = xDomain && 'interval' in xDomain && !('chromosome' in xDomain);
+    const hasOnlyChromosome = xDomain && 'chromosome' in xDomain && !('interval' in xDomain);
+    const hasBoth = xDomain && 'chromosome' in xDomain && 'interval' in xDomain;
 
     if (typeof xDomain === 'string') {
         position = xDomain;
