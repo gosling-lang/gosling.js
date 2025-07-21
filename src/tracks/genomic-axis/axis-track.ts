@@ -21,6 +21,9 @@ const TICK_TEXT_SEPARATION = 2;
 const TICK_COLOR = 0x777777;
 
 export type AxisTrackOptions = {
+    orientation?: 'horizontal' | 'vertical';
+    encoding: 'x' | 'y';
+    static: boolean;
     innerRadius: number;
     outerRadius: number;
     startAngle: number;

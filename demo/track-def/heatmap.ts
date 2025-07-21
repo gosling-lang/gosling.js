@@ -22,7 +22,7 @@ export function processHeatmapTrack(
         boundingBox = newTrackBbox;
     }
 
-    const heatmapOptions = getHeatmapOptions(track, theme);
+    const heatmapOptions = getHeatmapOptions(track);
     trackDefs.push({
         type: TrackType.Heatmap,
         options: heatmapOptions,
@@ -44,7 +44,7 @@ function getHeatmapOptions(track: ProcessedTrack): HeatmapTrackOptions {
     const missingX = !('x' in track) || track.x === undefined;
     const missingY = !('y' in track) || track.y === undefined;
     const hasOverlay = '_overlay' in track && track._overlay && track._overlay.length == 1;
-    if (missingX && missingY && hasOverlay) track = { ...track, ...track._overlay[0] };
+    if (missingX && missingY && hasOverlay) track = { ...track, ...track._overlay?.[0] };
 
     // Get color range
     const colorStr =
@@ -73,8 +73,6 @@ function getHeatmapOptions(track: ProcessedTrack): HeatmapTrackOptions {
         colorbarPosition: 'hidden',
         labelShowAssembly: true,
         colorbarBackgroundColor: '#ffffff',
-        minWidth: 100,
-        minHeight: 100,
         heatmapValueScaling: 'log',
         showTooltip: false,
         zeroValueColor: undefined,

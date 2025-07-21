@@ -1,18 +1,21 @@
-import { GoslingTrack } from '@gosling-lang/gosling-track';
-import { AxisTrack } from '@gosling-lang/genomic-axis';
-import { BrushLinearTrack } from '@gosling-lang/brush-linear';
+import { GoslingTrack, type GoslingTrackOptions } from '@gosling-lang/gosling-track';
+import { AxisTrack, type AxisTrackOptions } from '@gosling-lang/genomic-axis';
+import { BrushLinearTrack, type BrushLinearTrackOptions } from '@gosling-lang/brush-linear';
 import { signal, Signal } from '@preact/signals-core';
-import { TextTrack } from '@gosling-lang/text-track';
+import { TextTrack, type TextTrackOptions } from '@gosling-lang/text-track';
 
 import { cursor, cursor2D, panZoom, panZoomHeatmap } from '@gosling-lang/interactors';
 import { type TrackDefs, TrackType } from '../track-def/main';
 import { getDataFetcher } from './dataFetcher';
 import type { LinkedEncoding } from '../linking/linkedEncoding';
-import { BrushCircularTrack } from '@gosling-lang/brush-circular';
-import { HeatmapTrack } from '@gosling-lang/heatmap';
+import { BrushCircularTrack, type BrushCircularTrackOptions } from '@gosling-lang/brush-circular';
+import { HeatmapTrack, type HeatmapTrackOptions } from '@gosling-lang/heatmap';
 import type { PixiManager } from '@pixi-manager';
-import { DummyTrack } from '@gosling-lang/dummy-track';
+import { DummyTrack, type DummyTrackOptions } from '@gosling-lang/dummy-track';
 import type { UrlToFetchOptions } from 'src/compiler/compile';
+import type { Tile } from '@higlass/services';
+import type { DataFetcher } from '@higlass/datafetcher';
+import type { OverlaidTrack, SingleTrack } from '@gosling-lang/gosling-schema';
 
 /**
  * Takes a list of track definitions and linkedEncodings and renders them
@@ -34,92 +37,104 @@ export function renderTrackDefs(
         const { boundingBox, type, options, trackId } = trackDef;
 
         if (type === TrackType.Text) {
-            const plot = new TextTrack(options, pixiManager.makeContainer(boundingBox));
+            const textOptions = options as TextTrackOptions;
+            const plot = new TextTrack(textOptions, pixiManager.makeContainer(boundingBox));
             plotDict[trackId] = plot;
         }
         if (type === TrackType.Gosling) {
+            const gosOptions = options as GoslingTrackOptions;
+            const { spec } = gosOptions;
             const xDomain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
             const yDomain = getEncodingSignal(trackDef.trackId, 'y', linkedEncodings);
             if (!xDomain) return;
 
-            const datafetcher = getDataFetcher(options.spec, urlToFetchOptions);
+            const datafetcher = getDataFetcher(spec, urlToFetchOptions);
+            if (!datafetcher) return;
             const gosPlot = new GoslingTrack(
-                options,
-                datafetcher,
+                gosOptions,
+                datafetcher as DataFetcher<Tile>,
                 pixiManager.makeContainer(boundingBox),
                 xDomain,
                 yDomain,
-                options.spec.orientation
+                gosOptions.spec.orientation
             );
-            const isOverlayedOnPrevious =
-                'overlayOnPreviousTrack' in options.spec && options.spec.overlayOnPreviousTrack;
-            if (!options.spec.static && !isOverlayedOnPrevious) {
+            const isOverlayedOnPrevious = 'overlayOnPreviousTrack' in spec && spec.overlayOnPreviousTrack;
+            if (!spec.static && !isOverlayedOnPrevious) {
                 gosPlot.addInteractor(plot => panZoom(plot, xDomain, yDomain));
             }
             gosPlot.addInteractor(plot => cursor(plot, cursorPosX));
             plotDict[trackId] = gosPlot;
         }
         if (type === TrackType.Heatmap) {
+            const hmOptions = options as HeatmapTrackOptions;
+            const { spec } = hmOptions;
             const xDomain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
             const yDomain = getEncodingSignal(trackDef.trackId, 'y', linkedEncodings);
             if (!xDomain || !yDomain) return;
 
-            const datafetcher = getDataFetcher(options.spec, urlToFetchOptions);
-            const heatmapPlot = new HeatmapTrack(options, datafetcher, pixiManager.makeContainer(boundingBox))
+            const datafetcher = getDataFetcher(spec as SingleTrack | OverlaidTrack, urlToFetchOptions);
+            const heatmapPlot = new HeatmapTrack(
+                hmOptions,
+                datafetcher as DataFetcher<Tile>,
+                pixiManager.makeContainer(boundingBox)
+            )
                 .addInteractor(plot => panZoomHeatmap(plot, xDomain, yDomain))
                 .addInteractor(plot => cursor2D(plot, cursorPosX, cursorPosY));
             plotDict[trackId] = heatmapPlot;
         }
         if (type === TrackType.Axis) {
-            const domain = getEncodingSignal(trackDef.trackId, options.encoding, linkedEncodings);
+            const axisOptions = options as AxisTrackOptions;
+            const domain = getEncodingSignal(trackDef.trackId, axisOptions.encoding, linkedEncodings);
             if (!domain) {
                 console.warn(`No domain found for axis ${trackDef.trackId}. Skipping...`);
                 return;
             }
-
             const axisTrack = new AxisTrack(
-                options,
+                axisOptions,
                 domain,
                 pixiManager.makeContainer(boundingBox),
-                options.orientation
+                axisOptions.orientation
             );
-            if (!options.static) {
+            if (!axisOptions.static) {
                 axisTrack.addInteractor(plot => panZoom(plot, domain));
             }
             plotDict[trackId] = axisTrack;
         }
         if (type === TrackType.BrushLinear) {
+            const brushOptions = options as BrushLinearTrackOptions;
             const domain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
             const brushDomain = getEncodingSignal(trackDef.trackId, 'brush', linkedEncodings);
             if (!domain || !brushDomain || !hasLinkedTracks(trackDef.trackId, linkedEncodings)) return;
             // We only want to add the brush track if it is linked to another track
             const brush = new BrushLinearTrack(
-                options,
+                brushOptions,
                 brushDomain,
                 pixiManager.makeContainer(boundingBox).overlayDiv,
                 domain
             );
-            if (!options.static) brush.addInteractor(plot => panZoom(plot, domain));
+            if (!brushOptions.static) brush.addInteractor(plot => panZoom(plot, domain));
             plotDict[trackId] = brush;
         }
         if (type === TrackType.BrushCircular) {
+            const brushOptions = options as BrushCircularTrackOptions;
             const domain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
             const brushDomain = getEncodingSignal(trackDef.trackId, 'brush', linkedEncodings);
             if (!domain || !brushDomain || !hasLinkedTracks(trackDef.trackId, linkedEncodings)) return;
             // We only want to add the brush track if it is linked to another track
             const brush = new BrushCircularTrack(
-                options,
+                brushOptions,
                 brushDomain,
                 pixiManager.makeContainer(boundingBox).overlayDiv,
                 domain
             );
-            if (!options.static) {
+            if (!brushOptions.static) {
                 brush.addInteractor(plot => panZoom(plot, domain));
             }
             plotDict[trackId] = brush;
         }
         if (type === TrackType.Dummy) {
-            const dummyPlot = new DummyTrack(options, pixiManager.makeContainer(boundingBox).overlayDiv);
+            const dummyOptions = options as DummyTrackOptions;
+            const dummyPlot = new DummyTrack(dummyOptions, pixiManager.makeContainer(boundingBox).overlayDiv);
             plotDict[trackId] = dummyPlot;
         }
     });

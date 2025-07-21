@@ -15,6 +15,7 @@ type CircularBrushData = {
 export type BrushCircularTrackContext = ViewportTrackerHorizontalContext;
 
 export interface BrushCircularTrackOptions {
+    static: boolean;
     innerRadius: number;
     outerRadius: number;
     startAngle: number;
@@ -27,6 +28,7 @@ export interface BrushCircularTrackOptions {
     strokeWidth: number;
 }
 const defaultOptions: BrushCircularTrackOptions = {
+    static: false,
     innerRadius: 100,
     outerRadius: 200,
     startAngle: 0,

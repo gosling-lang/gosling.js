@@ -1,5 +1,11 @@
 import { type AxisTrackOptions } from '@gosling-lang/genomic-axis';
-import { IsChannelDeep, IsDummyTrack, IsTemplateTrack, type AxisPosition } from '@gosling-lang/gosling-schema';
+import {
+    IsChannelDeep,
+    IsDummyTrack,
+    IsTemplateTrack,
+    type AxisPosition,
+    type Track
+} from '@gosling-lang/gosling-schema';
 import type { CompleteThemeDeep } from '../../src/core/utils/theme';
 import { resolveSuperposedTracks } from '../../src/core/utils/overlay';
 import { TrackType, type TrackDef } from './main';
@@ -27,7 +33,7 @@ export function getAxisTrackDef(
                 type: TrackType.Axis,
                 trackId: track.id,
                 boundingBox: boundingBox,
-                options: getAxisTrackCircularOptions(track, boundingBox, xAxisPosition, theme)
+                options: getAxisTrackCircularOptions(track as ProcessedCircularTrack, boundingBox, xAxisPosition, theme)
             });
         }
         if (track.layout === 'linear') {
@@ -95,7 +101,7 @@ function getAxisTrackLinearOptions(
     const narrowType = getAxisNarrowType(encoding, track.orientation, boundingBox.width, boundingBox.height);
     const options: AxisTrackOptions = {
         orientation: getAxisOrientation(encoding, track.orientation),
-        encoding: encoding,
+        encoding,
         static: track.static,
         innerRadius: 0,
         outerRadius: 0,
@@ -104,6 +110,7 @@ function getAxisTrackLinearOptions(
         startAngle: 0,
         endAngle: 0,
         layout: 'linear',
+        labelPosition: 'left',
         assembly: track.assembly ?? 'hg38',
         stroke: 'transparent', // text outline
         color: theme.axis.labelColor,
@@ -115,7 +122,14 @@ function getAxisTrackLinearOptions(
         tickColor: theme.axis.tickColor,
         tickFormat: narrowType === 'narrower' ? 'si' : 'plain',
         tickPositions: narrowType === 'regular' ? 'even' : 'ends',
-        reverseOrientation: position === 'bottom' || position === 'right' ? true : false
+        reverseOrientation: position === 'bottom' || position === 'right' ? true : false,
+        // TODO: Are these below really needed?
+        trackBorderWidth: 1,
+        labelColor: 'black',
+        labelTextOpacity: 1,
+        trackBorderColor: 'white',
+        backgroundColor: 'white',
+        showMousePosition: false // Making this `true` causes a crash
     };
     return options;
 }
@@ -156,6 +170,7 @@ function getAxisTrackCircularOptions(
     }
 
     const options: AxisTrackOptions = {
+        orientation: undefined,
         layout: 'circular',
         encoding: 'x',
         static: track.static,
@@ -176,7 +191,15 @@ function getAxisTrackCircularOptions(
         tickColor: theme.axis.tickColor,
         tickFormat: narrowType === 'narrower' ? 'si' : 'plain',
         tickPositions: narrowType === 'regular' ? 'even' : 'ends',
-        reverseOrientation: position === 'bottom' || position === 'right' ? true : false
+        reverseOrientation: position === 'bottom' || position === 'right' ? true : false,
+        // TODO: Are these below really needed?
+        trackBorderWidth: 1,
+        labelColor: 'black',
+        labelPosition: 'left',
+        labelTextOpacity: 1,
+        trackBorderColor: 'white',
+        backgroundColor: 'white',
+        showMousePosition: false // Making this `true` causes a crash
     };
     return options;
 }
@@ -194,7 +217,7 @@ function getAxisPositions(track: ProcessedTrack): {
         return { xAxisPosition: undefined, yAxisPosition: undefined };
     }
 
-    const resolvedSpecs = resolveSuperposedTracks(track);
+    const resolvedSpecs = resolveSuperposedTracks(track as Track);
     const firstResolvedSpec = resolvedSpecs[0];
 
     const hasXAxis =

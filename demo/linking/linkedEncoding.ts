@@ -3,6 +3,8 @@ import {
     IsMultipleViews,
     IsSingleView,
     type Assembly,
+    type OverlaidTrack,
+    type SingleTrack,
     type SingleView
 } from '@gosling-lang/gosling-schema';
 import { GenomicPositionHelper, computeChromSizes } from '../../src/core/utils/assembly';
@@ -165,31 +167,43 @@ function getLinkedFeaturesRecursive(gs: GoslingSpec): LinkInfo {
  */
 function getSingleViewTrackLinks(gs: SingleView): TrackLink[] {
     // Helper function to create a track link for the x encoding
-    function createTrackLinkX(trackId: string, track: Track, trackType: TrackType, gs: SingleView) {
+    function createTrackLinkX(
+        trackId: string,
+        track: SingleTrack | OverlaidTrack,
+        trackType: TrackType,
+        gs: SingleView
+    ) {
+        const linkingId = 'x' in track && track.x && 'linkingId' in track.x ? track.x.linkingId : undefined;
         const trackLink = {
             trackId: trackId,
-            linkingId: track.x.linkingId,
+            linkingId,
             trackType,
             encoding: 'x'
         } as TrackLink;
         // If the track has a domain, we create a signal and add it to the trackLink
-        if (track.x.domain !== undefined) {
+        if ('x' in track && track.x && 'domain' in track.x && track.x.domain !== undefined) {
             const { assembly } = gs;
             const domain = getDomain(track.x.domain, assembly);
             trackLink.signal = signal(domain);
         }
         return trackLink;
     }
-    function createTrackLinkY(trackId: string, track: Track, trackType: TrackType, gs: SingleView) {
+    function createTrackLinkY(
+        trackId: string,
+        track: SingleTrack | OverlaidTrack,
+        trackType: TrackType,
+        gs: SingleView
+    ) {
         const { assembly } = gs;
+        const linkingId = 'x' in track && track.x && 'linkingId' in track.x ? track.x.linkingId : undefined;
         const trackLink = {
             trackId: trackId,
-            linkingId: track.y.linkingId,
+            linkingId,
             trackType,
             encoding: 'y'
         } as TrackLink;
         // If the track has a domain, we create a signal and add it to the trackLink
-        if (track.y.domain !== undefined) {
+        if ('y' in track && track.y && 'domain' in track.y && track.y.domain !== undefined) {
             const domain = getDomain(track.y.domain, assembly);
             trackLink.signal = signal(domain);
         }

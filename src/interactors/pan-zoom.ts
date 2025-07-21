@@ -2,12 +2,16 @@ import { type Signal, batch } from '@preact/signals-core';
 import { scaleLinear } from 'd3-scale';
 import { ZoomTransform, type D3ZoomEvent, zoom } from 'd3-zoom';
 import { select } from 'd3-selection';
-import { zoomWheelBehavior, type Plot } from '../tracks/utils';
+import { zoomWheelBehavior, type HeatmapPlot, type Plot } from '../tracks/utils';
 
 /**
  * This interactor allows the user to pan and zoom the plot
  */
-export function panZoom(plot: Plot, xDomain: Signal<[number, number]>, yDomain?: Signal<[number, number]>) {
+export function panZoom(
+    plot: Plot | HeatmapPlot,
+    xDomain: Signal<[number, number]>,
+    yDomain?: Signal<[number, number]>
+) {
     plot.xDomain = xDomain; // Update the xDomain with the signal
     if ('yDomain' in plot && yDomain !== undefined) plot.yDomain = yDomain;
 

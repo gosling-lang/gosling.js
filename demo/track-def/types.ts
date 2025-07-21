@@ -14,8 +14,10 @@ import type { DataDeep, Assembly, DummyTrackStyle, Mark, X, Y } from '@gosling-l
 
 /** A Track after it has been compiled */
 export type ProcessedTrack = ProcessedLinearTrack | ProcessedCircularTrack | ProcessedDummyTrack;
+// TODO: This should be much better expanded to include all the properties that are actually present.
 /** All tracks potentially have these properties */
 export interface ProcessedTrackBase {
+    layout?: 'linear' | 'circular';
     id: string;
     height: number;
     width: number;

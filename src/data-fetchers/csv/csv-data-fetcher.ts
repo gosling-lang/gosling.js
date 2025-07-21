@@ -5,7 +5,7 @@ import type { Assembly, CsvData, FilterTransform, Datum } from '@gosling-lang/go
 import { filterData } from '../../core/utils/data-transform';
 import { type CommonDataConfig, filterUsingGenoPos, sanitizeChrName, RemoteFile } from '../utils';
 
-type CsvDataConfig = CsvData & CommonDataConfig & { filter?: FilterTransform[] };
+export type CsvDataConfig = CsvData & CommonDataConfig & { filter?: FilterTransform[] };
 
 interface ChromSizes {
     chrToAbs: (chrom: string, chromPos: number) => number;

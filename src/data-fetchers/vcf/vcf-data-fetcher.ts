@@ -41,6 +41,8 @@ export type VcfTile = Omit<VcfRecord, 'ALT' | 'INFO'> & {
     DISTPREVLOGE: number | null;
 } & { [infoKey: string]: any };
 
+export type VcfDataConfig = VcfData & { assembly: Assembly };
+
 class VcfDataFetcher implements TabularDataFetcher<VcfTile> {
     static config = { type: 'vcf' };
     dataConfig = {}; // required for higlass

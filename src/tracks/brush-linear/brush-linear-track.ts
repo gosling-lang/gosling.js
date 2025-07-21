@@ -15,6 +15,7 @@ export interface BrushLinearTrackContext extends SVGTrackContext {
 }
 
 export interface BrushLinearTrackOptions {
+    static: boolean;
     projectionFillColor: string;
     projectionStrokeColor: string;
     projectionFillOpacity: number;
