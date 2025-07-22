@@ -23,7 +23,13 @@ export class PixiManager {
     /** Mapping between the position and the overlay div */
     createdContainers: Map<string, HTMLDivElement> = new Map();
 
-    constructor(width: number, height: number, container: HTMLDivElement, fps: (fps: number) => void) {
+    constructor(
+        width: number,
+        height: number,
+        container: HTMLDivElement,
+        fps: (fps: number) => void,
+        options: { padding?: number }
+    ) {
         this.app = new PIXI.Application<HTMLCanvasElement>({
             width,
             height,
@@ -42,7 +48,8 @@ export class PixiManager {
         });
         // The wrapper div is used to add padding around the canvas
         const wrapper = document.createElement('div');
-        wrapper.style.padding = '50px';
+        const padding = options.padding || 50;
+        wrapper.style.padding = `${padding}px`;
         wrapper.style.backgroundColor = 'white';
         container.appendChild(wrapper);
 
