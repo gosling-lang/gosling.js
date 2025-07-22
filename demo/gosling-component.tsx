@@ -15,6 +15,7 @@ export type GoslingRef = { api: ReturnType<typeof createApiV2> };
 // https://github.com/gosling-lang/gosling.js/blob/b7f7f0a065d99c66aee2b87db71e220e18d534ca/src/core/gosling-component.tsx#L33-L45
 interface GoslingComponentProps {
     spec?: GoslingSpec;
+    padding?: number;
     theme?: Theme;
     urlToFetchOptions?: UrlToFetchOptions;
     ref?: RefObject<GoslingRef>;
@@ -22,7 +23,7 @@ interface GoslingComponentProps {
 }
 
 export function GoslingComponent(props: GoslingComponentProps) {
-    const { spec, urlToFetchOptions, theme = 'light', ref, visualized = () => { } } = props;
+    const { spec, padding, urlToFetchOptions, theme = 'light', ref, visualized = () => { } } = props;
 
     const [compiledResults, setCompiledResults] = useState<ReturnType<typeof renderGosling>>();
 
@@ -46,7 +47,7 @@ export function GoslingComponent(props: GoslingComponentProps) {
         if (!pixiManager) {
             const canvasWidth = 1000,
                 canvasHeight = 1000; // These initial sizes don't matter because the size will be updated
-            const pixiManager = new PixiManager(canvasWidth, canvasHeight, plotElement, () => { });
+            const pixiManager = new PixiManager(canvasWidth, canvasHeight, plotElement, () => { }, { padding });
             const compileResult = renderGosling(spec, plotElement, pixiManager, theme, urlToFetchOptions);
             setCompiledResults(compileResult);
             setPixiManager(pixiManager);
