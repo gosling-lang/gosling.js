@@ -15,6 +15,8 @@ export type GoslingRef = { api: ReturnType<typeof createApiV2> };
 // https://github.com/gosling-lang/gosling.js/blob/b7f7f0a065d99c66aee2b87db71e220e18d534ca/src/core/gosling-component.tsx#L33-L45
 interface GoslingComponentProps {
     spec?: GoslingSpec;
+    id?: string;
+    className?: string;
     padding?: number;
     theme?: Theme;
     urlToFetchOptions?: UrlToFetchOptions;
@@ -23,7 +25,7 @@ interface GoslingComponentProps {
 }
 
 export function GoslingComponent(props: GoslingComponentProps) {
-    const { spec, padding, urlToFetchOptions, theme = 'light', ref, visualized = () => { } } = props;
+    const { spec, id, className, padding, urlToFetchOptions, theme = 'light', ref, visualized = () => { } } = props;
 
     const [compiledResults, setCompiledResults] = useState<ReturnType<typeof renderGosling>>();
 
@@ -58,7 +60,13 @@ export function GoslingComponent(props: GoslingComponentProps) {
         }
     }, [spec]);
 
-    return <div id="plot" style={{ height: '100%' }}></div>;
+    return (
+        <div
+            id={id ?? 'gosling-component'}
+            className={className ?? 'gosling-component'}
+            style={{ height: '100%' }}
+        ></div>
+    );
 }
 /**
  * This is the main function. It takes a Gosling spec and renders it using the PixiManager
