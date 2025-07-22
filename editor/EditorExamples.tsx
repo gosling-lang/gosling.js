@@ -60,6 +60,8 @@ export default function EditorExamples({
                                                     closeDescription();
                                                     setIsImportDemo(true);
                                                     setDemo({ id: d[0], ...examples[d[0]] } as any);
+                                                    // XXX: remove this!
+                                                    console.warn('New demo selected in the Editor');
                                                 }}
                                             >
                                                 <div className="card-img-wrap">
