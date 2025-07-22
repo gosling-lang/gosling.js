@@ -35,46 +35,47 @@ export function renderTrackDefs(
     const cursorPosY = signal(0);
 
     // Remove all plots that are not in the new specification
-    Object.keys(prevPlots).forEach(trackId => {
-        const index = trackDefs.findIndex(def => def.trackId === trackId);
+    // console.warn(Object.keys(prevPlots), trackDefs);
+    Object.keys(prevPlots).forEach(cacheId => {
+        const index = trackDefs.findIndex(def => def.cacheId === cacheId);
         if (index === -1) {
-            pixiManager.clear(trackId);
-            delete prevPlots[trackId];
+            console.warn('removing');
+            pixiManager.clear(cacheId);
+            delete prevPlots[cacheId];
         }
     });
 
     // Create a new plots or reuse existing plots
     trackDefs.forEach(trackDef => {
-        const { boundingBox, type, options, trackId } = trackDef;
-        const prevPlot = prevPlots[trackId];
-
+        const { boundingBox, type, options, trackId, cacheId } = trackDef;
+        const prevPlot = prevPlots[cacheId];
         if (type === TrackType.Text) {
             if (prevPlot) {
-                plotDict[trackId] = prevPlot as TextTrack;
+                plotDict[cacheId] = prevPlot as TextTrack;
             } else {
                 const textOptions = options as TextTrackOptions;
-                plotDict[trackId] = new TextTrack(textOptions, pixiManager.makeContainer(boundingBox, trackId));
+                plotDict[cacheId] = new TextTrack(textOptions, pixiManager.makeContainer(boundingBox, cacheId));
             }
         }
         if (type === TrackType.Gosling) {
             const gosOptions = options as GoslingTrackOptions;
             const { spec } = gosOptions;
-            const xDomain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
-            const yDomain = getEncodingSignal(trackDef.trackId, 'y', linkedEncodings);
+            const xDomain = getEncodingSignal(trackId, 'x', linkedEncodings);
+            const yDomain = getEncodingSignal(trackId, 'y', linkedEncodings);
             if (!xDomain) return;
 
             const datafetcher = getDataFetcher(spec, urlToFetchOptions);
             if (!datafetcher) return;
             if (prevPlot) {
                 // TODO: the new signal needs to be passed to the existing plot
-                const gosPlot = prevPlots[trackId] as GoslingTrack;
+                const gosPlot = prevPlots[cacheId] as GoslingTrack;
                 gosPlot.rerender(gosOptions);
-                plotDict[trackId] = gosPlot;
+                plotDict[cacheId] = gosPlot;
             } else {
                 const gosPlot = new GoslingTrack(
                     gosOptions,
                     datafetcher as DataFetcher<Tile>,
-                    pixiManager.makeContainer(boundingBox, trackId),
+                    pixiManager.makeContainer(boundingBox, cacheId),
                     xDomain,
                     yDomain,
                     gosOptions.spec.orientation
@@ -84,90 +85,91 @@ export function renderTrackDefs(
                     gosPlot.addInteractor(plot => panZoom(plot, xDomain, yDomain));
                 }
                 gosPlot.addInteractor(plot => cursor(plot, cursorPosX));
-                plotDict[trackId] = gosPlot;
+                plotDict[cacheId] = gosPlot;
             }
         }
         if (type === TrackType.Heatmap) {
             const hmOptions = options as HeatmapTrackOptions;
             const { spec } = hmOptions;
-            const xDomain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
-            const yDomain = getEncodingSignal(trackDef.trackId, 'y', linkedEncodings);
+            const xDomain = getEncodingSignal(trackId, 'x', linkedEncodings);
+            const yDomain = getEncodingSignal(trackId, 'y', linkedEncodings);
             if (!xDomain || !yDomain) return;
 
             const datafetcher = getDataFetcher(spec as SingleTrack | OverlaidTrack, urlToFetchOptions);
             if (prevPlot) {
                 // TODO: the new signal needs to be passed to the existing plot
-                prevPlot.rerender(hmOptions);
-                plotDict[trackId] = prevPlot;
+                const heatmapPlot = prevPlots[cacheId] as HeatmapTrack;
+                heatmapPlot.rerender(hmOptions);
+                plotDict[cacheId] = heatmapPlot;
             } else {
                 const heatmapPlot = new HeatmapTrack(
                     hmOptions,
                     datafetcher as DataFetcher<Tile>,
-                    pixiManager.makeContainer(boundingBox, trackId)
+                    pixiManager.makeContainer(boundingBox, cacheId)
                 )
                     .addInteractor(plot => panZoomHeatmap(plot, xDomain, yDomain))
                     .addInteractor(plot => cursor2D(plot, cursorPosX, cursorPosY));
-                plotDict[trackId] = heatmapPlot;
+                plotDict[cacheId] = heatmapPlot;
             }
         }
         if (type === TrackType.Axis) {
             const axisOptions = options as AxisTrackOptions;
-            const domain = getEncodingSignal(trackDef.trackId, axisOptions.encoding, linkedEncodings);
+            const domain = getEncodingSignal(trackId, axisOptions.encoding, linkedEncodings);
             if (!domain) {
-                console.warn(`No domain found for axis ${trackDef.trackId}. Skipping...`);
+                console.warn(`No domain found for axis ${trackId}. Skipping...`);
                 return;
             }
             if (prevPlot) {
-                plotDict[trackId] = prevPlot;
+                plotDict[cacheId] = prevPlot;
             } else {
                 const axisTrack = new AxisTrack(
                     axisOptions,
                     domain,
-                    pixiManager.makeContainer(boundingBox, trackId),
+                    pixiManager.makeContainer(boundingBox, cacheId),
                     axisOptions.orientation
                 );
                 if (!axisOptions.static) {
                     axisTrack.addInteractor(plot => panZoom(plot, domain));
                 }
-                plotDict[trackId] = axisTrack;
+                plotDict[cacheId] = axisTrack;
             }
         }
         if (type === TrackType.BrushLinear) {
             const brushOptions = options as BrushLinearTrackOptions;
-            const domain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
-            const brushDomain = getEncodingSignal(trackDef.trackId, 'brush', linkedEncodings);
-            if (!domain || !brushDomain || !hasLinkedTracks(trackDef.trackId, linkedEncodings)) return;
+            const domain = getEncodingSignal(trackId, 'x', linkedEncodings);
+            const brushDomain = getEncodingSignal(trackId, 'brush', linkedEncodings);
+            if (!domain || !brushDomain || !hasLinkedTracks(trackId, linkedEncodings)) return;
             // We only want to add the brush track if it is linked to another track
             const brush = new BrushLinearTrack(
                 brushOptions,
                 brushDomain,
-                pixiManager.makeContainer(boundingBox, trackId).overlayDiv,
+                pixiManager.makeContainer(boundingBox, cacheId).overlayDiv,
                 domain
             );
             if (!brushOptions.static) brush.addInteractor(plot => panZoom(plot, domain));
-            plotDict[trackId] = brush;
+            plotDict[cacheId] = brush;
         }
         if (type === TrackType.BrushCircular) {
             const brushOptions = options as BrushCircularTrackOptions;
-            const domain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
-            const brushDomain = getEncodingSignal(trackDef.trackId, 'brush', linkedEncodings);
-            if (!domain || !brushDomain || !hasLinkedTracks(trackDef.trackId, linkedEncodings)) return;
+            const domain = getEncodingSignal(trackId, 'x', linkedEncodings);
+            const brushDomain = getEncodingSignal(trackId, 'brush', linkedEncodings);
+            if (!domain || !brushDomain || !hasLinkedTracks(trackId, linkedEncodings)) return;
             // We only want to add the brush track if it is linked to another track
             const brush = new BrushCircularTrack(
                 brushOptions,
                 brushDomain,
-                pixiManager.makeContainer(boundingBox, trackId).overlayDiv,
+                pixiManager.makeContainer(boundingBox, cacheId).overlayDiv,
                 domain
             );
             if (!brushOptions.static) {
                 brush.addInteractor(plot => panZoom(plot, domain));
             }
-            plotDict[trackId] = brush;
+            plotDict[cacheId] = brush;
         }
         if (type === TrackType.Dummy) {
             const dummyOptions = options as DummyTrackOptions;
-            const dummyPlot = new DummyTrack(dummyOptions, pixiManager.makeContainer(boundingBox, trackId).overlayDiv);
-            plotDict[trackId] = dummyPlot;
+            const dummyPlot = new DummyTrack(dummyOptions, pixiManager.makeContainer(boundingBox, cacheId).overlayDiv);
+            plotDict[cacheId] = dummyPlot;
         }
     });
     return plotDict;
