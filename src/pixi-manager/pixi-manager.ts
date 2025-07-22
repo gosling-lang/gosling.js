@@ -99,12 +99,14 @@ export class PixiManager {
 
         return { pixiContainer: pContainer, overlayDiv: plotDiv };
     }
+    // TODO: container should be also removed from the app.stage
     clear(id: string): void {
         this.createdContainers.keys().forEach(key => {
             const div = this.createdContainers.get(key)!;
             const overlayId = div.id.split('overlay-')[1];
             if (overlayId === id) {
                 this.createdContainers.delete(key);
+                this.overlayContainer.removeChild(div);
                 div.remove();
                 return;
             }

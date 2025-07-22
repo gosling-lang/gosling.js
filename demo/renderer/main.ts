@@ -36,7 +36,9 @@ export function renderTrackDefs(
 
     // Remove all plots that are not in the new specification
     Object.keys(prevPlots).forEach(trackId => {
-        if (!trackDefs.find(def => def.trackId !== trackId)) pixiManager.clear(trackId);
+        if (trackDefs.findIndex(def => def.trackId === trackId) === -1) {
+            pixiManager.clear(trackId);
+        }
     });
 
     // Create a new plots or reuse existing plots
@@ -66,7 +68,7 @@ export function renderTrackDefs(
                 const gosPlot = new GoslingTrack(
                     gosOptions,
                     datafetcher as DataFetcher<Tile>,
-                    pixiManager.makeContainer(boundingBox),
+                    pixiManager.makeContainer(boundingBox, trackId),
                     xDomain,
                     yDomain,
                     gosOptions.spec.orientation
