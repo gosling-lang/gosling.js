@@ -48,7 +48,7 @@ export class PixiManager {
         });
         // The wrapper div is used to add padding around the canvas
         const wrapper = document.createElement('div');
-        const padding = options.padding || 50;
+        const padding = options.padding ?? 50;
         wrapper.style.padding = `${padding}px`;
         wrapper.style.backgroundColor = 'white';
         container.appendChild(wrapper);
@@ -76,7 +76,10 @@ export class PixiManager {
      * @param position
      * @returns
      */
-    makeContainer(position: BoundingBox): {
+    makeContainer(
+        position: BoundingBox,
+        id?: string
+    ): {
         pixiContainer: PIXI.Container;
         overlayDiv: HTMLDivElement;
     } {
@@ -89,14 +92,24 @@ export class PixiManager {
         if (this.createdContainers.has(positionString)) {
             plotDiv = this.createdContainers.get(positionString)!;
         } else {
-            plotDiv = createOverlayElement(position);
+            plotDiv = createOverlayElement(position, id);
             this.createdContainers.set(positionString, plotDiv);
             this.overlayContainer.appendChild(plotDiv);
         }
 
         return { pixiContainer: pContainer, overlayDiv: plotDiv };
     }
-
+    clear(id: string): void {
+        this.createdContainers.keys().forEach(key => {
+            const div = this.createdContainers.get(key)!;
+            const overlayId = div.id.split('overlay-')[1];
+            if (overlayId === id) {
+                this.createdContainers.delete(key);
+                div.remove();
+                return;
+            }
+        });
+    }
     clearAll(): void {
         const children = this.app.stage.removeChildren();
         children.forEach(child => {
@@ -125,12 +138,15 @@ export class PixiManager {
  * @param position
  * @returns
  */
-export function createOverlayElement(position: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-}): HTMLDivElement {
+export function createOverlayElement(
+    position: {
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+    },
+    id?: string
+): HTMLDivElement {
     const overlay = document.createElement('div');
 
     overlay.style.position = 'absolute';
@@ -138,7 +154,7 @@ export function createOverlayElement(position: {
     overlay.style.top = `${position.y}px`;
     overlay.style.width = `${position.width}px`;
     overlay.style.height = `${position.height}px`;
-    overlay.id = `overlay-${Math.random().toString(36).substring(7)}`; // Add random id
+    overlay.id = `overlay-${id || Math.random().toString(36).substring(7)}`; // Add random id
 
     return overlay;
 }

@@ -26,6 +26,7 @@ export function renderTrackDefs(
     trackDefs: TrackDefs[],
     linkedEncodings: LinkedEncoding[],
     pixiManager: PixiManager,
+    prevPlots: Record<string, unknown>,
     urlToFetchOptions?: UrlToFetchOptions
 ) {
     const plotDict: Record<string, unknown> = {};
@@ -33,6 +34,12 @@ export function renderTrackDefs(
     const cursorPosX = signal(0);
     const cursorPosY = signal(0);
 
+    // Remove all plots that are not in the new specification
+    Object.keys(prevPlots).forEach(trackId => {
+        if (!trackDefs.find(def => def.trackId !== trackId)) pixiManager.clear(trackId);
+    });
+
+    // Create a new plots or reuse existing plots
     trackDefs.forEach(trackDef => {
         const { boundingBox, type, options, trackId } = trackDef;
 
@@ -50,20 +57,27 @@ export function renderTrackDefs(
 
             const datafetcher = getDataFetcher(spec, urlToFetchOptions);
             if (!datafetcher) return;
-            const gosPlot = new GoslingTrack(
-                gosOptions,
-                datafetcher as DataFetcher<Tile>,
-                pixiManager.makeContainer(boundingBox),
-                xDomain,
-                yDomain,
-                gosOptions.spec.orientation
-            );
-            const isOverlayedOnPrevious = 'overlayOnPreviousTrack' in spec && spec.overlayOnPreviousTrack;
-            if (!spec.static && !isOverlayedOnPrevious) {
-                gosPlot.addInteractor(plot => panZoom(plot, xDomain, yDomain));
+            if (prevPlots[trackId]) {
+                // TODO: the new signal needs to be passed to the existing plot
+                const gosPlot = prevPlots[trackId] as GoslingTrack;
+                gosPlot.rerender(gosOptions);
+                plotDict[trackId] = gosPlot;
+            } else {
+                const gosPlot = new GoslingTrack(
+                    gosOptions,
+                    datafetcher as DataFetcher<Tile>,
+                    pixiManager.makeContainer(boundingBox),
+                    xDomain,
+                    yDomain,
+                    gosOptions.spec.orientation
+                );
+                const isOverlayedOnPrevious = 'overlayOnPreviousTrack' in spec && spec.overlayOnPreviousTrack;
+                if (!spec.static && !isOverlayedOnPrevious) {
+                    gosPlot.addInteractor(plot => panZoom(plot, xDomain, yDomain));
+                }
+                gosPlot.addInteractor(plot => cursor(plot, cursorPosX));
+                plotDict[trackId] = gosPlot;
             }
-            gosPlot.addInteractor(plot => cursor(plot, cursorPosX));
-            plotDict[trackId] = gosPlot;
         }
         if (type === TrackType.Heatmap) {
             const hmOptions = options as HeatmapTrackOptions;
