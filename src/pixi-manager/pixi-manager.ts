@@ -100,7 +100,6 @@ export class PixiManager {
 
         this.createdPixiContainers.set(id, pContainer);
 
-        console.warn('Current this.app.stage', this.app.stage.children.length);
         return { pixiContainer: pContainer, overlayDiv: plotDiv };
     }
 

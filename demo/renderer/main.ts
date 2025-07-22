@@ -35,7 +35,6 @@ export function renderTrackDefs(
     const cursorPosY = signal(0);
 
     // Remove all plots that are not in the new specification
-    console.error('num prevPlots', Object.keys(prevPlots).length, Object.keys(prevPlots));
     Object.keys(prevPlots).forEach(cacheId => {
         const index = trackDefs.findIndex(def => def.cacheId === cacheId);
         if (index === -1) {
