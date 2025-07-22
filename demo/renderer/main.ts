@@ -35,13 +35,14 @@ export function renderTrackDefs(
     const cursorPosY = signal(0);
 
     // Remove all plots that are not in the new specification
-    // console.warn(Object.keys(prevPlots), trackDefs);
+    console.warn(Object.keys(prevPlots), trackDefs);
     Object.keys(prevPlots).forEach(cacheId => {
         const index = trackDefs.findIndex(def => def.cacheId === cacheId);
-        if (index === -1) {
-            console.warn('removing');
+        if (index === -1 || true) {
             pixiManager.clear(cacheId);
             delete prevPlots[cacheId];
+        } else {
+            console.warn('found', cacheId);
         }
     });
 

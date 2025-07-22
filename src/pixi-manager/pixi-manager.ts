@@ -84,7 +84,7 @@ export class PixiManager {
      */
     makeContainer(
         position: BoundingBox,
-        id?: string
+        id: string
     ): {
         pixiContainer: PIXI.Container;
         overlayDiv: HTMLDivElement;
@@ -103,19 +103,25 @@ export class PixiManager {
             this.overlayContainer.appendChild(plotDiv);
         }
 
+        console.warn('this.app.stage', this.app.stage.children.length);
         return { pixiContainer: pContainer, overlayDiv: plotDiv };
     }
 
     clear(id: string): void {
+        console.error(
+            this.createdContainers.keys().toArray().length,
+            this.app.stage.children.length,
+            this.app.stage.children
+        );
         this.createdContainers.keys().forEach(key => {
             const { overlayDiv: div, pixiContainer: pContainer } = this.createdContainers.get(key)!;
             const overlayId = div.id.split('overlay-')[1];
             if (overlayId === id) {
                 this.app.stage.removeChild(pContainer);
-                //const pC = pContainer.removeChildren();
-                //pC.forEach(child => {
-                //    child.destroy();
-                //});
+                const pC = pContainer.removeChildren();
+                pC.forEach(child => {
+                    child.destroy();
+                });
                 pContainer.destroy();
 
                 this.overlayContainer.removeChild(div);
@@ -123,8 +129,8 @@ export class PixiManager {
                     div.removeChild(div.firstChild);
                 }
                 div.remove();
+                div.innerHTML = '';
                 this.createdContainers.delete(key);
-                return;
             }
         });
     }
@@ -163,7 +169,7 @@ export function createOverlayElement(
         width: number;
         height: number;
     },
-    id?: string
+    id: string
 ): HTMLDivElement {
     const overlay = document.createElement('div');
 
@@ -172,7 +178,7 @@ export function createOverlayElement(
     overlay.style.top = `${position.y}px`;
     overlay.style.width = `${position.width}px`;
     overlay.style.height = `${position.height}px`;
-    overlay.id = `overlay-${id || Math.random().toString(36).substring(7)}`; // Add random id
+    overlay.id = `overlay-${id}`; // Math.random().toString(36).substring(7)
 
     return overlay;
 }
