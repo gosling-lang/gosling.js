@@ -36,19 +36,25 @@ export function renderTrackDefs(
 
     // Remove all plots that are not in the new specification
     Object.keys(prevPlots).forEach(trackId => {
-        if (trackDefs.findIndex(def => def.trackId === trackId) === -1) {
+        const index = trackDefs.findIndex(def => def.trackId === trackId);
+        if (index === -1) {
             pixiManager.clear(trackId);
+            delete prevPlots[trackId];
         }
     });
 
     // Create a new plots or reuse existing plots
     trackDefs.forEach(trackDef => {
         const { boundingBox, type, options, trackId } = trackDef;
+        const prevPlot = prevPlots[trackId];
 
         if (type === TrackType.Text) {
-            const textOptions = options as TextTrackOptions;
-            const plot = new TextTrack(textOptions, pixiManager.makeContainer(boundingBox));
-            plotDict[trackId] = plot;
+            if (prevPlot) {
+                plotDict[trackId] = prevPlot as TextTrack;
+            } else {
+                const textOptions = options as TextTrackOptions;
+                plotDict[trackId] = new TextTrack(textOptions, pixiManager.makeContainer(boundingBox, trackId));
+            }
         }
         if (type === TrackType.Gosling) {
             const gosOptions = options as GoslingTrackOptions;
@@ -59,7 +65,7 @@ export function renderTrackDefs(
 
             const datafetcher = getDataFetcher(spec, urlToFetchOptions);
             if (!datafetcher) return;
-            if (prevPlots[trackId]) {
+            if (prevPlot) {
                 // TODO: the new signal needs to be passed to the existing plot
                 const gosPlot = prevPlots[trackId] as GoslingTrack;
                 gosPlot.rerender(gosOptions);
@@ -89,14 +95,20 @@ export function renderTrackDefs(
             if (!xDomain || !yDomain) return;
 
             const datafetcher = getDataFetcher(spec as SingleTrack | OverlaidTrack, urlToFetchOptions);
-            const heatmapPlot = new HeatmapTrack(
-                hmOptions,
-                datafetcher as DataFetcher<Tile>,
-                pixiManager.makeContainer(boundingBox)
-            )
-                .addInteractor(plot => panZoomHeatmap(plot, xDomain, yDomain))
-                .addInteractor(plot => cursor2D(plot, cursorPosX, cursorPosY));
-            plotDict[trackId] = heatmapPlot;
+            if (prevPlot) {
+                // TODO: the new signal needs to be passed to the existing plot
+                prevPlot.rerender(hmOptions);
+                plotDict[trackId] = prevPlot;
+            } else {
+                const heatmapPlot = new HeatmapTrack(
+                    hmOptions,
+                    datafetcher as DataFetcher<Tile>,
+                    pixiManager.makeContainer(boundingBox, trackId)
+                )
+                    .addInteractor(plot => panZoomHeatmap(plot, xDomain, yDomain))
+                    .addInteractor(plot => cursor2D(plot, cursorPosX, cursorPosY));
+                plotDict[trackId] = heatmapPlot;
+            }
         }
         if (type === TrackType.Axis) {
             const axisOptions = options as AxisTrackOptions;
@@ -105,16 +117,20 @@ export function renderTrackDefs(
                 console.warn(`No domain found for axis ${trackDef.trackId}. Skipping...`);
                 return;
             }
-            const axisTrack = new AxisTrack(
-                axisOptions,
-                domain,
-                pixiManager.makeContainer(boundingBox),
-                axisOptions.orientation
-            );
-            if (!axisOptions.static) {
-                axisTrack.addInteractor(plot => panZoom(plot, domain));
+            if (prevPlot) {
+                plotDict[trackId] = prevPlot;
+            } else {
+                const axisTrack = new AxisTrack(
+                    axisOptions,
+                    domain,
+                    pixiManager.makeContainer(boundingBox, trackId),
+                    axisOptions.orientation
+                );
+                if (!axisOptions.static) {
+                    axisTrack.addInteractor(plot => panZoom(plot, domain));
+                }
+                plotDict[trackId] = axisTrack;
             }
-            plotDict[trackId] = axisTrack;
         }
         if (type === TrackType.BrushLinear) {
             const brushOptions = options as BrushLinearTrackOptions;
@@ -125,7 +141,7 @@ export function renderTrackDefs(
             const brush = new BrushLinearTrack(
                 brushOptions,
                 brushDomain,
-                pixiManager.makeContainer(boundingBox).overlayDiv,
+                pixiManager.makeContainer(boundingBox, trackId).overlayDiv,
                 domain
             );
             if (!brushOptions.static) brush.addInteractor(plot => panZoom(plot, domain));
@@ -140,7 +156,7 @@ export function renderTrackDefs(
             const brush = new BrushCircularTrack(
                 brushOptions,
                 brushDomain,
-                pixiManager.makeContainer(boundingBox).overlayDiv,
+                pixiManager.makeContainer(boundingBox, trackId).overlayDiv,
                 domain
             );
             if (!brushOptions.static) {
@@ -150,7 +166,7 @@ export function renderTrackDefs(
         }
         if (type === TrackType.Dummy) {
             const dummyOptions = options as DummyTrackOptions;
-            const dummyPlot = new DummyTrack(dummyOptions, pixiManager.makeContainer(boundingBox).overlayDiv);
+            const dummyPlot = new DummyTrack(dummyOptions, pixiManager.makeContainer(boundingBox, trackId).overlayDiv);
             plotDict[trackId] = dummyPlot;
         }
     });

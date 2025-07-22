@@ -21,7 +21,13 @@ export class PixiManager {
     /** Element which contains all of the overlay divs */
     overlayContainer: HTMLDivElement;
     /** Mapping between the position and the overlay div */
-    createdContainers: Map<string, HTMLDivElement> = new Map();
+    createdContainers: Map<
+        string,
+        {
+            pixiContainer: PIXI.Container;
+            overlayDiv: HTMLDivElement;
+        }
+    > = new Map();
 
     constructor(
         width: number,
@@ -90,24 +96,34 @@ export class PixiManager {
         let plotDiv: HTMLDivElement;
         const positionString = JSON.stringify(position);
         if (this.createdContainers.has(positionString)) {
-            plotDiv = this.createdContainers.get(positionString)!;
+            plotDiv = this.createdContainers.get(positionString)!.overlayDiv;
         } else {
             plotDiv = createOverlayElement(position, id);
-            this.createdContainers.set(positionString, plotDiv);
+            this.createdContainers.set(positionString, { pixiContainer: pContainer, overlayDiv: plotDiv });
             this.overlayContainer.appendChild(plotDiv);
         }
 
         return { pixiContainer: pContainer, overlayDiv: plotDiv };
     }
-    // TODO: container should be also removed from the app.stage
+
     clear(id: string): void {
         this.createdContainers.keys().forEach(key => {
-            const div = this.createdContainers.get(key)!;
+            const { overlayDiv: div, pixiContainer: pContainer } = this.createdContainers.get(key)!;
             const overlayId = div.id.split('overlay-')[1];
             if (overlayId === id) {
-                this.createdContainers.delete(key);
+                this.app.stage.removeChild(pContainer);
+                //const pC = pContainer.removeChildren();
+                //pC.forEach(child => {
+                //    child.destroy();
+                //});
+                pContainer.destroy();
+
                 this.overlayContainer.removeChild(div);
+                while (div.firstChild) {
+                    div.removeChild(div.firstChild);
+                }
                 div.remove();
+                this.createdContainers.delete(key);
                 return;
             }
         });
@@ -117,7 +133,7 @@ export class PixiManager {
         children.forEach(child => {
             child.destroy();
         });
-        this.createdContainers.forEach(div => {
+        this.createdContainers.forEach(({ overlayDiv: div }) => {
             div.remove();
         });
         this.createdContainers.clear();

@@ -11,6 +11,7 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
             alignment: 'overlay',
             tracks: [
                 {
+                    id: 'matrix',
                     data: {
                         url: GOSLING_PUBLIC_DATA.matrix,
                         type: 'matrix'
