@@ -111,6 +111,19 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
         this.addTooltip();
     }
 
+    setDimensions(newDimensions: [number, number]) {
+        const [width, height] = newDimensions;
+        super.setDimensions(newDimensions);
+        const svgElement = this.domOverlay.querySelector('svg');
+        if (svgElement) {
+            svgElement.style.width = `${width}px`;
+            svgElement.style.height = `${height}px`;
+        }
+        this._xScale.range([0, this.dimensions[0]]);
+        this._refXScale.range([0, this.dimensions[0]]);
+        this._yScale.range([0, this.dimensions[1]]);
+        this._refYScale.range([0, this.dimensions[1]]);
+    }
     /** When the tooltip option is used, the tooltip div will be populated sample information  */
     addTooltip() {
         /** Helper function to get the position relative to the overlay div */

@@ -21,7 +21,7 @@ export class PixiManager {
     /** Element which contains all of the overlay divs */
     overlayContainer: HTMLDivElement;
     /** Mapping between the position and the overlay div */
-    createdContainers: Map<string, HTMLDivElement> = new Map();
+    createdOverlayDivs: Map<string, HTMLDivElement> = new Map();
     createdPixiContainers: Map<string, PIXI.Container> = new Map();
 
     constructor(
@@ -90,11 +90,11 @@ export class PixiManager {
 
         let plotDiv: HTMLDivElement;
         const positionString = JSON.stringify(position);
-        if (this.createdContainers.has(positionString)) {
-            plotDiv = this.createdContainers.get(positionString)!;
+        if (this.createdOverlayDivs.has(positionString)) {
+            plotDiv = this.createdOverlayDivs.get(positionString)!;
         } else {
             plotDiv = createOverlayElement(position, id);
-            this.createdContainers.set(positionString, plotDiv);
+            this.createdOverlayDivs.set(positionString, plotDiv);
             this.overlayContainer.appendChild(plotDiv);
         }
 
@@ -103,9 +103,26 @@ export class PixiManager {
         return { pixiContainer: pContainer, overlayDiv: plotDiv };
     }
 
+    updateContainer(position: BoundingBox, id: string) {
+        this.createdOverlayDivs.keys().forEach(key => {
+            const div = this.createdOverlayDivs.get(key)!;
+
+            // TODO: Avoid hardcoding the ID prefix
+            const overlayId = div.id.split('overlay-')[1];
+            if (overlayId === id) {
+                div.style.left = `${position.x}px`;
+                div.style.top = `${position.y}px`;
+                div.style.width = `${position.width}px`;
+                div.style.height = `${position.height}px`;
+                const pContainer = this.createdPixiContainers.get(id)!;
+                pContainer.position.set(position.x, position.y);
+            }
+        });
+    }
+
     clear(id: string): void {
-        this.createdContainers.keys().forEach(key => {
-            const div = this.createdContainers.get(key)!;
+        this.createdOverlayDivs.keys().forEach(key => {
+            const div = this.createdOverlayDivs.get(key)!;
 
             // TODO: Avoid hardcoding the ID prefix
             const overlayId = div.id.split('overlay-')[1];
@@ -116,7 +133,7 @@ export class PixiManager {
                 }
                 div.remove();
                 div.innerHTML = '';
-                this.createdContainers.delete(key);
+                this.createdOverlayDivs.delete(key);
             }
         });
         const pContainer = this.createdPixiContainers.get(id)!;
@@ -132,10 +149,10 @@ export class PixiManager {
         children.forEach(child => {
             child.destroy();
         });
-        this.createdContainers.forEach(div => {
+        this.createdOverlayDivs.forEach(div => {
             div.remove();
         });
-        this.createdContainers.clear();
+        this.createdOverlayDivs.clear();
         this.overlayContainer.innerHTML = '';
     }
 

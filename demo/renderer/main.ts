@@ -34,7 +34,7 @@ export function renderTrackDefs(
     const cursorPosX = signal(0);
     const cursorPosY = signal(0);
 
-    // Remove all plots that are not in the new specification
+    // For reactive rendering, remove all plots except for the ones that need to be reused
     Object.keys(prevPlots).forEach(cacheId => {
         const index = trackDefs.findIndex(def => def.cacheId === cacheId);
         if (index === -1) {
@@ -49,6 +49,10 @@ export function renderTrackDefs(
         const prevPlot = prevPlots[cacheId];
         if (type === TrackType.Text) {
             if (prevPlot) {
+                const txtPlot = prevPlot as TextTrack;
+                pixiManager.updateContainer(boundingBox, cacheId);
+                txtPlot.setDimensions([boundingBox.width, boundingBox.height]);
+                txtPlot.rerender(options as TextTrackOptions, true);
                 plotDict[cacheId] = prevPlot as TextTrack;
             } else {
                 const textOptions = options as TextTrackOptions;
@@ -67,6 +71,9 @@ export function renderTrackDefs(
             if (prevPlot) {
                 // TODO: the new signal needs to be passed to the existing plot
                 const gosPlot = prevPlots[cacheId] as GoslingTrack;
+                pixiManager.updateContainer(boundingBox, cacheId);
+                gosPlot.setDimensions([boundingBox.width, boundingBox.height]);
+                //gosPlot.setPosition([boundingBox.x, boundingBox.y]);
                 gosPlot.rerender(gosOptions);
                 plotDict[cacheId] = gosPlot;
             } else {
@@ -118,6 +125,10 @@ export function renderTrackDefs(
                 return;
             }
             if (prevPlot) {
+                const axisPlot = prevPlot as AxisTrack;
+                pixiManager.updateContainer(boundingBox, cacheId);
+                axisPlot.setDimensions([boundingBox.width, boundingBox.height]);
+                // axisPlot.rerender(options as TextTrackOptions, true);
                 plotDict[cacheId] = prevPlot;
             } else {
                 const axisTrack = new AxisTrack(

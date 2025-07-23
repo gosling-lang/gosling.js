@@ -10,7 +10,8 @@ import type {
     GenomicPosition,
     Assembly,
     ValueExtent,
-    Range
+    Range,
+    BoundingBox
 } from '@gosling-lang/gosling-schema';
 import { type MouseEventData, isPointInsideDonutSlice } from '../gosling-track/gosling-mouse-event';
 import { BamDataFetcher, type TabularDataFetcher } from '@data-fetchers';
@@ -398,6 +399,7 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
         this.processAllTiles(true);
         this.draw();
         this.forceDraw();
+        this.calculateVisibleTiles();
     }
     /**
      * Clears MouseEventModel from each GoslingTrackModel. Must be a public method because it is called from draw()
