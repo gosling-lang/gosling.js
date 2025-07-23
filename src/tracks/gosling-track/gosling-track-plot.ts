@@ -94,7 +94,7 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
         this.domOverlay = overlayDiv;
         // Now we need to initialize all of the properties that would normally be set by HiGlassComponent
         this.setDimensions([this.width, this.height]);
-        this.setPosition([0, 0]);
+        this.setPosition([0, 0]); // @sehi: So, we not just set this to [0, 0] always?
         // Create some scales where the range is the height/width of the plot
         const refXScale = scaleLinear().domain(this.xDomain.value).range([0, this.width]);
         const refYScale = scaleLinear().domain(this.yDomain.value).range([0, this.height]);

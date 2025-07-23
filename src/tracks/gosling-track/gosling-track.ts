@@ -399,7 +399,6 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
         this.processAllTiles(true);
         this.draw();
         this.forceDraw();
-        this.calculateVisibleTiles();
     }
     /**
      * Clears MouseEventModel from each GoslingTrackModel. Must be a public method because it is called from draw()

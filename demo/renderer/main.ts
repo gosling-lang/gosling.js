@@ -73,8 +73,12 @@ export function renderTrackDefs(
                 const gosPlot = prevPlots[cacheId] as GoslingTrack;
                 pixiManager.updateContainer(boundingBox, cacheId);
                 gosPlot.setDimensions([boundingBox.width, boundingBox.height]);
-                //gosPlot.setPosition([boundingBox.x, boundingBox.y]);
                 gosPlot.rerender(gosOptions);
+                const isOverlayedOnPrevious = 'overlayOnPreviousTrack' in spec && spec.overlayOnPreviousTrack;
+                if (!spec.static && !isOverlayedOnPrevious) {
+                    // TODO: How to update this based on the updated width/height?
+                    gosPlot.addInteractor(plot => panZoom(plot, xDomain, yDomain));
+                }
                 plotDict[cacheId] = gosPlot;
             } else {
                 const gosPlot = new GoslingTrack(
