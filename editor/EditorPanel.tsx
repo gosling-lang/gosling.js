@@ -132,7 +132,7 @@ function EditorPanel(props: {
     }
 
     function onChangeHandle(newCode: string) {
-        setCode(newCode);
+        // setCode(newCode); // this does not seem to be necessary.
         if (props.onChange) props.onChange(newCode, language);
     }
 
