@@ -38,6 +38,7 @@ export function processGoslingTrack(
     trackDefs.push({
         type: TrackType.Gosling,
         trackId: track.id,
+        cacheId: track.id,
         boundingBox: { ...boundingBox },
         options: goslingTrackOptions
     });
@@ -54,7 +55,7 @@ export function processGoslingTrack(
 function getGoslingTrackOptions(spec: ProcessedTrack, theme: Required<CompleteThemeDeep>): GoslingTrackOptions {
     return {
         // @ts-expect-error At this point, the spec is processed
-        spec: spec,
+        spec,
         id: spec.id,
         siblingIds: [],
         showMousePosition: true,
@@ -71,6 +72,6 @@ function getGoslingTrackOptions(spec: ProcessedTrack, theme: Required<CompleteTh
         labelRightMargin: 0,
         labelBottomMargin: 0,
         backgroundColor: 'transparent',
-        theme: theme
+        theme
     };
 }

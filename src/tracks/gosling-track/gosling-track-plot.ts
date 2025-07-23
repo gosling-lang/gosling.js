@@ -94,7 +94,7 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
         this.domOverlay = overlayDiv;
         // Now we need to initialize all of the properties that would normally be set by HiGlassComponent
         this.setDimensions([this.width, this.height]);
-        this.setPosition([0, 0]);
+        this.setPosition([0, 0]); // @sehi: So, we not just set this to [0, 0] always?
         // Create some scales where the range is the height/width of the plot
         const refXScale = scaleLinear().domain(this.xDomain.value).range([0, this.width]);
         const refYScale = scaleLinear().domain(this.yDomain.value).range([0, this.height]);
@@ -111,6 +111,19 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
         this.addTooltip();
     }
 
+    setDimensions(newDimensions: [number, number]) {
+        const [width, height] = newDimensions;
+        super.setDimensions(newDimensions);
+        const svgElement = this.domOverlay.querySelector('svg');
+        if (svgElement) {
+            svgElement.style.width = `${width}px`;
+            svgElement.style.height = `${height}px`;
+        }
+        this._xScale.range([0, this.dimensions[0]]);
+        this._refXScale.range([0, this.dimensions[0]]);
+        this._yScale.range([0, this.dimensions[1]]);
+        this._refYScale.range([0, this.dimensions[1]]);
+    }
     /** When the tooltip option is used, the tooltip div will be populated sample information  */
     addTooltip() {
         /** Helper function to get the position relative to the overlay div */

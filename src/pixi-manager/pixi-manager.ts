@@ -21,7 +21,8 @@ export class PixiManager {
     /** Element which contains all of the overlay divs */
     overlayContainer: HTMLDivElement;
     /** Mapping between the position and the overlay div */
-    createdContainers: Map<string, HTMLDivElement> = new Map();
+    createdOverlayDivs: Map<string, HTMLDivElement> = new Map();
+    createdPixiContainers: Map<string, PIXI.Container> = new Map();
 
     constructor(
         width: number,
@@ -48,7 +49,7 @@ export class PixiManager {
         });
         // The wrapper div is used to add padding around the canvas
         const wrapper = document.createElement('div');
-        const padding = options.padding || 50;
+        const padding = options.padding ?? 50;
         wrapper.style.padding = `${padding}px`;
         wrapper.style.backgroundColor = 'white';
         container.appendChild(wrapper);
@@ -76,7 +77,10 @@ export class PixiManager {
      * @param position
      * @returns
      */
-    makeContainer(position: BoundingBox): {
+    makeContainer(
+        position: BoundingBox,
+        id: string
+    ): {
         pixiContainer: PIXI.Container;
         overlayDiv: HTMLDivElement;
     } {
@@ -86,26 +90,69 @@ export class PixiManager {
 
         let plotDiv: HTMLDivElement;
         const positionString = JSON.stringify(position);
-        if (this.createdContainers.has(positionString)) {
-            plotDiv = this.createdContainers.get(positionString)!;
+        if (this.createdOverlayDivs.has(positionString)) {
+            plotDiv = this.createdOverlayDivs.get(positionString)!;
         } else {
-            plotDiv = createOverlayElement(position);
-            this.createdContainers.set(positionString, plotDiv);
+            plotDiv = createOverlayElement(position, id);
+            this.createdOverlayDivs.set(positionString, plotDiv);
             this.overlayContainer.appendChild(plotDiv);
         }
+
+        this.createdPixiContainers.set(id, pContainer);
 
         return { pixiContainer: pContainer, overlayDiv: plotDiv };
     }
 
+    updateContainer(position: BoundingBox, id: string) {
+        this.createdOverlayDivs.keys().forEach(key => {
+            const div = this.createdOverlayDivs.get(key)!;
+
+            // TODO: Avoid hardcoding the ID prefix
+            const overlayId = div.id.split('overlay-')[1];
+            if (overlayId === id) {
+                div.style.left = `${position.x}px`;
+                div.style.top = `${position.y}px`;
+                div.style.width = `${position.width}px`;
+                div.style.height = `${position.height}px`;
+                const pContainer = this.createdPixiContainers.get(id)!;
+                pContainer.position.set(position.x, position.y);
+            }
+        });
+    }
+
+    clear(id: string): void {
+        this.createdOverlayDivs.keys().forEach(key => {
+            const div = this.createdOverlayDivs.get(key)!;
+
+            // TODO: Avoid hardcoding the ID prefix
+            const overlayId = div.id.split('overlay-')[1];
+            if (overlayId === id) {
+                this.overlayContainer.removeChild(div);
+                while (div.firstChild) {
+                    div.removeChild(div.firstChild);
+                }
+                div.remove();
+                div.innerHTML = '';
+                this.createdOverlayDivs.delete(key);
+            }
+        });
+        const pContainer = this.createdPixiContainers.get(id)!;
+        this.app.stage.removeChild(pContainer);
+        const pC = pContainer.removeChildren();
+        pC.forEach(child => {
+            child.destroy();
+        });
+        pContainer.destroy();
+    }
     clearAll(): void {
         const children = this.app.stage.removeChildren();
         children.forEach(child => {
             child.destroy();
         });
-        this.createdContainers.forEach(div => {
+        this.createdOverlayDivs.forEach(div => {
             div.remove();
         });
-        this.createdContainers.clear();
+        this.createdOverlayDivs.clear();
         this.overlayContainer.innerHTML = '';
     }
 
@@ -125,12 +172,15 @@ export class PixiManager {
  * @param position
  * @returns
  */
-export function createOverlayElement(position: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-}): HTMLDivElement {
+export function createOverlayElement(
+    position: {
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+    },
+    id: string
+): HTMLDivElement {
     const overlay = document.createElement('div');
 
     overlay.style.position = 'absolute';
@@ -138,7 +188,7 @@ export function createOverlayElement(position: {
     overlay.style.top = `${position.y}px`;
     overlay.style.width = `${position.width}px`;
     overlay.style.height = `${position.height}px`;
-    overlay.id = `overlay-${Math.random().toString(36).substring(7)}`; // Add random id
+    overlay.id = `overlay-${id}`; // Math.random().toString(36).substring(7)
 
     return overlay;
 }

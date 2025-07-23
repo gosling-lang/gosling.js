@@ -47,6 +47,7 @@ interface TrackOptionsMap {
 export interface TrackDef<T> {
     type: TrackType;
     trackId: string;
+    cacheId: string;
     boundingBox: { x: number; y: number; width: number; height: number };
     options: T;
 }
@@ -85,8 +86,8 @@ export function createTrackDefs(trackInfos: TrackInfo[], theme: Required<Complet
             trackDefs.push(...dummyTrackDefs);
         } else {
             // We have a gosling track
-            const goslingAxisDefs = processGoslingTrack(track, boundingBox, theme);
-            trackDefs.push(...goslingAxisDefs);
+            const goslingAndAxisDefs = processGoslingTrack(track, boundingBox, theme);
+            trackDefs.push(...goslingAndAxisDefs);
         }
     });
     return trackDefs;

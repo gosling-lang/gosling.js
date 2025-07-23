@@ -22,6 +22,7 @@ export function proccessTextHeader(
         trackDefs.push({
             type: TrackType.Text,
             trackId: 'title',
+            cacheId: 'title',
             boundingBox: { ...boundingBox, height },
             options: textTrackOptions
         });
@@ -33,6 +34,7 @@ export function proccessTextHeader(
         trackDefs.push({
             type: TrackType.Text,
             trackId: 'subtitle',
+            cacheId: 'subtitle',
             boundingBox: { ...boundingBox, y: boundingBox.y + cumHeight, height },
             options: textTrackOptions
         });

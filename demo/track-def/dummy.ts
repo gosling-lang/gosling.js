@@ -9,6 +9,7 @@ export function processDummyTrack(
     const trackDef: TrackDef<DummyTrackOptions> = {
         type: TrackType.Dummy,
         trackId: track.id,
+        cacheId: track.id,
         boundingBox,
         options: {
             width: boundingBox.width,

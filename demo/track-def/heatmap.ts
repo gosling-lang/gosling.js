@@ -27,7 +27,8 @@ export function processHeatmapTrack(
         type: TrackType.Heatmap,
         options: heatmapOptions,
         boundingBox,
-        trackId: track.id
+        trackId: track.id,
+        cacheId: track.id
     });
     return trackDefs;
 }
