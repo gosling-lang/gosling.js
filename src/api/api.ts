@@ -5,6 +5,8 @@ import { computeChromSizes, GenomicPositionHelper } from '../core/utils/assembly
 import { type CompleteThemeDeep } from '../core/utils/theme';
 import type { IdTable } from './track-and-view-ids';
 import type { renderGosling } from 'demo/gosling-component';
+import { scaleLinear } from 'd3-scale';
+import type { Plot } from '../tracks/utils';
 
 // TODO: Complete the API
 export type HiGlassApi = {
@@ -55,10 +57,12 @@ export function createEmptyApi(): GoslingApi {
     return {
         subscribe,
         unsubscribe,
-        zoomTo: () => { },
-        zoomToExtent: () => { },
-        zoomToGene: () => { },
-        suggestGene: () => { },
+        zoomTo: () => {
+            console.warn('[zoomTo()] No compiled result available');
+        },
+        zoomToExtent: () => {},
+        zoomToGene: () => {},
+        suggestGene: () => {},
         getTracksAndViews: () => [],
         getTrackIds: () => [],
         getTracks: () => [],
@@ -69,8 +73,8 @@ export function createEmptyApi(): GoslingApi {
         getView: () => {
             return undefined;
         },
-        exportPng: () => { },
-        exportPdf: () => { },
+        exportPng: () => {},
+        exportPdf: () => {},
         getCanvas: () => {
             return {
                 canvas: new HTMLCanvasElement(),
@@ -97,12 +101,13 @@ export function createApiV2(
     | 'unsubscribe'
     | 'exportPdf'
     | 'exportPng'
+    | 'zoomTo'
 > {
     if (!compileResult) {
         return createEmptyApi();
     }
 
-    const { tracksAndViews, theme, pixiManager } = compileResult;
+    const { tracksAndViews, theme, pixiManager, plots } = compileResult;
     const getTracksAndViews = () => {
         return [...tracksAndViews];
     };
@@ -188,6 +193,67 @@ export function createApiV2(
         pdf.save('gosling-visualization.pdf');
     };
 
+    const zoomTo: GoslingApi['zoomTo'] = (trackId, position, padding = 0, duration = 1000) => {
+        // Get the plot instance for the specified track
+        const plot = (plots as Record<string, unknown>)[trackId] as Plot;
+        if (!plot) {
+            console.warn(`[zoomTo()] Unable to find a track using the ID (${trackId})`);
+            return;
+        }
+
+        // Get track information for assembly
+        const track = getTrack(trackId);
+        if (!track) {
+            console.warn(`[zoomTo()] Unable to find track information for ID (${trackId})`);
+            return;
+        }
+
+        // Parse the genomic position (e.g., "chr1:100-1000" or "chr1")
+        const assembly = track.spec.assembly;
+        const manager = GenomicPositionHelper.fromString(position);
+        const absCoordinates = manager.toAbsoluteCoordinates(assembly, padding);
+
+        // Get current domain and set up the target domain
+        const currentXDomain = plot.xDomain.value;
+        const targetXDomain: [number, number] = [absCoordinates[0], absCoordinates[1]];
+
+        // If duration is 0, immediately set the domain
+        if (duration === 0) {
+            plot.xDomain.value = targetXDomain;
+            return;
+        }
+
+        // Use requestAnimationFrame for smooth animation
+        const startTime = performance.now();
+
+        // Simple linear interpolation function
+        const lerp = (start: number, end: number, t: number) => start + (end - start) * t;
+
+        // Ease-in-out cubic easing function
+        const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+        const animate = (currentTime: number) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const easedProgress = easeInOutCubic(progress);
+
+            // Interpolate the domain values
+            const newStart = lerp(currentXDomain[0], targetXDomain[0], easedProgress);
+            const newEnd = lerp(currentXDomain[1], targetXDomain[1], easedProgress);
+
+            plot.xDomain.value = [newStart, newEnd];
+
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            } else {
+                // Ensure the final domain is set precisely
+                plot.xDomain.value = targetXDomain;
+            }
+        };
+
+        requestAnimationFrame(animate);
+    };
+
     return {
         subscribe,
         unsubscribe,
@@ -199,7 +265,8 @@ export function createApiV2(
         getViews,
         getCanvas,
         exportPng,
-        exportPdf
+        exportPdf,
+        zoomTo
     };
 }
 
