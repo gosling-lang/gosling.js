@@ -10,8 +10,7 @@ import type {
     GenomicPosition,
     Assembly,
     ValueExtent,
-    Range,
-    BoundingBox
+    Range
 } from '@gosling-lang/gosling-schema';
 import { type MouseEventData, isPointInsideDonutSlice } from '../gosling-track/gosling-mouse-event';
 import { BamDataFetcher, type TabularDataFetcher } from '@data-fetchers';

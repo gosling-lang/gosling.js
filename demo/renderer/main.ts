@@ -4,7 +4,14 @@ import { BrushLinearTrack, type BrushLinearTrackOptions } from '@gosling-lang/br
 import { signal, Signal } from '@preact/signals-core';
 import { TextTrack, type TextTrackOptions } from '@gosling-lang/text-track';
 
-import { cursor, cursor2D, panZoom, panZoomHeatmap } from '@gosling-lang/interactors';
+import {
+    cursor,
+    cursor2D,
+    panZoom,
+    panZoomHeatmap,
+    updatePanZoom,
+    updatePanZoomHeatmap
+} from '@gosling-lang/interactors';
 import { type TrackDefs, TrackType } from '../track-def/main';
 import { getDataFetcher } from './dataFetcher';
 import type { LinkedEncoding } from '../linking/linkedEncoding';
@@ -76,8 +83,8 @@ export function renderTrackDefs(
                 gosPlot.rerender(gosOptions);
                 const isOverlayedOnPrevious = 'overlayOnPreviousTrack' in spec && spec.overlayOnPreviousTrack;
                 if (!spec.static && !isOverlayedOnPrevious) {
-                    // TODO: How to update this based on the updated width/height?
-                    gosPlot.addInteractor(plot => panZoom(plot, xDomain, yDomain));
+                    // Update the zoom behavior to use the new dimensions
+                    updatePanZoom(gosPlot);
                 }
                 plotDict[cacheId] = gosPlot;
             } else {
@@ -108,7 +115,11 @@ export function renderTrackDefs(
             if (prevPlot) {
                 // TODO: the new signal needs to be passed to the existing plot
                 const heatmapPlot = prevPlots[cacheId] as HeatmapTrack;
+                pixiManager.updateContainer(boundingBox, cacheId);
+                heatmapPlot.setDimensions([boundingBox.width, boundingBox.height]);
                 heatmapPlot.rerender(hmOptions);
+                // Update the zoom behavior to use the new dimensions
+                updatePanZoomHeatmap(heatmapPlot);
                 plotDict[cacheId] = heatmapPlot;
             } else {
                 const heatmapPlot = new HeatmapTrack(
@@ -133,6 +144,10 @@ export function renderTrackDefs(
                 pixiManager.updateContainer(boundingBox, cacheId);
                 axisPlot.setDimensions([boundingBox.width, boundingBox.height]);
                 // axisPlot.rerender(options as TextTrackOptions, true);
+                if (!axisOptions.static) {
+                    // Update the zoom behavior to use the new dimensions
+                    updatePanZoom(axisPlot);
+                }
                 plotDict[cacheId] = prevPlot;
             } else {
                 const axisTrack = new AxisTrack(
