@@ -56,12 +56,10 @@ export function createEmptyApi(): GoslingApi {
     return {
         subscribe,
         unsubscribe,
-        zoomTo: () => {
-            console.warn('[zoomTo()] No compiled result available');
-        },
-        zoomToExtent: () => {},
-        zoomToGene: () => {},
-        suggestGene: () => {},
+        zoomTo: () => { },
+        zoomToExtent: () => { },
+        zoomToGene: () => { },
+        suggestGene: () => { },
         getTracksAndViews: () => [],
         getTrackIds: () => [],
         getTracks: () => [],
@@ -72,8 +70,8 @@ export function createEmptyApi(): GoslingApi {
         getView: () => {
             return undefined;
         },
-        exportPng: () => {},
-        exportPdf: () => {},
+        exportPng: () => { },
+        exportPdf: () => { },
         getCanvas: () => {
             return {
                 canvas: new HTMLCanvasElement(),
@@ -193,17 +191,12 @@ export function createApiV2(
     };
 
     const zoomTo: GoslingApi['zoomTo'] = (trackId, position, padding = 0, duration = 1000) => {
-        // Get the plot instance for the specified track
+        // Get the plot and track instances using the track ID
         const plot = (plots as Record<string, unknown>)[trackId] as Plot;
-        if (!plot) {
-            console.warn(`[zoomTo()] Unable to find a track using the ID (${trackId})`);
-            return;
-        }
-
-        // Get track information for assembly
         const track = getTrack(trackId);
-        if (!track) {
-            console.warn(`[zoomTo()] Unable to find track information for ID (${trackId})`);
+
+        if (!plot || !track) {
+            console.warn(`[zoomTo()] Unable to find track for ID (${trackId})`);
             return;
         }
 
@@ -213,12 +206,12 @@ export function createApiV2(
         const absCoordinates = manager.toAbsoluteCoordinates(assembly, padding);
 
         // Get current domain and set up the target domain
-        const currentXDomain = plot.xDomain.value;
-        const targetXDomain: [number, number] = [absCoordinates[0], absCoordinates[1]];
+        const xDomainFrom = plot.xDomain.value;
+        const xDomainTo: [number, number] = [absCoordinates[0], absCoordinates[1]];
 
         // If duration is 0, immediately set the domain
         if (duration === 0) {
-            plot.xDomain.value = targetXDomain;
+            plot.xDomain.value = xDomainTo;
             return;
         }
 
@@ -237,8 +230,8 @@ export function createApiV2(
             const easedProgress = easeInOutCubic(progress);
 
             // Interpolate the domain values
-            const newStart = lerp(currentXDomain[0], targetXDomain[0], easedProgress);
-            const newEnd = lerp(currentXDomain[1], targetXDomain[1], easedProgress);
+            const newStart = lerp(xDomainFrom[0], xDomainTo[0], easedProgress);
+            const newEnd = lerp(xDomainFrom[1], xDomainTo[1], easedProgress);
 
             plot.xDomain.value = [newStart, newEnd];
 
@@ -246,7 +239,7 @@ export function createApiV2(
                 requestAnimationFrame(animate);
             } else {
                 // Ensure the final domain is set precisely
-                plot.xDomain.value = targetXDomain;
+                plot.xDomain.value = xDomainTo;
             }
         };
 
