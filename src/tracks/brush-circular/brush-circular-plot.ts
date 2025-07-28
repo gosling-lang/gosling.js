@@ -43,8 +43,8 @@ export class BrushCircularTrack extends CircularBrushTrackClass implements Plot 
         const context: BrushCircularTrackContext = {
             id: 'test',
             svgElement: svgElement,
-            registerViewportChanged: () => { },
-            removeViewportChanged: () => { },
+            registerViewportChanged: () => {},
+            removeViewportChanged: () => {},
             setDomainsCallback: (xDomain: [number, number]) => (xBrushDomain.value = xDomain),
             projectionXDomain: xBrushDomain.value
         };

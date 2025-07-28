@@ -5,7 +5,6 @@ import { computeChromSizes, GenomicPositionHelper } from '../core/utils/assembly
 import { type CompleteThemeDeep } from '../core/utils/theme';
 import type { IdTable } from './track-and-view-ids';
 import type { renderGosling } from 'demo/gosling-component';
-import { scaleLinear } from 'd3-scale';
 import type { Plot } from '../tracks/utils';
 
 // TODO: Complete the API
