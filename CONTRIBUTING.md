@@ -138,12 +138,34 @@ If there is an example you would like to add to the editor example library, plea
 
 ## Bumping Gosling.js
 
+The version should follow the [semver](https://semver.org/) convention. This includes release candidates (e.g., alpha).
+
 GitHub Action handles bumping the version of Gosling.js. The pattern looks like the following:
 
 ```
 pnpm version patch # or minor or major
 git push origin main --tags
 ```
+
+### Alpha or Beta Versions
+
+After updating the `version` in `package.json`:
+
+```
+# Add a pre-release tag to the commit
+git tag v2.0.0-alpha.1 [commit hash]
+
+# Push changes with the tag
+git push origin tag v2.0.0-alpha.1
+```
+
+You need to properly tag the `latest` and next versions in NPM. You can do this by:
+
+```
+npm dist-tag add gosling.js@2.0.0-alpha.1 alpha
+```
+
+This will add the `alpha` tag to the `2.0.0-alpha.1` version of Gosling.js.
 
 # Internal Explanations  
 ## How does a Gosling spec get turned into a HiGlass spec?
