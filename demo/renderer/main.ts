@@ -5,6 +5,7 @@ import { signal, Signal } from '@preact/signals-core';
 import { TextTrack, type TextTrackOptions } from '@gosling-lang/text-track';
 
 import { cursor, cursor2D, panZoom, panZoomHeatmap } from '@gosling-lang/interactors';
+import { cursorCircular } from '../../src/interactors/cursor-circular';
 import { type TrackDefs, TrackType } from '../track-def/main';
 import { getDataFetcher } from './dataFetcher';
 import type { LinkedEncoding } from '../linking/linkedEncoding';
@@ -32,6 +33,8 @@ export function renderTrackDefs(
 
     const cursorPosX = signal(0);
     const cursorPosY = signal(0);
+    const cursorPosAngle = signal(0);
+    const cursorPosRadius = signal(0);
 
     trackDefs.forEach(trackDef => {
         const { boundingBox, type, options, trackId } = trackDef;
@@ -62,7 +65,11 @@ export function renderTrackDefs(
             if (!spec.static && !isOverlayedOnPrevious) {
                 gosPlot.addInteractor(plot => panZoom(plot, xDomain, yDomain));
             }
-            gosPlot.addInteractor(plot => cursor(plot, cursorPosX));
+            if (spec.layout === 'circular') {
+                gosPlot.addInteractor(plot => cursorCircular(plot, cursorPosAngle, cursorPosRadius));
+            } else {
+                gosPlot.addInteractor(plot => cursor(plot, cursorPosX));
+            }
             plotDict[trackId] = gosPlot;
         }
         if (type === TrackType.Heatmap) {
