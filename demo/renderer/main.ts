@@ -6,6 +6,7 @@ import { TextTrack, type TextTrackOptions } from '@gosling-lang/text-track';
 
 import { cursor, cursor2D, panZoom, panZoomHeatmap } from '@gosling-lang/interactors';
 import { cursorCircular } from '../../src/interactors/cursor-circular';
+import { panZoomCircular } from '../../src/interactors/pan-zoom-circular';
 import { type TrackDefs, TrackType } from '../track-def/main';
 import { getDataFetcher } from './dataFetcher';
 import type { LinkedEncoding } from '../linking/linkedEncoding';
@@ -31,10 +32,8 @@ export function renderTrackDefs(
 ) {
     const plotDict: Record<string, unknown> = {};
 
-    const cursorPosX = signal(0);
-    const cursorPosY = signal(0);
-    const cursorPosAngle = signal(0);
-    const cursorPosRadius = signal(0);
+    const cursorPosX = signal(Number.NEGATIVE_INFINITY);
+    const cursorPosY = signal(Number.NEGATIVE_INFINITY);
 
     trackDefs.forEach(trackDef => {
         const { boundingBox, type, options, trackId } = trackDef;
@@ -62,11 +61,16 @@ export function renderTrackDefs(
                 gosOptions.spec.orientation
             );
             const isOverlayedOnPrevious = 'overlayOnPreviousTrack' in spec && spec.overlayOnPreviousTrack;
-            if (!spec.static && !isOverlayedOnPrevious) {
-                gosPlot.addInteractor(plot => panZoom(plot, xDomain, yDomain));
+            // TODO: Is this check sufficient?
+            if (!spec.static && !(spec.layout === 'linear' && isOverlayedOnPrevious)) {
+                if (spec.layout === 'circular') {
+                    gosPlot.addInteractor(plot => panZoomCircular(plot, cursorPosX, xDomain));
+                } else {
+                    gosPlot.addInteractor(plot => panZoom(plot, xDomain, yDomain));
+                }
             }
             if (spec.layout === 'circular') {
-                gosPlot.addInteractor(plot => cursorCircular(plot, cursorPosAngle, cursorPosRadius));
+                gosPlot.addInteractor(plot => cursorCircular(plot, cursorPosX));
             } else {
                 gosPlot.addInteractor(plot => cursor(plot, cursorPosX));
             }

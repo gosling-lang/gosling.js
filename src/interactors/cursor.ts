@@ -23,15 +23,18 @@ export function cursor(plot: Plot & { pMasked: PIXI.Container }, cursorPos: Sign
         const newScale = baseScale.domain(plot.xDomain.value);
         const genomicPos = newScale.invert(event.offsetX);
         cursorPos.value = genomicPos;
+        cursor.visible = true;
     };
     plot.domOverlay.addEventListener('mousemove', moveCursor);
     plot.domOverlay.addEventListener('mouseleave', () => {
-        cursorPos.value = -10; // TODO: set cursor visibility to false instead
+        cursorPos.value = Number.NEGATIVE_INFINITY;
+        cursor.visible = false;
     });
 
     // Every time the domain gets changed we want to update the cursor
     effect(() => {
         const newScale = baseScale.domain(plot.xDomain.value);
         cursor.position.x = newScale(cursorPos.value);
+        cursor.visible = true;
     });
 }
