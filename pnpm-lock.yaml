@@ -59,6 +59,9 @@ dependencies:
   d3-format:
     specifier: ^3.1.0
     version: 3.1.0
+  d3-hilbert:
+    specifier: ^1.4.1
+    version: 1.4.1
   d3-scale:
     specifier: ^4.0.2
     version: 4.0.2
@@ -2960,6 +2963,11 @@ packages:
 
   /d3-format@3.1.0:
     resolution: {integrity: sha512-YyUI6AEuY/Wpt8KWLgZHsIU86atmikuoOmCfommt0LYHiQSPjvX2AcFc38PX0CBpr2RCyZhjex+NS/LPOv6YqA==}
+    engines: {node: '>=12'}
+    dev: false
+
+  /d3-hilbert@1.4.1:
+    resolution: {integrity: sha512-1DfHNkVliz3KNbwGpGS6aBrN4qrGGFh0yjEnvElgHL7wUkB0bP15sCm0DBBUgRZrbbthVVmEgc/ez3pNvVra2A==}
     engines: {node: '>=12'}
     dev: false
 

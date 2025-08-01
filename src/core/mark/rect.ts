@@ -4,11 +4,77 @@ import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import type { PIXIVisualProperty } from '../visual-property.schema';
 import colorToHex from '../utils/color-to-hex';
 import { IsChannelDeep } from '@gosling-lang/gosling-schema';
+import hilbert from 'd3-hilbert';
+
+/**
+ * Draws rectangles in the space-filling layout, i.e., the Hilbert Curve.
+ *
+ * Open Issues:
+ * 1. The data should be loaded in the much higher resolution, since the Hilbert Curve is good at very dense data. Otherwise,
+ * the visualization looks very low resolution with large cells.
+ * 2. The Hilbert Curve should be draw in the contiguous space, instead of descrete space. For this, implementing the Hilbert Curve
+ * myself might be better than using the d3-hilbert library.
+ */
+function drawSpaceFillingRect(track: any, tile: Tile, model: GoslingTrackModel) {
+    const data = model.data();
+    const xScale = track._xScale;
+    const trackHeight = track.dimensions[1];
+    let tileUnitWidth: number;
+    if (tile.tileData.tilePos) {
+        const tileSize = track.tilesetInfo.tile_size;
+        const { tileX, tileWidth } = track.getTilePosAndDimensions(
+            tile.tileData.zoomLevel,
+            tile.tileData.tilePos, // TODO: required parameter. Typing out `track` should address this issue.
+            tileSize
+        );
+        tileUnitWidth = xScale(tileX + tileWidth / tileSize) - xScale(tileX);
+    }
+    const g = tile.graphics;
+    const [startX, endX] = xScale.range();
+    const availableWidth = endX - startX;
+    const hilbertData = { start: startX, length: endX - startX };
+    const curve = hilbert().canvasWidth(availableWidth).order(6).layout(hilbertData);
+    console.warn(startX, endX, curve, hilbertData);
+    const cellWidth = hilbertData.cellWidth;
+    console.log(data);
+    data.forEach(d => {
+        const x = model.encodedPIXIProperty('x', d);
+        // console.warn(x);
+        if (x < startX || x > endX) return;
+        const color = model.encodedPIXIProperty('color', d);
+        const stroke = model.encodedPIXIProperty('stroke', d);
+        const strokeWidth = model.encodedPIXIProperty('strokeWidth', d);
+        const opacity = model.encodedPIXIProperty('opacity', d);
+        const rectWidth = model.encodedPIXIProperty('width', d, { markWidth: cellWidth });
+        const rectHeight = model.encodedPIXIProperty('height', d, { markHeight: cellWidth });
+
+        const [hx, hy] = curve.getXyAtVal(x);
+        console.log(hx, hy);
+        const [xs, xe, ys, ye] = [
+            hx * cellWidth - cellWidth / 2.0,
+            hx * cellWidth + cellWidth / 2.0,
+            trackHeight - hy * cellWidth - cellWidth,
+            trackHeight - hy * cellWidth
+        ];
+        g.lineStyle(
+            strokeWidth,
+            colorToHex(stroke),
+            opacity, // alpha
+            0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+        );
+        g.beginFill(colorToHex(color === 'none' ? 'white' : color), color === 'none' ? 0 : opacity);
+        g.drawRect(xs, ys, xe - xs, ye - ys);
+    });
+}
 
 export function drawRect(track: any, tile: Tile, model: GoslingTrackModel) {
     /* track spec */
     const spec = model.spec();
 
+    if (spec.layout === 'space-filling') {
+        drawSpaceFillingRect(track, tile, model);
+        return;
+    }
     /* data */
     const data = model.data();
 

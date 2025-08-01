@@ -65,14 +65,19 @@ export function renderTrackDefs(
             if (!spec.static && !(spec.layout === 'linear' && isOverlayedOnPrevious)) {
                 if (spec.layout === 'circular') {
                     gosPlot.addInteractor(plot => panZoomCircular(plot, cursorPosX, xDomain));
-                } else {
+                } else if (spec.layout === 'linear') {
+                    gosPlot.addInteractor(plot => panZoom(plot, xDomain, yDomain));
+                } else if (spec.layout === 'space-filling') {
+                    // TODO:
                     gosPlot.addInteractor(plot => panZoom(plot, xDomain, yDomain));
                 }
             }
             if (spec.layout === 'circular') {
                 gosPlot.addInteractor(plot => cursorCircular(plot, cursorPosX));
-            } else {
+            } else if (spec.layout === 'linear') {
                 gosPlot.addInteractor(plot => cursor(plot, cursorPosX));
+            } else if (spec.layout === 'space-filling') {
+                // TODO:
             }
             plotDict[trackId] = gosPlot;
         }

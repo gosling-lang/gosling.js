@@ -238,7 +238,8 @@ export const editorExampleObj: {
         group: 'Unassigned',
         name: 'DEBUG',
         spec: JsonExampleSpecs.EX_SPEC_DEBUG,
-        hidden: true
+        hidden: false,
+        forceShow: true
     },
     VISUAL_ENCODING: {
         group: 'Visual Encoding',

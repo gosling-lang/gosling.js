@@ -3500,7 +3500,8 @@
     "Layout": {
       "enum": [
         "linear",
-        "circular"
+        "circular",
+        "space-filling"
       ],
       "type": "string"
     },
