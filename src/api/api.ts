@@ -56,10 +56,10 @@ export function createEmptyApi(): GoslingApi {
     return {
         subscribe,
         unsubscribe,
-        zoomTo: () => { },
-        zoomToExtent: () => { },
-        zoomToGene: () => { },
-        suggestGene: () => { },
+        zoomTo: () => {},
+        zoomToExtent: () => {},
+        zoomToGene: () => {},
+        suggestGene: () => {},
         getTracksAndViews: () => [],
         getTrackIds: () => [],
         getTracks: () => [],
@@ -70,8 +70,8 @@ export function createEmptyApi(): GoslingApi {
         getView: () => {
             return undefined;
         },
-        exportPng: () => { },
-        exportPdf: () => { },
+        exportPng: () => {},
+        exportPdf: () => {},
         getCanvas: () => {
             return {
                 canvas: new HTMLCanvasElement(),
