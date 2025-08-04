@@ -120,7 +120,7 @@ async function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptio
     return buffer;
 }
 
-function fetchValuesFromColumn(columnName: string, arrowIpc: Uint8Array): number[] | string[] | any[] {
+function fetchValuesFromColumn(columnName: string, arrowIpc: Uint8Array): number[] | string[] | undefined {
     const table = tableFromIPC(arrowIpc);
     const column = table.getChild(columnName);
     const t = column.type;
@@ -132,10 +132,10 @@ function fetchValuesFromColumn(columnName: string, arrowIpc: Uint8Array): number
         return column.toArray() as string[];
     }
 
-    return column.toArray() as any[];
+    return undefined;
 }
 
-function findMinAndMaxOfColumn(column: Int16Array): [number, number] {
+function findMinAndMaxOfColumn(column: Int16Array | number[]): [number, number] {
     let minVal = Infinity;
     let maxVal = -Infinity;
     for (const v of column) {
@@ -172,7 +172,7 @@ const randomColors = (n: number) => {
     return colors;
 };
 
-//~ lifted from chromospace/uchimata, should probably export instead
+//~ TODO: lifted from chromospace/uchimata, should probably export instead
 type ViewConfigColor = string |
     {
         values?: number[] | string[];
@@ -239,8 +239,19 @@ function handleColorField(arrowIpc: Uint8Array, color?: ChannelValue | Color | s
     }
 }
 
+//~ TODO: lifted from chromospace/uchimata, should probably export instead
+type ViewConfigScale = number | {
+    values?: number[] | string[];
+    field?: string; //~ used to specify the field in the Table that contains the values
+    min?: number;
+    max?: number;
+} & {
+    scaleMin: number;
+    scaleMax: number;
+};
+
 //~ I see a case for a generic impl for color and size...
-function handleSizeField(arrowIpc: Uint8Array, size?: ChannelValue | Size | number): number {
+function handleSizeField(arrowIpc: Uint8Array, size?: ChannelValue | Size | number): ViewConfigScale {
     if (size === undefined) {
         return 0.01;
     } else if (typeof size === 'number') {
@@ -254,10 +265,13 @@ function handleSizeField(arrowIpc: Uint8Array, size?: ChannelValue | Size | numb
         if (size.type === 'nominal') {
             console.warn('not implemented!');
         } else if (size.type === 'quantitative') {
+            assert(size.field, "size.field is required for quantitative size");
             const values = fetchValuesFromColumn(size.field, arrowIpc);
             const [rangeMax, rangeMin] = getRange(size);
             console.warn(`size.field = ${size.field}`);
             console.warn(values);
+            assert(values, "size.field must be a valid field in the data table");
+            assert(values.every(it => typeof it === 'number'), "size.field must be a numeric field");
             const [minVal, maxVal] = findMinAndMaxOfColumn(values);
             const sizeConfig = {
                 values: [...values],
