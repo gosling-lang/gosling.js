@@ -175,7 +175,7 @@ const randomColors = (n: number) => {
 /**
  * Returns something we can feed to chromospace view config
  */
-function handleColorField(color?: ChannelValue | Color | string, arrowIpc: Uint8Array): string {
+function handleColorField(arrowIpc: Uint8Array, color?: ChannelValue | Color | string): string {
     if (color === undefined) {
         return 'red';
     } else if (typeof color === 'string') {
@@ -220,7 +220,7 @@ function handleColorField(color?: ChannelValue | Color | string, arrowIpc: Uint8
 }
 
 //~ I see a case for a generic impl for color and size...
-function handleSizeField(size?: ChannelValue | Size | number, arrowIpc: Uint8Array): number {
+function handleSizeField(arrowIpc: Uint8Array, size?: ChannelValue | Size | number): number {
     if (size === undefined) {
         return 0.01;
     } else if (typeof size === 'number') {
@@ -250,9 +250,9 @@ function handleSizeField(size?: ChannelValue | Size | number, arrowIpc: Uint8Arr
         } else {
             return 0.01;
         }
-    } else {
-        return 0.01;
     }
+
+    return 0.01;
 }
 
 export function createSpatialTrack(
@@ -283,18 +283,21 @@ export function createSpatialTrack(
                 for (const ov of tracks) {
                     console.warn('ov', ov);
 
-                    const color = handleColorField(ov.color, ipcBuffer.buffer);
-                    const scale = handleSizeField(ov.size, ipcBuffer.buffer);
+                    const color = handleColorField(ipcBuffer, ov.color);
+                    const scale = handleSizeField(ipcBuffer, ov.size);
                     const viewConfig = {
                         scale: scale,
                         color: color,
                         mark: ov.mark
                     };
 
-                    let s = chs.load(ipcBuffer.buffer, { center: true, normalize: true });
+                    let s = chs.load(ipcBuffer.slice().buffer, { center: true, normalize: true });
 
+                    function checkIsModel(s: chs.ChromatinChunk | chs.ChromatinModel): s is chs.ChromatinModel {
+                        return 'parts' in s;
+                    }
                     const isModel = 'parts' in s; //~ ChromatinModel has .parts
-                    if (isModel) {
+                    if (checkIsModel(s)) {
                         const filterTransform = (ov.dataTransform ?? []).find(t => t.type === 'filter');
                         if (filterTransform) {
                             const field: string = filterTransform.field;
