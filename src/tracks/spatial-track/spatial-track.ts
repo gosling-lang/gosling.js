@@ -73,7 +73,7 @@ async function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptio
     );
     console.warn(`fieldForSpatialChr : ${fieldForSpatialChr},\nfieldForSpatialCoord: ${fieldForSpatialCoord}`);
 
-    for (const [i, _] of tabularData.entries()) {
+    for (const [i] of tabularData.entries()) {
         // same as `xArr.push(parseAsNumber(tabularData[i].x));` but here I can use the string from the `"x": { "field": "whatever-value" }` instead of hard-coded ".x"
         xArr.push(parseAsNumber(tabularData[i][fieldForSpatialX]));
         yArr.push(parseAsNumber(tabularData[i][fieldForSpatialY]));
@@ -294,7 +294,7 @@ export function createSpatialTrack(
                             const first = oneOf[0];
                             const res = chs.get(s, first)!;
                             if (res) {
-                                const [selectedModel, _] = res;
+                                const [selectedModel] = res;
                                 s = { parts: [selectedModel] };
                             }
                         }
@@ -303,7 +303,7 @@ export function createSpatialTrack(
                         chromatinScene = chs.addChunkToScene(chromatinScene, s, viewConfig);
                     }
                 }
-                const [_, createdCanvas] = chs.display(chromatinScene, { alwaysRedraw: false, withHUD: false });
+                const [, createdCanvas] = chs.display(chromatinScene, { alwaysRedraw: false, withHUD: false });
                 container.appendChild(createdCanvas);
             },
             ['0.0']
