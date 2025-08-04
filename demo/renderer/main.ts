@@ -18,7 +18,7 @@ import type { UrlToFetchOptions } from 'src/compiler/compile';
 import type { Tile } from '@higlass/services';
 import type { DataFetcher } from '@higlass/datafetcher';
 import type { OverlaidTrack, SingleTrack } from '@gosling-lang/gosling-schema';
-import { createSpatialTrack } from '../../src/tracks/spatial-track/spatial-track';
+import { createSpatialTrack, type SpatialTrackOptions } from '../../src/tracks/spatial-track/spatial-track';
 import type { CsvDataFetcherClass } from 'src/data-fetchers/csv/csv-data-fetcher';
 
 /**
@@ -146,7 +146,7 @@ export function renderTrackDefs(
             plotDict[trackId] = brush;
         }
         if (type === TrackType.Dummy) {
-            const dummyOptions = options as DummyTrackOptions;
+            const dummyOptions = options as DummyTrackOptions; //~ TODO: properly assert the type!
             const dummyPlot = new DummyTrack(dummyOptions, pixiManager.makeContainer(boundingBox).overlayDiv);
             plotDict[trackId] = dummyPlot;
         }
@@ -156,14 +156,15 @@ export function renderTrackDefs(
             // In the final version, we would probably want Chromospace to use an existing canvas element (to limit the creation of new elements).
             // But for now this gets the job done.
             const container = pixiManager.makeContainer(boundingBox).overlayDiv;
+            const spatialTrackOptions = options as SpatialTrackOptions; //~ TODO: properly assert the type!
             console.warn('!@$!#%@#');
-            console.warn(options.spec);
-            if (options.spec.data) {
+            console.warn(spatialTrackOptions);
+            if (spatialTrackOptions.spec.data) {
                 // Ensure to pull all data needed
-                options.spec.data.sampleLength = 30000;
+                spatialTrackOptions.spec.data.sampleLength = 30000;
             }
-            const datafetcher = getDataFetcher(options.spec, urlToFetchOptions);
-            createSpatialTrack(options, datafetcher as CsvDataFetcherClass, container);
+            const datafetcher = getDataFetcher(spatialTrackOptions.spec, urlToFetchOptions);
+            createSpatialTrack(spatialTrackOptions, datafetcher as CsvDataFetcherClass, container);
         }
     });
     return plotDict;
