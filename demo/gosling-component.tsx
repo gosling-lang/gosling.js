@@ -33,7 +33,7 @@ export function GoslingComponent(props: GoslingComponentProps) {
         urlToFetchOptions,
         theme = 'light',
         ref,
-        visualized = () => {}
+        visualized = () => { }
     } = props;
 
     const [compiledResults, setCompiledResults] = useState<ReturnType<typeof renderGosling>>();
@@ -58,7 +58,7 @@ export function GoslingComponent(props: GoslingComponentProps) {
         if (!pixiManager) {
             const canvasWidth = 1000,
                 canvasHeight = 1000; // These initial sizes don't matter because the size will be updated
-            const pixiManager = new PixiManager(canvasWidth, canvasHeight, plotElement, () => {}, { padding });
+            const pixiManager = new PixiManager(canvasWidth, canvasHeight, plotElement, () => { }, { padding });
             const compileResult = renderGosling(spec, plotElement, pixiManager, theme, urlToFetchOptions);
             setCompiledResults(compileResult);
             setPixiManager(pixiManager);
@@ -78,7 +78,6 @@ export function GoslingComponent(props: GoslingComponentProps) {
     );
 }
 
-const baseTheme = getTheme('light');
 /**
  * This is the main function. It takes a Gosling spec and renders it using the PixiManager
  */

@@ -84,15 +84,15 @@ export type Layout = 'linear' | 'circular' | 'spatial' | LayoutDeep;
 export type LayoutDeep =
     | { type: 'linear' | 'circular' }
     | {
-        type: 'spatial';
-        model: {
-            type: 'csv';
-            url: string;
-            xyz: [string, string, string];
-            chromosome: string;
-            position: string;
-        };
-    };
+          type: 'spatial';
+          model: {
+              type: 'csv';
+              url: string;
+              xyz: [string, string, string];
+              chromosome: string;
+              position: string;
+          };
+      };
 export type Orientation = 'horizontal' | 'vertical';
 
 /** Custom chromosome sizes, e.g., [["foo", 1000], ["bar", 300], ["baz", 240]] */

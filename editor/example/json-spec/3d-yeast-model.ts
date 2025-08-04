@@ -95,13 +95,13 @@ export const EX_SPEC_3D_YEAST_MODEL: GoslingSpec = {
     layout: { ...spatialLayoutDef },
     views: [
         {
-            tracks: [{ ...base, mark: "sphere", height: trackWidth }]
+            tracks: [{ ...base, mark: 'sphere', height: trackWidth }]
         },
         {
             tracks: [
                 {
                     ...base,
-                    mark: "sphere",
+                    mark: 'sphere',
                     data: undefined,
                     color: { field: 'chr', type: 'nominal', range: colors },
                     height: trackWidth

@@ -20,7 +20,7 @@ import { getTabularData } from '../gosling-track/data-abstraction';
  * @license MIT
  * @see {@link https://github.com/manzt/manzt/blob/f7faee/utils/assert.js}
  */
-export function assert(expression: unknown, msg: string | undefined = ""): asserts expression {
+export function assert(expression: unknown, msg: string | undefined = ''): asserts expression {
     if (!expression) throw new Error(msg);
 }
 
@@ -61,17 +61,17 @@ async function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptio
         }
         return e;
     };
-    console.log(options);
+    console.warn(options);
 
     const fieldForSpatialX = options.spec.spatial.x;
     const fieldForSpatialY = options.spec.spatial.y;
     const fieldForSpatialZ = options.spec.spatial.z;
     const fieldForSpatialChr = options.spec.spatial.chr;
     const fieldForSpatialCoord = options.spec.spatial.coord;
-    console.log(
+    console.warn(
         `fieldForSpatialX: ${fieldForSpatialX},\nfieldForSpatialY: ${fieldForSpatialY},\nfieldForSpatialZ: ${fieldForSpatialZ}`
     );
-    console.log(`fieldForSpatialChr : ${fieldForSpatialChr},\nfieldForSpatialCoord: ${fieldForSpatialCoord}`);
+    console.warn(`fieldForSpatialChr : ${fieldForSpatialChr},\nfieldForSpatialCoord: ${fieldForSpatialCoord}`);
 
     for (let i = 0; i < tabularData.length; i++) {
         // same as `xArr.push(parseAsNumber(tabularData[i].x));` but here I can use the string from the `"x": { "field": "whatever-value" }` instead of hard-coded ".x"
@@ -190,9 +190,9 @@ function handleColorField(color?: ChannelValue | Color | string, arrowIpc: Uint8
             return colorConfig;
         } else if (color.type === 'quantitative') {
             const values = fetchValuesFromColumn(color.field, arrowIpc);
-            console.log('values', values);
+            console.warn('values', values);
             const [minVal, maxVal] = color.domain ? [color.domain[0], color.domain[1]] : findMinAndMaxOfColumn(values);
-            console.log(`minVal = ${minVal}, maxVal = ${maxVal}`);
+            console.warn(`minVal = ${minVal}, maxVal = ${maxVal}`);
             const colScale = color.range ?? 'viridis';
             const colorConfig = {
                 //values: values,
@@ -227,8 +227,8 @@ function handleSizeField(size?: ChannelValue | Size | number, arrowIpc: Uint8Arr
         } else if (size.type === 'quantitative') {
             const values = fetchValuesFromColumn(size.field, arrowIpc);
             const [rangeMax, rangeMin] = getRange(size);
-            console.log(`size.field = ${size.field}`);
-            console.log(values);
+            console.warn(`size.field = ${size.field}`);
+            console.warn(values);
             const [minVal, maxVal] = findMinAndMaxOfColumn(values);
             const sizeConfig = {
                 values: [...values],
@@ -249,15 +249,15 @@ function handleSizeField(size?: ChannelValue | Size | number, arrowIpc: Uint8Arr
 export function createSpatialTrack(
     options: SpatialTrackOptions,
     dataFetcher: CsvDataFetcherClass,
-    container: HTMLDivElement,
+    container: HTMLDivElement
 ) {
-    console.log('SPEC OPTIONS', options);
+    console.warn('SPEC OPTIONS', options);
     dataFetcher.tilesetInfo(info => {
-        console.log('info', info);
+        console.warn('info', info);
         dataFetcher.fetchTilesDebounced(
             async t => {
-                console.log('CSV tiles: ~~~~~~~~');
-                console.log(t);
+                console.warn('CSV tiles: ~~~~~~~~');
+                console.warn(t);
                 if (!t['0.0'].tileWidth) {
                     // This information is needed to create tabular data (i.e., running getTabularData())
                     t['0.0'].tileWidth = info.max_width;
@@ -265,14 +265,14 @@ export function createSpatialTrack(
 
                 const ipcBuffer = await transformObjectToArrow(t, options);
                 if (!ipcBuffer) {
-                    console.error("could not tranform into Apache Arrow");
+                    console.error('could not tranform into Apache Arrow');
                     return;
                 }
-                console.warn("spec", options.spec);
+                console.warn('spec', options.spec);
                 let chromatinScene = chs.initScene();
                 const tracks = options.spec._overlay ?? [options.spec];
                 for (const ov of tracks) {
-                    console.log("ov", ov);
+                    console.warn('ov', ov);
 
                     const color = handleColorField(ov.color, ipcBuffer.buffer);
                     const scale = handleSizeField(ov.size, ipcBuffer.buffer);
@@ -284,12 +284,12 @@ export function createSpatialTrack(
 
                     let s = chs.load(ipcBuffer.buffer, { center: true, normalize: true });
 
-                    const isModel = "parts" in s; //~ ChromatinModel has .parts
+                    const isModel = 'parts' in s; //~ ChromatinModel has .parts
                     if (isModel) {
-                        const filterTransform = (ov.dataTransform ?? []).find(t => t.type === "filter");
+                        const filterTransform = (ov.dataTransform ?? []).find(t => t.type === 'filter');
                         if (filterTransform) {
                             const field: string = filterTransform.field;
-                            assert(field === "chr", "Field for transform should be 'chr'");
+                            assert(field === 'chr', "Field for transform should be 'chr'");
                             const oneOf = filterTransform.oneOf;
                             const first = oneOf[0];
                             const res = chs.get(s, first)!;

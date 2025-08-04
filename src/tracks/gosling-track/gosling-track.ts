@@ -539,10 +539,10 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
 
             shareScaleAcrossTracks(models);
 
-        const flatTileData = ([] as Datum[]).concat(...models.map(d => d.data()));
-        if (flatTileData.length !== 0) {
-            publish('rawData', { id: this.options.id, data: flatTileData });
-        }
+            const flatTileData = ([] as Datum[]).concat(...models.map(d => d.data()));
+            if (flatTileData.length !== 0) {
+                publish('rawData', { id: this.options.id, data: flatTileData });
+            }
 
             // Record processed tiles so that we don't process them again
             tiles.forEach(tile => {

@@ -30,7 +30,6 @@ export enum TrackType {
     Spatial
 }
 
-
 /**
  * Associate options to each track type
  */
@@ -98,7 +97,7 @@ export function createTrackDefs(trackInfos: TrackInfo[], theme: Required<Complet
                     spec: track,
                     color: track.color ? track.color.value : undefined,
                     test: track.test,
-                    data3D: track.data3D,
+                    data3D: track.data3D
                 }
             };
             trackDefs.push(trackDef);
