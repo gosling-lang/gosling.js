@@ -73,7 +73,7 @@ async function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptio
     );
     console.warn(`fieldForSpatialChr : ${fieldForSpatialChr},\nfieldForSpatialCoord: ${fieldForSpatialCoord}`);
 
-    for (let i = 0; i < tabularData.length; i++) {
+    for (const [i, _] of tabularData.entries()) {
         // same as `xArr.push(parseAsNumber(tabularData[i].x));` but here I can use the string from the `"x": { "field": "whatever-value" }` instead of hard-coded ".x"
         xArr.push(parseAsNumber(tabularData[i][fieldForSpatialX]));
         yArr.push(parseAsNumber(tabularData[i][fieldForSpatialY]));
