@@ -173,21 +173,30 @@ const randomColors = (n: number) => {
 };
 
 //~ TODO: lifted from chromospace/uchimata, should probably export instead
-type ViewConfigColor = string |
-    {
-        values?: number[] | string[];
-        field?: string; //~ used to specify the field in the Table that contains the values
-        min?: number;
-        max?: number;
-    } & {
-        /** Either a colorscale name (e.g., "viridis") or an array of categorical colors (e.g., ["#123456", "#abcdef", ...]) */
-        colorScale: string | string[];
-    };
+export type AssociatedValues = {
+    values: number[] | string[];
+    min: number;
+    max: number;
+};
+export type AssociatedValuesColor = AssociatedValues & {
+    /** Either a colorscale name (e.g., "viridis") or an array of categorical colors (e.g., ["#123456", "#abcdef", ...]) */
+    colorScale: string | string[];
+};
+export type AssociatedValuesScale = AssociatedValues & {
+    scaleMin: number;
+    scaleMax: number;
+};
+//export type ViewConfig = {
+//    scale?: number | AssociatedValuesScale;
+//    color?: string | AssociatedValuesColor;
+//    mark?: MarkTypes;
+//    links?: boolean;
+//};
 
 /**
  * Returns something we can feed to chromospace view config
  */
-function handleColorField(arrowIpc: Uint8Array, color?: ChannelValue | Color | string): ViewConfigColor {
+function handleColorField(arrowIpc: Uint8Array, color?: ChannelValue | Color | string): string | AssociatedValuesColor {
     if (color === undefined) {
         return 'red';
     } else if (typeof color === 'string') {
@@ -218,6 +227,8 @@ function handleColorField(arrowIpc: Uint8Array, color?: ChannelValue | Color | s
         } else if (color.type === 'quantitative') {
             assert(color.field, "color.field is required for quantitative color");
             const values = fetchValuesFromColumn(color.field, arrowIpc);
+            assert(values, "color.field must be a valid field in the data table");
+            assert(values.every(it => typeof it === 'number'), "color.field must be a numeric field");
             const [minVal, maxVal] = color.domain ? [color.domain[0], color.domain[1]] : findMinAndMaxOfColumn(values);
             const colScale = color.range ?? 'viridis';
             assert(
@@ -239,19 +250,8 @@ function handleColorField(arrowIpc: Uint8Array, color?: ChannelValue | Color | s
     }
 }
 
-//~ TODO: lifted from chromospace/uchimata, should probably export instead
-type ViewConfigScale = number | {
-    values?: number[] | string[];
-    field?: string; //~ used to specify the field in the Table that contains the values
-    min?: number;
-    max?: number;
-} & {
-    scaleMin: number;
-    scaleMax: number;
-};
-
 //~ I see a case for a generic impl for color and size...
-function handleSizeField(arrowIpc: Uint8Array, size?: ChannelValue | Size | number): ViewConfigScale {
+function handleSizeField(arrowIpc: Uint8Array, size?: ChannelValue | Size | number): number | AssociatedValuesScale {
     if (size === undefined) {
         return 0.01;
     } else if (typeof size === 'number') {
