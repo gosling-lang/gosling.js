@@ -219,8 +219,8 @@ function handleColorField(arrowIpc: Uint8Array, color?: ChannelValue | Color | s
 
             const colorConfig = {
                 values: [...values],
-                //min: minVal,
-                //max: maxVal,
+                min: 0,
+                max: values.length - 1,
                 colorScale: colScale
             };
             return colorConfig;
