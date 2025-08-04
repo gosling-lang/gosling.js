@@ -1,7 +1,7 @@
 import type { ChannelValue, Color, OverlaidTrack, SingleTrack, Size } from '@gosling-lang/gosling-schema';
 import * as chs from 'chromospace';
 import type { CsvDataFetcherClass, LoadedTiles } from 'src/data-fetchers/csv/csv-data-fetcher';
-import { tableFromArrays, tableFromIPC, tableToIPC } from '@uwdata/flechette';
+import { tableFromArrays, tableFromIPC, tableToIPC, Type } from '@uwdata/flechette';
 import { transform } from '../../core/utils/data-transform';
 import { getTabularData } from '../gosling-track/data-abstraction';
 
@@ -120,10 +120,19 @@ async function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptio
     return buffer;
 }
 
-function fetchValuesFromColumn(columnName: string, arrowIpc: Uint8Array): number[] | string[] {
+function fetchValuesFromColumn(columnName: string, arrowIpc: Uint8Array): number[] | string[] | any[] {
     const table = tableFromIPC(arrowIpc);
-    const column = table.getChild(columnName).toArray();
-    return column;
+    const column = table.getChild(columnName);
+    const t = column.type;
+    //~ got the hint for checking types of columns from:
+    // https://github.com/manzt/quak/blob/d89ccecfc7bb18563cea8c3e62c005c059918406/lib/utils/formatting.ts#L27
+    if ((t.typeId === Type.Int) || (t.typeId === Type.Float)) {
+        return column.toArray() as number[];
+    } else if ((t.typeId === Type.Dictionary) || (t.typeId === Type.Utf8)) {
+        return column.toArray() as string[];
+    }
+
+    return column.toArray() as any[];
 }
 
 function findMinAndMaxOfColumn(column: Int16Array): [number, number] {
