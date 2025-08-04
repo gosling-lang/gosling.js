@@ -172,10 +172,22 @@ const randomColors = (n: number) => {
     return colors;
 };
 
+//~ lifted from chromospace/uchimata, should probably export instead
+type ViewConfigColor = string |
+    {
+        values?: number[] | string[];
+        field?: string; //~ used to specify the field in the Table that contains the values
+        min?: number;
+        max?: number;
+    } & {
+        /** Either a colorscale name (e.g., "viridis") or an array of categorical colors (e.g., ["#123456", "#abcdef", ...]) */
+        colorScale: string | string[];
+    };
+
 /**
  * Returns something we can feed to chromospace view config
  */
-function handleColorField(arrowIpc: Uint8Array, color?: ChannelValue | Color | string): string {
+function handleColorField(arrowIpc: Uint8Array, color?: ChannelValue | Color | string): ViewConfigColor {
     if (color === undefined) {
         return 'red';
     } else if (typeof color === 'string') {
@@ -187,9 +199,15 @@ function handleColorField(arrowIpc: Uint8Array, color?: ChannelValue | Color | s
             color.type = 'nominal'; // assume 'nominal' by default?
         }
         if (color.type === 'nominal') {
-            console.warn('not implemented!');
+            assert(color.field, "color.field is required for nominal color");
             const values = fetchValuesFromColumn(color.field, arrowIpc) as string[]; //~TODO: forcing to string[] not good
             const colScale = color.range ?? randomColors(50); //~ just some big number
+
+            assert(
+                typeof colScale === "string" ||
+                (Array.isArray(colScale) && colScale.every(it => typeof it === 'string'))
+                , "color.range must be a string or an array of strings");
+
             const colorConfig = {
                 values: [...values],
                 //min: minVal,
@@ -198,16 +216,18 @@ function handleColorField(arrowIpc: Uint8Array, color?: ChannelValue | Color | s
             };
             return colorConfig;
         } else if (color.type === 'quantitative') {
+            assert(color.field, "color.field is required for quantitative color");
             const values = fetchValuesFromColumn(color.field, arrowIpc);
-            console.warn('values', values);
             const [minVal, maxVal] = color.domain ? [color.domain[0], color.domain[1]] : findMinAndMaxOfColumn(values);
-            console.warn(`minVal = ${minVal}, maxVal = ${maxVal}`);
             const colScale = color.range ?? 'viridis';
+            assert(
+                typeof colScale === "string" ||
+                (Array.isArray(colScale) && colScale.every(it => typeof it === 'string'))
+                , "color.range must be a string or an array of strings");
             const colorConfig = {
-                //values: values,
                 values: [...values],
-                min: minVal,
-                max: maxVal,
+                min: Number(minVal),
+                max: Number(maxVal),
                 colorScale: colScale
             };
             return colorConfig;
