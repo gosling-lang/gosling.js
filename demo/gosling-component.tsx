@@ -33,7 +33,7 @@ export function GoslingComponent(props: GoslingComponentProps) {
         urlToFetchOptions,
         theme = 'light',
         ref,
-        visualized = () => {}
+        visualized = () => { }
     } = props;
 
     const [compiledResults, setCompiledResults] = useState<ReturnType<typeof renderGosling>>();
@@ -56,26 +56,35 @@ export function GoslingComponent(props: GoslingComponentProps) {
         const plotElement = document.getElementById(id) as HTMLDivElement;
         // If the pixiManager doesn't exist, create a new one
         if (!pixiManager) {
-            const canvasWidth = 1000,
-                canvasHeight = 1000; // These initial sizes don't matter because the size will be updated
-            const pixiManager = new PixiManager(canvasWidth, canvasHeight, plotElement, () => {}, { padding });
-            const compileResult = renderGosling(spec, plotElement, pixiManager, theme, urlToFetchOptions);
+            // These initial sizes don't matter because the size will be updated
+            const canvasWidth = 1000;
+            const canvasHeight = 1000;
+            const pixiManager = new PixiManager(canvasWidth, canvasHeight, plotElement, () => { }, { padding });
+            const compileResult = renderGosling(
+                spec,
+                plotElement,
+                pixiManager,
+                theme,
+                compiledResults?.plots,
+                urlToFetchOptions
+            );
             setCompiledResults(compileResult);
             setPixiManager(pixiManager);
         } else {
-            pixiManager.clearAll();
-            const compileResult = renderGosling(spec, plotElement, pixiManager, theme, urlToFetchOptions);
+            // pixiManager.clearAll();
+            const compileResult = renderGosling(
+                spec,
+                plotElement,
+                pixiManager,
+                theme,
+                compiledResults?.plots,
+                urlToFetchOptions
+            );
             setCompiledResults(compileResult);
         }
     }, [spec]);
 
-    return (
-        <div
-            id={id ?? 'gosling-component'}
-            className={className ?? 'gosling-component'}
-            style={{ height: '100%' }}
-        ></div>
-    );
+    return <div id={id} className={className} style={{ height: '100%' }}></div>;
 }
 /**
  * This is the main function. It takes a Gosling spec and renders it using the PixiManager
@@ -85,6 +94,7 @@ export function renderGosling(
     container: HTMLDivElement,
     pixiManager: PixiManager,
     theme: Theme,
+    prevPlots: Record<string, unknown> = {},
     urlToFetchOptions?: UrlToFetchOptions
 ) {
     const themeDeep = getTheme(theme);
@@ -117,7 +127,7 @@ export function renderGosling(
                 );
                 // 4. Render the tracks
                 const trackDefs = createTrackDefs(rescaledTracks, themeDeep);
-                plots = renderTrackDefs(trackDefs, linkedEncodings, pixiManager, urlToFetchOptions);
+                plots = renderTrackDefs(trackDefs, linkedEncodings, pixiManager, prevPlots, urlToFetchOptions);
                 // Resize the canvas to make sure it fits the tracks
                 const { width, height } = calculateWidthHeight(rescaledTracks);
                 pixiManager.resize(width, height);
@@ -128,7 +138,8 @@ export function renderGosling(
         // 4. If the spec is not responsive, we can just render the tracks
         const trackDefs = createTrackDefs(trackInfos, themeDeep);
 
-        plots = renderTrackDefs(trackDefs, linkedEncodings, pixiManager, urlToFetchOptions);
+        plots = renderTrackDefs(trackDefs, linkedEncodings, pixiManager, prevPlots, urlToFetchOptions);
+
         // Resize the canvas to make sure it fits the tracks
         const { width, height } = calculateWidthHeight(trackInfos);
         pixiManager.resize(width, height);
@@ -139,7 +150,7 @@ export function renderGosling(
 /** Debounces the resize observer */
 function debounce(f: (arg0: unknown) => unknown, delay: number) {
     let timer = 0;
-    return function (...args: [arg0: unknown]) {
+    return function(...args: [arg0: unknown]) {
         clearTimeout(timer);
         // @ts-expect-error
         timer = setTimeout(() => f.apply(this, args), delay);

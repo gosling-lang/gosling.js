@@ -11,6 +11,7 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
             alignment: 'overlay',
             tracks: [
                 {
+                    id: 'matrix',
                     data: {
                         url: GOSLING_PUBLIC_DATA.matrix,
                         type: 'matrix'
@@ -29,6 +30,7 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                     style: { background: 'lightgray' }
                 },
                 {
+                    id: 'v-rules',
                     data: {
                         type: 'json',
                         values: [
@@ -46,6 +48,7 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                     color: { value: 'red' }
                 },
                 {
+                    id: 'h-rules',
                     data: {
                         type: 'json',
                         values: [
@@ -63,6 +66,7 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                     color: { value: 'blue' }
                 },
                 {
+                    id: 'rectangles',
                     data: {
                         type: 'json',
                         values: [
@@ -105,6 +109,7 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                     opacity: { value: 0.5 }
                 },
                 {
+                    id: 'points',
                     data: {
                         type: 'json',
                         values: [
