@@ -88,7 +88,7 @@ export function renderTrackDefs(
                 const isOverlayedOnPrevious = 'overlayOnPreviousTrack' in spec && spec.overlayOnPreviousTrack;
                 if (!spec.static && !isOverlayedOnPrevious) {
                     // Update the zoom behavior to use the new dimensions
-                    //updatePanZoom(gosPlot);
+                    updatePanZoom(gosPlot);
                 }
                 plotDict[cacheId] = gosPlot;
             } else {
