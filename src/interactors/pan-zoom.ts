@@ -55,8 +55,8 @@ function createPanZoomBehavior(
             .on('end', () => (plot.domOverlay.__zoom = new ZoomTransform(1, 0, 0)))
             .on('start', () => {
                 // Always use current plot dimensions for zoom start scales
-                zoomStartScaleX.domain(xDomain.value).range([0, plot.width]);
-                if (yDomain) zoomStartScaleY.domain(yDomain.value).range([0, plot.height]);
+                zoomStartScaleX.domain(xDomain.value).range([0, plot.domOverlay.clientWidth]);
+                if (yDomain) zoomStartScaleY.domain(yDomain.value).range([0, plot.domOverlay.clientHeight]);
             })
             .on('zoom', zoomed)
     );
