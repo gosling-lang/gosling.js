@@ -35,7 +35,7 @@ export function renderTrackDefs(
     trackDefs: TrackDefs[],
     linkedEncodings: LinkedEncoding[],
     pixiManager: PixiManager,
-    prevPlots: Record<string, unknown>,
+    cachedPlots: Record<string, unknown>,
     urlToFetchOptions?: UrlToFetchOptions
 ) {
     const plotDict: Record<string, unknown> = {};
@@ -43,26 +43,27 @@ export function renderTrackDefs(
     const cursorPosX = signal(Number.NEGATIVE_INFINITY);
     const cursorPosY = signal(Number.NEGATIVE_INFINITY);
 
-    // For reactive rendering, remove all plots except for the ones that need to be reused
-    Object.keys(prevPlots).forEach(cacheId => {
-        const index = trackDefs.findIndex(def => def.cacheId === cacheId);
-        if (index === -1) {
+    // Remove existing plots except for the ones that need to be reused
+    Object.keys(cachedPlots).forEach(cacheId => {
+        if (!trackDefs.find(def => def.cacheId === cacheId)) {
             pixiManager.clear(cacheId);
-            delete prevPlots[cacheId];
+            delete cachedPlots[cacheId];
         }
     });
 
-    // Create a new plots or reuse existing plots
+    // Create new plots or reuse cached plots
     trackDefs.forEach(trackDef => {
         const { boundingBox, type, options, trackId, cacheId } = trackDef;
-        const prevPlot = prevPlots[cacheId];
+
+        const cachedPlot = cachedPlots[cacheId];
+
         if (type === TrackType.Text) {
-            if (prevPlot) {
-                const txtPlot = prevPlot as TextTrack;
+            if (cachedPlot) {
+                const txtPlot = cachedPlot as TextTrack;
                 pixiManager.updateContainer(boundingBox, cacheId);
                 txtPlot.setDimensions([boundingBox.width, boundingBox.height]);
                 txtPlot.rerender(options as TextTrackOptions, true);
-                plotDict[cacheId] = prevPlot as TextTrack;
+                plotDict[cacheId] = cachedPlot as TextTrack;
             } else {
                 const textOptions = options as TextTrackOptions;
                 plotDict[cacheId] = new TextTrack(textOptions, pixiManager.makeContainer(boundingBox, cacheId));
@@ -71,15 +72,16 @@ export function renderTrackDefs(
         if (type === TrackType.Gosling) {
             const gosOptions = options as GoslingTrackOptions;
             const { spec } = gosOptions;
+
             const xDomain = getEncodingSignal(trackId, 'x', linkedEncodings);
             const yDomain = getEncodingSignal(trackId, 'y', linkedEncodings);
             if (!xDomain) return;
 
             const datafetcher = getDataFetcher(spec, urlToFetchOptions);
             if (!datafetcher) return;
-            if (prevPlot) {
-                // TODO: the new signal needs to be passed to the existing plot
-                const gosPlot = prevPlots[cacheId] as GoslingTrack;
+
+            if (cachedPlot) {
+                const gosPlot = cachedPlots[cacheId] as GoslingTrack;
                 pixiManager.updateContainer(boundingBox, cacheId);
                 gosPlot.setDimensions([boundingBox.width, boundingBox.height]);
                 gosPlot.rerender(gosOptions);
@@ -90,29 +92,30 @@ export function renderTrackDefs(
                 }
                 plotDict[cacheId] = gosPlot;
             } else {
-              const gosPlot = new GoslingTrack(
-                  gosOptions,
-                  datafetcher as DataFetcher<Tile>,
-                  pixiManager.makeContainer(boundingBox),
-                  xDomain,
-                  yDomain,
-                  gosOptions.spec.orientation
-              );
-              const isOverlayedOnPrevious = 'overlayOnPreviousTrack' in spec && spec.overlayOnPreviousTrack;
-              // TODO: Is this check sufficient?
-              if (!spec.static && !(spec.layout === 'linear' && isOverlayedOnPrevious)) {
-                  if (spec.layout === 'circular') {
-                      gosPlot.addInteractor(plot => panZoomCircular(plot, cursorPosX, xDomain));
-                  } else {
-                      gosPlot.addInteractor(plot => panZoom(plot, xDomain, yDomain));
-                  }
-              }
-              if (spec.layout === 'circular') {
-                  gosPlot.addInteractor(plot => cursorCircular(plot, cursorPosX));
-              } else {
-                  gosPlot.addInteractor(plot => cursor(plot, cursorPosX));
-              }
-              plotDict[trackId] = gosPlot;
+                const gosPlot = new GoslingTrack(
+                    gosOptions,
+                    datafetcher as DataFetcher<Tile>,
+                    pixiManager.makeContainer(boundingBox, cacheId),
+                    xDomain,
+                    yDomain,
+                    gosOptions.spec.orientation
+                );
+                const isOverlayedOnPrevious = 'overlayOnPreviousTrack' in spec && spec.overlayOnPreviousTrack;
+
+                // TODO: Is this check sufficient?
+                if (!spec.static && !(spec.layout === 'linear' && isOverlayedOnPrevious)) {
+                    if (spec.layout === 'circular') {
+                        gosPlot.addInteractor(plot => panZoomCircular(plot, cursorPosX, xDomain));
+                    } else {
+                        gosPlot.addInteractor(plot => panZoom(plot, xDomain, yDomain));
+                    }
+                }
+                if (spec.layout === 'circular') {
+                    gosPlot.addInteractor(plot => cursorCircular(plot, cursorPosX));
+                } else {
+                    gosPlot.addInteractor(plot => cursor(plot, cursorPosX));
+                }
+                plotDict[trackId] = gosPlot;
             }
         }
         if (type === TrackType.Heatmap) {
@@ -123,9 +126,9 @@ export function renderTrackDefs(
             if (!xDomain || !yDomain) return;
 
             const datafetcher = getDataFetcher(spec as SingleTrack | OverlaidTrack, urlToFetchOptions);
-            if (prevPlot) {
+            if (cachedPlot) {
                 // TODO: the new signal needs to be passed to the existing plot
-                const heatmapPlot = prevPlots[cacheId] as HeatmapTrack;
+                const heatmapPlot = cachedPlots[cacheId] as HeatmapTrack;
                 pixiManager.updateContainer(boundingBox, cacheId);
                 heatmapPlot.setDimensions([boundingBox.width, boundingBox.height]);
                 heatmapPlot.rerender(hmOptions);
@@ -150,8 +153,8 @@ export function renderTrackDefs(
                 console.warn(`No domain found for axis ${trackId}. Skipping...`);
                 return;
             }
-            if (prevPlot) {
-                const axisPlot = prevPlot as AxisTrack;
+            if (cachedPlot) {
+                const axisPlot = cachedPlot as AxisTrack;
                 pixiManager.updateContainer(boundingBox, cacheId);
                 axisPlot.setDimensions([boundingBox.width, boundingBox.height]);
                 // axisPlot.rerender(options as TextTrackOptions, true);
@@ -159,7 +162,7 @@ export function renderTrackDefs(
                     // Update the zoom behavior to use the new dimensions
                     updatePanZoom(axisPlot);
                 }
-                plotDict[cacheId] = prevPlot;
+                plotDict[cacheId] = cachedPlot;
             } else {
                 const axisTrack = new AxisTrack(
                     axisOptions,
