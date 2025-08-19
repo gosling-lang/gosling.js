@@ -36,11 +36,11 @@ export class AxisTrack extends AxisTrackClass {
         const context: AxisTrackContext = {
             chromInfoPath: 'https://s3.amazonaws.com/gosling-lang.org/data/hg38.chrom.sizes',
             scene: pixiContainer,
-            animate: () => { },
+            animate: () => {},
             dataConfig: {},
             id: 'test',
             viewUid: 'test',
-            pubSub: () => { },
+            pubSub: () => {},
             isShowGlobalMousePosition: () => false
             // id: 'test',
             // onValueScaleChanged: () => { },

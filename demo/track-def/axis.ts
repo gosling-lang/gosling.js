@@ -32,6 +32,7 @@ export function getAxisTrackDef(
             trackDefs.push({
                 type: TrackType.Axis,
                 trackId: track.id,
+                cacheId: `axis-circular-${track.id}`,
                 boundingBox: boundingBox,
                 options: getAxisTrackCircularOptions(track as ProcessedCircularTrack, boundingBox, xAxisPosition, theme)
             });
@@ -53,6 +54,7 @@ export function getAxisTrackDef(
             trackDefs.push({
                 type: TrackType.Axis,
                 trackId: track.id,
+                cacheId: `axis-linear-x-${track.id}`,
                 boundingBox: axisBbox,
                 options: getAxisTrackLinearOptions('x', track, axisBbox, xAxisPosition, theme)
             });
@@ -78,6 +80,7 @@ export function getAxisTrackDef(
             trackDefs.push({
                 type: TrackType.Axis,
                 trackId: track.id,
+                cacheId: `axis-linear-y-${track.id}`,
                 boundingBox: axisBbox,
                 options: getAxisTrackLinearOptions('y', track, axisBbox, yAxisPosition, theme)
             });

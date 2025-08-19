@@ -253,7 +253,6 @@ const spec: GoslingSpec = {
     layout: 'circular',
     arrangement: 'vertical',
     centerRadius: 0.5,
-    static: true,
     xDomain: { chromosome: 'chr1', interval: [1, 3000500] },
     views: [row1, row2, row3, row4, barView2]
 };

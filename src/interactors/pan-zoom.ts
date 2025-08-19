@@ -7,14 +7,11 @@ import { zoomWheelBehavior, type HeatmapPlot, type Plot } from '../tracks/utils'
 /**
  * This interactor allows the user to pan and zoom the plot
  */
-export function panZoom(
+function createPanZoomBehavior(
     plot: Plot | HeatmapPlot,
     xDomain: Signal<[number, number]>,
     yDomain?: Signal<[number, number]>
 ) {
-    plot.xDomain = xDomain; // Update the xDomain with the signal
-    if ('yDomain' in plot && yDomain !== undefined) plot.yDomain = yDomain;
-
     // This will store the xDomain when the user starts zooming
     const zoomStartScaleX = scaleLinear();
     const zoomStartScaleY = scaleLinear();
@@ -40,27 +37,63 @@ export function panZoom(
     };
 
     // Create the zoom behavior
-    const zoomBehavior = zoom<HTMLElement, unknown>()
-        .wheelDelta(zoomWheelBehavior)
-        .filter(event => {
-            // We don't want to zoom if the user is dragging a brush
-            const isRect = event.target.tagName === 'rect';
-            const isMousedown = event.type === 'mousedown';
-            const isDraggingBrush = isRect && isMousedown;
-            const isAltPressed = event.altKey;
-            // Here are the default filters
-            const defaultFilter = (!event.ctrlKey || event.type === 'wheel') && !event.button;
-            // Use the default filter and our custom filter
-            return defaultFilter && !isDraggingBrush && !isAltPressed;
-        })
-        // @ts-expect-error We need to reset the transform when the user stops zooming
-        .on('end', () => (plot.domOverlay.__zoom = new ZoomTransform(1, 0, 0)))
-        .on('start', () => {
-            zoomStartScaleX.domain(xDomain.value).range([0, plot.width]);
-            if (yDomain) zoomStartScaleY.domain(yDomain.value).range([0, plot.height]);
-        })
-        .on('zoom', zoomed);
+    return (
+        zoom<HTMLElement, unknown>()
+            .wheelDelta(zoomWheelBehavior)
+            .filter(event => {
+                // We don't want to zoom if the user is dragging a brush
+                const isRect = event.target.tagName === 'rect';
+                const isMousedown = event.type === 'mousedown';
+                const isDraggingBrush = isRect && isMousedown;
+                const isAltPressed = event.altKey;
+                // Here are the default filters
+                const defaultFilter = (!event.ctrlKey || event.type === 'wheel') && !event.button;
+                // Use the default filter and our custom filter
+                return defaultFilter && !isDraggingBrush && !isAltPressed;
+            })
+            // @ts-expect-error We need to reset the transform when the user stops zooming
+            .on('end', () => (plot.domOverlay.__zoom = new ZoomTransform(1, 0, 0)))
+            .on('start', () => {
+                // Always use current plot dimensions for zoom start scales
+                zoomStartScaleX.domain(xDomain.value).range([0, plot.domOverlay.clientWidth]);
+                if (yDomain) zoomStartScaleY.domain(yDomain.value).range([0, plot.domOverlay.clientHeight]);
+            })
+            .on('zoom', zoomed)
+    );
+}
 
-    // Apply the zoom behavior to the overlay div
+export function panZoom(
+    plot: Plot | HeatmapPlot,
+    xDomain: Signal<[number, number]>,
+    yDomain?: Signal<[number, number]>
+) {
+    plot.xDomain = xDomain; // Update the xDomain with the signal
+    if ('yDomain' in plot && yDomain !== undefined) plot.yDomain = yDomain;
+
+    // Store the domain signals for updates
+    (plot as any)._panZoomXDomain = xDomain;
+    (plot as any)._panZoomYDomain = yDomain;
+
+    // Create and apply the zoom behavior
+    const zoomBehavior = createPanZoomBehavior(plot, xDomain, yDomain);
     select<HTMLElement, unknown>(plot.domOverlay).call(zoomBehavior);
+}
+
+/**
+ * Updates the zoom behavior for a plot that has already been initialized with panZoom
+ * This should be called after setDimensions to ensure zoom uses the correct dimensions
+ */
+export function updatePanZoom(plot: Plot | HeatmapPlot) {
+    const xDomain = (plot as any)._panZoomXDomain;
+    const yDomain = (plot as any)._panZoomYDomain;
+
+    if (xDomain) {
+        // Clear any existing zoom transform to ensure clean state with new dimensions
+        // @ts-expect-error We need to reset the transform when dimensions change
+        plot.domOverlay.__zoom = new ZoomTransform(1, 0, 0);
+
+        // Create a fresh zoom behavior with current dimensions
+        const zoomBehavior = createPanZoomBehavior(plot, xDomain, yDomain);
+        select<HTMLElement, unknown>(plot.domOverlay).call(zoomBehavior);
+    }
 }

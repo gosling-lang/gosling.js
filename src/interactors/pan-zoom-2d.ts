@@ -20,10 +20,10 @@ export function panZoomHeatmap(
     const zoomStartYScale = scaleLinear();
 
     const maxDomain = plot.maxDomain; // used to calculate k, the scaling factor
-    const width = plot.domOverlay.clientWidth;
-    const height = plot.domOverlay.clientHeight;
-    const baseXScale = scaleLinear().range([0, width]);
-    const baseYScale = scaleLinear().range([0, height]);
+
+    // Create scales that will use current dimensions
+    const baseXScale = scaleLinear();
+    const baseYScale = scaleLinear();
 
     // This function will be called every time the user zooms
     const zoomed = (event: D3ZoomEvent<HTMLElement, unknown>) => {
@@ -54,15 +54,28 @@ export function panZoomHeatmap(
             plot.domOverlay.__zoom = new ZoomTransform(1, 0, 0);
         })
         .on('start', () => {
-            zoomStartXScale.domain(xDomain.value).range([0, width]);
-            zoomStartYScale.domain(yDomain.value).range([0, height]);
+            // Use current dimensions instead of cached ones
+            const currentWidth = plot.width;
+            const currentHeight = plot.height;
+            zoomStartXScale.domain(xDomain.value).range([0, currentWidth]);
+            zoomStartYScale.domain(yDomain.value).range([0, currentHeight]);
         })
         .on('zoom', zoomed);
+
+    // Store the domain signals for updates
+    (plot as any)._panZoomXDomain = xDomain;
+    (plot as any)._panZoomYDomain = yDomain;
 
     // Apply the zoom behavior to the overlay div
     select<HTMLElement, unknown>(plot.domOverlay).call(zoomBehavior);
 
     effect(() => {
+        // Use current dimensions instead of cached ones
+        const currentWidth = plot.width;
+        const currentHeight = plot.height;
+        baseXScale.range([0, currentWidth]);
+        baseYScale.range([0, currentHeight]);
+
         const newXScale = baseXScale.domain(xDomain.value);
         const newYScale = baseYScale.domain(yDomain.value);
 
@@ -72,11 +85,11 @@ export function panZoomHeatmap(
         // This lets us change the xDomain and yDomain signals without having to update the transform object
 
         const k = maxDomain / (xDomain.value[1] - xDomain.value[0]);
-        const scalingXFactor = width / maxDomain;
+        const scalingXFactor = currentWidth / maxDomain;
         const tx = -(xDomain.value[0] * k) * scalingXFactor;
 
         const ky = maxDomain / (yDomain.value[1] - yDomain.value[0]);
-        const scalingYFactor = height / maxDomain;
+        const scalingYFactor = currentHeight / maxDomain;
         const ty = -(yDomain.value[0] * k) * scalingYFactor;
 
         if (ky.toPrecision(3) !== k.toPrecision(3)) {
@@ -88,4 +101,18 @@ export function panZoomHeatmap(
             plot.zoomed(newXScale, newYScale, k, tx, ty);
         }
     });
+}
+
+/**
+ * Updates the heatmap zoom behavior for a plot that has already been initialized with panZoomHeatmap
+ * This should be called after setDimensions to ensure zoom uses the correct dimensions
+ */
+export function updatePanZoomHeatmap(plot: HeatmapPlot) {
+    const xDomain = (plot as any)._panZoomXDomain;
+    const yDomain = (plot as any)._panZoomYDomain;
+
+    if (xDomain && yDomain) {
+        // Re-initialize the panZoom with current dimensions
+        panZoomHeatmap(plot, xDomain, yDomain);
+    }
 }

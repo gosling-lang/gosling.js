@@ -1,10 +1,9 @@
 import { type Signal } from '@preact/signals-core';
 import { type ScaleLinear } from 'd3-scale';
 
-export function zoomWheelBehavior(event: WheelEvent) {
+export function zoomWheelBehavior(event: WheelEvent, defaultMultiplier = 1) {
     // Default d3 zoom feels slow, so we can adjust the following instead
     // https://d3js.org/d3-zoom#zoom_wheelDelta
-    const defaultMultiplier = 1;
     return (
         -event.deltaY *
         (event.deltaMode === 1 ? 0.05 : event.deltaMode ? 1 : 0.002) *
