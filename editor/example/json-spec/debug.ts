@@ -20,19 +20,8 @@ export const EX_SPEC_DEBUG: GoslingSpec = {
                     xe: { field: 'end', type: 'genomic' },
                     row: { field: 'sample', type: 'nominal', legend: true },
                     color: { field: 'peak', type: 'quantitative', legend: true },
-                    tooltip: [
-                        { field: 'start', type: 'genomic', alt: 'Start Position' },
-                        { field: 'end', type: 'genomic', alt: 'End Position' },
-                        {
-                            field: 'peak',
-                            type: 'quantitative',
-                            alt: 'Value',
-                            format: '.2'
-                        },
-                        { field: 'sample', type: 'nominal', alt: 'Sample' }
-                    ],
                     width: 200,
-                    height: 30
+                    height: 300
                 }
             ]
         },
@@ -53,21 +42,10 @@ export const EX_SPEC_DEBUG: GoslingSpec = {
                     y: { field: 'peak', type: 'quantitative' },
                     row: { field: 'sample', type: 'nominal' },
                     color: { field: 'sample', type: 'nominal', legend: true },
-                    tooltip: [
-                        { field: 'start', type: 'genomic', alt: 'Start Position' },
-                        { field: 'end', type: 'genomic', alt: 'End Position' },
-                        {
-                            field: 'peak',
-                            type: 'quantitative',
-                            alt: 'Value',
-                            format: '.2'
-                        },
-                        { field: 'sample', type: 'nominal', alt: 'Sample' }
-                    ],
                     width: 600,
                     height: 130
                 }
             ]
         }
-    ]
+    ].slice(0, 1)
 };

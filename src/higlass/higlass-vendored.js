@@ -112,7 +112,7 @@ class Track {
         return () => this[prop];
     }
 
-    getData() {}
+    getData() { }
 
     /**
      * Capture click events. x and y are relative to the track position
@@ -131,7 +131,7 @@ class Track {
     }
 
     /** There was a click event outside the track * */
-    clickOutside() {}
+    clickOutside() { }
 
     /** @returns {[number, number]} */
     getDimensions() {
@@ -251,7 +251,7 @@ class Track {
     }
 
     /** @returns {void} */
-    draw() {}
+    draw() { }
 
     /** @returns {[number, number]} */
     getPosition() {
@@ -273,7 +273,7 @@ class Track {
      * @param {{}} evt
      * @returns {void}
      */
-    defaultMouseMoveHandler() {}
+    defaultMouseMoveHandler() { }
 
     /** @returns {void} */
     remove() {
@@ -286,7 +286,7 @@ class Track {
      * @param {Options} options
      * @returns {void}
      */
-    rerender() {}
+    rerender() { }
 
     /**
      * This function is for seeing whether this track should respond
@@ -306,13 +306,13 @@ class Track {
      * @param {number} kMultiplier
      * @returns {void}
      */
-    zoomedY() {}
+    zoomedY() { }
 
     /**
      * @param {number} dY
      * @returns {void}
      */
-    movedY() {}
+    movedY() { }
 }
 
 // @ts-nocheck
@@ -582,10 +582,30 @@ class PixiTrack extends Track {
     setMask(position, dimensions) {
         this.pMask.clear();
         this.pMask.beginFill();
+        if (this.options.layout === 'circular') {
+            /**
+             * If the layout is circular and is overlaid on another track, the mask should be circular
+             * so outer tracks can still receive click events.
+             */
+            console.warn('circular mask');
+            const [x, y] = this.position;
+            const [width, height] = this.dimensions;
+            const cx = x + width / 2.0;
+            const cy = y + height / 2.0;
+            const outerRadius = this.options.outerRadius;
+            this.pMask.drawCircle(cx, cy, outerRadius);
+        } else {
+            // Normal rectangular mask. This is what is done in PixiTrack
+            this.pMask.drawRect(position[0], position[1], dimensions[0], dimensions[1]);
+        }
+        this.pMask.endFill();
+/*
+        this.pMask.clear();
+        this.pMask.beginFill();
 
         this.pMask.drawRect(position[0], position[1], dimensions[0], dimensions[1]);
         this.pMask.endFill();
-    }
+  */  }
 
     setForeground() {
         this.pForeground.position.y = this.position[1];
@@ -796,10 +816,10 @@ class PixiTrack extends Track {
             graphics.drawRect(
                 this.position[0] + (labelLeftMargin || labelTopMargin) + this.labelXOffset,
                 this.position[1] +
-                    this.dimensions[1] -
-                    this.labelText.height -
-                    labelBackgroundMargin -
-                    (labelBottomMargin || labelRightMargin),
+                this.dimensions[1] -
+                this.labelText.height -
+                labelBackgroundMargin -
+                (labelBottomMargin || labelRightMargin),
                 this.labelText.width + labelBackgroundMargin,
                 this.labelText.height + labelBackgroundMargin
             );
@@ -816,11 +836,11 @@ class PixiTrack extends Track {
 
             graphics.drawRect(
                 this.position[0] +
-                    this.dimensions[0] -
-                    this.labelText.width -
-                    labelBackgroundMargin -
-                    (labelRightMargin || labelBottomMargin) -
-                    this.labelXOffset,
+                this.dimensions[0] -
+                this.labelText.width -
+                labelBackgroundMargin -
+                (labelRightMargin || labelBottomMargin) -
+                this.labelXOffset,
                 this.position[1] + (labelTopMargin || labelLeftMargin),
                 this.labelText.width + labelBackgroundMargin,
                 this.labelText.height + labelBackgroundMargin
@@ -837,16 +857,16 @@ class PixiTrack extends Track {
 
             graphics.drawRect(
                 this.position[0] +
-                    this.dimensions[0] -
-                    this.labelText.width -
-                    labelBackgroundMargin -
-                    labelRightMargin -
-                    this.labelXOffset,
+                this.dimensions[0] -
+                this.labelText.width -
+                labelBackgroundMargin -
+                labelRightMargin -
+                this.labelXOffset,
                 this.position[1] +
-                    this.dimensions[1] -
-                    this.labelText.height -
-                    labelBackgroundMargin -
-                    labelBottomMargin,
+                this.dimensions[1] -
+                this.labelText.height -
+                labelBackgroundMargin -
+                labelBottomMargin,
                 this.labelText.width + labelBackgroundMargin,
                 this.labelText.height + labelBackgroundMargin
             );
@@ -978,9 +998,9 @@ class PixiTrack extends Track {
         clipPolygon.setAttribute(
             'points',
             `${this.position[0]},${this.position[1]} ` +
-                `${this.position[0] + this.dimensions[0]},${this.position[1]} ` +
-                `${this.position[0] + this.dimensions[0]},${this.position[1] + this.dimensions[1]} ` +
-                `${this.position[0]},${this.position[1] + this.dimensions[1]} `
+            `${this.position[0] + this.dimensions[0]},${this.position[1]} ` +
+            `${this.position[0] + this.dimensions[0]},${this.position[1] + this.dimensions[1]} ` +
+            `${this.position[0]},${this.position[1] + this.dimensions[1]} `
         );
 
         // the clipping area needs to be a clipPath element
@@ -2153,9 +2173,9 @@ function workerGetTiles(outUrl, server, theseTileIds, authHeader, done, requestB
         headers,
         ...(requestBody && Object.keys(requestBody).length > 0
             ? {
-                  method: 'POST',
-                  body: JSON.stringify(requestBody)
-              }
+                method: 'POST',
+                body: JSON.stringify(requestBody)
+            }
             : {})
     })
         .then(response => response.json())
@@ -4061,7 +4081,7 @@ class TiledPixiTrack extends PixiTrack {
      * Function is called when all tiles that should be visible have
      * been received.
      */
-    allTilesLoaded() {}
+    allTilesLoaded() { }
 
     minValue(_) {
         if (_) {
@@ -4101,7 +4121,7 @@ class TiledPixiTrack extends PixiTrack {
         this.scale.maxValue = this.scale.maxRawValue;
     }
 
-    updateTile(/* tile */) {}
+    updateTile(/* tile */) { }
 
     destroyTile(/* tile */) {
         // remove all data structures needed to draw this tile
@@ -4337,7 +4357,7 @@ class TiledPixiTrack extends PixiTrack {
     /**
      * Draw a tile on some graphics
      */
-    drawTile(/* tileData, graphics */) {}
+    drawTile(/* tileData, graphics */) { }
 
     calculateMedianVisibleValue() {
         if (this.areAllVisibleTilesLoaded()) {
@@ -5109,17 +5129,17 @@ const setupShowMousePosition = (context, is2d = false, isGlobal = false) => {
  */
 const valueToColor =
     (valueScale, colorScale, pseudoCounts = 0, eps = 0.000001) =>
-    value => {
-        let rgbIdx = 255;
+        value => {
+            let rgbIdx = 255;
 
-        if (value > eps) {
-            // values less than espilon are considered NaNs and made transparent
-            // (rgbIdx 255)
-            rgbIdx = Math.max(0, Math.min(255, Math.floor(valueScale(value + pseudoCounts))));
-        }
+            if (value > eps) {
+                // values less than espilon are considered NaNs and made transparent
+                // (rgbIdx 255)
+                rgbIdx = Math.max(0, Math.min(255, Math.floor(valueScale(value + pseudoCounts))));
+            }
 
-        return colorScale[rgbIdx];
-    };
+            return colorScale[rgbIdx];
+        };
 
 // @ts-nocheck
 
@@ -5989,9 +6009,9 @@ class HeatmapTiledPixiTrack extends TiledPixiTrack {
         ) {
             this.limitedValueScale.domain([
                 this.valueScale.domain()[0] +
-                    (this.valueScale.domain()[1] - this.valueScale.domain()[0]) * this.options.scaleStartPercent,
+                (this.valueScale.domain()[1] - this.valueScale.domain()[0]) * this.options.scaleStartPercent,
                 this.valueScale.domain()[0] +
-                    (this.valueScale.domain()[1] - this.valueScale.domain()[0]) * this.options.scaleEndPercent
+                (this.valueScale.domain()[1] - this.valueScale.domain()[0]) * this.options.scaleEndPercent
             ]);
         }
 
@@ -6302,8 +6322,7 @@ class HeatmapTiledPixiTrack extends TiledPixiTrack {
 
             this.gColorscaleBrush.attr(
                 'transform',
-                `translate(${this.pColorbarArea.x + this.pColorbar.x + COLORBAR_WIDTH + 2},${
-                    this.pColorbarArea.y + this.pColorbar.y - 1
+                `translate(${this.pColorbarArea.x + this.pColorbar.x + COLORBAR_WIDTH + 2},${this.pColorbarArea.y + this.pColorbar.y - 1
                 })`
             );
         }
@@ -6321,8 +6340,7 @@ class HeatmapTiledPixiTrack extends TiledPixiTrack {
 
             this.gColorscaleBrush.attr(
                 'transform',
-                `translate(${this.pColorbarArea.x + this.pColorbar.x + COLORBAR_WIDTH + BRUSH_COLORBAR_GAP},${
-                    this.pColorbarArea.y + this.pColorbar.y - 1
+                `translate(${this.pColorbarArea.x + this.pColorbar.x + COLORBAR_WIDTH + BRUSH_COLORBAR_GAP},${this.pColorbarArea.y + this.pColorbar.y - 1
                 })`
             );
         }
@@ -6717,8 +6735,8 @@ class HeatmapTiledPixiTrack extends TiledPixiTrack {
                 GLOBALS.PIXI.VERSION[0] === '4'
                     ? GLOBALS.PIXI.Texture.fromCanvas(canvas, GLOBALS.PIXI.SCALE_MODES.NEAREST)
                     : GLOBALS.PIXI.Texture.from(canvas, {
-                          scaleMode: GLOBALS.PIXI.SCALE_MODES.NEAREST
-                      });
+                        scaleMode: GLOBALS.PIXI.SCALE_MODES.NEAREST
+                    });
 
             const sprite = new GLOBALS.PIXI.Sprite(texture);
 

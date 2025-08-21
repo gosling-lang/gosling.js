@@ -7,6 +7,27 @@ import { IsXAxis, type Track } from '@gosling-lang/gosling-schema';
 import { DEFAULT_AXIS_SIZE } from '../compiler/defaults';
 
 /**
+ * Updates the circular cursor for a plot that has already been initialized
+ * This should be called after setDimensions to ensure cursor uses the correct dimensions
+ */
+export function updateCursorCircular(
+    plot: Plot & {
+        pMasked: PIXI.Container;
+        options?: { spec?: { innerRadius?: number; outerRadius?: number; startAngle?: number; endAngle?: number } };
+    },
+    cursorPos: Signal<number>
+) {
+    // Remove existing cursor if any
+    const existingCursor = (plot as any)._circularCursor;
+    if (existingCursor) {
+        plot.pMasked.removeChild(existingCursor);
+    }
+
+    // Reinitialize cursor with current dimensions
+    cursorCircular(plot, cursorPos);
+}
+
+/**
  * This interactor shows a cursor that follows the mouse in circular plots
  */
 export function cursorCircular(
@@ -36,6 +57,9 @@ export function cursorCircular(
 
     const cursor = new PIXI.Graphics();
     plot.pMasked.addChild(cursor);
+
+    // Store cursor reference for potential removal during updates
+    (plot as any)._circularCursor = cursor;
 
     // This function will be called every time the user moves the mouse
     const moveCursor = (event: MouseEvent) => {

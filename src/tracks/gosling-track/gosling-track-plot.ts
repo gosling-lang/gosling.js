@@ -4,10 +4,10 @@ import { fakePubSub } from '../../../src/core/utils/fake-pub-sub';
 import { scaleLinear } from 'd3-scale';
 import { type Signal } from '@preact/signals-core';
 import { DataFetcher } from '@higlass/datafetcher';
-
 import { type Plot } from '../utils';
 import { signal, effect } from '@preact/signals-core';
 import type { Tile } from '@higlass/services';
+import type { BoundingBox } from '@gosling-lang/gosling-schema';
 
 /**
  * A wrapper around the GoslingTrackClass that allows for use with signals
@@ -111,6 +111,12 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
         this.addTooltip();
     }
 
+    onOptionsChange(options: GoslingTrackOptions, boundingBox: BoundingBox) {
+        this.options = options;
+        this.setDimensions([boundingBox.width, boundingBox.height]);
+        this.rerender(this.options);
+    }
+
     setDimensions(newDimensions: [number, number]) {
         const [width, height] = newDimensions;
         super.setDimensions(newDimensions);
@@ -124,6 +130,7 @@ export class GoslingTrack extends GoslingTrackClass implements Plot {
         this._yScale.range([0, this.dimensions[1]]);
         this._refYScale.range([0, this.dimensions[1]]);
     }
+
     /** When the tooltip option is used, the tooltip div will be populated sample information  */
     addTooltip() {
         /** Helper function to get the position relative to the overlay div */

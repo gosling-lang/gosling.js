@@ -498,7 +498,6 @@ export class GoslingTrackClass extends TiledPixiTrack<Tile, GoslingTrackOptions>
     override setMask(position: [number, number], dimensions: [number, number]) {
         this.pMask.clear();
         this.pMask.beginFill();
-
         if (this.options.spec.layout === 'circular' && this.options.spec.overlayOnPreviousTrack) {
             /**
              * If the layout is circular and is overlaid on another track, the mask should be circular

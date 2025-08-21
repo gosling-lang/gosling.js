@@ -26,7 +26,6 @@ export function drawCircularOutlines(trackInfo: any, tm: GoslingTrackModel, them
 
     /* render */
     const g = trackInfo.pBackground;
-
     if (!(spec.layout === 'circular' && spec.mark === 'withinLink')) {
         // circular link marks usually use entire inner space
         g.lineStyle(

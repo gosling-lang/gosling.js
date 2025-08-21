@@ -116,8 +116,13 @@ export class PixiManager {
                 div.style.height = `${position.height}px`;
                 const pContainer = this.createdPixiContainers.get(id)!;
                 pContainer.position.set(position.x, position.y);
+
+                this.createdOverlayDivs.set(key, undefined);
+                this.createdOverlayDivs.delete(key);
+                this.createdOverlayDivs.set(JSON.stringify(position), div);
             }
         });
+        console.warn(this.createdOverlayDivs);
     }
 
     clear(id: string): void {
