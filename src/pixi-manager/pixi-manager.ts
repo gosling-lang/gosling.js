@@ -28,7 +28,7 @@ export class PixiManager {
         height: number,
         container: HTMLDivElement,
         fps: (fps: number) => void,
-        options: { padding?: number }
+        options: { padding?: number; background?: string } = {}
     ) {
         this.app = new PIXI.Application<HTMLCanvasElement>({
             width,
@@ -37,7 +37,8 @@ export class PixiManager {
             resolution: 2, // Higher resolution
             autoDensity: true, // When resolution is set, this should be true so things are scaled correctly
             view: document.createElement('canvas'),
-            backgroundColor: 0xffffff,
+            backgroundColor: options.background ?? 0xffffff,
+            backgroundAlpha: options.background === 'transparent' ? 0 : 1,
             eventMode: 'static',
             eventFeatures: {
                 move: true,
@@ -50,7 +51,8 @@ export class PixiManager {
         const wrapper = document.createElement('div');
         const padding = options.padding || 50;
         wrapper.style.padding = `${padding}px`;
-        wrapper.style.backgroundColor = 'white';
+        wrapper.style.backgroundColor =
+            options.background === 'transparent' ? '#ffffff00' : (options.background ?? '#ffffff');
         container.appendChild(wrapper);
 
         // Canvas and overlay container will be added to the root div
