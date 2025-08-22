@@ -588,12 +588,21 @@ class PixiTrack extends Track {
              * so outer tracks can still receive click events.
              */
             console.warn('circular mask');
+
             const [x, y] = this.position;
             const [width, height] = this.dimensions;
             const cx = x + width / 2.0;
             const cy = y + height / 2.0;
             const outerRadius = this.options.outerRadius;
-            this.pMask.drawCircle(cx, cy, outerRadius);
+
+            //this.pMask.drawCircle(cx, cy, outerRadius);
+            this.pMask.beginFill(
+            );
+            this.pMask.moveTo(cx, y);
+            this.pMask.arc(cx, cy, this.options.innerRadius, 0, 365, true);
+            this.pMask.arc(cx, cy, this.options.outerRadius, 0, 365, false);
+
+            this.pMask.closePath();
         } else {
             // Normal rectangular mask. This is what is done in PixiTrack
             this.pMask.drawRect(position[0], position[1], dimensions[0], dimensions[1]);

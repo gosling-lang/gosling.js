@@ -117,9 +117,9 @@ export class PixiManager {
                 const pContainer = this.createdPixiContainers.get(id)!;
                 pContainer.position.set(position.x, position.y);
 
+                this.createdOverlayDivs.set(JSON.stringify(position), div);
                 this.createdOverlayDivs.set(key, undefined);
                 this.createdOverlayDivs.delete(key);
-                this.createdOverlayDivs.set(JSON.stringify(position), div);
             }
         });
         console.warn(this.createdOverlayDivs);
