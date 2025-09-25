@@ -20,7 +20,7 @@ export type ProcessedTrack =
     | ProcessedSpatialTrack;
 /** All tracks potentially have these properties */
 export interface ProcessedTrackBase {
-    layout?: 'linear' | 'circular';
+    layout?: 'linear' | 'circular' | 'spatial';
     id: string;
     height: number;
     width: number;

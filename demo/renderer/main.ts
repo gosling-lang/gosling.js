@@ -161,7 +161,9 @@ export function renderTrackDefs(
             console.warn(spatialTrackOptions);
             if (spatialTrackOptions.spec.data) {
                 // Ensure to pull all data needed
-                spatialTrackOptions.spec.data.sampleLength = 30000;
+                if ('sampleLength' in spatialTrackOptions.spec.data) {
+                    spatialTrackOptions.spec.data.sampleLength = 30000;
+                }
             }
             const datafetcher = getDataFetcher(spatialTrackOptions.spec, urlToFetchOptions);
             createSpatialTrack(spatialTrackOptions, datafetcher as CsvDataFetcherClass, container);
