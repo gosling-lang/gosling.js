@@ -1,5 +1,5 @@
 import type { ChannelValue, Color, OverlaidTrack, SingleTrack, Size } from '@gosling-lang/gosling-schema';
-import * as chs from 'chromospace';
+import * as uchi from 'uchimata';
 import type { CsvDataFetcherClass, LoadedTiles } from 'src/data-fetchers/csv/csv-data-fetcher';
 import { tableFromArrays, tableFromIPC, tableToIPC, Type } from '@uwdata/flechette';
 import { transform } from '../../core/utils/data-transform';
@@ -312,7 +312,7 @@ export function createSpatialTrack(
                     return;
                 }
                 console.warn('spec', options.spec);
-                let chromatinScene = chs.initScene();
+                let chromatinScene = uchi.initScene();
                 const tracks = options.spec._overlay ?? [options.spec];
                 for (const ov of tracks) {
                     console.warn('ov', ov);
@@ -325,31 +325,23 @@ export function createSpatialTrack(
                         mark: ov.mark
                     };
 
-                    let s = chs.load(ipcBuffer.slice().buffer, { center: true, normalize: true });
+                    let s = uchi.load(ipcBuffer.slice().buffer, { center: true, normalize: true });
 
-                    function checkIsModel(s: chs.ChromatinChunk | chs.ChromatinModel): s is chs.ChromatinModel {
-                        return 'parts' in s;
-                    }
-                    const isModel = 'parts' in s; //~ ChromatinModel has .parts
-                    if (checkIsModel(s)) {
-                        const filterTransform = (ov.dataTransform ?? []).find(t => t.type === 'filter');
-                        if (filterTransform) {
-                            const field: string = filterTransform.field;
-                            assert(field === 'chr', "Field for transform should be 'chr'");
-                            const oneOf = filterTransform.oneOf;
-                            const first = oneOf[0];
-                            const res = chs.get(s, first)!;
-                            if (res) {
-                                const [selectedModel] = res;
-                                s = { parts: [selectedModel] };
-                            }
+                    const filterTransform = (ov.dataTransform ?? []).find(t => t.type === 'filter');
+                    if (filterTransform) {
+                        const field: string = filterTransform.field;
+                        assert(field === 'chr', "Field for transform should be 'chr'");
+                        const oneOf = filterTransform.oneOf;
+                        const first = oneOf[0];
+                        const res = await uchi.selectChromosome(s.data, first);
+                        console.warn(`selectChromosome result: res.numRows = ${res.numRows}`);
+                        if (res) {
+                            s = { data: res, name: `Filtered structure (${oneOf})` };
                         }
-                        chromatinScene = chs.addModelToScene(chromatinScene, s, viewConfig);
-                    } else {
-                        chromatinScene = chs.addChunkToScene(chromatinScene, s, viewConfig);
                     }
+                    chromatinScene = uchi.addStructureToScene(chromatinScene, s, viewConfig);
                 }
-                const [, createdCanvas] = chs.display(chromatinScene, { alwaysRedraw: false, withHUD: false });
+                const [, createdCanvas] = uchi.display(chromatinScene, { alwaysRedraw: false, withHUD: false });
                 container.appendChild(createdCanvas);
             },
             ['0.0']
