@@ -52,8 +52,9 @@ export type ProcessedCircularTrack = ProcessedTrackBase & {
 };
 
 export type ProcessedDummyTrack = ProcessedTrackBase & {
-    type?: string;
+    type: 'dummy-track';
     style?: DummyTrackStyle;
+    x?: X;
 };
 
 /** Tracks in the _overlay */

@@ -307,6 +307,8 @@ export function IsXAxis(_: Track) {
             }
         });
         return isFound;
+    } else if (IsDummyTrack(_)) {
+        return _.x?.axis && _.x.axis !== 'none';
     }
     return false;
 }

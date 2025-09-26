@@ -1,5 +1,4 @@
 import {
-    IsDummyTrack,
     IsMultipleViews,
     IsSingleView,
     type Assembly,
@@ -306,8 +305,7 @@ function getSingleViewLinks(gs: SingleView): ViewLink[] {
         // Add each track to the link
         tracks.forEach(track => {
             // If the track is already linked to something else, we don't need to add it again
-            // Or if the track is a dummy track, we don't need to add it
-            if (hasDiffXDomainThanView(gs, track, assembly, viewXDomain) || IsDummyTrack(track)) return;
+            if (hasDiffXDomainThanView(gs, track, assembly, viewXDomain)) return;
             const hasOverlaidTracks = '_overlay' in track;
             // Add overlaid brush tracks to the link
             if (hasOverlaidTracks) {

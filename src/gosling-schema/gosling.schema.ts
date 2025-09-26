@@ -219,6 +219,8 @@ export interface DummyTrack
     type: 'dummy-track';
     /** Text that gets shown on the DummyTrack */
     title?: string;
+    /** For showing axis */
+    x?: X;
     /** Defines how the track is styled */
     style?: DummyTrackStyle;
     /** Only linear layout are supported at this time */
