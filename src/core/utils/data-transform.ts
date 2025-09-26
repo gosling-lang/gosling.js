@@ -27,7 +27,7 @@ import {
 import { computeChromSizes } from './assembly';
 import { dsvFormat } from 'd3-dsv';
 import type { Scale } from '@higlass/services';
-import { assert } from 'src/core/utils/assert';
+import { assert } from '../../core/utils/assert';
 
 /**
  * Apply data transformation.

@@ -4,7 +4,7 @@ import type { CsvDataFetcherClass, LoadedTiles } from 'src/data-fetchers/csv/csv
 import { tableFromArrays, tableFromIPC, tableToIPC, Type } from '@uwdata/flechette';
 import { transform } from '../../core/utils/data-transform';
 import { getTabularData } from '../gosling-track/data-abstraction';
-import { assert } from 'src/core/utils/assert';
+import { assert } from '../../core/utils/assert';
 
 export type SpatialTrackOptions = {
     spec: SingleTrack | OverlaidTrack;
