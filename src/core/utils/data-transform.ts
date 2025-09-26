@@ -27,6 +27,7 @@ import {
 import { computeChromSizes } from './assembly';
 import { dsvFormat } from 'd3-dsv';
 import type { Scale } from '@higlass/services';
+import { assert } from 'src/core/utils/assert';
 
 /**
  * Apply data transformation.
@@ -50,10 +51,12 @@ export async function transform(t: DataTransform, data: Datum[], xScale?: Scale,
         case 'svType':
             return inferSvType(t, data);
         case 'coverage':
+            assert(xScale, 'xScale parameters is required for coverage transform');
             return aggregateCoverage(t, data, xScale);
         case 'subjson':
             return parseSubJSON(t, data);
         case 'displace':
+            assert(xScale, 'xScale parameters is required for displace transform');
             return displace(t, data, xScale);
     }
 }
