@@ -1,16 +1,19 @@
 import type { JoinTransform, Track } from '@gosling-lang/gosling-schema';
+import { assert } from "../core/utils/assert";
 
 /**
  * Convert a 3D-specific spec into a generalized spec (i.e., moving 3D model data to the `join` transform)
  */
 export function _fixTrackToWalkaround(t: Track) {
+    console.warn("track before _fixTrackToWalkaround", t);
+    console.log({ ...t });
     const { layout } = t;
     if (typeof layout == 'object' && 'type' in layout && layout.type === 'spatial') {
         // This means, we encountered a spatial layout track
         const { model } = layout;
         const [x, y, z] = model.xyz;
         const { url, chromosome: chr, position: coord } = model;
-        // @ts-expect-error
+        assert('spatial' in t, "Should be a spatial track.");
         t.spatial = {
             x,
             y,
@@ -33,7 +36,6 @@ export function _fixTrackToWalkaround(t: Track) {
             to = { startField, endField };
         }
 
-        // @ts-expect-error
         t.dataTransform = [{ ...dataTransform, to }, ...(t.dataTransform ?? [])];
         t.layout = 'spatial';
     } else if (typeof layout == 'object') {
@@ -45,4 +47,5 @@ export function _fixTrackToWalkaround(t: Track) {
         // @ts-expect-error
         t.x = { ...t.locus, type: 'genomic' };
     }
+    console.warn("track after _fixTrackToWalkaround", t);
 }

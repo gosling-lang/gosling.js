@@ -1,4 +1,4 @@
-import type { ChannelValue, Color, OverlaidTrack, SingleTrack, Size } from '@gosling-lang/gosling-schema';
+import type { ChannelValue, ChromospaceTrack, Color, OverlaidTrack, SingleTrack, Size } from '@gosling-lang/gosling-schema';
 import * as uchi from 'uchimata';
 import type { CsvDataFetcherClass, LoadedTiles } from 'src/data-fetchers/csv/csv-data-fetcher';
 import { tableFromArrays, tableFromIPC, tableToIPC, Type } from '@uwdata/flechette';
@@ -7,16 +7,7 @@ import { getTabularData } from '../gosling-track/data-abstraction';
 import { assert } from '../../core/utils/assert';
 
 export type SpatialTrackOptions = {
-    spec: SingleTrack | OverlaidTrack;
-    color: string | undefined;
-    test: string | undefined;
-    data3D: string | undefined;
-    spatial: {
-        //~ spatial encoding
-        x: string;
-        y: string;
-        z: string;
-    };
+    spec: ChromospaceTrack;
 };
 
 const ERROR_COLOR = '#ff00ff';

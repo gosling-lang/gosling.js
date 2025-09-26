@@ -214,10 +214,6 @@ export interface ChromospaceTrack
         CommonTrackDef,
         'width' | 'height' | 'id' | 'title' | '_invalidTrack' | 'orientation' | 'static' | 'assembly'
     > {
-    //type: '3D';
-    color: string; //~ just testing
-    test: string;
-    data3D: string;
     spatial: {
         x: string;
         y: string;
