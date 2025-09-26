@@ -94,6 +94,7 @@ export function createTrackDefs(trackInfos: TrackInfo[], theme: Required<Complet
                 trackId: track.id,
                 boundingBox,
                 options: {
+                    // @ts-expect-error At this point, the spec is processed
                     spec: track,
                     color: track.color ? track.color.value : undefined,
                     test: track.test,
