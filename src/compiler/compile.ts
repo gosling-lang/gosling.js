@@ -67,5 +67,6 @@ export function compile(
 
     // Make HiGlass models for individual tracks
     const compileResult = collectViewsAndTracks(specCopy, trackInfos, theme);
+    console.warn(compileResult);
     return compileResult;
 }

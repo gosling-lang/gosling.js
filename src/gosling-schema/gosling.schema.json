@@ -789,6 +789,10 @@
           "description": "Specify the track width in pixels.",
           "type": "number"
         },
+        "x": {
+          "$ref": "#/definitions/X",
+          "description": "For showing axis"
+        },
         "zoomLimits": {
           "description": "Unused property for DummyTrack",
           "items": {
@@ -5547,6 +5551,10 @@
             },
             {
               "$ref": "#/definitions/ChannelValue"
+            },
+            {
+              "$ref": "#/definitions/X",
+              "description": "For showing axis"
             }
           ]
         },

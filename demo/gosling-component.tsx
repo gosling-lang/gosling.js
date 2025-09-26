@@ -33,7 +33,7 @@ export function GoslingComponent(props: GoslingComponentProps) {
         urlToFetchOptions,
         theme = 'light',
         ref,
-        visualized = () => { }
+        visualized = () => {}
     } = props;
 
     const [compiledResults, setCompiledResults] = useState<ReturnType<typeof renderGosling>>();
@@ -58,7 +58,7 @@ export function GoslingComponent(props: GoslingComponentProps) {
         if (!pixiManager) {
             const canvasWidth = 1000,
                 canvasHeight = 1000; // These initial sizes don't matter because the size will be updated
-            const pixiManager = new PixiManager(canvasWidth, canvasHeight, plotElement, () => { }, {
+            const pixiManager = new PixiManager(canvasWidth, canvasHeight, plotElement, () => {}, {
                 padding,
                 background: getTheme(theme).root.background
             });
@@ -142,7 +142,7 @@ export function renderGosling(
 /** Debounces the resize observer */
 function debounce(f: (arg0: unknown) => unknown, delay: number) {
     let timer = 0;
-    return function(...args: [arg0: unknown]) {
+    return function (...args: [arg0: unknown]) {
         clearTimeout(timer);
         // @ts-expect-error
         timer = setTimeout(() => f.apply(this, args), delay);
