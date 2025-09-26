@@ -96,9 +96,8 @@ export function renderTrackDefs(
         if (type === TrackType.Axis) {
             const axisOptions = options as AxisTrackOptions;
             const domain = getEncodingSignal(trackDef.trackId, axisOptions.encoding, linkedEncodings);
-            console.warn(`No domain found for axis ${trackDef.trackId}. Skipping...`, trackDef, linkedEncodings);
             if (!domain) {
-                console.warn(`No domain found for axis ${trackDef.trackId}. Skipping...`, trackDef, linkedEncodings);
+                console.warn(`No domain found for axis ${trackDef.trackId}. Skipping...`);
                 return;
             }
             const axisTrack = new AxisTrack(
