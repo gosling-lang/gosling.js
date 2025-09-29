@@ -1,4 +1,4 @@
-import type { ChannelValue, SpatialTrack, Color, OverlaidTrack, SingleTrack, Size } from '@gosling-lang/gosling-schema';
+import type { ChannelValue, SpatialTrack, Color, Size } from '@gosling-lang/gosling-schema';
 import * as uchi from 'uchimata';
 import type { CsvDataFetcherClass, LoadedTiles } from 'src/data-fetchers/csv/csv-data-fetcher';
 import { tableFromArrays, tableFromIPC, tableToIPC, Type } from '@uwdata/flechette';
@@ -6,8 +6,13 @@ import { transform } from '../../core/utils/data-transform';
 import { getTabularData } from '../gosling-track/data-abstraction';
 import { assert } from '../../core/utils/assert';
 
+export type OverlaidSpatialTrack = Partial<SpatialTrack> & {
+    // This is a property internally used when compiling
+    _overlay: Partial<Omit<SpatialTrack, 'height' | 'width' | 'layout' | 'title' | 'subtitle'>>[];
+};
+
 export type SpatialTrackOptions = {
-    spec: SpatialTrack;
+    spec: SpatialTrack | OverlaidSpatialTrack;
 };
 
 const ERROR_COLOR = '#ff00ff';
@@ -36,6 +41,7 @@ async function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptio
     };
     console.warn(options);
 
+    assert(options.spec.spatial, 'Spatial field is required for spatial track');
     const fieldForSpatialX = options.spec.spatial.x;
     const fieldForSpatialY = options.spec.spatial.y;
     const fieldForSpatialZ = options.spec.spatial.z;
@@ -286,12 +292,19 @@ export function createSpatialTrack(
                 }
                 console.warn('spec', options.spec);
                 let chromatinScene = uchi.initScene();
-                const tracks = options.spec._overlay ?? [options.spec];
+                let tracks: SpatialTrack[] = [];
+                if ('_overlay' in options.spec) {
+                    tracks = options.spec._overlay as SpatialTrack[]; //TODO: okay?
+                } else {
+                    tracks = [options.spec];
+                }
+                // const tracks = options.spec._overlay ?? [options.spec];
                 for (const ov of tracks) {
                     console.warn('ov', ov);
 
                     const color = handleColorField(ipcBuffer, ov.color);
                     const scale = handleSizeField(ipcBuffer, ov.size);
+                    assert(ov.mark === "sphere" || ov.mark === "octahedron" || ov.mark === "box", "Unsupported mark type for spatial view");
                     const viewConfig = {
                         scale: scale,
                         color: color,
@@ -303,9 +316,15 @@ export function createSpatialTrack(
                     const filterTransform = (ov.dataTransform ?? []).find(t => t.type === 'filter');
                     if (filterTransform) {
                         const field: string = filterTransform.field;
+
                         assert(field === 'chr', "Field for transform should be 'chr'");
+                        assert('oneOf' in filterTransform, 'oneOf is required for this filter transform');
+
                         const oneOf = filterTransform.oneOf;
                         const first = oneOf[0];
+
+                        assert(typeof first === 'string', 'only string is supported for chromosome filtering');
+
                         const res = await uchi.selectChromosome(s.data, first);
                         console.warn(`selectChromosome result: res.numRows = ${res.numRows}`);
                         if (res) {
