@@ -166,7 +166,7 @@ export interface CommonViewDef {
 }
 
 /* ----------------------------- TRACK ----------------------------- */
-export type Track = SingleTrack | OverlaidTrack | TemplateTrack | DummyTrack | ChromospaceTrack;
+export type Track = SingleTrack | OverlaidTrack | TemplateTrack | DummyTrack | SpatialTrack;
 
 export interface CommonTrackDef extends CommonViewDef {
     /** Assigned to `uid` in a HiGlass view config, used for API and caching. */
@@ -209,7 +209,7 @@ export interface CommonTrackDef extends CommonViewDef {
     _invalidTrack?: boolean; // flag to ignore rendering certain tracks if they have problems // !!! TODO: add tests
 }
 
-export interface ChromospaceTrack
+export interface SpatialTrack
     extends Pick<
         CommonTrackDef,
         'width' | 'height' | 'id' | 'title' | '_invalidTrack' | 'orientation' | 'static' | 'assembly'
