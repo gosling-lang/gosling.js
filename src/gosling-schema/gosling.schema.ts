@@ -230,6 +230,10 @@ export interface SpatialTrackBase
     overlayOnPreviousTrack?: false; // internal property
     style?: { [key: string]: string | number }; // Any style-related properties to support?
     zoomLimits?: [null, null]; // This determines whether users can zoom ifinitely or not. Unused at the moment.
+
+    // Data
+    data: DataDeep;
+
     // Data transformation
     dataTransform?: DataTransform[];
 
