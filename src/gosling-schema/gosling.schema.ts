@@ -299,6 +299,7 @@ export type Mark =
     | 'sphere'
     | 'box'
     | 'octahedron';
+//~ TODO: (spatial) add more 3D mark options
 
 /* ----------------------------- API & MOUSE EVENTS ----------------------------- */
 interface CommonEventData {
