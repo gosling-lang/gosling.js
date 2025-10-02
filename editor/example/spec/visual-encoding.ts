@@ -231,6 +231,7 @@ const spec: GoslingSpec = {
     layout: 'linear',
     arrangement: 'vertical',
     centerRadius: 0.8,
+    responsiveSize: { width: true },
     xDomain: { chromosome: 'chr1', interval: [1, 3000500] },
     views: [heatmapView, barView, stackView, lineView, pointView, pointView2, areaView2, barView2, bandView]
 };

@@ -8,6 +8,7 @@ import type { TrackInfo } from 'src/compiler/bounding-box';
 import type { GoslingSpec, Theme } from 'gosling.js';
 import { getLinkedEncodings } from './linking/linkedEncoding';
 import { createApiV2 } from '../src/api/api';
+import { collectViewsAndTracks } from '../src/compiler/views-and-tracks';
 
 export type GoslingRef = { api: ReturnType<typeof createApiV2> };
 
@@ -22,6 +23,7 @@ interface GoslingComponentProps {
     urlToFetchOptions?: UrlToFetchOptions;
     ref?: RefObject<GoslingRef>;
     visualized?: () => void;
+    resized?: () => void;
 }
 
 export function GoslingComponent(props: GoslingComponentProps) {
@@ -33,7 +35,8 @@ export function GoslingComponent(props: GoslingComponentProps) {
         urlToFetchOptions,
         theme = 'light',
         ref,
-        visualized = () => {}
+        visualized = () => {},
+        resized = () => {}
     } = props;
 
     const [compiledResults, setCompiledResults] = useState<ReturnType<typeof renderGosling>>();
@@ -62,12 +65,12 @@ export function GoslingComponent(props: GoslingComponentProps) {
                 padding,
                 background: getTheme(theme).root.background
             });
-            const compileResult = renderGosling(spec, plotElement, pixiManager, theme, urlToFetchOptions);
+            const compileResult = renderGosling(spec, plotElement, pixiManager, theme, urlToFetchOptions, resized);
             setCompiledResults(compileResult);
             setPixiManager(pixiManager);
         } else {
             pixiManager.clearAll();
-            const compileResult = renderGosling(spec, plotElement, pixiManager, theme, urlToFetchOptions);
+            const compileResult = renderGosling(spec, plotElement, pixiManager, theme, urlToFetchOptions, resized);
             setCompiledResults(compileResult);
         }
     }, [spec]);
@@ -88,21 +91,26 @@ export function renderGosling(
     container: HTMLDivElement,
     pixiManager: PixiManager,
     theme: Theme,
-    urlToFetchOptions?: UrlToFetchOptions
+    urlToFetchOptions?: UrlToFetchOptions,
+    resized?: () => void
 ) {
     const themeDeep = getTheme(theme);
     let plots = {};
 
     // 1. Compile the spec
     const compileResult = compile(gs, [], themeDeep, {});
-    const { trackInfos, gs: processedSpec } = compileResult;
+    const { trackInfos, gs: processedSpec, theme: themeComplete } = compileResult;
 
     // 2. Extract all of the linking information from the spec
     const linkedEncodings = getLinkedEncodings(processedSpec);
 
+    // Create the result object that will be returned and potentially mutated
+    const result = { ...compileResult, plots, pixiManager };
+
     // 3. If the spec is responsive, we need to add a resize observer to the container
     const { isResponsiveWidth, isResponsiveHeight } = checkResponsiveSpec(processedSpec);
     if (isResponsiveWidth || isResponsiveHeight) {
+        console.error('here');
         const resizeObserver = new ResizeObserver(
             debounce(entries => {
                 // @ts-expect-error
@@ -118,12 +126,18 @@ export function renderGosling(
                     isResponsiveWidth,
                     isResponsiveHeight
                 );
+                // Regenerate tracksAndViews with the rescaled dimensions
+                const updatedResult = collectViewsAndTracks(processedSpec, rescaledTracks, themeComplete);
+                result.tracksAndViews = updatedResult.tracksAndViews;
+                result.size = updatedResult.size;
+
                 // 4. Render the tracks
                 const trackDefs = createTrackDefs(rescaledTracks, themeDeep);
                 plots = renderTrackDefs(trackDefs, linkedEncodings, pixiManager, urlToFetchOptions);
                 // Resize the canvas to make sure it fits the tracks
                 const { width, height } = calculateWidthHeight(rescaledTracks);
                 pixiManager.resize(width, height);
+                resized?.();
             }, 300)
         );
         resizeObserver.observe(container);
@@ -136,7 +150,7 @@ export function renderGosling(
         const { width, height } = calculateWidthHeight(trackInfos);
         pixiManager.resize(width, height);
     }
-    return { ...compileResult, plots, pixiManager };
+    return result;
 }
 
 /** Debounces the resize observer */
