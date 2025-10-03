@@ -22,7 +22,9 @@ interface GoslingComponentProps {
     theme?: Theme;
     urlToFetchOptions?: UrlToFetchOptions;
     ref?: RefObject<GoslingRef>;
+    /** A callback function to notify that visualization has been rendered for the first time */
     visualized?: () => void;
+    /** A callback function to notify that visualization has been resized. Only called when responsive design is used. */
     resized?: () => void;
 }
 
