@@ -29,6 +29,9 @@ export function processDummyTrack(
         options: {
             width: boundingBox.width,
             height: boundingBox.height,
+            layout: track.layout,
+            outerRadius: 'outerRadius' in track ? track.outerRadius : undefined,
+            innerRadius: 'innerRadius' in track ? track.innerRadius : undefined,
             ...track.style,
             title: track.title ?? ''
         }

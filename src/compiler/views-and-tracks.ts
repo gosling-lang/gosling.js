@@ -9,7 +9,6 @@ import type {
 } from '@gosling-lang/gosling-schema';
 import type { CompleteThemeDeep } from '../core/utils/theme';
 import { getViewApiData } from '../api/api-data';
-import { IsDummyTrack } from '@gosling-lang/gosling-schema';
 import type { ProcessedCircularTrack } from 'demo/track-def/types';
 
 export function collectViewsAndTracks(spec: GoslingSpec, trackInfos: TrackInfo[], theme: Required<CompleteThemeDeep>) {
@@ -21,9 +20,6 @@ export function collectViewsAndTracks(spec: GoslingSpec, trackInfos: TrackInfo[]
     const tracks: TrackApiData[] = trackInfos.map(d => {
         let isLinear = false;
         if ('layout' in d.track && d.track.layout === 'linear') {
-            isLinear = true;
-        } else if (IsDummyTrack(d.track)) {
-            // Dummy track is always linear
             isLinear = true;
         }
         return {
