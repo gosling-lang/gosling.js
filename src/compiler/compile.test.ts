@@ -99,7 +99,7 @@ describe('Dummy track', () => {
           }
         `);
     });
-    it('gets filtered out when layout circular', () => {
+    it('does not get filtered out when layout circular', () => {
         const spec: GoslingSpec = {
             tracks: [
                 {
@@ -120,7 +120,7 @@ describe('Dummy track', () => {
             layout: 'circular'
         };
         const { gs } = compile(spec, [], getTheme(), {});
-        expect('tracks' in gs && gs.tracks).toHaveLength(1);
+        expect('tracks' in gs && gs.tracks).toHaveLength(2);
     });
 });
 
