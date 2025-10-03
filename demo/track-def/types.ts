@@ -25,7 +25,7 @@ export interface ProcessedTrackBase {
     height: number;
     width: number;
     static: boolean;
-    mark?: string;
+    mark?: Mark;
     orientation: 'horizontal' | 'vertical';
     title?: string;
     subtitle?: string;
@@ -56,8 +56,12 @@ export type ProcessedCircularTrack = ProcessedTrackBase & {
 
 export type ProcessedSpatialTrack = ProcessedTrackBase & {
     layout: 'spatial';
-    test: string;
-    data3D: string;
+    model: {
+        url: string;
+        xyz: [string, string, string];
+        chromosome: string;
+        position: string;
+    };
 };
 
 export type ProcessedDummyTrack = ProcessedTrackBase & {

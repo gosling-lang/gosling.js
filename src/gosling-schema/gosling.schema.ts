@@ -80,19 +80,17 @@ export type ResponsiveSpecOfMultipleViews = {
     }[];
 };
 
-export type Layout = 'linear' | 'circular' | 'spatial' | LayoutDeep;
-export type LayoutDeep =
-    | { type: 'linear' | 'circular' }
-    | {
-        type: 'spatial';
-        model: {
-            type: 'csv';
-            url: string;
-            xyz: [string, string, string];
-            chromosome: string;
-            position: string;
-        };
+export type Layout = 'linear' | 'circular' | 'spatial' | LayoutSpatial;
+export type LayoutSpatial = {
+    type: 'spatial';
+    model: {
+        type: 'csv';
+        url: string;
+        xyz: [string, string, string];
+        chromosome: string;
+        position: string;
     };
+};
 export type Orientation = 'horizontal' | 'vertical';
 
 /** Custom chromosome sizes, e.g., [["foo", 1000], ["bar", 300], ["baz", 240]] */
@@ -166,7 +164,7 @@ export interface CommonViewDef {
 }
 
 /* ----------------------------- TRACK ----------------------------- */
-export type Track = SingleTrack | OverlaidTrack | TemplateTrack | DummyTrack | SpatialTrack;
+export type Track = SingleTrack | OverlaidTrack | TemplateTrack | DummyTrack;
 
 export interface CommonTrackDef extends CommonViewDef {
     /** Assigned to `uid` in a HiGlass view config, used for API and caching. */
@@ -209,117 +207,106 @@ export interface CommonTrackDef extends CommonViewDef {
     _invalidTrack?: boolean; // flag to ignore rendering certain tracks if they have problems // !!! TODO: add tests
 }
 
-export type SpatialTrack = SpatialTrackBase & Encoding;
-
-export interface SpatialTrackBase
-    extends Pick<
-        CommonTrackDef,
-        | 'width'
-        | 'height'
-        | 'id'
-        | 'title'
-        | 'subtitle'
-        | 'overlayOnPreviousTrack'
-        | 'outerRadius'
-        | 'innerRadius'
-        | 'startAngle'
-        | 'endAngle'
-        | '_renderingId'
-        | '_invalidTrack'
-        | 'orientation'
-        | 'spacing'
-        | 'static'
-        | 'zoomLimits'
-        | 'xOffset'
-        | 'yOffset'
-        | 'xDomain'
-        | 'yDomain'
-        | 'assembly'
-        | 'linkingId'
-        | 'xAxis'
-        | 'centerRadius'
-        | 'style'
-        | '_assignedWidth'
-        | '_assignedHeight'
-    > {
-    spatial: {
-        x: string;
-        y: string;
-        z: string;
-        chr: string;
-        coord: string;
-    };
-
-    // Override layout to be spatial-specific
-    layout?: 'spatial'
-    | {
-        type: 'spatial';
-        model: {
-            type: 'csv';
-            url: string;
-            xyz: [string, string, string];
-            chromosome: string;
-            position: string;
-        };
-    };
-
-
-    // Data
-    data: DataDeep;
-
-    // Data transformation
-    dataTransform?: DataTransform[];
-
-    // Tooltip
-    tooltip?: Tooltip[];
-
-    /*
-     * Determine whether to use mouse events, such as click and mouse over on marks. __Default__: `false`
-     */
-    mouseEvents?: boolean | MouseEventsDeep;
-
-    // Experimental
-    experimental?: {
-        /**
-         * Render visual marks with less smooth curves to increase rendering performance.
-         * Only supported for `elliptical` `linkStyle` `withinLink` currently.
-         * @default false
-         */
-        performanceMode?: boolean;
-
-        /**
-         * Performance rendering option.
-         * By default, certain marks ('bar', 'line', 'rect', 'area') are stretched when zooming in/out to improve
-         * rendering performance. No marks will be stretched in circular layouts.
-         *
-         * When this option is set to true, all marks will be stretched when zooming in/out.
-         * When this option is set to false, all marks will be rerendered when zooming in/out.
-         *
-         */
-        stretchGraphics?: boolean;
-
-        /**
-         * Threshold for stretching graphics. If the graphics are scaled larger than the threshold, then the graphic
-         * will be rerendered. If the graphics are scaled smaller than 1/threshold (e.g., 1/2), then the graphic will
-         * be rerendered. This is to prevent the graphics from being stretched too much.
-         * @default 1.5
-         */
-        stretchGraphicsThreshold?: number;
-    };
-
-    // Mark
-    mark: Mark;
-
-    // Resolving overlaps
-    displacement?: Displacement;
-
-    // Visibility
-    visibility?: VisibilityCondition[];
-
-    // Style
-    flipY?: boolean;
-    stretch?: boolean;
-}
+// export type SpatialTrack = SpatialTrackBase & Encoding;
+//
+// export interface SpatialTrackBase
+//     extends Pick<
+//         CommonTrackDef,
+//         | 'width'
+//         | 'height'
+//         | 'id'
+//         | 'title'
+//         | 'subtitle'
+//         | 'overlayOnPreviousTrack'
+//         | 'outerRadius'
+//         | 'innerRadius'
+//         | 'startAngle'
+//         | 'endAngle'
+//         | '_renderingId'
+//         | '_invalidTrack'
+//         | 'orientation'
+//         | 'spacing'
+//         | 'static'
+//         | 'zoomLimits'
+//         | 'xOffset'
+//         | 'yOffset'
+//         | 'xDomain'
+//         | 'yDomain'
+//         | 'assembly'
+//         | 'linkingId'
+//         | 'xAxis'
+//         | 'centerRadius'
+//         | 'style'
+//         | '_assignedWidth'
+//         | '_assignedHeight'
+//     > {
+//     spatial: {
+//         x: string;
+//         y: string;
+//         z: string;
+//         chr: string;
+//         coord: string;
+//     };
+//
+//     // Override layout to be spatial-specific
+//     layout?: LayoutSpatial;
+//
+//     // Data
+//     data: DataDeep;
+//
+//     // Data transformation
+//     dataTransform?: DataTransform[];
+//
+//     // Tooltip
+//     tooltip?: Tooltip[];
+//
+//     /*
+//      * Determine whether to use mouse events, such as click and mouse over on marks. __Default__: `false`
+//      */
+//     mouseEvents?: boolean | MouseEventsDeep;
+//
+//     // Experimental
+//     experimental?: {
+//         /**
+//          * Render visual marks with less smooth curves to increase rendering performance.
+//          * Only supported for `elliptical` `linkStyle` `withinLink` currently.
+//          * @default false
+//          */
+//         performanceMode?: boolean;
+//
+//         /**
+//          * Performance rendering option.
+//          * By default, certain marks ('bar', 'line', 'rect', 'area') are stretched when zooming in/out to improve
+//          * rendering performance. No marks will be stretched in circular layouts.
+//          *
+//          * When this option is set to true, all marks will be stretched when zooming in/out.
+//          * When this option is set to false, all marks will be rerendered when zooming in/out.
+//          *
+//          */
+//         stretchGraphics?: boolean;
+//
+//         /**
+//          * Threshold for stretching graphics. If the graphics are scaled larger than the threshold, then the graphic
+//          * will be rerendered. If the graphics are scaled smaller than 1/threshold (e.g., 1/2), then the graphic will
+//          * be rerendered. This is to prevent the graphics from being stretched too much.
+//          * @default 1.5
+//          */
+//         stretchGraphicsThreshold?: number;
+//     };
+//
+//     // Mark
+//     mark: Mark;
+//
+//     // Resolving overlaps
+//     displacement?: Displacement;
+//
+//     // Visibility
+//     visibility?: VisibilityCondition[];
+//
+//     // Style
+//     flipY?: boolean;
+//     stretch?: boolean;
+// }
 
 /**
  * A placeholder track. In contrast to other tracks, this track does not display any data. Instead it provides

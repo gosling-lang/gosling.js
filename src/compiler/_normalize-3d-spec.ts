@@ -1,12 +1,12 @@
-import type { JoinTransform, SpatialTrack, Track } from '@gosling-lang/gosling-schema';
+import type { JoinTransform, OverlaidTrack, SingleTrack } from '@gosling-lang/gosling-schema';
 import { assert } from "../core/utils/assert";
-import type { OverlaidSpatialTrack } from 'src/tracks/spatial-track/spatial-track';
+// import type { OverlaidSpatialTrack } from 'src/tracks/spatial-track/spatial-track';
 
 /**
  * Convert a 3D-specific spec into a generalized spec (i.e., moving 3D model data to the `join` transform)
  */
-export function _fixTrackToWalkaround(t: Track) {
-    // export function _fixTrackToWalkaround(t: SpatialTrack | OverlaidSpatialTrack) {
+// export function _fixTrackToWalkaround(t: Track) {
+export function _fixTrackToWalkaround(t: SingleTrack | OverlaidTrack) {
     console.warn("track before _fixTrackToWalkaround", t);
     console.log({ ...t });
     const { layout } = t;

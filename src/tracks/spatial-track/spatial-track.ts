@@ -1,18 +1,21 @@
-import type { ChannelValue, SpatialTrack, Color, Size } from '@gosling-lang/gosling-schema';
+import type { ChannelValue, Color, Size, SingleTrack, OverlaidTrack } from '@gosling-lang/gosling-schema';
 import * as uchi from 'uchimata';
 import type { CsvDataFetcherClass, LoadedTiles } from 'src/data-fetchers/csv/csv-data-fetcher';
 import { tableFromArrays, tableFromIPC, tableToIPC, Type } from '@uwdata/flechette';
 import { transform } from '../../core/utils/data-transform';
 import { getTabularData } from '../gosling-track/data-abstraction';
 import { assert } from '../../core/utils/assert';
+import type { ProcessedSpatialTrack } from 'demo/track-def/types';
 
-export type OverlaidSpatialTrack = Partial<SpatialTrack> & {
-    // This is a property internally used when compiling
-    _overlay: Partial<Omit<SpatialTrack, 'height' | 'width' | 'layout' | 'title' | 'subtitle'>>[];
-};
+// export type OverlaidSpatialTrack = Partial<SpatialTrack> & {
+//     // This is a property internally used when compiling
+//     _overlay: Partial<Omit<SpatialTrack, 'height' | 'width' | 'layout' | 'title' | 'subtitle'>>[];
+// };
 
 export type SpatialTrackOptions = {
-    spec: SpatialTrack | OverlaidSpatialTrack;
+    // spec: SpatialTrack | OverlaidSpatialTrack;
+    spec: SingleTrack | OverlaidTrack;
+    processedSpec: ProcessedSpatialTrack;
 };
 
 const ERROR_COLOR = '#ff00ff';
@@ -21,6 +24,8 @@ async function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptio
     // Some genomics file formats, such as BigWig and MultiVec, do not have tabular data already stored.
     // So, create one if missing by running `getTabularData()`.
     // The tile ID of '0.0' extracts all data for a given file at the lowest resolution.
+
+    //@ts-expect-error Maybe more appropriate than narrowing down here would be to change getTabularData to accept SingleTrack | OverlaidTrack?
     let tabularData = t['0.0'].tabularData ?? getTabularData(options.spec, t['0.0']);
 
     tabularData = structuredClone(tabularData);
@@ -41,12 +46,15 @@ async function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptio
     };
     console.warn(options);
 
-    assert(options.spec.spatial, 'Spatial field is required for spatial track');
-    const fieldForSpatialX = options.spec.spatial.x;
-    const fieldForSpatialY = options.spec.spatial.y;
-    const fieldForSpatialZ = options.spec.spatial.z;
-    const fieldForSpatialChr = options.spec.spatial.chr;
-    const fieldForSpatialCoord = options.spec.spatial.coord;
+
+    assert(options.processedSpec.model, 'ProcessedSpatilTrack is missing the definition of a model.');
+    const spatialModel = options.processedSpec.model;
+    assert(spatialModel.xyz.length === 3, 'Expecting the `xyz` field to have 3 elements');
+    const fieldForSpatialX = spatialModel.xyz[0];
+    const fieldForSpatialY = spatialModel.xyz[1];
+    const fieldForSpatialZ = spatialModel.xyz[2];
+    const fieldForSpatialChr = spatialModel.chromosome;
+    const fieldForSpatialCoord = spatialModel.position;
     console.warn(
         `fieldForSpatialX: ${fieldForSpatialX},\nfieldForSpatialY: ${fieldForSpatialY},\nfieldForSpatialZ: ${fieldForSpatialZ}`
     );
@@ -280,8 +288,10 @@ export function createSpatialTrack(
             async t => {
                 console.warn('CSV tiles: ~~~~~~~~');
                 console.warn(t);
+                //@ts-expect-error TODO: need to take a better look at what happens here
                 if (!t['0.0'].tileWidth) {
                     // This information is needed to create tabular data (i.e., running getTabularData())
+                    //@ts-expect-error TODO: need to take a better look at what happens here
                     t['0.0'].tileWidth = info.max_width;
                 }
 
@@ -292,9 +302,9 @@ export function createSpatialTrack(
                 }
                 console.warn('spec', options.spec);
                 let chromatinScene = uchi.initScene();
-                let tracks: SpatialTrack[] = [];
+                let tracks: Partial<SingleTrack>[] = [];
                 if ('_overlay' in options.spec) {
-                    tracks = options.spec._overlay as SpatialTrack[]; //TODO: okay?
+                    tracks = options.spec._overlay;
                 } else {
                     tracks = [options.spec];
                 }
