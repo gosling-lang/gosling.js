@@ -138,7 +138,7 @@ export function renderGosling(
                 // Resize the canvas to make sure it fits the tracks
                 const { width, height } = calculateWidthHeight(rescaledTracks);
                 pixiManager.resize(width, height);
-                // Call an API function
+                // Notify that the visualization has been resized
                 resized?.();
             }, 300)
         );
