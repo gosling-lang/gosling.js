@@ -222,7 +222,9 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             if (!track.zoomLimits) track.zoomLimits = spec.zoomLimits;
 
             // Convert a 3D-specific spec into a generalized spec (i.e., moving 3D model data to the `join` transform)
-            _fixTrackToWalkaround(track);
+            if (track.layout && typeof track.layout === 'object' && track.layout.type === 'spatial') {
+                _fixTrackToWalkaround(track);
+            }
 
             /**
              * Dummy track can't have a circular layout

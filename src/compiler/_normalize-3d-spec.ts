@@ -1,13 +1,16 @@
-import type { JoinTransform, Track } from '@gosling-lang/gosling-schema';
+import type { JoinTransform, SpatialTrack, Track } from '@gosling-lang/gosling-schema';
 import { assert } from "../core/utils/assert";
+import type { OverlaidSpatialTrack } from 'src/tracks/spatial-track/spatial-track';
 
 /**
  * Convert a 3D-specific spec into a generalized spec (i.e., moving 3D model data to the `join` transform)
  */
 export function _fixTrackToWalkaround(t: Track) {
+    // export function _fixTrackToWalkaround(t: SpatialTrack | OverlaidSpatialTrack) {
     console.warn("track before _fixTrackToWalkaround", t);
     console.log({ ...t });
     const { layout } = t;
+    t.layout;
     if (typeof layout == 'object' && 'type' in layout && layout.type === 'spatial') {
         // This means, we encountered a spatial layout track
         const { model } = layout;
@@ -26,7 +29,7 @@ export function _fixTrackToWalkaround(t: Track) {
             from: { url, chromosomeField: chr, genomicField: coord }
         };
         // TODO: need to support other data types as well
-        let to: JoinTransform['to'];
+        let to: JoinTransform['to'] = { startField: 'start', endField: 'end' };
         if (t.data?.type === 'bigwig') {
             to = { startField: 'start', endField: 'end' };
         } else if (t.data?.type === 'csv') {
@@ -42,9 +45,7 @@ export function _fixTrackToWalkaround(t: Track) {
         t.layout = layout.type;
     }
 
-    // @ts-expect-error
     if (t.locus && !t.x) {
-        // @ts-expect-error
         t.x = { ...t.locus, type: 'genomic' };
     }
     console.warn("track after _fixTrackToWalkaround", t);
