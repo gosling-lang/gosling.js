@@ -110,12 +110,11 @@ export function renderGosling(
     // 3. If the spec is responsive, we need to add a resize observer to the container
     const { isResponsiveWidth, isResponsiveHeight } = checkResponsiveSpec(processedSpec);
     if (isResponsiveWidth || isResponsiveHeight) {
-        console.error('here');
         const resizeObserver = new ResizeObserver(
             debounce(entries => {
                 // @ts-expect-error
                 const { width: containerWidth, height: containerHeight } = entries[0].contentRect;
-                console.warn('Resizing to', containerWidth, containerHeight);
+                // console.warn('Resizing to', containerWidth, containerHeight);
                 // Remove all of the previously drawn overlay divs and tracks
                 pixiManager.clearAll();
                 const rescaledTracks = rescaleTrackInfos(
@@ -137,6 +136,7 @@ export function renderGosling(
                 // Resize the canvas to make sure it fits the tracks
                 const { width, height } = calculateWidthHeight(rescaledTracks);
                 pixiManager.resize(width, height);
+                // Call an API function
                 resized?.();
             }, 300)
         );
