@@ -54,13 +54,16 @@ export type ProcessedCircularTrack = ProcessedTrackBase & {
     innerRadius: number;
 };
 
+//~ DK: AFAIK, this needs to loosely fit definitions in Track.
+//~ it is force casted via `as ProcessedTrack`, so there's no strict type checking.
 export type ProcessedSpatialTrack = ProcessedTrackBase & {
     layout: 'spatial';
-    model: {
-        url: string;
-        xyz: [string, string, string];
-        chromosome: string;
-        position: string;
+    spatial: {
+        x: string;
+        y: string;
+        z: string;
+        chr: string;
+        coord: string;
     };
 };
 

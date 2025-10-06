@@ -28,7 +28,7 @@ import {
 import { spreadTracksByData } from '../core/utils/overlay';
 import { getStyleOverridden } from '../core/utils/style';
 import { uuid } from '../core/utils/uuid';
-import { _fixTrackToWalkaround } from './_normalize-3d-spec';
+import { propagateSpatialLayoutInfo } from './_normalize-3d-spec';
 
 /**
  * Traverse individual tracks and call the callback function to read and/or update the track definition.
@@ -224,7 +224,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             // Convert a 3D-specific spec into a generalized spec (i.e., moving 3D model data to the `join` transform)
             if (track.layout && typeof track.layout === 'object' && track.layout.type === 'spatial') {
                 if (!('template' in track)) { //~ exclude TemplateTrack
-                    _fixTrackToWalkaround(track);
+                    propagateSpatialLayoutInfo(track);
                 }
             }
 

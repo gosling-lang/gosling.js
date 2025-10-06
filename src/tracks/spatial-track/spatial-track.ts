@@ -44,17 +44,17 @@ async function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptio
         }
         return e;
     };
+    console.warn('options');
     console.warn(options);
 
 
-    assert(options.processedSpec.model, 'ProcessedSpatilTrack is missing the definition of a model.');
-    const spatialModel = options.processedSpec.model;
-    assert(spatialModel.xyz.length === 3, 'Expecting the `xyz` field to have 3 elements');
-    const fieldForSpatialX = spatialModel.xyz[0];
-    const fieldForSpatialY = spatialModel.xyz[1];
-    const fieldForSpatialZ = spatialModel.xyz[2];
-    const fieldForSpatialChr = spatialModel.chromosome;
-    const fieldForSpatialCoord = spatialModel.position;
+    assert(options.processedSpec.spatial, 'ProcessedSpatilTrack is missing the definition for spatial coordinates.');
+    const spatialMapping = options.processedSpec.spatial;
+    const fieldForSpatialX = spatialMapping.x;
+    const fieldForSpatialY = spatialMapping.y;
+    const fieldForSpatialZ = spatialMapping.z;
+    const fieldForSpatialChr = spatialMapping.chr;
+    const fieldForSpatialCoord = spatialMapping.coord;
     console.warn(
         `fieldForSpatialX: ${fieldForSpatialX},\nfieldForSpatialY: ${fieldForSpatialY},\nfieldForSpatialZ: ${fieldForSpatialZ}`
     );
@@ -314,6 +314,10 @@ export function createSpatialTrack(
 
                     const color = handleColorField(ipcBuffer, ov.color);
                     const scale = handleSizeField(ipcBuffer, ov.size);
+                    //~ An undefined mark would get handled by uchimata itself, but since we're doing the assert, we can define 'sphere' be the default already here
+                    if (!ov.mark) {
+                        ov.mark = 'sphere';
+                    }
                     assert(ov.mark === "sphere" || ov.mark === "octahedron" || ov.mark === "box", "Unsupported mark type for spatial view");
                     const viewConfig = {
                         scale: scale,

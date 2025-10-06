@@ -96,7 +96,7 @@ export function createTrackDefs(trackInfos: TrackInfo[], theme: Required<Complet
                 options: {
                     // @ts-expect-error At this point, the spec is processed
                     spec: track,
-                    color: track.color ? track.color.value : undefined,
+                    processedSpec: track,
                 }
             };
             trackDefs.push(trackDef);

@@ -1,22 +1,19 @@
 import type { JoinTransform, OverlaidTrack, SingleTrack } from '@gosling-lang/gosling-schema';
 import { assert } from "../core/utils/assert";
-// import type { OverlaidSpatialTrack } from 'src/tracks/spatial-track/spatial-track';
 
 /**
- * Convert a 3D-specific spec into a generalized spec (i.e., moving 3D model data to the `join` transform)
+ * Convert a 3D-specific spec into a generalized spec (i.e., moving 3D model data to the `join` transform).
+ * What happens here:
+ *     1. asdf
  */
-// export function _fixTrackToWalkaround(t: Track) {
-export function _fixTrackToWalkaround(t: SingleTrack | OverlaidTrack) {
-    console.warn("track before _fixTrackToWalkaround", t);
-    console.log({ ...t });
+export function propagateSpatialLayoutInfo(t: SingleTrack | OverlaidTrack) {
     const { layout } = t;
-    t.layout;
     if (typeof layout == 'object' && 'type' in layout && layout.type === 'spatial') {
         // This means, we encountered a spatial layout track
         const { model } = layout;
         const [x, y, z] = model.xyz;
         const { url, chromosome: chr, position: coord } = model;
-        assert('spatial' in t, "Should be a spatial track.");
+        //~ Step 1: Moving the spatial layout information from the view layout level down to the track level
         t.spatial = {
             x,
             y,
@@ -24,6 +21,9 @@ export function _fixTrackToWalkaround(t: SingleTrack | OverlaidTrack) {
             chr,
             coord
         };
+        t.layout = 'spatial';
+
+        //~ Step 2: Moving the 3D model data information to the `join` transform
         const dataTransform: Omit<JoinTransform, 'to'> = {
             type: 'join',
             from: { url, chromosomeField: chr, genomicField: coord }
@@ -38,9 +38,7 @@ export function _fixTrackToWalkaround(t: SingleTrack | OverlaidTrack) {
             const endField = t.data.genomicFields?.[1] ?? undefined;
             to = { startField, endField };
         }
-
         t.dataTransform = [{ ...dataTransform, to }, ...(t.dataTransform ?? [])];
-        t.layout = 'spatial';
     } else if (typeof layout == 'object') {
         t.layout = layout.type;
     }
@@ -48,5 +46,4 @@ export function _fixTrackToWalkaround(t: SingleTrack | OverlaidTrack) {
     if (t.locus && !t.x) {
         t.x = { ...t.locus, type: 'genomic' };
     }
-    console.warn("track after _fixTrackToWalkaround", t);
 }

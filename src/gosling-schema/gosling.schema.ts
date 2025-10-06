@@ -550,6 +550,17 @@ interface SingleTrackBase extends CommonTrackDef {
     // Mark
     mark: Mark;
 
+    //~ For spatial layouts
+    //  The reason to have this in the SingleTrackBase instead of making a different (SpatialTrack) is that a spatial track
+    //  should still be a "single track". Not specializing makes it easier for flowing between the different procedures of spec transformations.
+    spatial?: {
+        x: string;
+        y: string;
+        z: string;
+        chr: string;
+        coord: string;
+    };
+
     // Resolving overlaps
     displacement?: Displacement;
 
