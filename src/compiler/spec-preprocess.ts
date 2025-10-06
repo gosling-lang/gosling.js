@@ -220,14 +220,6 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             if (track.static === undefined) track.static = spec.static !== undefined ? spec.static : false;
             if (!track.zoomLimits) track.zoomLimits = spec.zoomLimits;
 
-            /**
-             * Dummy track can't have a circular layout
-             */
-            if (track.layout == 'circular' && IsDummyTrack(track)) {
-                track._invalidTrack = true;
-                return;
-            }
-
             // Override styles
             track.style = getStyleOverridden(spec.style, track.style);
             if (IsOverlaidTrack(track)) {

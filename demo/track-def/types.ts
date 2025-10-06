@@ -51,7 +51,7 @@ export type ProcessedCircularTrack = ProcessedTrackBase & {
     innerRadius: number;
 };
 
-export type ProcessedDummyTrack = ProcessedTrackBase & {
+export type ProcessedDummyTrack = (ProcessedLinearTrack | ProcessedCircularTrack) & {
     type: 'dummy-track';
     style?: DummyTrackStyle;
     x?: X;

@@ -1,5 +1,5 @@
 import type { MultipleViews, CommonViewDef, GoslingSpec, Track, SingleView } from '@gosling-lang/gosling-schema';
-import { Is2DTrack, IsDummyTrack, IsOverlaidTrack, IsXAxis, IsYAxis } from '@gosling-lang/gosling-schema';
+import { Is2DTrack, IsOverlaidTrack, IsXAxis, IsYAxis } from '@gosling-lang/gosling-schema';
 import {
     DEFAULT_AXIS_SIZE,
     DEFAULT_CIRCULAR_VIEW_PADDING,
@@ -316,10 +316,6 @@ function traverseAndCollectTrackInfo(
         // const numXAxes = getNumOfXAxes(cTracks.map(info => info.track));
 
         cTracks.forEach((t, i) => {
-            // at this time, circular dummy tracks are not supported, so we don't do anything here
-            if (IsDummyTrack(t.track)) {
-                return;
-            }
             // TODO: We know that this is a circular track, but it would be better to type guard it.
             const circularTrack = t.track as ProcessedCircularTrack;
 
