@@ -66,7 +66,6 @@ export class DummyTrackClass extends SVGTrack<DummyTrackOptions> {
         super(context, options);
         // @ts-expect-error Typescript things that the default option for textFontWeight is not compatible
         this.options = { ...defaultOptions, ...options };
-        console.warn(this.options);
         // Set the width and height of the rect element so that other elements appended to gMain will be shown
         this.clipRect.attr('width', this.options.width).attr('height', this.options.height);
 
