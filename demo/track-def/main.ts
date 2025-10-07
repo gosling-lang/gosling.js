@@ -41,7 +41,7 @@ interface TrackOptionsMap {
     [TrackType.BrushLinear]: BrushLinearTrackOptions;
     [TrackType.BrushCircular]: BrushCircularTrackOptions;
     [TrackType.Heatmap]: HeatmapTrackOptions;
-    [TrackType.Spatial]: SpatialTrackOptions; //~ TODO: add actual options
+    [TrackType.Spatial]: SpatialTrackOptions;
 }
 
 /**
@@ -88,7 +88,6 @@ export function createTrackDefs(trackInfos: TrackInfo[], theme: Required<Complet
             trackDefs.push(...dummyTrackDefs);
         } else if ('layout' in track && track.layout === 'spatial') {
             // We have a 3D track
-            console.warn('got 3D track', track);
             const trackDef: TrackDef<SpatialTrackOptions> = {
                 type: TrackType.Spatial,
                 trackId: track.id,

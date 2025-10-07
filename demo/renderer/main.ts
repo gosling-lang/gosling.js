@@ -146,19 +146,18 @@ export function renderTrackDefs(
             plotDict[trackId] = brush;
         }
         if (type === TrackType.Dummy) {
-            const dummyOptions = options as DummyTrackOptions; //~ TODO: properly assert the type!
+            const dummyOptions = options as DummyTrackOptions;
             const dummyPlot = new DummyTrack(dummyOptions, pixiManager.makeContainer(boundingBox).overlayDiv);
             plotDict[trackId] = dummyPlot;
         }
-        // Add a new track type for Chromospace
+        // Add a new track type for `spatial` layout (rendered via uchimata)
         if (type === TrackType.Spatial) {
-            // Even though Chromospace doesn't use PixiJS, we can use the PixiManager to create a div container that the canvas can be placed into.
-            // In the final version, we would probably want Chromospace to use an existing canvas element (to limit the creation of new elements).
+            // Even though uchimata doesn't use PixiJS, we can use the PixiManager to create a div container that the canvas can be placed into.
+            // In the final version, we would probably want uchimata to use an existing canvas element (to limit the creation of new elements).
             // But for now this gets the job done.
             const container = pixiManager.makeContainer(boundingBox).overlayDiv;
             const spatialTrackOptions = options as SpatialTrackOptions; //~ TODO: properly assert the type!
-            console.warn('!@$!#%@#');
-            console.warn(spatialTrackOptions);
+            console.warn('!@$!#%@# detected spatial track !@#$!#%@#');
             if (spatialTrackOptions.spec.data) {
                 // Ensure to pull all data needed
                 if ('sampleLength' in spatialTrackOptions.spec.data) {
