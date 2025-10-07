@@ -152,7 +152,7 @@ export function renderGosling(
         const { width, height } = calculateWidthHeight(trackInfos);
         pixiManager.resize(width, height);
     }
-    return result;
+    return { ...result, plots };
 }
 
 /** Debounces the resize observer */
