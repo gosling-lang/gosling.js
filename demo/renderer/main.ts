@@ -115,8 +115,7 @@ export function renderTrackDefs(
             const brushOptions = options as BrushLinearTrackOptions;
             const domain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
             const brushDomain = getEncodingSignal(trackDef.trackId, 'brush', linkedEncodings);
-            if (!domain || !brushDomain || !hasLinkedTracks(trackDef.trackId, linkedEncodings)) return;
-            // We only want to add the brush track if it is linked to another track
+            if (!domain || !brushDomain) return;
             const brush = new BrushLinearTrack(
                 brushOptions,
                 brushDomain,
@@ -130,8 +129,7 @@ export function renderTrackDefs(
             const brushOptions = options as BrushCircularTrackOptions;
             const domain = getEncodingSignal(trackDef.trackId, 'x', linkedEncodings);
             const brushDomain = getEncodingSignal(trackDef.trackId, 'brush', linkedEncodings);
-            if (!domain || !brushDomain || !hasLinkedTracks(trackDef.trackId, linkedEncodings)) return;
-            // We only want to add the brush track if it is linked to another track
+            if (!domain || !brushDomain) return;
             const brush = new BrushCircularTrack(
                 brushOptions,
                 brushDomain,
