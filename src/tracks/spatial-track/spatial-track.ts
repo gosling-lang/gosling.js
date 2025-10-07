@@ -7,13 +7,7 @@ import { getTabularData } from '../gosling-track/data-abstraction';
 import { assert } from '../../core/utils/assert';
 import type { ProcessedSpatialTrack } from 'demo/track-def/types';
 
-// export type OverlaidSpatialTrack = Partial<SpatialTrack> & {
-//     // This is a property internally used when compiling
-//     _overlay: Partial<Omit<SpatialTrack, 'height' | 'width' | 'layout' | 'title' | 'subtitle'>>[];
-// };
-
 export type SpatialTrackOptions = {
-    // spec: SpatialTrack | OverlaidSpatialTrack;
     spec: SingleTrack | OverlaidTrack;
     processedSpec: ProcessedSpatialTrack;
 };
@@ -44,9 +38,6 @@ async function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptio
         }
         return e;
     };
-    console.warn('options');
-    console.warn(options);
-
 
     assert(options.processedSpec.spatial, 'ProcessedSpatilTrack is missing the definition for spatial coordinates.');
     const spatialMapping = options.processedSpec.spatial;
@@ -55,10 +46,6 @@ async function transformObjectToArrow(t: LoadedTiles, options: SpatialTrackOptio
     const fieldForSpatialZ = spatialMapping.z;
     const fieldForSpatialChr = spatialMapping.chr;
     const fieldForSpatialCoord = spatialMapping.coord;
-    console.warn(
-        `fieldForSpatialX: ${fieldForSpatialX},\nfieldForSpatialY: ${fieldForSpatialY},\nfieldForSpatialZ: ${fieldForSpatialZ}`
-    );
-    console.warn(`fieldForSpatialChr : ${fieldForSpatialChr},\nfieldForSpatialCoord: ${fieldForSpatialCoord}`);
 
     for (const [i] of tabularData.entries()) {
         // same as `xArr.push(parseAsNumber(tabularData[i].x));` but here I can use the string from the `"x": { "field": "whatever-value" }` instead of hard-coded ".x"
@@ -173,12 +160,6 @@ export type AssociatedValuesScale = AssociatedValues & {
     scaleMin: number;
     scaleMax: number;
 };
-//export type ViewConfig = {
-//    scale?: number | AssociatedValuesScale;
-//    color?: string | AssociatedValuesColor;
-//    mark?: MarkTypes;
-//    links?: boolean;
-//};
 
 /**
  * Returns something we can feed to chromospace view config
@@ -255,8 +236,6 @@ function handleSizeField(arrowIpc: Uint8Array, size?: ChannelValue | Size | numb
             assert(size.field, "size.field is required for quantitative size");
             const values = fetchValuesFromColumn(size.field, arrowIpc);
             const [rangeMax, rangeMin] = getRange(size);
-            console.warn(`size.field = ${size.field}`);
-            console.warn(values);
             assert(values, "size.field must be a valid field in the data table");
             assert(values.every(it => typeof it === 'number'), "size.field must be a numeric field");
             const [minVal, maxVal] = findMinAndMaxOfColumn(values);
@@ -281,13 +260,9 @@ export function createSpatialTrack(
     dataFetcher: CsvDataFetcherClass,
     container: HTMLDivElement
 ) {
-    console.warn('SPEC OPTIONS', options);
     dataFetcher.tilesetInfo(info => {
-        console.warn('info', info);
         dataFetcher.fetchTilesDebounced(
             async t => {
-                console.warn('CSV tiles: ~~~~~~~~');
-                console.warn(t);
                 //@ts-expect-error TODO: need to take a better look at what happens here
                 if (!t['0.0'].tileWidth) {
                     // This information is needed to create tabular data (i.e., running getTabularData())
@@ -300,7 +275,6 @@ export function createSpatialTrack(
                     console.error('could not tranform into Apache Arrow');
                     return;
                 }
-                console.warn('spec', options.spec);
                 let chromatinScene = uchi.initScene();
                 let tracks: Partial<SingleTrack>[] = [];
                 if ('_overlay' in options.spec) {
@@ -310,7 +284,6 @@ export function createSpatialTrack(
                 }
                 // const tracks = options.spec._overlay ?? [options.spec];
                 for (const ov of tracks) {
-                    console.warn('ov', ov);
 
                     const color = handleColorField(ipcBuffer, ov.color);
                     const scale = handleSizeField(ipcBuffer, ov.size);
