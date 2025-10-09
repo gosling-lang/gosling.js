@@ -152,6 +152,10 @@ git push origin main --tags
 After updating the `version` in `package.json`:
 
 ```
+# Commit and push the change
+git commit -m "2.0.0-alpha.1"
+git push
+
 # Add a pre-release tag to the commit
 git tag v2.0.0-alpha.1 [commit hash]
 

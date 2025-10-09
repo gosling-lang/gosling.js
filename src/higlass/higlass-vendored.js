@@ -6053,7 +6053,6 @@ class HeatmapTiledPixiTrack extends TiledPixiTrack {
 
         canvas.width = this.binsPerTile();
         canvas.height = this.binsPerTile();
-
         const ctx = canvas.getContext('2d');
 
         ctx.fillStyle = 'transparent';

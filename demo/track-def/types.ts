@@ -67,9 +67,10 @@ export type ProcessedSpatialTrack = ProcessedTrackBase & {
     };
 };
 
-export type ProcessedDummyTrack = ProcessedTrackBase & {
-    type?: string;
+export type ProcessedDummyTrack = (ProcessedLinearTrack | ProcessedCircularTrack) & {
+    type: 'dummy-track';
     style?: DummyTrackStyle;
+    x?: X;
 };
 
 /** Tracks in the _overlay */

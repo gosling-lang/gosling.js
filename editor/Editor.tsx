@@ -1208,7 +1208,7 @@ function Editor(props: RouteComponentProps) {
                                         <GoslingComponent
                                             ref={gosRef}
                                             spec={goslingSpec}
-                                            theme={'light'}
+                                            theme={{ base: 'light' }}
                                             padding={50}
                                             visualized={() => {
                                                 const tracksAndViews = gosRef.current?.api.getTracksAndViews();

@@ -229,14 +229,6 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                 }
             }
 
-            /**
-             * Dummy track can't have a circular layout
-             */
-            if (track.layout == 'circular' && IsDummyTrack(track)) {
-                track._invalidTrack = true;
-                return;
-            }
-
             // Override styles
             track.style = getStyleOverridden(spec.style, track.style);
             if (IsOverlaidTrack(track)) {
@@ -316,7 +308,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
 
             // This means this track is positioned on the top of a view
             if (
-                i === 0 ||
+                (i === 0 && !IsDummyTrack(track)) ||
                 (i !== 0 &&
                     tracks.slice(0, i).filter(d => !d.overlayOnPreviousTrack).length === 1 &&
                     track.overlayOnPreviousTrack === true)
@@ -344,6 +336,11 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                         //     isNone = true;
                         // }
                     });
+                }
+            } else if (i === 0 && IsDummyTrack(track)) {
+                const nextNonDummyTrack = array.slice(i).find(d => !IsDummyTrack(d));
+                if (nextNonDummyTrack && 'x' in nextNonDummyTrack) {
+                    track.x = { ...nextNonDummyTrack.x, axis: 'top' };
                 }
             }
 

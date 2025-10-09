@@ -104,9 +104,9 @@ export function createApiV2(
         return createEmptyApi();
     }
 
-    const { tracksAndViews, theme, pixiManager, plots } = compileResult;
+    const { theme, pixiManager, plots } = compileResult;
     const getTracksAndViews = () => {
-        return [...tracksAndViews];
+        return [...compileResult.tracksAndViews];
     };
     const getTracks = () => {
         return [...getTracksAndViews().filter(d => d.type === 'track')] as TrackApiData[];

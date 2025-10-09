@@ -70,10 +70,8 @@ export type TrackDefs = {
  */
 export function createTrackDefs(trackInfos: TrackInfo[], theme: Required<CompleteThemeDeep>): TrackDefs[] {
     const trackDefs: TrackDefs[] = [];
-    console.warn('trackinfos', trackInfos);
     trackInfos.forEach(trackInfo => {
         const { track, boundingBox } = trackInfo;
-
         if (track.mark === '_header') {
             // Header marks contain both the title and subtitle
             const textTrackDefs = proccessTextHeader(track, boundingBox, theme);
@@ -84,7 +82,7 @@ export function createTrackDefs(trackInfos: TrackInfo[], theme: Required<Complet
             trackDefs.push(...heatmapTrackDefs);
         } else if (IsDummyTrack(track)) {
             // We have a dummy track
-            const dummyTrackDefs = processDummyTrack(track, boundingBox);
+            const dummyTrackDefs = processDummyTrack(track, boundingBox, theme);
             trackDefs.push(...dummyTrackDefs);
         } else if ('layout' in track && track.layout === 'spatial') {
             // We have a 3D track

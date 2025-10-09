@@ -22,7 +22,7 @@ export function getAxisTrackDef(
     track: ProcessedTrack,
     boundingBox: { x: number; y: number; width: number; height: number },
     theme: Required<CompleteThemeDeep>
-): [trackBbox: { x: number; y: number; width: number; height: number }, TrackDef<AxisTrackOptions>[] | undefined] {
+): [{ x: number; y: number; width: number; height: number }, TrackDef<AxisTrackOptions>[] | undefined] {
     const { xAxisPosition, yAxisPosition } = getAxisPositions(track);
     // This is a copy of the original bounding box. It will be modified if an axis is added
     const trackBbox = { ...boundingBox };
@@ -213,10 +213,17 @@ function getAxisPositions(track: ProcessedTrack): {
     xAxisPosition: AxisPosition | undefined;
     yAxisPosition: AxisPosition | undefined;
 } {
-    if (IsTemplateTrack(track) || IsDummyTrack(track)) {
+    if (IsTemplateTrack(track)) {
         return { xAxisPosition: undefined, yAxisPosition: undefined };
     }
-
+    if (IsDummyTrack(track)) {
+        if (track.x?.axis) {
+            // TODO: Do we need to show y axis in dummy tracks?
+            return { xAxisPosition: track.x.axis, yAxisPosition: undefined };
+        } else {
+            return { xAxisPosition: undefined, yAxisPosition: undefined };
+        }
+    }
     const resolvedSpecs = resolveSuperposedTracks(track as Track);
     const firstResolvedSpec = resolvedSpecs[0];
 
