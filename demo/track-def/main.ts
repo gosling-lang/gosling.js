@@ -95,7 +95,7 @@ export function createTrackDefs(trackInfos: TrackInfo[], theme: Required<Complet
                 options: {
                     // @ts-expect-error At this point, the spec is processed
                     spec: track,
-                    processedSpec: track,
+                    processedSpec: track
                 }
             };
             trackDefs.push(trackDef);

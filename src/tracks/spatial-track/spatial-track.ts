@@ -100,9 +100,9 @@ function fetchValuesFromColumn(columnName: string, arrowIpc: Uint8Array): number
     const t = column.type;
     //~ got the hint for checking types of columns from:
     // https://github.com/manzt/quak/blob/d89ccecfc7bb18563cea8c3e62c005c059918406/lib/utils/formatting.ts#L27
-    if ((t.typeId === Type.Int) || (t.typeId === Type.Float)) {
+    if (t.typeId === Type.Int || t.typeId === Type.Float) {
         return column.toArray() as number[];
-    } else if ((t.typeId === Type.Dictionary) || (t.typeId === Type.Utf8)) {
+    } else if (t.typeId === Type.Dictionary || t.typeId === Type.Utf8) {
         return column.toArray() as string[];
     }
 
@@ -176,14 +176,15 @@ function handleColorField(arrowIpc: Uint8Array, color?: ChannelValue | Color | s
             color.type = 'nominal'; // assume 'nominal' by default?
         }
         if (color.type === 'nominal') {
-            assert(color.field, "color.field is required for nominal color");
+            assert(color.field, 'color.field is required for nominal color');
             const values = fetchValuesFromColumn(color.field, arrowIpc) as string[]; //~TODO: forcing to string[] not good
             const colScale = color.range ?? randomColors(50); //~ just some big number
 
             assert(
-                typeof colScale === "string" ||
-                (Array.isArray(colScale) && colScale.every(it => typeof it === 'string'))
-                , "color.range must be a string or an array of strings");
+                typeof colScale === 'string' ||
+                    (Array.isArray(colScale) && colScale.every(it => typeof it === 'string')),
+                'color.range must be a string or an array of strings'
+            );
 
             const colorConfig = {
                 values: [...values],
@@ -193,16 +194,20 @@ function handleColorField(arrowIpc: Uint8Array, color?: ChannelValue | Color | s
             };
             return colorConfig;
         } else if (color.type === 'quantitative') {
-            assert(color.field, "color.field is required for quantitative color");
+            assert(color.field, 'color.field is required for quantitative color');
             const values = fetchValuesFromColumn(color.field, arrowIpc);
-            assert(values, "color.field must be a valid field in the data table");
-            assert(values.every(it => typeof it === 'number'), "color.field must be a numeric field");
+            assert(values, 'color.field must be a valid field in the data table');
+            assert(
+                values.every(it => typeof it === 'number'),
+                'color.field must be a numeric field'
+            );
             const [minVal, maxVal] = color.domain ? [color.domain[0], color.domain[1]] : findMinAndMaxOfColumn(values);
             const colScale = color.range ?? 'viridis';
             assert(
-                typeof colScale === "string" ||
-                (Array.isArray(colScale) && colScale.every(it => typeof it === 'string'))
-                , "color.range must be a string or an array of strings");
+                typeof colScale === 'string' ||
+                    (Array.isArray(colScale) && colScale.every(it => typeof it === 'string')),
+                'color.range must be a string or an array of strings'
+            );
             const colorConfig = {
                 values: [...values],
                 min: Number(minVal),
@@ -233,11 +238,14 @@ function handleSizeField(arrowIpc: Uint8Array, size?: ChannelValue | Size | numb
         if (size.type === 'nominal') {
             console.warn('not implemented!');
         } else if (size.type === 'quantitative') {
-            assert(size.field, "size.field is required for quantitative size");
+            assert(size.field, 'size.field is required for quantitative size');
             const values = fetchValuesFromColumn(size.field, arrowIpc);
             const [rangeMax, rangeMin] = getRange(size);
-            assert(values, "size.field must be a valid field in the data table");
-            assert(values.every(it => typeof it === 'number'), "size.field must be a numeric field");
+            assert(values, 'size.field must be a valid field in the data table');
+            assert(
+                values.every(it => typeof it === 'number'),
+                'size.field must be a numeric field'
+            );
             const [minVal, maxVal] = findMinAndMaxOfColumn(values);
             const sizeConfig = {
                 values: [...values],
@@ -284,14 +292,16 @@ export function createSpatialTrack(
                 }
                 // const tracks = options.spec._overlay ?? [options.spec];
                 for (const ov of tracks) {
-
                     const color = handleColorField(ipcBuffer, ov.color);
                     const scale = handleSizeField(ipcBuffer, ov.size);
                     //~ An undefined mark would get handled by uchimata itself, but since we're doing the assert, we can define 'sphere' be the default already here
                     if (!ov.mark) {
                         ov.mark = 'sphere';
                     }
-                    assert(ov.mark === "sphere" || ov.mark === "octahedron" || ov.mark === "box", "Unsupported mark type for spatial view");
+                    assert(
+                        ov.mark === 'sphere' || ov.mark === 'octahedron' || ov.mark === 'box',
+                        'Unsupported mark type for spatial view'
+                    );
                     const viewConfig = {
                         scale: scale,
                         color: color,

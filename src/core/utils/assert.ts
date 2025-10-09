@@ -14,5 +14,5 @@
  * @see {@link https://github.com/manzt/manzt/blob/f7faee/utils/assert.js}
  */
 export function assert(expression: unknown, msg: string | undefined = ''): asserts expression {
-	if (!expression) throw new Error(msg);
+    if (!expression) throw new Error(msg);
 }

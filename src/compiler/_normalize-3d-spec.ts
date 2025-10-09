@@ -1,5 +1,4 @@
 import type { JoinTransform, OverlaidTrack, SingleTrack } from '@gosling-lang/gosling-schema';
-import { assert } from "../core/utils/assert";
 
 /**
  * Convert a 3D-specific spec into a generalized spec (i.e., moving 3D model data to the `join` transform).
