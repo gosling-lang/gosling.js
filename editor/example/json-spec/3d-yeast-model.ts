@@ -119,7 +119,7 @@ export const EX_SPEC_3D_YEAST_MODEL: GoslingSpec = {
                     layout: 'circular',
                     centerRadius: 0.5,
                     spacing: 1,
-                    tracks: [{ ...chrTrack }, { title: 'Cicular Layout', ...base }]
+                    tracks: [{ ...chrTrack }, { title: 'Cicular Layout', ...base, locus: undefined, x: { field: 'position', type: 'genomic' } }]
                 }
             ]
         }
