@@ -30,6 +30,12 @@ import TEMPLATE from './thumbnails/TEMPLATE.png';
 import VISUAL_ENCODING from './thumbnails/VISUAL_ENCODING.png';
 import VISUAL_ENCODING_CIRCULAR from './thumbnails/VISUAL_ENCODING_CIRCULAR.png';
 import ISLANDVIEWER from './thumbnails/ISLANDVIEWER.png';
+import SPATIAL_MINIMAL from './thumbnails/SPATIAL_MINIMAL.png';
+import SPATIAL_YEAST from './thumbnails/SPATIAL_YEAST.png';
+import SPATIAL_COLOR from './thumbnails/SPATIAL_COLOR.png';
+import SPATIAL_DENSITY from './thumbnails/SPATIAL_DENSITY.png';
+import SPATIAL_MULTIPLE_TRACKS from './thumbnails/SPATIAL_MULTIPLE_TRACKS.png';
+import SPATIAL_TAN from './thumbnails/SPATIAL_TAN.png';
 
 export const THUMBNAILS = {
     ALIGNMENT,
@@ -63,5 +69,11 @@ export const THUMBNAILS = {
     TEMPLATE,
     VISUAL_ENCODING,
     VISUAL_ENCODING_CIRCULAR,
-    ISLANDVIEWER
+    ISLANDVIEWER,
+    SPATIAL_MINIMAL,
+    SPATIAL_YEAST,
+    SPATIAL_COLOR,
+    SPATIAL_DENSITY,
+    SPATIAL_MULTIPLE_TRACKS,
+    SPATIAL_TAN
 };

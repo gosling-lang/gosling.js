@@ -80,12 +80,22 @@ export type ResponsiveSpecOfMultipleViews = {
     }[];
 };
 
-export type Layout = 'linear' | 'circular';
+export type Layout = 'linear' | 'circular' | 'spatial' | LayoutSpatial;
+export type LayoutSpatial = {
+    type: 'spatial';
+    model: {
+        type: 'csv';
+        url: string;
+        xyz: [string, string, string];
+        chromosome: string;
+        position: string;
+    };
+};
 export type Orientation = 'horizontal' | 'vertical';
 
 /** Custom chromosome sizes, e.g., [["foo", 1000], ["bar", 300], ["baz", 240]] */
 export type ChromSizes = [string, number][];
-export type Assembly = 'hg38' | 'hg19' | 'hg18' | 'hg17' | 'hg16' | 'mm10' | 'mm9' | 'unknown' | ChromSizes;
+export type Assembly = 'hg38' | 'hg19' | 'hg18' | 'hg17' | 'hg16' | 'mm10' | 'mm9' | 'sacCer3' | 'unknown' | ChromSizes;
 export type ZoomLimits = [number | null, number | null];
 
 export interface CommonViewDef {
@@ -263,7 +273,12 @@ export type Mark =
     | 'triangleBottom'
     | 'brush'
     // The _header mark is used internally for text tracks
-    | '_header';
+    | '_header'
+    // Spatial track
+    | 'sphere'
+    | 'box'
+    | 'octahedron';
+//~ TODO: (spatial) add more 3D mark options
 
 /* ----------------------------- API & MOUSE EVENTS ----------------------------- */
 interface CommonEventData {
@@ -436,6 +451,17 @@ interface SingleTrackBase extends CommonTrackDef {
     // Mark
     mark: Mark;
 
+    //~ For spatial layouts
+    //  The reason to have this in the SingleTrackBase instead of making a different (SpatialTrack) is that a spatial track
+    //  should still be a "single track". Not specializing makes it easier for flowing between the different procedures of spec transformations.
+    spatial?: {
+        x: string;
+        y: string;
+        z: string;
+        chr: string;
+        coord: string;
+    };
+
     // Resolving overlaps
     displacement?: Displacement;
 
@@ -460,6 +486,9 @@ export interface Encoding {
     y1e?: Y | ChannelValue;
 
     row?: Row | ChannelValue;
+
+    // For 3D, conceptually identical to `x` in the linear layout
+    locus?: X | ChannelValue;
 
     color?: Color | ChannelValue;
     size?: Size | ChannelValue;
@@ -1259,6 +1288,7 @@ export interface MatrixData {
 
 export type DataTransform =
     | FilterTransform
+    | JoinTransform
     | StrConcatTransform
     | StrReplaceTransform
     | LogTransform
@@ -1310,6 +1340,26 @@ export interface ComparisonFilter extends CommonFilterTransform {
     operation: LogicalOperation;
 
     not: undefined; // Not used
+}
+
+/**
+ * Join new data to the existing data.
+ * The data will be combined based on the overlap of genomic positions.
+ * The data will join _right_ to the new data (e.g., BigWig --> 3D Model).
+ */
+export interface JoinTransform {
+    type: 'join';
+    /** The existing data to be updated, e.g., BigWig */
+    to: {
+        startField: string;
+        endField?: string;
+    };
+    /** The new data to be combined, e.g., 3D Model */
+    from: {
+        url: string;
+        chromosomeField: string;
+        genomicField: string;
+    };
 }
 
 export type LogBase = number | 'e';

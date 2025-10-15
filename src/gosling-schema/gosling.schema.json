@@ -43,6 +43,10 @@
           "type": "string"
         },
         {
+          "const": "sacCer3",
+          "type": "string"
+        },
+        {
           "const": "unknown",
           "type": "string"
         },
@@ -563,6 +567,9 @@
       "anyOf": [
         {
           "$ref": "#/definitions/FilterTransform"
+        },
+        {
+          "$ref": "#/definitions/JoinTransform"
         },
         {
           "$ref": "#/definitions/StrConcatTransform"
@@ -1156,6 +1163,16 @@
               "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
               "type": "string"
             },
+            "locus": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/X"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
+            },
             "mark": {
               "$ref": "#/definitions/Mark"
             },
@@ -1309,6 +1326,16 @@
                         "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
                         "type": "string"
                       },
+                      "locus": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/definitions/X"
+                          },
+                          {
+                            "$ref": "#/definitions/ChannelValue"
+                          }
+                        ]
+                      },
                       "mark": {
                         "$ref": "#/definitions/Mark"
                       },
@@ -1366,6 +1393,34 @@
                       "spacing": {
                         "description": "The size of the gap (1) between tracks, (2) between views, and (3) of the origin of circular tracks. The effect of this property depends on where on the spec you specify the `spacing`.\n\nIn a linear layout, this value is used in pixels, while in a circular layout, this value is used relative to the height of the tracks or views.",
                         "type": "number"
+                      },
+                      "spatial": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "chr": {
+                            "type": "string"
+                          },
+                          "coord": {
+                            "type": "string"
+                          },
+                          "x": {
+                            "type": "string"
+                          },
+                          "y": {
+                            "type": "string"
+                          },
+                          "z": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y",
+                          "z",
+                          "chr",
+                          "coord"
+                        ],
+                        "type": "object"
                       },
                       "startAngle": {
                         "description": "Specify the start angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
@@ -1616,6 +1671,34 @@
             "spacing": {
               "description": "The size of the gap (1) between tracks, (2) between views, and (3) of the origin of circular tracks. The effect of this property depends on where on the spec you specify the `spacing`.\n\nIn a linear layout, this value is used in pixels, while in a circular layout, this value is used relative to the height of the tracks or views.",
               "type": "number"
+            },
+            "spatial": {
+              "additionalProperties": false,
+              "properties": {
+                "chr": {
+                  "type": "string"
+                },
+                "coord": {
+                  "type": "string"
+                },
+                "x": {
+                  "type": "string"
+                },
+                "y": {
+                  "type": "string"
+                },
+                "z": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "z",
+                "chr",
+                "coord"
+              ],
+              "type": "object"
             },
             "startAngle": {
               "description": "Specify the start angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
@@ -1926,6 +2009,16 @@
               "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
               "type": "string"
             },
+            "locus": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/X"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
+            },
             "mark": {
               "$ref": "#/definitions/Mark"
             },
@@ -2079,6 +2172,16 @@
                         "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
                         "type": "string"
                       },
+                      "locus": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/definitions/X"
+                          },
+                          {
+                            "$ref": "#/definitions/ChannelValue"
+                          }
+                        ]
+                      },
                       "mark": {
                         "$ref": "#/definitions/Mark"
                       },
@@ -2136,6 +2239,34 @@
                       "spacing": {
                         "description": "The size of the gap (1) between tracks, (2) between views, and (3) of the origin of circular tracks. The effect of this property depends on where on the spec you specify the `spacing`.\n\nIn a linear layout, this value is used in pixels, while in a circular layout, this value is used relative to the height of the tracks or views.",
                         "type": "number"
+                      },
+                      "spatial": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "chr": {
+                            "type": "string"
+                          },
+                          "coord": {
+                            "type": "string"
+                          },
+                          "x": {
+                            "type": "string"
+                          },
+                          "y": {
+                            "type": "string"
+                          },
+                          "z": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y",
+                          "z",
+                          "chr",
+                          "coord"
+                        ],
+                        "type": "object"
                       },
                       "startAngle": {
                         "description": "Specify the start angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
@@ -2386,6 +2517,34 @@
             "spacing": {
               "description": "The size of the gap (1) between tracks, (2) between views, and (3) of the origin of circular tracks. The effect of this property depends on where on the spec you specify the `spacing`.\n\nIn a linear layout, this value is used in pixels, while in a circular layout, this value is used relative to the height of the tracks or views.",
               "type": "number"
+            },
+            "spatial": {
+              "additionalProperties": false,
+              "properties": {
+                "chr": {
+                  "type": "string"
+                },
+                "coord": {
+                  "type": "string"
+                },
+                "x": {
+                  "type": "string"
+                },
+                "y": {
+                  "type": "string"
+                },
+                "z": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "z",
+                "chr",
+                "coord"
+              ],
+              "type": "object"
             },
             "startAngle": {
               "description": "Specify the start angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
@@ -2753,6 +2912,16 @@
                         "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
                         "type": "string"
                       },
+                      "locus": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/definitions/X"
+                          },
+                          {
+                            "$ref": "#/definitions/ChannelValue"
+                          }
+                        ]
+                      },
                       "mark": {
                         "$ref": "#/definitions/Mark"
                       },
@@ -2810,6 +2979,34 @@
                       "spacing": {
                         "description": "The size of the gap (1) between tracks, (2) between views, and (3) of the origin of circular tracks. The effect of this property depends on where on the spec you specify the `spacing`.\n\nIn a linear layout, this value is used in pixels, while in a circular layout, this value is used relative to the height of the tracks or views.",
                         "type": "number"
+                      },
+                      "spatial": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "chr": {
+                            "type": "string"
+                          },
+                          "coord": {
+                            "type": "string"
+                          },
+                          "x": {
+                            "type": "string"
+                          },
+                          "y": {
+                            "type": "string"
+                          },
+                          "z": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y",
+                          "z",
+                          "chr",
+                          "coord"
+                        ],
+                        "type": "object"
                       },
                       "startAngle": {
                         "description": "Specify the start angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
@@ -3406,6 +3603,59 @@
       ],
       "type": "object"
     },
+    "JoinTransform": {
+      "additionalProperties": false,
+      "description": "Join new data to the existing data. The data will be combined based on the overlap of genomic positions. The data will join _right_ to the new data (e.g., BigWig --> 3D Model).",
+      "properties": {
+        "from": {
+          "additionalProperties": false,
+          "description": "The new data to be combined, e.g., 3D Model",
+          "properties": {
+            "chromosomeField": {
+              "type": "string"
+            },
+            "genomicField": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "url",
+            "chromosomeField",
+            "genomicField"
+          ],
+          "type": "object"
+        },
+        "to": {
+          "additionalProperties": false,
+          "description": "The existing data to be updated, e.g., BigWig",
+          "properties": {
+            "endField": {
+              "type": "string"
+            },
+            "startField": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "startField"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "const": "join",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "to",
+        "from"
+      ],
+      "type": "object"
+    },
     "JsonData": {
       "additionalProperties": false,
       "description": "The JSON data format allows users to include data directly in the Gosling's JSON specification.",
@@ -3502,11 +3752,71 @@
       "type": "object"
     },
     "Layout": {
-      "enum": [
-        "linear",
-        "circular"
+      "anyOf": [
+        {
+          "const": "linear",
+          "type": "string"
+        },
+        {
+          "const": "circular",
+          "type": "string"
+        },
+        {
+          "const": "spatial",
+          "type": "string"
+        },
+        {
+          "$ref": "#/definitions/LayoutSpatial"
+        }
+      ]
+    },
+    "LayoutSpatial": {
+      "additionalProperties": false,
+      "properties": {
+        "model": {
+          "additionalProperties": false,
+          "properties": {
+            "chromosome": {
+              "type": "string"
+            },
+            "position": {
+              "type": "string"
+            },
+            "type": {
+              "const": "csv",
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            },
+            "xyz": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 3,
+              "minItems": 3,
+              "type": "array"
+            }
+          },
+          "required": [
+            "type",
+            "url",
+            "xyz",
+            "chromosome",
+            "position"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "const": "spatial",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "model"
       ],
-      "type": "string"
+      "type": "object"
     },
     "LogBase": {
       "anyOf": [
@@ -3576,7 +3886,10 @@
         "triangleRight",
         "triangleBottom",
         "brush",
-        "_header"
+        "_header",
+        "sphere",
+        "box",
+        "octahedron"
       ],
       "type": "string"
     },
@@ -3987,6 +4300,16 @@
                 "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
                 "type": "string"
               },
+              "locus": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/X"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
               "mark": {
                 "$ref": "#/definitions/Mark"
               },
@@ -4044,6 +4367,34 @@
               "spacing": {
                 "description": "The size of the gap (1) between tracks, (2) between views, and (3) of the origin of circular tracks. The effect of this property depends on where on the spec you specify the `spacing`.\n\nIn a linear layout, this value is used in pixels, while in a circular layout, this value is used relative to the height of the tracks or views.",
                 "type": "number"
+              },
+              "spatial": {
+                "additionalProperties": false,
+                "properties": {
+                  "chr": {
+                    "type": "string"
+                  },
+                  "coord": {
+                    "type": "string"
+                  },
+                  "x": {
+                    "type": "string"
+                  },
+                  "y": {
+                    "type": "string"
+                  },
+                  "z": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "x",
+                  "y",
+                  "z",
+                  "chr",
+                  "coord"
+                ],
+                "type": "object"
               },
               "startAngle": {
                 "description": "Specify the start angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
@@ -4314,6 +4665,16 @@
           "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
           "type": "string"
         },
+        "locus": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
         "mark": {
           "$ref": "#/definitions/Mark"
         },
@@ -4371,6 +4732,34 @@
         "spacing": {
           "description": "The size of the gap (1) between tracks, (2) between views, and (3) of the origin of circular tracks. The effect of this property depends on where on the spec you specify the `spacing`.\n\nIn a linear layout, this value is used in pixels, while in a circular layout, this value is used relative to the height of the tracks or views.",
           "type": "number"
+        },
+        "spatial": {
+          "additionalProperties": false,
+          "properties": {
+            "chr": {
+              "type": "string"
+            },
+            "coord": {
+              "type": "string"
+            },
+            "x": {
+              "type": "string"
+            },
+            "y": {
+              "type": "string"
+            },
+            "z": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "x",
+            "y",
+            "z",
+            "chr",
+            "coord"
+          ],
+          "type": "object"
         },
         "startAngle": {
           "description": "Specify the start angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
@@ -4671,6 +5060,16 @@
           "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
           "type": "string"
         },
+        "locus": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
         "mark": {
           "$ref": "#/definitions/Mark"
         },
@@ -4728,6 +5127,34 @@
         "spacing": {
           "description": "The size of the gap (1) between tracks, (2) between views, and (3) of the origin of circular tracks. The effect of this property depends on where on the spec you specify the `spacing`.\n\nIn a linear layout, this value is used in pixels, while in a circular layout, this value is used relative to the height of the tracks or views.",
           "type": "number"
+        },
+        "spatial": {
+          "additionalProperties": false,
+          "properties": {
+            "chr": {
+              "type": "string"
+            },
+            "coord": {
+              "type": "string"
+            },
+            "x": {
+              "type": "string"
+            },
+            "y": {
+              "type": "string"
+            },
+            "z": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "x",
+            "y",
+            "z",
+            "chr",
+            "coord"
+          ],
+          "type": "object"
         },
         "startAngle": {
           "description": "Specify the start angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
@@ -5038,6 +5465,16 @@
                 "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
                 "type": "string"
               },
+              "locus": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/X"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
               "mark": {
                 "$ref": "#/definitions/Mark"
               },
@@ -5095,6 +5532,34 @@
               "spacing": {
                 "description": "The size of the gap (1) between tracks, (2) between views, and (3) of the origin of circular tracks. The effect of this property depends on where on the spec you specify the `spacing`.\n\nIn a linear layout, this value is used in pixels, while in a circular layout, this value is used relative to the height of the tracks or views.",
                 "type": "number"
+              },
+              "spatial": {
+                "additionalProperties": false,
+                "properties": {
+                  "chr": {
+                    "type": "string"
+                  },
+                  "coord": {
+                    "type": "string"
+                  },
+                  "x": {
+                    "type": "string"
+                  },
+                  "y": {
+                    "type": "string"
+                  },
+                  "z": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "x",
+                  "y",
+                  "z",
+                  "chr",
+                  "coord"
+                ],
+                "type": "object"
               },
               "startAngle": {
                 "description": "Specify the start angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
@@ -5391,6 +5856,16 @@
           "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
           "type": "string"
         },
+        "locus": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
         "mark": {
           "$ref": "#/definitions/Mark"
         },
@@ -5448,6 +5923,34 @@
         "spacing": {
           "description": "The size of the gap (1) between tracks, (2) between views, and (3) of the origin of circular tracks. The effect of this property depends on where on the spec you specify the `spacing`.\n\nIn a linear layout, this value is used in pixels, while in a circular layout, this value is used relative to the height of the tracks or views.",
           "type": "number"
+        },
+        "spatial": {
+          "additionalProperties": false,
+          "properties": {
+            "chr": {
+              "type": "string"
+            },
+            "coord": {
+              "type": "string"
+            },
+            "x": {
+              "type": "string"
+            },
+            "y": {
+              "type": "string"
+            },
+            "z": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "x",
+            "y",
+            "z",
+            "chr",
+            "coord"
+          ],
+          "type": "object"
         },
         "startAngle": {
           "description": "Specify the start angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
@@ -5931,6 +6434,16 @@
           "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
           "type": "string"
         },
+        "locus": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
         "mark": {
           "$ref": "#/definitions/Mark"
         },
@@ -5988,6 +6501,34 @@
         "spacing": {
           "description": "The size of the gap (1) between tracks, (2) between views, and (3) of the origin of circular tracks. The effect of this property depends on where on the spec you specify the `spacing`.\n\nIn a linear layout, this value is used in pixels, while in a circular layout, this value is used relative to the height of the tracks or views.",
           "type": "number"
+        },
+        "spatial": {
+          "additionalProperties": false,
+          "properties": {
+            "chr": {
+              "type": "string"
+            },
+            "coord": {
+              "type": "string"
+            },
+            "x": {
+              "type": "string"
+            },
+            "y": {
+              "type": "string"
+            },
+            "z": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "x",
+            "y",
+            "z",
+            "chr",
+            "coord"
+          ],
+          "type": "object"
         },
         "startAngle": {
           "description": "Specify the start angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
@@ -6291,6 +6832,16 @@
               "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
               "type": "string"
             },
+            "locus": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/X"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
+            },
             "mark": {
               "$ref": "#/definitions/Mark"
             },
@@ -6440,6 +6991,16 @@
                         "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
                         "type": "string"
                       },
+                      "locus": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/definitions/X"
+                          },
+                          {
+                            "$ref": "#/definitions/ChannelValue"
+                          }
+                        ]
+                      },
                       "mark": {
                         "$ref": "#/definitions/Mark"
                       },
@@ -6497,6 +7058,34 @@
                       "spacing": {
                         "description": "The size of the gap (1) between tracks, (2) between views, and (3) of the origin of circular tracks. The effect of this property depends on where on the spec you specify the `spacing`.\n\nIn a linear layout, this value is used in pixels, while in a circular layout, this value is used relative to the height of the tracks or views.",
                         "type": "number"
+                      },
+                      "spatial": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "chr": {
+                            "type": "string"
+                          },
+                          "coord": {
+                            "type": "string"
+                          },
+                          "x": {
+                            "type": "string"
+                          },
+                          "y": {
+                            "type": "string"
+                          },
+                          "z": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y",
+                          "z",
+                          "chr",
+                          "coord"
+                        ],
+                        "type": "object"
                       },
                       "startAngle": {
                         "description": "Specify the start angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
@@ -6747,6 +7336,34 @@
             "spacing": {
               "description": "The size of the gap (1) between tracks, (2) between views, and (3) of the origin of circular tracks. The effect of this property depends on where on the spec you specify the `spacing`.\n\nIn a linear layout, this value is used in pixels, while in a circular layout, this value is used relative to the height of the tracks or views.",
               "type": "number"
+            },
+            "spatial": {
+              "additionalProperties": false,
+              "properties": {
+                "chr": {
+                  "type": "string"
+                },
+                "coord": {
+                  "type": "string"
+                },
+                "x": {
+                  "type": "string"
+                },
+                "y": {
+                  "type": "string"
+                },
+                "z": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "z",
+                "chr",
+                "coord"
+              ],
+              "type": "object"
             },
             "startAngle": {
               "description": "Specify the start angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
@@ -7054,6 +7671,16 @@
               "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
               "type": "string"
             },
+            "locus": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/X"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
+            },
             "mark": {
               "$ref": "#/definitions/Mark"
             },
@@ -7203,6 +7830,16 @@
                         "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
                         "type": "string"
                       },
+                      "locus": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/definitions/X"
+                          },
+                          {
+                            "$ref": "#/definitions/ChannelValue"
+                          }
+                        ]
+                      },
                       "mark": {
                         "$ref": "#/definitions/Mark"
                       },
@@ -7260,6 +7897,34 @@
                       "spacing": {
                         "description": "The size of the gap (1) between tracks, (2) between views, and (3) of the origin of circular tracks. The effect of this property depends on where on the spec you specify the `spacing`.\n\nIn a linear layout, this value is used in pixels, while in a circular layout, this value is used relative to the height of the tracks or views.",
                         "type": "number"
+                      },
+                      "spatial": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "chr": {
+                            "type": "string"
+                          },
+                          "coord": {
+                            "type": "string"
+                          },
+                          "x": {
+                            "type": "string"
+                          },
+                          "y": {
+                            "type": "string"
+                          },
+                          "z": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y",
+                          "z",
+                          "chr",
+                          "coord"
+                        ],
+                        "type": "object"
                       },
                       "startAngle": {
                         "description": "Specify the start angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
@@ -7510,6 +8175,34 @@
             "spacing": {
               "description": "The size of the gap (1) between tracks, (2) between views, and (3) of the origin of circular tracks. The effect of this property depends on where on the spec you specify the `spacing`.\n\nIn a linear layout, this value is used in pixels, while in a circular layout, this value is used relative to the height of the tracks or views.",
               "type": "number"
+            },
+            "spatial": {
+              "additionalProperties": false,
+              "properties": {
+                "chr": {
+                  "type": "string"
+                },
+                "coord": {
+                  "type": "string"
+                },
+                "x": {
+                  "type": "string"
+                },
+                "y": {
+                  "type": "string"
+                },
+                "z": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "z",
+                "chr",
+                "coord"
+              ],
+              "type": "object"
             },
             "startAngle": {
               "description": "Specify the start angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
@@ -7870,6 +8563,16 @@
                         "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
                         "type": "string"
                       },
+                      "locus": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/definitions/X"
+                          },
+                          {
+                            "$ref": "#/definitions/ChannelValue"
+                          }
+                        ]
+                      },
                       "mark": {
                         "$ref": "#/definitions/Mark"
                       },
@@ -7927,6 +8630,34 @@
                       "spacing": {
                         "description": "The size of the gap (1) between tracks, (2) between views, and (3) of the origin of circular tracks. The effect of this property depends on where on the spec you specify the `spacing`.\n\nIn a linear layout, this value is used in pixels, while in a circular layout, this value is used relative to the height of the tracks or views.",
                         "type": "number"
+                      },
+                      "spatial": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "chr": {
+                            "type": "string"
+                          },
+                          "coord": {
+                            "type": "string"
+                          },
+                          "x": {
+                            "type": "string"
+                          },
+                          "y": {
+                            "type": "string"
+                          },
+                          "z": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y",
+                          "z",
+                          "chr",
+                          "coord"
+                        ],
+                        "type": "object"
                       },
                       "startAngle": {
                         "description": "Specify the start angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",

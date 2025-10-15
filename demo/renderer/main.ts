@@ -18,6 +18,8 @@ import type { UrlToFetchOptions } from 'src/compiler/compile';
 import type { Tile } from '@higlass/services';
 import type { DataFetcher } from '@higlass/datafetcher';
 import type { OverlaidTrack, SingleTrack } from '@gosling-lang/gosling-schema';
+import { createSpatialTrack, type SpatialTrackOptions } from '../../src/tracks/spatial-track/spatial-track';
+import type { CsvDataFetcherClass } from 'src/data-fetchers/csv/csv-data-fetcher';
 
 /**
  * Takes a list of track definitions and linkedEncodings and renders them
@@ -145,6 +147,23 @@ export function renderTrackDefs(
             const dummyOptions = options as DummyTrackOptions;
             const dummyPlot = new DummyTrack(dummyOptions, pixiManager.makeContainer(boundingBox).overlayDiv);
             plotDict[trackId] = dummyPlot;
+        }
+        // Add a new track type for `spatial` layout (rendered via uchimata)
+        if (type === TrackType.Spatial) {
+            // Even though uchimata doesn't use PixiJS, we can use the PixiManager to create a div container that the canvas can be placed into.
+            // In the final version, we would probably want uchimata to use an existing canvas element (to limit the creation of new elements).
+            // But for now this gets the job done.
+            const container = pixiManager.makeContainer(boundingBox).overlayDiv;
+            const spatialTrackOptions = options as SpatialTrackOptions; //~ TODO: properly assert the type!
+            console.warn('!@$!#%@# detected spatial track !@#$!#%@#');
+            if (spatialTrackOptions.spec.data) {
+                // Ensure to pull all data needed
+                if ('sampleLength' in spatialTrackOptions.spec.data) {
+                    spatialTrackOptions.spec.data.sampleLength = 30000;
+                }
+            }
+            const datafetcher = getDataFetcher(spatialTrackOptions.spec, urlToFetchOptions);
+            createSpatialTrack(spatialTrackOptions, datafetcher as CsvDataFetcherClass, container);
         }
     });
     return plotDict;

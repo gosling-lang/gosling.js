@@ -12,7 +12,9 @@ import type {
     SvTypeTransform,
     CoverageTransform,
     DisplaceTransform,
-    JsonParseTransform
+    JsonParseTransform,
+    JoinTransform,
+    DataTransform
 } from '@gosling-lang/gosling-schema';
 import {
     getChannelKeysByAggregateFnc,
@@ -23,7 +25,41 @@ import {
     IsRangeFilter
 } from '@gosling-lang/gosling-schema';
 import { computeChromSizes } from './assembly';
-// import Logging from './log';
+import { dsvFormat } from 'd3-dsv';
+import type { Scale } from '@higlass/services';
+import { assert } from '../../core/utils/assert';
+
+/**
+ * Apply data transformation.
+ */
+export async function transform(t: DataTransform, data: Datum[], xScale?: Scale, assembly?: Assembly) {
+    switch (t.type) {
+        case 'filter':
+            return filterData(t, data);
+        case 'join':
+            return await joinData(t, data, assembly);
+        case 'concat':
+            return concatString(t, data);
+        case 'replace':
+            return replaceString(t, data);
+        case 'log':
+            return calculateData(t, data);
+        case 'exonSplit':
+            return splitExon(t, data, assembly);
+        case 'genomicLength':
+            return calculateGenomicLength(t, data);
+        case 'svType':
+            return inferSvType(t, data);
+        case 'coverage':
+            assert(xScale, 'xScale parameters is required for coverage transform');
+            return aggregateCoverage(t, data, xScale);
+        case 'subjson':
+            return parseSubJSON(t, data);
+        case 'displace':
+            assert(xScale, 'xScale parameters is required for displace transform');
+            return displace(t, data, xScale);
+    }
+}
 
 /**
  * Apply filter
@@ -50,6 +86,51 @@ export function filterData(filter: FilterTransform, data: Datum[]): Datum[] {
         });
     }
     return output;
+}
+
+// TODO: cache already transformed data as well
+// naive caching from a random place
+const FETCH_CACHE: Record<string, Datum[]> = {};
+
+/**
+ * Load a CSV file, and join it to the existing data.
+ */
+export async function joinData(
+    transform: JoinTransform,
+    toData: Datum[],
+    assembly: Assembly = 'hg19'
+): Promise<Datum[]> {
+    const { from, to } = transform;
+    const fetchDataIfNeeded = async (url: string) => {
+        if (FETCH_CACHE[url]) return FETCH_CACHE[url];
+        const response = await fetch(url);
+        const text = await response.text();
+        const data = dsvFormat(',').parse(text) as Datum[];
+        const chromSizes = computeChromSizes(assembly);
+        for (const d of data) {
+            const chrName = d[from.chromosomeField];
+            const chromPosition = d[from.genomicField];
+            d[from.genomicField] = (chromSizes.interval[chrName]?.[0] ?? 0) + +chromPosition;
+        }
+        FETCH_CACHE[url] = data;
+        return data;
+    };
+    const fromData = await fetchDataIfNeeded(from.url);
+    // a very naive approach to join two files
+    const joinned: Datum[] = fromData.map(f => {
+        // TODO: to be most accurate, need to find all data records matching and aggregate data
+        const found = toData.find(t => {
+            if (to.endField) {
+                const start = +t[to.startField] <= +f[from.genomicField];
+                const end = +t[to.endField] >= +f[from.genomicField];
+                return start && end;
+            } else {
+                return +t[to.startField] == +f[from.genomicField];
+            }
+        }) ?? { value: 0 };
+        return { ...f, ...found };
+    });
+    return joinned;
 }
 
 /**

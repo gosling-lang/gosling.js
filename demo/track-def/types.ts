@@ -13,16 +13,19 @@ import type { DataDeep, Assembly, DummyTrackStyle, Mark, X, Y } from '@gosling-l
  */
 
 /** A Track after it has been compiled */
-export type ProcessedTrack = ProcessedLinearTrack | ProcessedCircularTrack | ProcessedDummyTrack;
-// TODO: This should be much better expanded to include all the properties that are actually present.
+export type ProcessedTrack =
+    | ProcessedLinearTrack
+    | ProcessedCircularTrack
+    | ProcessedDummyTrack
+    | ProcessedSpatialTrack;
 /** All tracks potentially have these properties */
 export interface ProcessedTrackBase {
-    layout?: 'linear' | 'circular';
+    layout?: 'linear' | 'circular' | 'spatial';
     id: string;
     height: number;
     width: number;
     static: boolean;
-    mark?: string;
+    mark?: Mark;
     orientation: 'horizontal' | 'vertical';
     title?: string;
     subtitle?: string;
@@ -49,6 +52,19 @@ export type ProcessedCircularTrack = ProcessedTrackBase & {
     endAngle: number;
     outerRadius: number;
     innerRadius: number;
+};
+
+//~ DK: AFAIK, this needs to loosely fit definitions in Track.
+//~ it is force casted via `as ProcessedTrack`, so there's no strict type checking.
+export type ProcessedSpatialTrack = ProcessedTrackBase & {
+    layout: 'spatial';
+    spatial: {
+        x: string;
+        y: string;
+        z: string;
+        chr: string;
+        coord: string;
+    };
 };
 
 export type ProcessedDummyTrack = (ProcessedLinearTrack | ProcessedCircularTrack) & {

@@ -22,7 +22,9 @@ export function getDataFetcher(spec: SingleTrack | OverlaidTrack, urlToFetchOpti
 
     if (typeof data === 'undefined') {
         console.warn('No data in the track spec', spec);
-        return;
+        // A data object can be missing in 3D tracks. In this case, just pass an empty data.
+        // The 3d track can still use the 3D genome model for visual encoding.
+        return new JsonDataFetcher({ type: 'json', values: [], assembly: spec.assembly ?? 'unknown' });
     }
 
     const { type } = data;

@@ -29,6 +29,7 @@ import JS_SPEC_ISLANDVIEWER from './spec/islandviewer.ts?raw';
 import { spec as JSON_SPEC_ISLANDVIEWER } from './spec/islandviewer';
 
 export type ExampleGroup =
+    | 'Spatial Layout'
     | 'Visual Encoding'
     | 'Mouse Events'
     | 'Semantic Zooming'
@@ -44,6 +45,10 @@ export const ExampleGroups: {
     name: ExampleGroup;
     description: string;
 }[] = [
+    {
+        name: 'Spatial Layout',
+        description: 'Visualizations using 3D genome models'
+    },
     {
         name: 'Visual Encoding',
         description:
@@ -422,6 +427,43 @@ export const editorExampleObj: {
         name: 'Performance Comparison: Stretching Tiles',
         spec: JsonExampleSpecs.EX_SPEC_PERF_ALIGNMENT,
         image: THUMBNAILS.PERF_ALIGNMENT
+    },
+    SPATIAL_LAYOUT_MIN: {
+        group: 'Spatial Layout',
+        name: 'Minimal Example',
+        spec: JsonExampleSpecs.EX_SPEC_SPATIAL_MINIMAL,
+        image: THUMBNAILS.SPATIAL_MINIMAL
+    },
+    SPATIAL_LAYOUT_COLORS: {
+        group: 'Spatial Layout',
+        name: 'Coloring Strategies',
+        spec: JsonExampleSpecs.EX_SPEC_SPATIAL_COLOR,
+        image: THUMBNAILS.SPATIAL_COLOR
+    },
+    SPATIAL_LAYOUT_DENSITY: {
+        group: 'Spatial Layout',
+        name: 'Density',
+        spec: JsonExampleSpecs.EX_SPEC_SPATIAL_DENSITY,
+        image: THUMBNAILS.SPATIAL_DENSITY
+    },
+    SPATIAL_LAYOUT_SUPERIMP: {
+        group: 'Spatial Layout',
+        name: 'Multiple tracks',
+        spec: JsonExampleSpecs.EX_SPEC_SPATIAL_MULTIPLE_TRACKS,
+        image: THUMBNAILS.SPATIAL_MULTIPLE_TRACKS
+    },
+    SPATIAL_LAYOUT_TAN_COMP: {
+        group: 'Spatial Layout',
+        name: 'Human Cell Model (Tan et al., Science 2018): Comparison',
+        spec: JsonExampleSpecs.EX_SPEC_SPATIAL_TAN_COMP,
+        image: THUMBNAILS.SPATIAL_TAN
+    },
+    SPATIAL_LAYOUT_3D_YEAST_MODEL: {
+        group: 'Spatial Layout',
+        name: '3D Yeast Model (Nature 2010)',
+        spec: JsonExampleSpecs.EX_SPEC_3D_YEAST_MODEL,
+        image: THUMBNAILS.SPATIAL_YEAST,
+        forceShow: true
     },
     CORCES_ET_AL: {
         group: 'Coordinated Multiple Views',

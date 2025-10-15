@@ -28,6 +28,7 @@ import {
 import { spreadTracksByData } from '../core/utils/overlay';
 import { getStyleOverridden } from '../core/utils/style';
 import { uuid } from '../core/utils/uuid';
+import { propagateSpatialLayoutInfo } from './_normalize-3d-spec';
 
 /**
  * Traverse individual tracks and call the callback function to read and/or update the track definition.
@@ -219,6 +220,14 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             if (!track.orientation) track.orientation = spec.orientation;
             if (track.static === undefined) track.static = spec.static !== undefined ? spec.static : false;
             if (!track.zoomLimits) track.zoomLimits = spec.zoomLimits;
+
+            // Convert a 3D-specific spec into a generalized spec (i.e., moving 3D model data to the `join` transform)
+            if (track.layout && typeof track.layout === 'object' && track.layout.type === 'spatial') {
+                if (!('template' in track)) {
+                    //~ exclude TemplateTrack
+                    propagateSpatialLayoutInfo(track);
+                }
+            }
 
             // Override styles
             track.style = getStyleOverridden(spec.style, track.style);

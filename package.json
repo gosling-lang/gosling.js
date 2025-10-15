@@ -58,6 +58,7 @@
         "@gmod/tabix": "^1.5.6",
         "@gmod/vcf": "^5.0.10",
         "@preact/signals-core": "^1.6.1",
+        "@uwdata/flechette": "^1.1.2",
         "allotment": "^1.19.0",
         "bezier-js": "4.0.3",
         "buffer": "^6.0.3",
@@ -89,7 +90,8 @@
         "rbush": "^3.0.1",
         "slugid": "^3.0.0",
         "stream-browserify": "^3.0.0",
-        "threads": "^1.6.4"
+        "threads": "^1.6.4",
+        "uchimata": "^0.4.0"
     },
     "devDependencies": {
         "@eslint/js": "^9.19.0",

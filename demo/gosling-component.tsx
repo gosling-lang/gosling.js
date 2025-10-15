@@ -85,6 +85,7 @@ export function GoslingComponent(props: GoslingComponentProps) {
         ></div>
     );
 }
+
 /**
  * This is the main function. It takes a Gosling spec and renders it using the PixiManager
  */
