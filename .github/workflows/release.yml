@@ -11,6 +11,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Extract git tag
+        run: echo "GIT_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+      - name: Choose npm dist-tag
+        run: |
+          if [[ "$GIT_TAG" == *"-alpha"* ]]; then
+            echo "DIST_TAG=alpha" >> $GITHUB_ENV
+          else
+            echo "DIST_TAG=latest" >> $GITHUB_ENV
+          fi
       - uses: actions/setup-node@v3
         with:
           node-version: 20
@@ -18,6 +27,6 @@ jobs:
       - uses: pnpm/action-setup@v2
       - run: pnpm install
       - run: pnpm build
-      - run: pnpm publish --no-git-checks
+      - run: pnpm publish --no-git-checks --tag "$DIST_TAG"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
