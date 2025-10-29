@@ -220,6 +220,8 @@ export interface DummyTrack
         | 'layout'
         | 'static'
         | 'assembly'
+        | 'xOffset'
+        | 'yOffset'
     > {
     /** Used to specify the dummy track */
     type: 'dummy-track';

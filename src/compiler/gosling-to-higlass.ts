@@ -39,7 +39,11 @@ export function goslingToHiGlass(
 
     // Adds the dummy track to the HiGlass spec
     if (IsDummyTrack(gosTrack)) {
-        hgModel.addDefaultView(gosTrack.id!).setDummyTrack(gosTrack).setLayout(layout);
+        hgModel
+            .addDefaultView(gosTrack.id!)
+            .setDummyTrack(gosTrack)
+            .setLayout(layout)
+            .setViewOffset(gosTrack.xOffset, gosTrack.yOffset);
         return hgModel;
     }
     // we only look into the first resolved spec to get information, such as size of the track
@@ -212,7 +216,8 @@ export function goslingToHiGlass(
                 .addTrackSourceServers(server)
                 .setZoomFixed(firstResolvedSpec.static === true)
                 .setZoomLimits(firstResolvedSpec.zoomLimits ?? [1, null])
-                .setLayout(layout);
+                .setLayout(layout)
+                .setViewOffset(firstResolvedSpec.xOffset, firstResolvedSpec.yOffset);
         }
 
         // determine the compactness type of an axis considering the size of a track
@@ -284,7 +289,10 @@ export function goslingToHiGlass(
         hgModel.validateSpec(true);
     } else if (firstResolvedSpec.mark === '_header') {
         // `text` tracks are used to show title and subtitle of the views
-        hgModel.addDefaultView(`${trackId}-title`).setLayout(layout);
+        hgModel
+            .addDefaultView(`${trackId}-title`)
+            .setLayout(layout)
+            .setViewOffset(firstResolvedSpec.xOffset, firstResolvedSpec.yOffset);
         if (typeof firstResolvedSpec.title === 'string') {
             hgModel.setTextTrack(
                 bb.width,

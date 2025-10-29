@@ -18,6 +18,10 @@ export function getLinkingInfo(hgModel: HiGlassModel) {
     hgModel.spec().views.forEach(v => {
         const hgViewId = v.uid;
 
+        // Extract view-level xOffset and yOffset
+        const viewXOffset = (v as any).xOffset;
+        const viewYOffset = (v as any).yOffset;
+
         // TODO: Better way to get view specifications?
         // Get spec of a view
         let spec = /* TODO: */ (v.tracks as any).center?.[0]?.contents?.[0]?.options?.spec;
@@ -53,7 +57,9 @@ export function getLinkingInfo(hgModel: HiGlassModel) {
                             startAngle: spec.startAngle,
                             endAngle: spec.endAngle,
                             innerRadius: spec.innerRadius,
-                            outerRadius: spec.outerRadius
+                            outerRadius: spec.outerRadius,
+                            xOffset: viewXOffset,
+                            yOffset: viewYOffset
                         }
                     });
                     return;
