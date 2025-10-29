@@ -170,19 +170,28 @@ function BrushTrack(HGC: any, ...args: any[]): any {
                 const [w, h] = this.dimensions;
                 const endEvent = event.sourceEvent;
 
+                console.warn(this.options.xOffset);
+                // Get xOffset and yOffset from options to account for brush positioning
+                const xOffset = this.options.xOffset ?? 0;
+                const yOffset = this.options.yOffset ?? 0;
+
                 // adjust the position
                 const startX = this.startEvent.layerX - x;
                 const startY = this.startEvent.layerY - y;
                 const endX = endEvent.layerX - x;
                 const endY = endEvent.layerY - y;
 
+                // Calculate center position accounting for offsets
+                const centerX = w / 2.0 + xOffset;
+                const centerY = h / 2.0 + yOffset;
+
                 // calculate the radian difference from the drag event
                 // rotate the origin +90 degree so that it is positioned on the 12 O'clock
                 const radDiff =
                     // radian of the start position
-                    Math.atan2(startX - w / 2.0, startY - h / 2.0) -
+                    Math.atan2(startX - centerX, startY - centerY) -
                     // radian of the current position
-                    Math.atan2(endX - w / 2.0, endY - h / 2.0);
+                    Math.atan2(endX - centerX, endY - centerY);
 
                 // previous extent of brush
                 let [s, e] = this.prevExtent;
@@ -331,7 +340,9 @@ BrushTrack.config = {
         'projectionStrokeColor',
         'projectionFillOpacity',
         'projectionStrokeOpacity',
-        'strokeWidth'
+        'strokeWidth',
+        'xOffset',
+        'yOffset'
     ],
     defaultOptions: {
         innerRadius: 100,
@@ -343,7 +354,9 @@ BrushTrack.config = {
         projectionStrokeColor: '#777',
         projectionFillOpacity: 0.3,
         projectionStrokeOpacity: 0.7,
-        strokeWidth: 1
+        strokeWidth: 1,
+        xOffset: 0,
+        yOffset: 0
     }
 };
 

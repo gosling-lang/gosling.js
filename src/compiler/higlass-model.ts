@@ -150,6 +150,8 @@ export class HiGlassModel {
             endAngle?: number;
             innerRadius?: number;
             outerRadius?: number;
+            xOffset?: number;
+            yOffset?: number;
         }
     ) {
         if (!fromViewUid) return;
@@ -169,7 +171,9 @@ export class HiGlassModel {
                 startAngle: style?.startAngle,
                 endAngle: style?.endAngle,
                 innerRadius: style?.innerRadius,
-                outerRadius: style?.outerRadius
+                outerRadius: style?.outerRadius,
+                xOffset: style?.xOffset,
+                yOffset: style?.yOffset
             }
         });
         return this;
@@ -256,6 +260,13 @@ export class HiGlassModel {
 
     public setLayout(layout: RelativePosition) {
         this.getLastView().layout = layout;
+        return this;
+    }
+
+    public setViewOffset(xOffset?: number, yOffset?: number) {
+        const view = this.getLastView() as any;
+        view.xOffset = xOffset;
+        view.yOffset = yOffset;
         return this;
     }
 
