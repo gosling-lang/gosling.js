@@ -16,22 +16,6 @@ The Gosling's key features compared to existing visualization libraries and gram
 
 -   **Interactivity**: Gosling has intuitive and effective user interactions built in, including zooming and panning and [brushing and linking](https://infovis-wiki.net/wiki/Linking_and_Brushing). This enables flexible visualizations that cover a wide range of visual analysis scenarios, like overview + detail views with brushes or comparative views.
 
-## Learn More About Gosling
-
--   [Documentation](http://gosling-lang.org/)
--   [Gosling.js Editor](https://gosling.js.org/)
--   [Gallery Examples](https://gosling-lang.org/examples/)
--   [How-to & Tutorials](https://gosling-lang.org/tutorials/)
--   [v1 Announcement](https://gosling-lang.org/blog/v1-release)
-
-## Contribute to Gosling.js
-
-We welcome and greatly appreciate your contribution to this project! Please read [CONTRIBUTING.md](/CONTRIBUTING.md) to find guidelines.
-
-## Contact
-
-Open [Github Issues](https://github.com/gosling-lang/gosling.js/issues/) to ask questions or request features.
-
 ## Citation
 
 [L'Yi et al., 2021. “Gosling: A Grammar-based Toolkit for Scalable and Interactive Genomics Data Visualization.”](https://pmc.ncbi.nlm.nih.gov/articles/PMC8826597/)
@@ -48,6 +32,22 @@ Open [Github Issues](https://github.com/gosling-lang/gosling.js/issues/) to ask 
   year = {2022}
 }
 ```
+
+## Learn More About Gosling
+
+-   [Documentation](http://gosling-lang.org/)
+-   [Gosling.js Editor](https://gosling.js.org/)
+-   [Gallery Examples](https://gosling-lang.org/examples/)
+-   [How-to & Tutorials](https://gosling-lang.org/tutorials/)
+-   [v1 Announcement](https://gosling-lang.org/blog/v1-release)
+
+## Contribute to Gosling.js
+
+We welcome and greatly appreciate your contribution to this project! Please read [CONTRIBUTING.md](/CONTRIBUTING.md) to find guidelines.
+
+## Contact
+
+Open [Github Issues](https://github.com/gosling-lang/gosling.js/issues/) to ask questions or request features.
 
 ## License
 
