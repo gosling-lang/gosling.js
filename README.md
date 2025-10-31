@@ -18,7 +18,7 @@ The Gosling's key features compared to existing visualization libraries and gram
 
 ## Citation
 
-[L'Yi et al., 2021. “Gosling: A Grammar-based Toolkit for Scalable and Interactive Genomics Data Visualization.”](https://doi.org/10.1109/TVCG.2021.3114876)
+[L'Yi et al., 2022. “Gosling: A Grammar-based Toolkit for Scalable and Interactive Genomics Data Visualization.”](https://doi.org/10.1109/TVCG.2021.3114876)
 
 ```bib
 @article{lyi2021gosling,
