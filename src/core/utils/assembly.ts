@@ -204,15 +204,45 @@ export function getChromTotalSize(chromSize: { [k: string]: number }) {
     return Object.values(chromSize).reduce((sum, current) => sum + current, 0);
 }
 
-export function parseGenomicPosition(position: string): { chromosome: string; start?: number; end?: number } {
-    const [chromosome, intervalString] = position.split(':');
-    if (intervalString) {
+export function parseGenomicPosition(position: string): {
+    chromosome: string;
+    start?: number;
+    end?: number;
+    chromosomeEnd?: string;
+} {
+    // Split only on the first colon to separate chromosome from the rest
+    const firstColonIndex = position.indexOf(':');
+    if (firstColonIndex === -1) {
+        return { chromosome: position };
+    }
+
+    const chromosome = position.substring(0, firstColonIndex);
+    const intervalString = position.substring(firstColonIndex + 1);
+
+    // Check if this is cross chromosome: chr1:100-chr2:100
+    if (intervalString.includes(':')) {
+        const dashIndex = intervalString.indexOf('-');
+        if (dashIndex !== -1) {
+            const startPosStr = intervalString.substring(0, dashIndex);
+            const endPart = intervalString.substring(dashIndex + 1);
+            const [chromosomeEnd, endPosStr] = endPart.split(':');
+
+            const start = +startPosStr.replace(/,/g, '');
+            const end = +endPosStr.replace(/,/g, '');
+
+            if (!Number.isNaN(start) && !Number.isNaN(end)) {
+                return { chromosome, start, chromosomeEnd, end };
+            }
+        }
+    } else {
+        // This is within chromosome: chr1:100-200
         const [start, end] = intervalString.split('-').map(s => +s.replace(/,/g, ''));
         // only return if both are valid
         if (!Number.isNaN(start) && !Number.isNaN(end)) {
             return { chromosome, start, end };
         }
     }
+
     return { chromosome };
 }
 
@@ -223,11 +253,12 @@ export class GenomicPositionHelper {
     constructor(
         public chromosome: string,
         public start?: number,
-        public end?: number
+        public end?: number,
+        public chromosomeEnd?: string
     ) {}
     static fromString(str: string) {
         const result = parseGenomicPosition(str);
-        return new GenomicPositionHelper(result.chromosome, result.start, result.end);
+        return new GenomicPositionHelper(result.chromosome, result.start, result.end, result.chromosomeEnd);
     }
     toAbsoluteCoordinates(assembly?: Assembly, padding = 0): [number, number] {
         const info = computeChromSizes(assembly);
@@ -242,6 +273,18 @@ export class GenomicPositionHelper {
             [start, end] = [1, size];
         }
         const offset = interval[0];
+
+        // Handle cross-chromosome range
+        if (this.chromosomeEnd && this.chromosomeEnd !== this.chromosome) {
+            const endSize = info.size[this.chromosomeEnd];
+            const endInterval = info.interval[this.chromosomeEnd];
+            if (endSize === undefined || endInterval === undefined) {
+                throw new Error(`End chromosome name ${this.chromosomeEnd} is not valid`);
+            }
+            const endOffset = endInterval[0];
+            return [start + offset - padding, end + endOffset + padding];
+        }
+
         return [start + offset - padding, end + offset + padding];
     }
 }

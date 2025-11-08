@@ -200,7 +200,7 @@ export function createApiV2(
             return;
         }
 
-        // Parse the genomic position (e.g., "chr1:100-1000" or "chr1")
+        // Parse the genomic position (e.g., "chr1:100-1000" or "chr1" or "chr1:100-chr2:100")
         const assembly = track.spec.assembly;
         const manager = GenomicPositionHelper.fromString(position);
         const absCoordinates = manager.toAbsoluteCoordinates(assembly, padding);

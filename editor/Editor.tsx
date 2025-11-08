@@ -750,7 +750,7 @@ function Editor(props: RouteComponentProps) {
             <div
                 className={`demo-navbar ${theme === 'dark' ? 'dark' : ''}`}
                 onClick={() => {
-                    gosRef.current?.api.zoomTo('track-1', 'chr1:1-10000', 0, 1000);
+                    gosRef.current?.api.zoomTo('track-1', 'chr1:1-chr4:10000', 0, 1000);
                 }}
                 // To test APIs, uncomment the following code.
                 // onClick={() => {
