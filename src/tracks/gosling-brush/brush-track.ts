@@ -170,11 +170,16 @@ function BrushTrack(HGC: any, ...args: any[]): any {
                 const [w, h] = this.dimensions;
                 const endEvent = event.sourceEvent;
 
-                // adjust the position
-                const startX = this.startEvent.layerX - x;
-                const startY = this.startEvent.layerY - y;
-                const endX = endEvent.layerX - x;
-                const endY = endEvent.layerY - y;
+                // Use clientX/clientY instead of layerX/layerY to avoid coordinate system issues
+                // when the mouse moves over different SVG elements during drag
+                // Get the bounding rect from the parent SVG, which should be stable
+                const svg = this.gMain.node().ownerSVGElement || this.gMain.node().closest('svg');
+                const svgRect = svg.getBoundingClientRect();
+
+                const startX = this.startEvent.clientX - svgRect.left - x;
+                const startY = this.startEvent.clientY - svgRect.top - y;
+                const endX = endEvent.clientX - svgRect.left - x;
+                const endY = endEvent.clientY - svgRect.top - y;
 
                 // calculate the radian difference from the drag event
                 // rotate the origin +90 degree so that it is positioned on the 12 O'clock
