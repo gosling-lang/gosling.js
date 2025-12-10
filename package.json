@@ -79,7 +79,7 @@
     "higlass-register": "^0.3.0",
     "higlass-text": "^0.1.7",
     "json-stringify-pretty-compact": "^2.0.0",
-    "jspdf": "^2.3.1",
+    "jspdf": "^3.0.2",
     "lodash-es": "^4.17.21",
     "monaco-editor": "^0.27.0",
     "nanoevents": "^7.0.1",
