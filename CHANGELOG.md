@@ -1,3 +1,12 @@
+## [1.0.7](https://github.com/gosling-lang/gosling.js/compare/v1.0.6...v1.0.7) (2025-12-10)
+
+
+### Bug Fixes
+
+* correct brushing when xOffset is used in circular tracks ([#1203](https://github.com/gosling-lang/gosling.js/issues/1203)) ([1acb013](https://github.com/gosling-lang/gosling.js/commit/1acb013a956903f63cbe93f85a94f90426dfdf20))
+
+
+
 ## [1.0.6](https://github.com/gosling-lang/gosling.js/compare/v1.0.5...v1.0.6) (2025-10-06)
 
 
