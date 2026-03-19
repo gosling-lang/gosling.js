@@ -32,7 +32,7 @@ export function getDataFetcher(spec: SingleTrack | OverlaidTrack, urlToFetchOpti
     const urlFetchOptions = ('url' in data && urlToFetchOptions?.[data.url]) || {};
     const indexUrlFetchOptions = ('indexUrl' in data && urlToFetchOptions?.[data.indexUrl]) || {};
 
-    if (type == 'multivec' || type == 'beddb' || type == 'matrix') {
+    if (type == 'multivec' || type == 'beddb' || type == 'matrix' || type == 'vector') {
         const url = data.url;
         const server = url.split('/').slice(0, -2).join('/');
         const tilesetUid = url.split('=').slice(-1)[0];
