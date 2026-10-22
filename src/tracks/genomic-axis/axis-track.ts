@@ -384,7 +384,8 @@ export class AxisTrackClass extends PixiTrack<AxisTrackOptions> {
         const p = precisionPrefix(pos, viewWidth);
 
         const fPlain = format(',');
-        const fPrecision = formatPrefix(`,.${p}`, viewWidth);
+        // `precisionPrefix` returns NaN for 0 (e.g., a view starting at a chromosome boundary)
+        const fPrecision = formatPrefix(`,.${Number.isFinite(p) ? p : 0}`, viewWidth);
         let f = fPlain;
 
         if (this.options.tickFormat === 'si') {
