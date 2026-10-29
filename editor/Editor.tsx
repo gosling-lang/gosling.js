@@ -289,13 +289,13 @@ function Editor(props: RouteComponentProps) {
     const [isShowAbout, setIsShowAbout] = useState(false);
 
     // API for split pane of the right panel
-    const displayPanelRef = useRef<any>();
+    const displayPanelRef = useRef<any>(undefined);
 
     // Resizer `div`
-    const descResizerRef = useRef<any>();
+    const descResizerRef = useRef<any>(undefined);
 
     // Drag event for resizing description panel
-    const dragX = useRef<any>();
+    const dragX = useRef<any>(undefined);
 
     // for using HiGlass JS API
     // const hgRef = useRef<any>();

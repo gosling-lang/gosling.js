@@ -1,4 +1,4 @@
-import React, { useState, useEffect, type RefObject, useImperativeHandle } from 'react';
+import React, { useState, useEffect, type Ref, type ReactElement, useImperativeHandle } from 'react';
 import { PixiManager } from '@pixi-manager';
 import { compile, type UrlToFetchOptions } from '../src/compiler/compile';
 import { getTheme } from '../src/core/utils/theme';
@@ -21,14 +21,14 @@ interface GoslingComponentProps {
     padding?: number;
     theme?: Theme;
     urlToFetchOptions?: UrlToFetchOptions;
-    ref?: RefObject<GoslingRef>;
+    ref?: Ref<GoslingRef>;
     /** A callback function to notify that visualization has been rendered for the first time */
     visualized?: () => void;
     /** A callback function to notify that visualization has been resized. Only called when responsive design is used. */
     resized?: () => void;
 }
 
-export function GoslingComponent(props: GoslingComponentProps) {
+export function GoslingComponent(props: GoslingComponentProps): ReactElement {
     const {
         spec,
         id = 'gosling-component',
