@@ -1,4 +1,4 @@
-import React, { useState, useEffect, type Ref, useImperativeHandle } from 'react';
+import React, { useState, useEffect, type Ref, type ReactElement, useImperativeHandle } from 'react';
 import { PixiManager } from '@pixi-manager';
 import { compile, type UrlToFetchOptions } from '../src/compiler/compile';
 import { getTheme } from '../src/core/utils/theme';
@@ -28,7 +28,7 @@ interface GoslingComponentProps {
     resized?: () => void;
 }
 
-export function GoslingComponent(props: GoslingComponentProps) {
+export function GoslingComponent(props: GoslingComponentProps): ReactElement {
     const {
         spec,
         id = 'gosling-component',
